@@ -1,0 +1,12 @@
+export const DEFAULT_THROW_POWER = 10;
+export const MIN_THROW_POWER = 6;
+export const MAX_THROW_POWER = 18;
+export const THROW_POWER_STEP = 1;
+export const PROJECTILE_SPEED = DEFAULT_THROW_POWER;
+export const PROJECTILE_LIFETIME = 3.25;
+export const MAX_PROJECTILE_DISTANCE = 18;
+export const PROJECTILE_GRAVITY = 9.8;
+export const PROJECTILE_UPWARD_SPEED = 4.8;
+export const PROJECTILE_RADIUS = 0.18;
+export const THROW_FORWARD_OFFSET = 1;
+export const THROW_HEIGHT_OFFSET = 1;
