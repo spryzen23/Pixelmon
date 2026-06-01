@@ -12,6 +12,10 @@ jest.mock('@react-three/fiber', () => ({
   },
 }));
 
+jest.mock('@react-three/drei', () => ({
+  PointerLockControls: () => <div data-testid="pointer-lock-controls" />,
+}));
+
 jest.mock('./components/GameScene', () => function MockGameScene() {
   return <div data-testid="game-scene" />;
 });
@@ -20,6 +24,7 @@ test('renders the 3D game shell', () => {
   render(<App />);
 
   expect(screen.getByTestId('game-canvas')).toBeInTheDocument();
+  expect(screen.getByTestId('pointer-lock-controls')).toBeInTheDocument();
   expect(screen.getByTestId('game-scene')).toBeInTheDocument();
   expect(screen.getByText(/voxel legends prototype/i)).toBeInTheDocument();
   expect(screen.getByText(/move with wasd or arrow keys/i)).toBeInTheDocument();

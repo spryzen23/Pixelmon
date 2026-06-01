@@ -61,6 +61,7 @@ export default function WildCreature({
 }) {
   const creatureRef = useRef();
   const fleeTimer = useRef(0);
+  const previousY = useRef(initialPosition[1]);
   const start = useMemo(() => new Vector3(...initialPosition), [initialPosition]);
   const ai = useRef({
     mode: 'pause',
@@ -90,8 +91,10 @@ export default function WildCreature({
     creature.position.y = getEntityY(
       creature.position.x,
       creature.position.z,
-      WILD_CREATURE_HEIGHT
+      WILD_CREATURE_HEIGHT,
+      previousY.current
     );
+    previousY.current = creature.position.y;
 
     if (status === 'capturing') {
       return;
@@ -117,7 +120,13 @@ export default function WildCreature({
 
         if (isWalkablePosition(nextX, nextZ, 0.45)) {
           creature.position.x = nextX;
-          creature.position.y = getEntityY(nextX, nextZ, WILD_CREATURE_HEIGHT);
+          creature.position.y = getEntityY(
+            nextX,
+            nextZ,
+            WILD_CREATURE_HEIGHT,
+            previousY.current
+          );
+          previousY.current = creature.position.y;
           creature.position.z = nextZ;
         }
       }
@@ -156,7 +165,13 @@ export default function WildCreature({
 
     if (isWalkablePosition(nextX, nextZ, 0.45)) {
       creature.position.x = nextX;
-      creature.position.y = getEntityY(nextX, nextZ, WILD_CREATURE_HEIGHT);
+      creature.position.y = getEntityY(
+        nextX,
+        nextZ,
+        WILD_CREATURE_HEIGHT,
+        previousY.current
+      );
+      previousY.current = creature.position.y;
       creature.position.z = nextZ;
     } else {
       ai.current.mode = 'pause';

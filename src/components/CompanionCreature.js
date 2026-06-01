@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { MathUtils, Vector3 } from 'three';
+import { Vector3 } from 'three';
 import AnimatedModel from './AnimatedModel';
 import ModelErrorBoundary from './ModelErrorBoundary';
 import VoxelFallback from './VoxelFallback';
@@ -37,6 +37,7 @@ const CompanionCreature = forwardRef(function CompanionCreature(
 ) {
   const companionRef = useRef();
   const movingRef = useRef(false);
+  const previousY = useRef(spawnPosition[1]);
   const [isMoving, setIsMoving] = useState(false);
 
   useImperativeHandle(ref, () => companionRef.current, []);
@@ -99,9 +100,11 @@ const CompanionCreature = forwardRef(function CompanionCreature(
     const targetY = getEntityY(
       companion.position.x,
       companion.position.z,
-      COMPANION_HEIGHT
+      COMPANION_HEIGHT,
+      previousY.current
     );
-    companion.position.y = MathUtils.lerp(companion.position.y, targetY, 0.15);
+    companion.position.y = targetY;
+    previousY.current = targetY;
   });
 
   return (

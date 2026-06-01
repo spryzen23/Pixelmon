@@ -9,7 +9,7 @@ import {
   PROJECTILE_LIFETIME,
   PROJECTILE_RADIUS,
   PROJECTILE_SPEED,
-  PROJECTILE_UPWARD_SPEED,
+  PROJECTILE_UPWARD_BOOST,
 } from '../game/projectilePhysics';
 
 const BOUNCE_DAMPING = 0.48;
@@ -37,8 +37,8 @@ export default function Projectile({
 }) {
   const projectileRef = useRef();
   const age = useRef(0);
+  const flightTime = useRef(0);
   const traveled = useRef(0);
-  const verticalVelocity = useRef(PROJECTILE_UPWARD_SPEED);
   const bounces = useRef(0);
   const expired = useRef(false);
   const mode = useRef('flying');
@@ -48,12 +48,13 @@ export default function Projectile({
   const burstTimer = useRef(0);
   const resolved = useRef(false);
   const velocity = useMemo(() => {
-    const horizontalDirection = new Vector3(...direction);
-    horizontalDirection.y = 0;
+    const lookDirection = new Vector3(...direction).normalize();
+    const initialVelocity = lookDirection.multiplyScalar(
+      throwPower || PROJECTILE_SPEED
+    );
+    initialVelocity.y += PROJECTILE_UPWARD_BOOST;
 
-    return horizontalDirection
-      .normalize()
-      .multiplyScalar(throwPower || PROJECTILE_SPEED);
+    return initialVelocity;
   }, [direction, throwPower]);
 
   useEffect(() => {
@@ -75,7 +76,6 @@ export default function Projectile({
     capturedWildId.current = wildId;
     mode.current = 'shaking';
     shakeTimer.current = 0;
-    verticalVelocity.current = 0;
 
     const groundY =
       getTerrainSurfaceY(wild.position.x, wild.position.z) + PROJECTILE_RADIUS;
@@ -106,8 +106,8 @@ export default function Projectile({
 
     projectile.position.x += velocity.x * delta;
     projectile.position.z += velocity.z * delta;
-    projectile.position.y += verticalVelocity.current * delta;
-    verticalVelocity.current -= PROJECTILE_GRAVITY * delta;
+    projectile.position.y +=
+      (velocity.y - PROJECTILE_GRAVITY * flightTime.current) * delta;
 
     checkWildCollision();
 
@@ -119,12 +119,15 @@ export default function Projectile({
       getTerrainSurfaceY(projectile.position.x, projectile.position.z) +
       PROJECTILE_RADIUS;
 
-    if (projectile.position.y <= groundY && verticalVelocity.current < 0) {
+    const currentVerticalVelocity =
+      velocity.y - PROJECTILE_GRAVITY * flightTime.current;
+
+    if (projectile.position.y <= groundY && currentVerticalVelocity < 0) {
       projectile.position.y = groundY;
 
       if (bounces.current < MAX_BOUNCES) {
-        verticalVelocity.current =
-          Math.abs(verticalVelocity.current) * BOUNCE_DAMPING;
+        velocity.y = Math.abs(currentVerticalVelocity) * BOUNCE_DAMPING;
+        flightTime.current = 0;
         bounces.current += 1;
       } else {
         expire();
@@ -134,6 +137,7 @@ export default function Projectile({
 
     const step = velocity.length() * delta;
     age.current += delta;
+    flightTime.current += delta;
     traveled.current += step;
 
     if (

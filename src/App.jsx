@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
+import { PointerLockControls } from '@react-three/drei';
 import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
 import GameScene from './components/GameScene';
 import Hotbar from './components/Hotbar';
@@ -77,6 +78,7 @@ function App() {
       >
         <color attach="background" args={['#87CEEB']} />
         <fog attach="fog" args={['#87CEEB', 10, 50]} />
+        <PointerLockControls pointerSpeed={0.65} />
         <GameScene
           equippedBall={equippedBall}
           onCreatureCaught={handleCreatureCaught}
@@ -86,12 +88,19 @@ function App() {
 
       <div className="hud">
         <strong>Voxel Legends Prototype</strong>
+        <span>Click game window to lock mouse</span>
         <span>Move with WASD or Arrow Keys</span>
         <span>Recall/send companion with E</span>
         <span>Throw with Spacebar</span>
         <span>Adjust power with Q/R or Mouse Wheel</span>
         <span>Ball: {equippedBall.name}</span>
         <span>Creatures Caught: {caughtCount}</span>
+      </div>
+
+      <div className="crosshair" aria-hidden="true">
+        <span className="crosshair-line crosshair-line-horizontal" />
+        <span className="crosshair-line crosshair-line-vertical" />
+        <span className="crosshair-dot" />
       </div>
 
       <Hotbar equippedBallId={equippedBallId} throwPower={throwPower} />

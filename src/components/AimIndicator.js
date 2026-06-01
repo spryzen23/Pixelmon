@@ -3,11 +3,10 @@ import { useFrame } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import { Vector3 } from 'three';
 import {
+  getParallaxThrowVector,
   PROJECTILE_GRAVITY,
   PROJECTILE_RADIUS,
-  PROJECTILE_UPWARD_SPEED,
-  THROW_FORWARD_OFFSET,
-  THROW_HEIGHT_OFFSET,
+  PROJECTILE_UPWARD_BOOST,
 } from '../game/projectilePhysics';
 import { getTerrainSurfaceY } from '../game/world';
 
@@ -18,18 +17,10 @@ const start = new Vector3();
 const velocity = new Vector3();
 const point = new Vector3();
 
-function createThrowArc(player, throwPower) {
-  player.getWorldDirection(forward);
-  forward.y = 0;
-  forward.normalize();
-
-  start
-    .copy(player.position)
-    .addScaledVector(forward, THROW_FORWARD_OFFSET);
-  start.y += THROW_HEIGHT_OFFSET;
-
+function createThrowArc(player, camera, throwPower) {
+  getParallaxThrowVector(camera, player, start, forward);
   velocity.copy(forward).multiplyScalar(throwPower);
-  velocity.y = PROJECTILE_UPWARD_SPEED;
+  velocity.y += PROJECTILE_UPWARD_BOOST;
 
   const points = [];
   let landingPoint = start.clone();
@@ -63,7 +54,7 @@ export default function AimIndicator({ ball, playerRef, throwPower }) {
     points: [],
   }));
 
-  useFrame(() => {
+  useFrame(({ camera }) => {
     const player = playerRef.current;
 
     if (!player) {
@@ -74,7 +65,14 @@ export default function AimIndicator({ ball, playerRef, throwPower }) {
       player.position.x.toFixed(2),
       player.position.y.toFixed(2),
       player.position.z.toFixed(2),
-      player.rotation.y.toFixed(2),
+      player.rotation.y.toFixed(3),
+      camera.position.x.toFixed(2),
+      camera.position.y.toFixed(2),
+      camera.position.z.toFixed(2),
+      camera.quaternion.x.toFixed(3),
+      camera.quaternion.y.toFixed(3),
+      camera.quaternion.z.toFixed(3),
+      camera.quaternion.w.toFixed(3),
       throwPower.toFixed(2),
     ].join(':');
 
@@ -83,7 +81,7 @@ export default function AimIndicator({ ball, playerRef, throwPower }) {
     }
 
     lastSignature.current = signature;
-    setArc(createThrowArc(player, throwPower));
+    setArc(createThrowArc(player, camera, throwPower));
   });
 
   if (arc.points.length < 2) {

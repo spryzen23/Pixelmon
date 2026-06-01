@@ -14,11 +14,13 @@ import {
   BLOCK_HEIGHT,
   PLAYER_START,
   TERRAIN_RADIUS,
+  VOXEL_SIZE,
   WATER_BLOCK_HEIGHT,
   createCacti,
   createTerrainTiles,
   createTrees,
   getTileCoord,
+  worldToGrid,
 } from '../game/world';
 
 const TILE_COLORS = {
@@ -51,10 +53,8 @@ export default function Terrain({ playerRef }) {
       return;
     }
 
-    const nextCenter = {
-      x: getTileCoord(player.position.x),
-      z: getTileCoord(player.position.z),
-    };
+    const { gridX, gridZ } = worldToGrid(player.position.x, player.position.z);
+    const nextCenter = { x: gridX, z: gridZ };
 
     if (nextCenter.x !== gridCenter.x || nextCenter.z !== gridCenter.z) {
       setGridCenter(nextCenter);
@@ -65,9 +65,10 @@ export default function Terrain({ playerRef }) {
     [grassTexture, dirtTexture].forEach((texture) => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
-      texture.magFilter = NearestFilter;
       texture.minFilter = NearestFilter;
+      texture.magFilter = NearestFilter;
       texture.colorSpace = SRGBColorSpace;
+      texture.generateMipmaps = false;
       texture.needsUpdate = true;
     });
   }, [dirtTexture, grassTexture]);
@@ -95,6 +96,23 @@ export default function Terrain({ playerRef }) {
     ];
   }, [dirtTexture, grassTexture]);
 
+  const plainsDirtMaterials = useMemo(() => {
+    const dirtMaterial = new MeshStandardMaterial({
+      map: dirtTexture,
+      roughness: 0.9,
+      metalness: 0,
+    });
+
+    return [
+      dirtMaterial,
+      dirtMaterial,
+      dirtMaterial,
+      dirtMaterial,
+      dirtMaterial,
+      dirtMaterial,
+    ];
+  }, [dirtTexture]);
+
   const desertMaterials = useMemo(() => {
     const sandTop = new MeshStandardMaterial({
       color: '#e9cf82',
@@ -108,6 +126,16 @@ export default function Terrain({ playerRef }) {
     });
 
     return [sandSide, sandSide, sandTop, sandSide, sandSide, sandSide];
+  }, []);
+
+  const desertDirtMaterials = useMemo(() => {
+    const sandSide = new MeshStandardMaterial({
+      color: '#c9a85c',
+      roughness: 0.95,
+      metalness: 0,
+    });
+
+    return [sandSide, sandSide, sandSide, sandSide, sandSide, sandSide];
   }, []);
 
   const snowMaterials = useMemo(() => {
@@ -132,12 +160,41 @@ export default function Terrain({ playerRef }) {
     ];
   }, []);
 
-  const getBlockMaterials = (biome) => {
-    if (biome === BIOMES.DESERT) {
+  const snowDirtMaterials = useMemo(() => {
+    const frozenDirtSide = new MeshStandardMaterial({
+      color: '#8a8f86',
+      roughness: 0.92,
+      metalness: 0,
+    });
+
+    return [
+      frozenDirtSide,
+      frozenDirtSide,
+      frozenDirtSide,
+      frozenDirtSide,
+      frozenDirtSide,
+      frozenDirtSide,
+    ];
+  }, []);
+
+  const getBlockMaterials = (tile) => {
+    if (tile.type === 'dirt') {
+      if (tile.biome === BIOMES.DESERT) {
+        return desertDirtMaterials;
+      }
+
+      if (tile.biome === BIOMES.SNOW) {
+        return snowDirtMaterials;
+      }
+
+      return plainsDirtMaterials;
+    }
+
+    if (tile.biome === BIOMES.DESERT) {
       return desertMaterials;
     }
 
-    if (biome === BIOMES.SNOW) {
+    if (tile.biome === BIOMES.SNOW) {
       return snowMaterials;
     }
 
@@ -153,11 +210,11 @@ export default function Terrain({ playerRef }) {
           <Box
             key={tile.key}
             args={[
-              1.02,
-              isWater ? WATER_BLOCK_HEIGHT : BLOCK_HEIGHT,
-              1.02,
+              VOXEL_SIZE,
+              tile.height || (isWater ? WATER_BLOCK_HEIGHT : BLOCK_HEIGHT),
+              VOXEL_SIZE,
             ]}
-            material={isWater ? undefined : getBlockMaterials(tile.biome)}
+            material={isWater ? undefined : getBlockMaterials(tile)}
             position={[tile.x, tile.centerY, tile.z]}
             receiveShadow
           >

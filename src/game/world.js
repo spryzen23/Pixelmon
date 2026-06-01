@@ -1,9 +1,12 @@
 export const WORLD_SIZE = 21;
 export const WORLD_HALF = Math.floor(WORLD_SIZE / 2);
 export const TERRAIN_RADIUS = 15;
-export const BLOCK_HEIGHT = 0.35;
-export const WATER_BLOCK_HEIGHT = 0.18;
-export const WATER_SURFACE_Y = -0.1;
+export const VOXEL_SIZE = 0.75;
+export const BLOCK_HEIGHT = VOXEL_SIZE;
+export const WATER_BLOCK_HEIGHT = VOXEL_SIZE;
+export const WATER_SURFACE_Y = -VOXEL_SIZE;
+export const WATER_LEVEL = WATER_SURFACE_Y;
+export const ENTITY_FOOT_CLEARANCE = 0.025;
 export const PLAYER_HEIGHT = 1;
 export const PLAYER_RADIUS = 0.38;
 export const COMPANION_HEIGHT = 0.8;
@@ -30,16 +33,37 @@ const ORIGIN_WATER_COORDS = [
   [0, 2],
 ];
 
+const GRID_EPSILON = 0.000001;
+
 const ORIGIN_WATER_KEYS = new Set(
-  ORIGIN_WATER_COORDS.map(([x, z]) => toTileKey(x, z))
+  ORIGIN_WATER_COORDS.map(([x, z]) =>
+    toTileKey(x * VOXEL_SIZE, z * VOXEL_SIZE)
+  )
 );
 
+export function snapToVoxel(value) {
+  const snapped = Math.floor((value + GRID_EPSILON) / VOXEL_SIZE) * VOXEL_SIZE;
+
+  return Number(snapped.toFixed(6));
+}
+
+export function getVoxelIndex(value) {
+  return Math.floor((value + GRID_EPSILON) / VOXEL_SIZE);
+}
+
 export function toTileKey(x, z) {
-  return `${x}:${z}`;
+  return `${snapToVoxel(x)}:${snapToVoxel(z)}`;
 }
 
 export function getTileCoord(value) {
-  return Math.round(value);
+  return snapToVoxel(value);
+}
+
+export function worldToGrid(x, z) {
+  return {
+    gridX: snapToVoxel(x),
+    gridZ: snapToVoxel(z),
+  };
 }
 
 function seededRandom(x, z = 0) {
@@ -62,13 +86,14 @@ function getLakeNoise(x, z) {
 }
 
 export function getBiomeValue(x, z) {
-  const tileX = getTileCoord(x);
-  const tileZ = getTileCoord(z);
+  const { gridX: tileX, gridZ: tileZ } = worldToGrid(x, z);
+  const tileIndexX = getVoxelIndex(tileX);
+  const tileIndexZ = getVoxelIndex(tileZ);
   const biomeNoise =
-    Math.sin(tileX * 0.045 + 12.3) * 0.35 +
-    Math.cos(tileZ * 0.052 - 3.1) * 0.35 +
-    Math.sin((tileX + tileZ) * 0.029) * 0.2 +
-    seededRandom(Math.floor(tileX / 8), Math.floor(tileZ / 8)) * 0.1;
+    Math.sin(tileIndexX * 0.045 + 12.3) * 0.35 +
+    Math.cos(tileIndexZ * 0.052 - 3.1) * 0.35 +
+    Math.sin((tileIndexX + tileIndexZ) * 0.029) * 0.2 +
+    seededRandom(Math.floor(tileIndexX / 8), Math.floor(tileIndexZ / 8)) * 0.1;
 
   return Math.max(0, Math.min(1, biomeNoise * 0.5 + 0.5));
 }
@@ -88,8 +113,7 @@ export function getBiomeForTile(x, z) {
 }
 
 export function isWaterTile(x, z) {
-  const tileX = getTileCoord(x);
-  const tileZ = getTileCoord(z);
+  const { gridX: tileX, gridZ: tileZ } = worldToGrid(x, z);
 
   if (ORIGIN_WATER_KEYS.has(toTileKey(tileX, tileZ))) {
     return true;
@@ -103,8 +127,7 @@ export function isWaterTile(x, z) {
 }
 
 export function isTreeTile(x, z) {
-  const tileX = getTileCoord(x);
-  const tileZ = getTileCoord(z);
+  const { gridX: tileX, gridZ: tileZ } = worldToGrid(x, z);
   const biome = getBiomeForTile(tileX, tileZ);
 
   if (
@@ -122,8 +145,7 @@ export function isTreeTile(x, z) {
 }
 
 export function isCactusTile(x, z) {
-  const tileX = getTileCoord(x);
-  const tileZ = getTileCoord(z);
+  const { gridX: tileX, gridZ: tileZ } = worldToGrid(x, z);
 
   if (
     isNearInitialSpawn(tileX, tileZ) ||
@@ -137,20 +159,21 @@ export function isCactusTile(x, z) {
 }
 
 export function getTerrainSurfaceY(x, z) {
-  const tileX = getTileCoord(x);
-  const tileZ = getTileCoord(z);
+  const { gridX: tileX, gridZ: tileZ } = worldToGrid(x, z);
+  const tileIndexX = getVoxelIndex(tileX);
+  const tileIndexZ = getVoxelIndex(tileZ);
 
   if (isWaterTile(tileX, tileZ)) {
     return WATER_SURFACE_Y;
   }
 
   const rollingHill =
-    Math.sin(tileX * 0.45) * 0.45 +
-    Math.cos(tileZ * 0.35) * 0.35 +
-    Math.sin((tileX + tileZ) * 0.22) * 0.25 +
-    Math.cos((tileX - tileZ) * 0.13) * 0.18;
+    Math.sin(tileIndexX * 0.45) * 0.45 +
+    Math.cos(tileIndexZ * 0.35) * 0.35 +
+    Math.sin((tileIndexX + tileIndexZ) * 0.22) * 0.25 +
+    Math.cos((tileIndexX - tileIndexZ) * 0.13) * 0.18;
 
-  return Math.round(rollingHill * 2) / 2;
+  return Math.round(rollingHill) * VOXEL_SIZE;
 }
 
 export function getTerrainBlockCenterY(x, z) {
@@ -160,14 +183,23 @@ export function getTerrainBlockCenterY(x, z) {
   return surfaceY - height / 2;
 }
 
-export function getEntityY(x, z, entityHeight) {
-  return getTerrainSurfaceY(x, z) + entityHeight / 2;
+export function getEntityY(x, z, entityHeight, previousY = undefined) {
+  const surfaceY = getTerrainSurfaceY(x, z);
+
+  if (!Number.isFinite(surfaceY)) {
+    return Number.isFinite(previousY) ? previousY : entityHeight / 2;
+  }
+
+  return surfaceY + entityHeight / 2 + ENTITY_FOOT_CLEARANCE;
 }
 
+const PLAYER_START_X = getTileCoord(-7);
+const PLAYER_START_Z = getTileCoord(-7);
+
 export const PLAYER_START = [
-  -7,
-  getEntityY(-7, -7, PLAYER_HEIGHT),
-  -7,
+  PLAYER_START_X,
+  getEntityY(PLAYER_START_X, PLAYER_START_Z, PLAYER_HEIGHT),
+  PLAYER_START_Z,
 ];
 
 export function isInsideWorld() {
@@ -175,17 +207,21 @@ export function isInsideWorld() {
 }
 
 export function isWaterCollision(x, z, radius = PLAYER_RADIUS) {
-  const minX = Math.floor(x - radius - 0.5);
-  const maxX = Math.ceil(x + radius + 0.5);
-  const minZ = Math.floor(z - radius - 0.5);
-  const maxZ = Math.ceil(z + radius + 0.5);
+  const minX = snapToVoxel(x - radius - VOXEL_SIZE);
+  const maxX = snapToVoxel(x + radius + VOXEL_SIZE);
+  const minZ = snapToVoxel(z - radius - VOXEL_SIZE);
+  const maxZ = snapToVoxel(z + radius + VOXEL_SIZE);
 
-  for (let tileX = minX; tileX <= maxX; tileX += 1) {
-    for (let tileZ = minZ; tileZ <= maxZ; tileZ += 1) {
+  for (let tileX = minX; tileX <= maxX + GRID_EPSILON; tileX += VOXEL_SIZE) {
+    const snappedX = snapToVoxel(tileX);
+
+    for (let tileZ = minZ; tileZ <= maxZ + GRID_EPSILON; tileZ += VOXEL_SIZE) {
+      const snappedZ = snapToVoxel(tileZ);
+
       if (
-        isWaterTile(tileX, tileZ) &&
-        Math.abs(x - tileX) < 0.5 + radius &&
-        Math.abs(z - tileZ) < 0.5 + radius
+        isWaterTile(snappedX, snappedZ) &&
+        Math.abs(x - snappedX) < VOXEL_SIZE / 2 + radius &&
+        Math.abs(z - snappedZ) < VOXEL_SIZE / 2 + radius
       ) {
         return true;
       }
@@ -196,17 +232,21 @@ export function isWaterCollision(x, z, radius = PLAYER_RADIUS) {
 }
 
 export function isTreeCollision(x, z, radius = PLAYER_RADIUS) {
-  const minX = Math.floor(x - TREE_RADIUS - radius);
-  const maxX = Math.ceil(x + TREE_RADIUS + radius);
-  const minZ = Math.floor(z - TREE_RADIUS - radius);
-  const maxZ = Math.ceil(z + TREE_RADIUS + radius);
+  const minX = snapToVoxel(x - TREE_RADIUS - radius);
+  const maxX = snapToVoxel(x + TREE_RADIUS + radius);
+  const minZ = snapToVoxel(z - TREE_RADIUS - radius);
+  const maxZ = snapToVoxel(z + TREE_RADIUS + radius);
 
-  for (let tileX = minX; tileX <= maxX; tileX += 1) {
-    for (let tileZ = minZ; tileZ <= maxZ; tileZ += 1) {
+  for (let tileX = minX; tileX <= maxX + GRID_EPSILON; tileX += VOXEL_SIZE) {
+    const snappedX = snapToVoxel(tileX);
+
+    for (let tileZ = minZ; tileZ <= maxZ + GRID_EPSILON; tileZ += VOXEL_SIZE) {
+      const snappedZ = snapToVoxel(tileZ);
+
       if (
-        isTreeTile(tileX, tileZ) &&
-        Math.abs(x - tileX) < TREE_RADIUS + radius &&
-        Math.abs(z - tileZ) < TREE_RADIUS + radius
+        isTreeTile(snappedX, snappedZ) &&
+        Math.abs(x - snappedX) < TREE_RADIUS + radius &&
+        Math.abs(z - snappedZ) < TREE_RADIUS + radius
       ) {
         return true;
       }
@@ -217,17 +257,21 @@ export function isTreeCollision(x, z, radius = PLAYER_RADIUS) {
 }
 
 export function isCactusCollision(x, z, radius = PLAYER_RADIUS) {
-  const minX = Math.floor(x - CACTUS_RADIUS - radius);
-  const maxX = Math.ceil(x + CACTUS_RADIUS + radius);
-  const minZ = Math.floor(z - CACTUS_RADIUS - radius);
-  const maxZ = Math.ceil(z + CACTUS_RADIUS + radius);
+  const minX = snapToVoxel(x - CACTUS_RADIUS - radius);
+  const maxX = snapToVoxel(x + CACTUS_RADIUS + radius);
+  const minZ = snapToVoxel(z - CACTUS_RADIUS - radius);
+  const maxZ = snapToVoxel(z + CACTUS_RADIUS + radius);
 
-  for (let tileX = minX; tileX <= maxX; tileX += 1) {
-    for (let tileZ = minZ; tileZ <= maxZ; tileZ += 1) {
+  for (let tileX = minX; tileX <= maxX + GRID_EPSILON; tileX += VOXEL_SIZE) {
+    const snappedX = snapToVoxel(tileX);
+
+    for (let tileZ = minZ; tileZ <= maxZ + GRID_EPSILON; tileZ += VOXEL_SIZE) {
+      const snappedZ = snapToVoxel(tileZ);
+
       if (
-        isCactusTile(tileX, tileZ) &&
-        Math.abs(x - tileX) < CACTUS_RADIUS + radius &&
-        Math.abs(z - tileZ) < CACTUS_RADIUS + radius
+        isCactusTile(snappedX, snappedZ) &&
+        Math.abs(x - snappedX) < CACTUS_RADIUS + radius &&
+        Math.abs(z - snappedZ) < CACTUS_RADIUS + radius
       ) {
         return true;
       }
@@ -255,20 +299,70 @@ export function createTerrainTiles(
   radius = TERRAIN_RADIUS
 ) {
   const tiles = [];
+  const startX = snapToVoxel(centerX - radius);
+  const endX = snapToVoxel(centerX + radius);
+  const startZ = snapToVoxel(centerZ - radius);
+  const endZ = snapToVoxel(centerZ + radius);
 
-  for (let x = centerX - radius; x <= centerX + radius; x += 1) {
-    for (let z = centerZ - radius; z <= centerZ + radius; z += 1) {
-      const type = isWaterTile(x, z) ? 'water' : 'grass';
+  for (
+    let x = startX;
+    x <= endX + GRID_EPSILON;
+    x += VOXEL_SIZE
+  ) {
+    const tileX = snapToVoxel(x);
 
-      tiles.push({
-        key: toTileKey(x, z),
-        x,
-        z,
-        biome: getBiomeForTile(x, z),
-        type,
-        surfaceY: getTerrainSurfaceY(x, z),
-        centerY: getTerrainBlockCenterY(x, z),
-      });
+    for (
+      let z = startZ;
+      z <= endZ + GRID_EPSILON;
+      z += VOXEL_SIZE
+    ) {
+      const tileZ = snapToVoxel(z);
+      const biome = getBiomeForTile(tileX, tileZ);
+      const surfaceY = getTerrainSurfaceY(tileX, tileZ);
+      const isWater = isWaterTile(tileX, tileZ);
+
+      if (isWater || surfaceY < WATER_LEVEL) {
+        for (
+          let topY = WATER_LEVEL;
+          topY >= surfaceY - GRID_EPSILON;
+          topY -= VOXEL_SIZE
+        ) {
+          const snappedTopY = snapToVoxel(topY);
+
+          tiles.push({
+            key: `${toTileKey(tileX, tileZ)}:water:${snappedTopY}`,
+            x: tileX,
+            z: tileZ,
+            biome,
+            height: WATER_BLOCK_HEIGHT,
+            type: 'water',
+            surfaceY: WATER_LEVEL,
+            centerY: snappedTopY - WATER_BLOCK_HEIGHT / 2,
+          });
+        }
+
+        continue;
+      }
+
+      for (
+        let topY = surfaceY;
+        topY >= WATER_LEVEL - GRID_EPSILON;
+        topY -= VOXEL_SIZE
+      ) {
+        const snappedTopY = snapToVoxel(topY);
+        const type = snappedTopY === surfaceY ? 'surface' : 'dirt';
+
+        tiles.push({
+          key: `${toTileKey(tileX, tileZ)}:${type}:${snappedTopY}`,
+          x: tileX,
+          z: tileZ,
+          biome,
+          height: BLOCK_HEIGHT,
+          type,
+          surfaceY,
+          centerY: snappedTopY - BLOCK_HEIGHT / 2,
+        });
+      }
     }
   }
 
@@ -281,15 +375,31 @@ export function createTrees(
   radius = TERRAIN_RADIUS
 ) {
   const trees = [];
+  const startX = snapToVoxel(centerX - radius);
+  const endX = snapToVoxel(centerX + radius);
+  const startZ = snapToVoxel(centerZ - radius);
+  const endZ = snapToVoxel(centerZ + radius);
 
-  for (let x = centerX - radius; x <= centerX + radius; x += 1) {
-    for (let z = centerZ - radius; z <= centerZ + radius; z += 1) {
-      if (isTreeTile(x, z)) {
+  for (
+    let x = startX;
+    x <= endX + GRID_EPSILON;
+    x += VOXEL_SIZE
+  ) {
+    const tileX = snapToVoxel(x);
+
+    for (
+      let z = startZ;
+      z <= endZ + GRID_EPSILON;
+      z += VOXEL_SIZE
+    ) {
+      const tileZ = snapToVoxel(z);
+
+      if (isTreeTile(tileX, tileZ)) {
         trees.push({
-          key: toTileKey(x, z),
-          x,
-          z,
-          surfaceY: getTerrainSurfaceY(x, z),
+          key: toTileKey(tileX, tileZ),
+          x: tileX,
+          z: tileZ,
+          surfaceY: getTerrainSurfaceY(tileX, tileZ),
         });
       }
     }
@@ -304,15 +414,31 @@ export function createCacti(
   radius = TERRAIN_RADIUS
 ) {
   const cacti = [];
+  const startX = snapToVoxel(centerX - radius);
+  const endX = snapToVoxel(centerX + radius);
+  const startZ = snapToVoxel(centerZ - radius);
+  const endZ = snapToVoxel(centerZ + radius);
 
-  for (let x = centerX - radius; x <= centerX + radius; x += 1) {
-    for (let z = centerZ - radius; z <= centerZ + radius; z += 1) {
-      if (isCactusTile(x, z)) {
+  for (
+    let x = startX;
+    x <= endX + GRID_EPSILON;
+    x += VOXEL_SIZE
+  ) {
+    const tileX = snapToVoxel(x);
+
+    for (
+      let z = startZ;
+      z <= endZ + GRID_EPSILON;
+      z += VOXEL_SIZE
+    ) {
+      const tileZ = snapToVoxel(z);
+
+      if (isCactusTile(tileX, tileZ)) {
         cacti.push({
-          key: toTileKey(x, z),
-          x,
-          z,
-          surfaceY: getTerrainSurfaceY(x, z),
+          key: toTileKey(tileX, tileZ),
+          x: tileX,
+          z: tileZ,
+          surfaceY: getTerrainSurfaceY(tileX, tileZ),
         });
       }
     }
@@ -337,8 +463,8 @@ export function getRandomGrassPosition(
     }
   }
 
-  const fallbackX = WORLD_HALF - 2;
-  const fallbackZ = WORLD_HALF - 2;
+  const fallbackX = getTileCoord(WORLD_HALF - 2);
+  const fallbackZ = getTileCoord(WORLD_HALF - 2);
 
   return [fallbackX, getEntityY(fallbackX, fallbackZ, entityHeight), fallbackZ];
 }

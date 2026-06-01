@@ -1,4 +1,5 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { useThree } from '@react-three/fiber';
 import { Sky } from '@react-three/drei';
 import { Vector3 } from 'three';
 import AimIndicator from './AimIndicator';
@@ -19,11 +20,11 @@ import {
 } from '../game/world';
 import { DEFAULT_BALL } from '../game/balls';
 import {
-  THROW_FORWARD_OFFSET,
-  THROW_HEIGHT_OFFSET,
+  getParallaxThrowVector,
 } from '../game/projectilePhysics';
 
 const throwForward = new Vector3();
+const throwOrigin = new Vector3();
 
 function createWildCreatures() {
   const count = 3 + Math.floor(Math.random() * 3);
@@ -47,6 +48,7 @@ export default function GameScene({
   onCreatureCaught = () => {},
   throwPower,
 }) {
+  const { camera } = useThree();
   const playerRef = useRef();
   const companionRef = useRef();
   const wildRefs = useRef(new Map());
@@ -193,14 +195,12 @@ export default function GameScene({
 
       event.preventDefault();
 
-      player.getWorldDirection(throwForward);
-      throwForward.y = 0;
-      throwForward.normalize();
+      getParallaxThrowVector(camera, player, throwOrigin, throwForward);
 
       const position = [
-        player.position.x + throwForward.x * THROW_FORWARD_OFFSET,
-        player.position.y + THROW_HEIGHT_OFFSET,
-        player.position.z + throwForward.z * THROW_FORWARD_OFFSET,
+        throwOrigin.x,
+        throwOrigin.y,
+        throwOrigin.z,
       ];
 
       projectileId.current += 1;
@@ -222,7 +222,7 @@ export default function GameScene({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [addCompanionEffect, equippedBall, isCompanionOut, throwPower]);
+  }, [addCompanionEffect, camera, equippedBall, isCompanionOut, throwPower]);
 
   return (
     <>

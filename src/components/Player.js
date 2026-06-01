@@ -22,21 +22,31 @@ import {
 } from '../game/world';
 
 const MOVE_SPEED = 4.5;
-const TURN_SPEED = 2.8;
+const ROTATION_SMOOTHING = 14;
 const MODEL_ROTATION = [-Math.PI / 2, 0, 0];
 const MODEL_SCALE = 0.32;
 const MODEL_URL = '/player.glb';
 const movement = new Vector3();
+const cameraForward = new Vector3();
+const cameraRight = new Vector3();
+
+function lerpAngle(from, to, alpha) {
+  const angleDelta =
+    MathUtils.euclideanModulo(to - from + Math.PI, Math.PI * 2) - Math.PI;
+
+  return MathUtils.lerp(from, from + angleDelta, alpha);
+}
 
 const Player = forwardRef(function Player(_, ref) {
   const playerRef = useRef();
   const movingRef = useRef(false);
+  const previousY = useRef(PLAYER_START[1]);
   const [isMoving, setIsMoving] = useState(false);
   const keys = useKeyboardControls();
 
   useImperativeHandle(ref, () => playerRef.current, []);
 
-  useFrame((_, delta) => {
+  useFrame(({ camera }, delta) => {
     if (!playerRef.current) {
       return;
     }
@@ -44,24 +54,30 @@ const Player = forwardRef(function Player(_, ref) {
     const targetY = getEntityY(
       playerRef.current.position.x,
       playerRef.current.position.z,
-      PLAYER_HEIGHT
+      PLAYER_HEIGHT,
+      previousY.current
     );
-    playerRef.current.position.y = MathUtils.lerp(
-      playerRef.current.position.y,
-      targetY,
-      0.15
-    );
+    playerRef.current.position.y = targetY;
+    previousY.current = targetY;
 
     const player = playerRef.current;
     const pressed = keys.current;
-    const turnInput = Number(pressed.right) - Number(pressed.left);
-    const driveInput = Number(pressed.forward) - Number(pressed.backward);
+    const forwardInput = Number(pressed.forward) - Number(pressed.backward);
+    const strafeInput = Number(pressed.right) - Number(pressed.left);
 
-    if (turnInput !== 0) {
-      player.rotation.y += turnInput * TURN_SPEED * delta;
+    camera.getWorldDirection(cameraForward);
+    cameraForward.y = 0;
+
+    if (cameraForward.lengthSq() < 0.0001) {
+      cameraForward.set(Math.sin(player.rotation.y), 0, Math.cos(player.rotation.y));
     }
 
-    if (driveInput === 0) {
+    cameraForward.normalize();
+    const cameraYaw = Math.atan2(cameraForward.x, cameraForward.z);
+    const rotationAlpha = 1 - Math.exp(-ROTATION_SMOOTHING * delta);
+    player.rotation.y = lerpAngle(player.rotation.y, cameraYaw, rotationAlpha);
+
+    if (forwardInput === 0 && strafeInput === 0) {
       if (movingRef.current) {
         movingRef.current = false;
         setIsMoving(false);
@@ -74,12 +90,25 @@ const Player = forwardRef(function Player(_, ref) {
       setIsMoving(true);
     }
 
-    const step = MOVE_SPEED * driveInput * delta;
-    movement.set(
-      Math.sin(player.rotation.y) * step,
-      0,
-      Math.cos(player.rotation.y) * step
-    );
+    cameraRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
+    cameraRight.y = 0;
+
+    if (cameraRight.lengthSq() < 0.0001) {
+      cameraRight.set(cameraForward.z, 0, -cameraForward.x);
+    }
+
+    cameraRight.normalize();
+
+    movement
+      .copy(cameraForward)
+      .multiplyScalar(forwardInput)
+      .addScaledVector(cameraRight, strafeInput);
+
+    if (movement.lengthSq() > 1) {
+      movement.normalize();
+    }
+
+    movement.multiplyScalar(MOVE_SPEED * delta);
 
     const nextX = clampToWorld(
       player.position.x + movement.x,
@@ -98,13 +127,11 @@ const Player = forwardRef(function Player(_, ref) {
     const nextTargetY = getEntityY(
       player.position.x,
       player.position.z,
-      PLAYER_HEIGHT
+      PLAYER_HEIGHT,
+      previousY.current
     );
-    player.position.y = MathUtils.lerp(
-      player.position.y,
-      nextTargetY,
-      0.15
-    );
+    player.position.y = nextTargetY;
+    previousY.current = nextTargetY;
   });
 
   return (

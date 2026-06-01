@@ -27,6 +27,43 @@
   font-size: 15px;
 }
 
+.crosshair {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 50;
+  width: 28px;
+  height: 28px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.crosshair-line,
+.crosshair-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 5px rgba(20, 35, 48, 0.55);
+  transform: translate(-50%, -50%);
+}
+
+.crosshair-line-horizontal {
+  width: 18px;
+  height: 2px;
+}
+
+.crosshair-line-vertical {
+  width: 2px;
+  height: 18px;
+}
+
+.crosshair-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+}
+
 .hotbar-wrap {
   position: absolute;
   left: 50%;
