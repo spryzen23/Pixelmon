@@ -8,6 +8,8 @@ import CompanionRecallEffect from './CompanionRecallEffect';
 import OceanHorizon from './OceanHorizon';
 import Player from './Player';
 import Projectile from './Projectile';
+import Sandstorm from './Sandstorm';
+import Snowstorm from './Snowstorm';
 import ThirdPersonCamera from './ThirdPersonCamera';
 import VoxelWorld from './VoxelWorld';
 import WildCreature from './WildCreature';
@@ -417,6 +419,10 @@ export default function GameScene({
         playerRef={playerRef}
         throwPower={throwPower}
       />
+      {currentBiome === 1 && <Sandstorm playerRef={playerRef} />}
+      {(currentBiome === 2 || currentBiome === 5) && (
+        <Snowstorm playerRef={playerRef} />
+      )}
       {isCompanionOut && (
         <CompanionCreature
           key={`companion-${currentBiome}`}
