@@ -48,6 +48,48 @@ export const WORLD_PATHS = [
   { id: 5, name: 'Coronet Approach', biome: BIOMES.SNOW, seed: 160.3 },
 ];
 
+export const CREATURE_ASSET_MANIFEST = {
+  0: {
+    ordinary: [
+      { file: 'ordinary/creature_01.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+      { file: 'ordinary/creature_02.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+    ],
+    alpha: { file: 'alpha.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+  },
+  1: {
+    ordinary: [
+      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+      { file: 'ordinary/creature_02.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    ],
+    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+  },
+  2: {
+    ordinary: [
+      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    ],
+    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+  },
+  3: {
+    ordinary: [
+      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    ],
+    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+  },
+  4: {
+    ordinary: [
+      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    ],
+    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+  },
+  5: {
+    ordinary: [
+      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+      { file: 'ordinary/creature_02.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    ],
+    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+  },
+};
+
 const GRID_EPSILON = 0.000001;
 const BLOCK_TYPES = ['desert', 'dirt', 'grass', 'snow', 'stone', 'water'];
 const SPAWN_PAD_RADIUS = 9;
@@ -112,11 +154,54 @@ function getBiomeDefinition(currentBiome = activeBiome) {
   return WORLD_PATHS.find((path) => path.id === currentBiome) || WORLD_PATHS[0];
 }
 
-export function getCreatureModelUrl(currentBiome = activeBiome, isAlpha = false) {
-  const biome = getBiomeDefinition(currentBiome);
-  const fileName = isAlpha ? 'alpha.glb' : 'ordinary.glb';
+function getCreatureAssetManifest(currentBiome = activeBiome) {
+  return CREATURE_ASSET_MANIFEST[currentBiome] || CREATURE_ASSET_MANIFEST[0];
+}
 
-  return encodeURI(`/assets/${biome.name}/${fileName}`);
+function getCreatureAssetUrl(currentBiome, file) {
+  const biome = getBiomeDefinition(currentBiome);
+
+  return encodeURI(`/assets/${biome.name}/${file}`);
+}
+
+export function getOrdinaryCreatureAsset(
+  currentBiome = activeBiome,
+  spawnIndex = 0
+) {
+  const manifest = getCreatureAssetManifest(currentBiome);
+  const ordinary = manifest.ordinary.length > 0
+    ? manifest.ordinary
+    : [{ file: 'ordinary.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] }];
+  const asset = ordinary[spawnIndex % ordinary.length];
+
+  return {
+    ...asset,
+    url: getCreatureAssetUrl(currentBiome, asset.file),
+  };
+}
+
+export function getAlphaCreatureAsset(currentBiome = activeBiome) {
+  const manifest = getCreatureAssetManifest(currentBiome);
+  const asset = manifest.alpha || {
+    file: 'alpha.glb',
+    scale: 0.95,
+    rotation: [0, Math.PI / 2, 0],
+  };
+
+  return {
+    ...asset,
+    url: getCreatureAssetUrl(currentBiome, asset.file),
+  };
+}
+
+export function getCreatureModelUrl(
+  currentBiome = activeBiome,
+  isAlpha = false,
+  spawnIndex = 0
+) {
+  return isAlpha
+    ? getAlphaCreatureAsset(currentBiome).url
+    : getOrdinaryCreatureAsset(currentBiome, spawnIndex).url;
 }
 
 function createEmptyCounts() {

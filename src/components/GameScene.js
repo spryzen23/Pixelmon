@@ -16,8 +16,9 @@ import WildCreature from './WildCreature';
 import {
   WILD_CREATURE_HEIGHT,
   COMPANION_HEIGHT,
-  getCreatureModelUrl,
+  getAlphaCreatureAsset,
   getEntityY,
+  getOrdinaryCreatureAsset,
   getPathSpawnPoint,
   getRandomGrassPosition,
   isWalkablePosition,
@@ -53,22 +54,27 @@ function createWildCreatures(pathId = 0) {
   const count = 3 + Math.floor(Math.random() * 3);
   const spawn = getPathSpawnPoint(pathId, WILD_CREATURE_HEIGHT);
 
-  return Array.from({ length: count }, (_, index) => ({
-    id: `wild-${index}`,
-    isAlpha: false,
-    modelScale: CREATURE_MODEL_SCALES[pathId] ?? 0.35,
-    modelUrl: getCreatureModelUrl(pathId, false),
-    // Absolute world positions, biased into the active path's spawn area.
-    position: getRandomGrassPosition(
-      0.45,
-      WILD_CREATURE_HEIGHT,
-      spawn[0],
-      spawn[2] + 6,
-      7,
-      pathId
-    ),
-    status: 'active',
-  }));
+  return Array.from({ length: count }, (_, index) => {
+    const asset = getOrdinaryCreatureAsset(pathId, index);
+
+    return {
+      id: `wild-${index}`,
+      isAlpha: false,
+      modelRotation: asset.rotation || MODEL_ROTATIONS.wildCreature,
+      modelScale: asset.scale ?? CREATURE_MODEL_SCALES[pathId] ?? 0.35,
+      modelUrl: asset.url,
+      // Absolute world positions, biased into the active path's spawn area.
+      position: getRandomGrassPosition(
+        0.45,
+        WILD_CREATURE_HEIGHT,
+        spawn[0],
+        spawn[2] + 6,
+        7,
+        pathId
+      ),
+      status: 'active',
+    };
+  });
 }
 
 function getAlphaSpawnPosition(player, camera, currentBiome) {
@@ -200,12 +206,14 @@ export default function GameScene({
 
     const player = playerRef.current;
     const position = getAlphaSpawnPosition(player, camera, currentBiome);
+    const asset = getAlphaCreatureAsset(currentBiome);
 
     setAlphaCreature({
       id: `alpha-${currentBiome}`,
       isAlpha: true,
-      modelScale: CREATURE_MODEL_SCALES[currentBiome] ?? 0.35,
-      modelUrl: getCreatureModelUrl(currentBiome, true),
+      modelRotation: asset.rotation || MODEL_ROTATIONS.wildCreature,
+      modelScale: asset.scale ?? CREATURE_MODEL_SCALES[currentBiome] ?? 0.35,
+      modelUrl: asset.url,
       position,
       status: 'active',
     });
@@ -462,7 +470,7 @@ export default function GameScene({
             isAlpha={wild.isAlpha}
             modelScale={wild.modelScale}
             modelUrl={wild.modelUrl}
-            modelRotation={MODEL_ROTATIONS.wildCreature}
+            modelRotation={wild.modelRotation || MODEL_ROTATIONS.wildCreature}
             playerRef={playerRef}
             registerRef={registerWildRef}
             status={wild.status}
@@ -480,7 +488,7 @@ export default function GameScene({
             isAlpha
             modelScale={alphaCreature.modelScale}
             modelUrl={alphaCreature.modelUrl}
-            modelRotation={MODEL_ROTATIONS.wildCreature}
+            modelRotation={alphaCreature.modelRotation || MODEL_ROTATIONS.wildCreature}
             playerRef={playerRef}
             registerRef={registerWildRef}
             status={alphaCreature.status}

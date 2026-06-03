@@ -1,70 +1,225 @@
-# Getting Started with Create React App
+# Voxel Legends Prototype
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Voxel Legends is a React + Three.js prototype for a creature-catching voxel adventure. It blends a blocky, biome-based world with third-person movement, companion recall, projectile catching, weather effects, and region-specific creature assets.
 
-## Available Scripts
+## Tech Stack
 
-In the project directory, you can run:
+- React
+- Three.js
+- @react-three/fiber
+- @react-three/drei
+- InstancedMesh voxel terrain rendering
+- GLB character and creature models loaded from `public/assets`
 
-### `npm start`
+## Running The Project
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Install dependencies:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm install
+```
 
-### `npm test`
+Start the local dev server:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm start
+```
 
-### `npm run build`
+Run tests:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm test -- --watchAll=false
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Create a production build:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm run build
+```
 
-### `npm run eject`
+## Gameplay Controls
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Click the game window to lock the mouse.
+- Move with `WASD` or arrow keys.
+- Throw the equipped ball with `Spacebar`.
+- Recall or send out the companion with `E`.
+- Adjust throw power with `Q`, `R`, or the mouse wheel.
+- Switch ball type with `1`, `2`, and `3`.
+- Switch biomes with the biome menu on the right side of the screen.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Current Game Architecture
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The game currently uses a segmented biome system instead of an infinite world.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- There are 6 finite biomes.
+- Only one biome is active at a time.
+- Each biome renders a cached 3x3 chunk map.
+- Terrain blocks are rendered with instanced meshes for performance.
+- The player is clamped inside the active biome bounds.
+- Creature spawns are reset when switching biomes.
+- Catching all ordinary creatures in a biome spawns that biome's alpha creature.
 
-## Learn More
+## Biomes
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The active biomes are defined in `src/game/world.js`:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```txt
+0 Fieldlands Trail
+1 Sandglass Flats
+2 Frostpine Pass
+3 Coastal Run
+4 Crimson Mire
+5 Coronet Approach
+```
 
-### Code Splitting
+## Asset Folder Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Global player, companion, terrain, and fallback assets live directly under `public/assets`:
 
-### Analyzing the Bundle Size
+```txt
+public/assets/
+  player.glb
+  companion.glb
+  wild_creature.glb
+  grass.png
+  dirt.png
+  grass_dirt.png
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Each biome has its own folder for ordinary creatures and alpha creatures:
 
-### Making a Progressive Web App
+```txt
+public/assets/
+  Fieldlands Trail/
+    alpha.glb
+    ordinary/
+      creature_01.glb
+      creature_02.glb
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+  Sandglass Flats/
+    alpha.glb
+    ordinary/
+      creature_01.glb
+      creature_02.glb
 
-### Advanced Configuration
+  Frostpine Pass/
+    alpha.glb
+    ordinary/
+      creature_01.glb
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+  Coastal Run/
+    alpha.glb
+    ordinary/
+      creature_01.glb
 
-### Deployment
+  Crimson Mire/
+    alpha.glb
+    ordinary/
+      creature_01.glb
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+  Coronet Approach/
+    alpha.glb
+    ordinary/
+      creature_01.glb
+```
 
-### `npm run build` fails to minify
+Folder names must match the biome names in `WORLD_PATHS`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Adding More Ordinary Creatures
+
+Put additional ordinary GLB files inside the biome's `ordinary` folder:
+
+```txt
+public/assets/Fieldlands Trail/ordinary/creature_03.glb
+public/assets/Fieldlands Trail/ordinary/creature_04.glb
+```
+
+Then register them in `CREATURE_ASSET_MANIFEST` inside `src/game/world.js`:
+
+```js
+0: {
+  ordinary: [
+    { file: 'ordinary/creature_01.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+    { file: 'ordinary/creature_02.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+    { file: 'ordinary/creature_03.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+  ],
+  alpha: { file: 'alpha.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+}
+```
+
+The ordinary spawner cycles through this list, so a biome can have multiple creature types active at once.
+
+## Adding More Alpha Models
+
+The current gameplay uses one active alpha encounter per biome. The default structure is:
+
+```txt
+public/assets/<Biome Name>/alpha.glb
+```
+
+For multiple alpha variants, use an `alpha` folder:
+
+```txt
+public/assets/Fieldlands Trail/alpha/
+  alpha_01.glb
+  alpha_02.glb
+  alpha_03.glb
+```
+
+Then update `CREATURE_ASSET_MANIFEST` to point at the alpha model you want to spawn:
+
+```js
+0: {
+  ordinary: [
+    { file: 'ordinary/creature_01.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+  ],
+  alpha: { file: 'alpha/alpha_01.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+}
+```
+
+To rotate alpha variants randomly, change the `alpha` field into a list and update `getAlphaCreatureAsset()` in `src/game/world.js` to select from that list.
+
+## Model Scale And Rotation
+
+Different GLB files often use different export axes and real-world sizes. Each manifest entry supports:
+
+- `file`: relative file path inside the biome folder.
+- `scale`: visual model scale.
+- `rotation`: corrective `[x, y, z]` rotation in radians.
+
+Examples:
+
+```js
+{ file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] }
+{ file: 'ordinary/creature_02.glb', scale: 0.3, rotation: [-Math.PI / 2, 0, 0] }
+```
+
+This lets normal creatures share a consistent gameplay size while still correcting each model independently.
+
+## Weather And Atmosphere
+
+- Sandglass Flats has intermittent sandstorms with blowing particles and fog.
+- Frostpine Pass and Coronet Approach have snowy storms.
+- The world uses a cloudy voxel sky and extended ocean horizon to hide map edges and make each biome feel larger.
+
+## Important Source Files
+
+```txt
+src/App.jsx                         Root Canvas and UI shell
+src/components/GameScene.js         Main gameplay scene and creature state
+src/components/Player.js            Player movement and camera-relative walking
+src/components/WildCreature.js      Creature AI, GLB rendering, alpha scaling
+src/components/VoxelWorld.js        Instanced terrain renderer
+src/components/OceanHorizon.js      Extended ocean and horizon blending
+src/components/Sandstorm.js         Desert weather
+src/components/Snowstorm.js         Snow biome weather
+src/game/world.js                   Biome data, terrain math, asset manifest
+src/game/projectilePhysics.js       Throw origin and trajectory math
+```
+
+## Notes
+
+- Files in `public/assets` are served from `/assets/...`.
+- Spaces in biome folder names are allowed because asset URLs are encoded in `world.js`.
+- If a model appears sideways or too large, adjust only its manifest `rotation` or `scale`.
+- If a biome has new creature files but they do not appear, confirm they were added to `CREATURE_ASSET_MANIFEST`.
