@@ -1,0 +1,358 @@
+
+[96m========================================
+[96m  PIXELMON CODEBASE STATE CHECK
+[96m========================================
+
+[94mCurrent directory: e:\maha\Pixelmon-master
+
+----------------------------------------
+[93m  Running: npm test -- --watchAll=false --coverage --passWithNoTests (CI=true for this step only)
+
+> pixelmon@0.1.0 test
+> react-scripts test --watchAll=false --coverage --passWithNoTests
+
+PASS src/game/animationUtils.test.js
+PASS src/App.test.js
+---------------------------|---------|----------|---------|---------|----------------------------------
+File                       | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                
+---------------------------|---------|----------|---------|---------|----------------------------------
+All files                  |    4.44 |     2.75 |    5.97 |    4.42 |                                  
+ src                       |   36.17 |     6.66 |   33.33 |   36.36 |                                  
+  App.jsx                  |   47.22 |     9.09 |   38.46 |   48.48 | 24,29-32,37-48,53-54,73-76       
+  index.js                 |       0 |      100 |     100 |       0 | 7-17                             
+  reportWebVitals.js       |       0 |        0 |       0 |       0 | 1-8                              
+ src/components            |    0.41 |     0.39 |    1.45 |    0.43 |                                  
+  AimIndicator.js          |       0 |        0 |       0 |       0 | 13-91                            
+  AimReticle.js            |       0 |        0 |       0 |       0 | 6-31                             
+  AnimatedModel.js         |       0 |        0 |       0 |       0 | 16-314                           
+  Cactus.js                |       0 |      100 |       0 |       0 | 4                                
+  CaptureBurst.js          |       0 |        0 |       0 |       0 | 6-60                             
+  CompanionCreature.js     |       0 |        0 |       0 |       0 | 22-200                           
+  CompanionRecallEffect.js |       0 |        0 |       0 |       0 | 5-41                             
+  GameScene.js             |       0 |        0 |       0 |       0 | 28-318                           
+  Hotbar.js                |     100 |      100 |     100 |     100 |                                  
+  ModelErrorBoundary.js    |       0 |        0 |       0 |       0 | 5-24                             
+  Player.js                |       0 |        0 |       0 |       0 | 25-236                           
+  PokeGlbPreloader.js      |       0 |        0 |       0 |       0 | 6-33                             
+  Projectile.js            |       0 |        0 |       0 |       0 | 15-217                           
+  Terrain.js               |       0 |        0 |       0 |       0 | 26-244                           
+  ThirdPersonCamera.js     |       0 |        0 |       0 |       0 | 5-50                             
+  Tree.js                  |       0 |        0 |       0 |       0 | 3-64                             
+  VoxelFallback.js         |       0 |        0 |       0 |       0 | 12                               
+  WildCreature.js          |       0 |        0 |       0 |       0 | 15-244                           
+ src/game                  |   13.07 |     8.67 |   11.62 |   13.09 |                                  
+  animationUtils.js        |   28.33 |    16.66 |   45.45 |   27.11 | 5-96,106,122-138,148,157,178-184 
+  balls.js                 |     100 |      100 |     100 |     100 |                                  
+  pokeModels.js            |       0 |        0 |       0 |       0 | 2-42                             
+  projectilePhysics.js     |   66.66 |      100 |       0 |   66.66 | 24-48                            
+  world.js                 |       0 |        0 |       0 |       0 | 1-469                            
+ src/hooks                 |       0 |        0 |       0 |       0 |                                  
+  useKeyboardControls.js   |       0 |        0 |       0 |       0 | 3-54                             
+---------------------------|---------|----------|---------|---------|----------------------------------
+
+Test Suites: 2 passed, 2 total
+Tests:       8 passed, 8 total
+Snapshots:   0 total
+Time:        12.028 s
+Ran all test suites.
+----------------------------------------
+[93m  Running: npm run build
+
+> pixelmon@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Compiled with warnings.
+
+Failed to parse source map from 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map' file: Error: ENOENT: no such file or directory, open 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map'
+
+[eslint] 
+src\components\AnimatedModel.js
+  Line 62:11:  'liveForward' is assigned a value but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  339.5 kB  build\static\js\main.f1ce7899.js
+  1.76 kB   build\static\js\453.635ba9e8.chunk.js
+  1.04 kB   build\static\css\main.8b3a45d9.css
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+
+[92m  OK Build successful (build\index.html present)
+
+[93m  Validating manifest.json JSON syntax
+[92m  OK manifest.json is valid JSON
+
+
+----------------------------------------
+
+[94m  poke_img PNG files: 0
+
+==> Environment check
+=== Pixelmon pipeline environment check ===
+
+OS: Windows 11
+Python: C:\Users\durga\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe
+Repo: E:\maha\Pixelmon-master
+TRELLIS dir exists: False
+
+OK:
+  [ok] Python package installed: pygltflib
+  [ok] Python package installed: rembg
+  [ok] Python package installed: pillow
+  [ok] Ubuntu WSL distro installed
+  [ok] WSL Ubuntu bash works
+  [ok] NVIDIA GPU in WSL: NVIDIA GeForce GTX 1650, 4096 MiB
+
+Warnings:
+  [warn] Pilot GLBs not generated yet (6 missing). Run pipeline after fixing WSL: powershell -File scripts/run_pipeline.ps1 -PilotOnly
+  [warn] docker-desktop is also installed. Use: wsl -d Ubuntu for TRELLIS.
+  [warn] GPU has ~4 GB VRAM. TRELLIS needs ~16 GB officially; use batch_poke_to_glb.py --low-vram and expect possible OOM.
+
+Errors (fix these first):
+  [error] Missing: E:\maha\Pixelmon-master\public\poke_img
+  [error] conda env 'trellis' exists but TRELLIS is not installed correctly. Run:
+  wsl -d Ubuntu
+  cd /mnt/e/maha/Pixelmon-master
+  bash scripts/wsl_setup.sh --force-recreate
+
+See scripts/TROUBLESHOOTING.md for step-by-step fixes.
+Fix errors above (see scripts\TROUBLESHOOTING.md).
+
+==> Installing Windows Python deps (if needed)
+
+==> Phase 1: Preprocess images (Windows)
+Missing image directory: E:\maha\Pixelmon-master\public\poke_img
+
+[93m  Please fix the errors before proceeding.
+
+[92m  OK manifest.json present
+
+----------------------------------------
+[94m  Skipped: JavaScript Create React App project (no TypeScript / tsc).
+
+----------------------------------------
+[93m  Running: python  scripts\verify_poke_glbs.py
+OK (0): none
+Missing GLB (6): 0001, 0003-Mega, 0006-Mega-X, 0009-Mega, 0036-Mega, 0569-Gmax
+
+These files are created by the TRELLIS pipeline (GPU, WSL Ubuntu).
+If WSL/conda failed, run:
+  python scripts/check_environment.py
+  powershell -ExecutionPolicy Bypass -File scripts/run_pipeline.ps1 -PilotOnly
+See scripts/TROUBLESHOOTING.md
+[93m   Pilot GLBs missing or incomplete (warn-only; run TRELLIS pipeline when ready)
+
+[93m  Running: python  scripts\verify_poke_glbs.py
+OK (0): none
+Missing GLB (6): 0001, 0003-Mega, 0006-Mega-X, 0009-Mega, 0036-Mega, 0569-Gmax
+
+These files are created by the TRELLIS pipeline (GPU, WSL Ubuntu).
+If WSL/conda failed, run:
+  python scripts/check_environment.py
+  powershell -ExecutionPolicy Bypass -File scripts/run_pipeline.ps1 -PilotOnly
+See scripts/TROUBLESHOOTING.md
+[93m   Pilot GLBs missing or incomplete (warn-only; run TRELLIS pipeline when ready)
+
+[93m  Running: python  scripts\verify_poke_glbs.py
+OK (0): none
+Missing GLB (6): 0001, 0003-Mega, 0006-Mega-X, 0009-Mega, 0036-Mega, 0569-Gmax
+
+These files are created by the TRELLIS pipeline (GPU, WSL Ubuntu).
+If WSL/conda failed, run:
+  python scripts/check_environment.py
+  powershell -ExecutionPolicy Bypass -File scripts/run_pipeline.ps1 -PilotOnly
+See scripts/TROUBLESHOOTING.md
+[93m   Pilot GLBs missing or incomplete (warn-only; run TRELLIS pipeline when ready)
+
+
+[93m  Running: npm install
+
+up to date, audited 1369 packages in 8s
+
+270 packages are looking for funding
+  run `npm fund` for details
+
+28 vulnerabilities (9 low, 6 moderate, 13 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+[92m  OK Dependencies installed
+
+[93m[2/10] Environment check skipped (SKIP_ENV_CHECK=1)
+
+----------------------------------------
+[94m  Skipped: JavaScript Create React App project (no TypeScript / tsc).
+
+
+e:\maha\Pixelmon-master\src\components\AnimatedModel.js
+  62:11  warning  'liveForward' is assigned a value but never used  no-unused-vars
+
+✖ 1 problem (0 errors, 1 warning)
+
+[92m  OK No linting errors
+
+----------------------------------------
+[93m  Skipped (no .prettierrc; set RUN_PRETTIER=1 to run anyway)
+
+[96m[5/10] Linting...
+----------------------------------------
+[92m  OK Pilot GLBs verified
+----------------------------------------
+[93m  Running: npm run build
+
+> pixelmon@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Compiled with warnings.
+
+Failed to parse source map from 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map' file: Error: ENOENT: no such file or directory, open 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map'
+
+[eslint] 
+src\components\AnimatedModel.js
+  Line 62:11:  'liveForward' is assigned a value but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  339.5 kB  build\static\js\main.f1ce7899.js
+  1.76 kB   build\static\js\453.635ba9e8.chunk.js
+  1.04 kB   build\static\css\main.8b3a45d9.css
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+
+[92m  OK Build successful (build\index.html present)
+
+
+
+[96m[6/10] Running tests...
+----------------------------------------
+[94m  Jest via react-scripts (non-interactive CI mode).
+[93m  Running: npm test -- --watchAll=false --passWithNoTests (CI=true for this step only)
+
+> pixelmon@0.1.0 test
+> react-scripts test --watchAll=false --passWithNoTests
+
+PASS src/game/animationUtils.test.js
+PASS src/App.test.js
+
+Test Suites: 2 passed, 2 total
+Tests:       8 passed, 8 total
+Snapshots:   0 total
+Time:        6.716 s
+Ran all test suites.
+[92m  OK All tests passed
+
+
+
+> pixelmon@0.1.0 start
+> react-scripts start
+
+Something is already running on port 3000.
+
+[93m[7/10] GLB verification skipped (SKIP_GLB_VERIFY=1)
+
+[96m[8/10] GLB manifest sanity check...
+----------------------------------------
+[93m  Validating manifest.json JSON syntax
+[92m  OK manifest.json is valid JSON
+
+[96m[9/10] Production build check...
+----------------------------------------
+[93m  Running: npm run build
+
+> pixelmon@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Compiled with warnings.
+
+Failed to parse source map from 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map' file: Error: ENOENT: no such file or directory, open 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map'
+
+[eslint] 
+src\components\AnimatedModel.js
+  Line 62:11:  'liveForward' is assigned a value but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  339.5 kB  build\static\js\main.f1ce7899.js
+  1.76 kB   build\static\js\453.635ba9e8.chunk.js
+  1.04 kB   build\static\css\main.8b3a45d9.css
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+
+[92m  OK Build successful (build\index.html present)
+
+
+[96m========================================
+[96m  SUMMARY
+[96m========================================
+
+[94mSection Status:
+  [0] Asset inventory:                  poke_img=0  poke_glb=20
+  [1] Cleanup and npm install:          PASSED
+  [2] Python/WSL environment:           SKIPPED
+  [3] Type checking (JS - skipped):     SKIPPED
+  [4] Prettier:                         SKIPPED
+  [5] ESLint:                           SKIPPED
+  [6] Jest tests:                       PASSED
+  [6b] Jest coverage:                   PASSED
+  [7] Pilot GLB verification:           SKIPPED
+  [8] Manifest check:                   PASSED
+  [9] Build verification:               PASSED
+
+[92m  OK All checks passed
+[93m  Found 5 warning(s)
+
+
+[96m========================================
+[96m  CHECK COMPLETE
+[96m========================================
+

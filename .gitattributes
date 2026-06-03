@@ -1,0 +1,5 @@
+*.sh text eol=lf
+scripts/run_pipeline.sh text eol=lf
+scripts/wsl_setup.sh text eol=lf
+scripts/run_trellis_wsl.sh text eol=lf
+scripts/install_miniconda_wsl.sh text eol=lf

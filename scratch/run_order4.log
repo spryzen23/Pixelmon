@@ -1,0 +1,68 @@
+
+[96m========================================
+[96m  PIXELMON CODEBASE STATE CHECK
+[96m========================================
+
+[94mCurrent directory: e:\maha\Pixelmon-master
+
+----------------------------------------
+[92m  OK Coverage run completed
+
+
+----------------------------------------
+ 
+ERROR: The file is either empty or does not contain the valid choices.
+
+[93m  Please fix the errors before proceeding.
+[94m  Open http://localhost:3000  -  Press Ctrl+C to stop
+
+
+> pixelmon@0.1.0 start
+> react-scripts start
+
+(node:7316) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:7316) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Compiled with warnings.
+
+Failed to parse source map from 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map' file: Error: ENOENT: no such file or directory, open 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map'
+
+[eslint] 
+src\components\AnimatedModel.js
+  Line 62:11:  'liveForward' is assigned a value but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in ./node_modules/@mediapipe/tasks-vision/vision_bundle.mjs
+Module Warning (from ./node_modules/source-map-loader/dist/cjs.js):
+Failed to parse source map from 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map' file: Error: ENOENT: no such file or directory, open 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map'
+
+WARNING in [eslint] 
+src\components\AnimatedModel.js
+  Line 62:11:  'liveForward' is assigned a value but never used  no-unused-vars
+
+webpack compiled with 2 warnings
+Compiling...
+Compiled with warnings.
+
+Failed to parse source map from 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map' file: Error: ENOENT: no such file or directory, open 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map'
+
+[eslint] 
+src\components\AnimatedModel.js
+  Line 62:11:  'liveForward' is assigned a value but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in ./node_modules/@mediapipe/tasks-vision/vision_bundle.mjs
+Module Warning (from ./node_modules/source-map-loader/dist/cjs.js):
+Failed to parse source map from 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map' file: Error: ENOENT: no such file or directory, open 'e:\maha\Pixelmon-master\node_modules\@mediapipe\tasks-vision\vision_bundle_mjs.js.map'
+
+WARNING in [eslint] 
+src\components\AnimatedModel.js
+  Line 62:11:  'liveForward' is assigned a value but never used  no-unused-vars
+
+webpack compiled with 2 warnings
