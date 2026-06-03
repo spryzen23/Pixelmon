@@ -1,4 +1,4 @@
-import { useAnimations, useGLTF } from '@react-three/drei';
+﻿import { useAnimations, useGLTF } from '@react-three/drei';
 import { useEffect, useMemo, useRef } from 'react';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { useFrame } from '@react-three/fiber';

@@ -17,14 +17,15 @@ const WANDER_SPEED = 1.35;
 const FLEE_SPEED = 5.5;
 const FLEE_DURATION = 2;
 const ARRIVAL_DISTANCE = 0.08;
+const DEFAULT_MODEL_SCALE = 0.35;
+const DEFAULT_ALPHA_MULTIPLIER = 2.5;
+const DEFAULT_MODEL_URL = '/wild_creature.glb';
 const ROTATION_SMOOTHING = 10;
 const DISPLACE_EPSILON = 0.0008;
-const MODEL_ROTATION = [0, 0, 0];
-const MODEL_SCALE = 0.25;
 const direction = new Vector3();
 const modelOffset = [0, -WILD_CREATURE_HEIGHT / 2, 0];
 
-function WildFallback({ rotation = [0, 0, 0] }) {
+function WildFallback({ rotation = [0, 0, 0], scale = DEFAULT_MODEL_SCALE }) {
   return (
     <VoxelFallback
       color="#dc2f32"
@@ -33,7 +34,7 @@ function WildFallback({ rotation = [0, 0, 0] }) {
       depth={0.75}
       position={modelOffset}
       rotation={rotation}
-      scale={MODEL_SCALE}
+      scale={scale}
     />
   );
 }
@@ -42,15 +43,19 @@ function randomPause() {
   return 1.5 + Math.random() * 2.5;
 }
 
-function randomNearbyTarget(origin) {
+function randomNearbyTarget(origin, pathId) {
   for (let attempts = 0; attempts < 30; attempts += 1) {
     const angle = Math.random() * Math.PI * 2;
     const distance = 1 + Math.random() * WANDER_RADIUS;
     const x = origin.x + Math.cos(angle) * distance;
     const z = origin.z + Math.sin(angle) * distance;
 
-    if (isWalkablePosition(x, z, 0.45)) {
-      return new Vector3(x, getEntityY(x, z, WILD_CREATURE_HEIGHT), z);
+    if (isWalkablePosition(x, z, 0.45, pathId)) {
+      return new Vector3(
+        x,
+        getEntityY(x, z, WILD_CREATURE_HEIGHT, undefined, pathId),
+        z
+      );
     }
   }
 
@@ -58,18 +63,23 @@ function randomNearbyTarget(origin) {
 }
 
 export default function WildCreature({
+  currentPathId = 0,
   id,
   initialPosition,
+  isAlpha = false,
+  modelScale = DEFAULT_MODEL_SCALE,
+  modelUrl = DEFAULT_MODEL_URL,
+  modelRotation = [Math.PI / 2, 0, 0],
   onFleeComplete,
   playerRef,
   registerRef,
   status = 'active',
-  modelUrl = '/wild_creature.glb',
 }) {
   const creatureRef = useRef();
   const fleeTimer = useRef(0);
   const previousY = useRef(initialPosition[1]);
   const movingRef = useRef(false);
+  const visualScale = modelScale * (isAlpha ? DEFAULT_ALPHA_MULTIPLIER : 1);
   const animInputRef = useRef({
     forwardInput: 0,
     strafeInput: 0,
@@ -133,7 +143,8 @@ export default function WildCreature({
       creature.position.x,
       creature.position.z,
       WILD_CREATURE_HEIGHT,
-      previousY.current
+      previousY.current,
+      currentPathId
     );
     previousY.current = creature.position.y;
 
@@ -162,14 +173,15 @@ export default function WildCreature({
         const nextX = prevX + direction.x * FLEE_SPEED * delta;
         const nextZ = prevZ + direction.z * FLEE_SPEED * delta;
 
-        if (isWalkablePosition(nextX, nextZ, 0.45)) {
+        if (isWalkablePosition(nextX, nextZ, 0.45, currentPathId)) {
           const moved = applyDisplacement(creature, prevX, prevZ, nextX, nextZ, delta);
           creature.position.x = nextX;
           creature.position.y = getEntityY(
             nextX,
             nextZ,
             WILD_CREATURE_HEIGHT,
-            previousY.current
+            previousY.current,
+            currentPathId
           );
           previousY.current = creature.position.y;
           creature.position.z = nextZ;
@@ -197,7 +209,7 @@ export default function WildCreature({
       animInputRef.current.strafeInput = 0;
 
       if (ai.current.pauseTimer <= 0) {
-        ai.current.target.copy(randomNearbyTarget(creature.position));
+        ai.current.target.copy(randomNearbyTarget(creature.position, currentPathId));
         ai.current.mode = 'walk';
       }
 
@@ -220,14 +232,15 @@ export default function WildCreature({
     const nextX = prevX + direction.x * WANDER_SPEED * delta;
     const nextZ = prevZ + direction.z * WANDER_SPEED * delta;
 
-    if (isWalkablePosition(nextX, nextZ, 0.45)) {
+    if (isWalkablePosition(nextX, nextZ, 0.45, currentPathId)) {
       const moved = applyDisplacement(creature, prevX, prevZ, nextX, nextZ, delta);
       creature.position.x = nextX;
       creature.position.y = getEntityY(
         nextX,
         nextZ,
         WILD_CREATURE_HEIGHT,
-        previousY.current
+        previousY.current,
+        currentPathId
       );
       previousY.current = creature.position.y;
       creature.position.z = nextZ;
@@ -238,8 +251,6 @@ export default function WildCreature({
       setMoving(false);
     }
   });
-
-  const rotation = MODEL_ROTATION;
 
   return (
     <group
@@ -253,20 +264,29 @@ export default function WildCreature({
 
       <ModelErrorBoundary
         resetKey={modelUrl}
-        fallback={<WildFallback rotation={rotation} />}
+        fallback={<WildFallback rotation={modelRotation} scale={visualScale} />}
       >
-        <Suspense fallback={<WildFallback rotation={rotation} />}>
+        <Suspense fallback={<WildFallback rotation={modelRotation} scale={visualScale} />}>
           <AnimatedModel
             url={modelUrl}
             actionName={isMoving ? 'Walk' : 'Idle'}
             fallbackActionName={isMoving ? ['Run', 'Walk', 'Idle'] : ['Idle', 'Walk']}
             position={modelOffset}
-            rotation={rotation}
-            scale={MODEL_SCALE}
+            rotation={modelRotation}
+            scale={visualScale}
             inputRef={animInputRef}
           />
         </Suspense>
       </ModelErrorBoundary>
+
+      {isAlpha && (
+        <pointLight
+          color="red"
+          distance={5}
+          intensity={2}
+          position={[0, 2, 0]}
+        />
+      )}
     </group>
   );
 }

@@ -1,11 +1,14 @@
-export const WORLD_SIZE = 21;
-export const WORLD_HALF = Math.floor(WORLD_SIZE / 2);
-export const TERRAIN_RADIUS = 15;
-export const VOXEL_SIZE = 0.75;
+﻿export const VOXEL_SIZE = 0.75;
+export const CHUNK_SIZE = 32;
+export const CHUNK_WORLD_SIZE = CHUNK_SIZE * VOXEL_SIZE;
+export const BIOME_CHUNK_RADIUS = 1;
+export const BIOME_BOUNDARY = 35;
 export const BLOCK_HEIGHT = VOXEL_SIZE;
 export const WATER_BLOCK_HEIGHT = VOXEL_SIZE;
 export const WATER_SURFACE_Y = -VOXEL_SIZE;
 export const WATER_LEVEL = WATER_SURFACE_Y;
+export const STONE_LINE_Y = 18;
+export const SNOW_LINE_Y = 40;
 export const ENTITY_FOOT_CLEARANCE = 0.025;
 export const PLAYER_HEIGHT = 1;
 export const PLAYER_RADIUS = 0.38;
@@ -13,33 +16,108 @@ export const COMPANION_HEIGHT = 0.8;
 export const WILD_CREATURE_HEIGHT = 0.8;
 export const TREE_RADIUS = 0.58;
 export const CACTUS_RADIUS = 0.45;
+export const MAP_SIZE = CHUNK_SIZE * 3;
+export const MAP_HALF_BLOCKS = MAP_SIZE / 2;
+export const MAP_HALF_WORLD_SIZE = MAP_HALF_BLOCKS * VOXEL_SIZE;
+export const TERRAIN_RADIUS = MAP_HALF_WORLD_SIZE;
+export const WORLD_SIZE = MAP_SIZE;
+export const WORLD_HALF = Math.floor(WORLD_SIZE / 2);
+export const PATH_COUNT = 6;
+export const PATH_GRID_SIZE = MAP_SIZE;
+export const PATH_HALF_BLOCKS = MAP_HALF_BLOCKS;
+export const PATH_WORLD_SIZE = MAP_SIZE * VOXEL_SIZE;
+export const PATH_HALF_WORLD_SIZE = PATH_WORLD_SIZE / 2;
+export const RENDER_DISTANCE = 1;
+export const MOUNT_CORONET_X = 0;
+export const MOUNT_CORONET_Z = -16;
+export const MOUNT_CORONET_PEAK_HEIGHT = 80;
+export const MOUNT_CORONET_SLOPE = 1.2;
+
 export const BIOMES = {
   DESERT: 'desert',
   PLAINS: 'plains',
   SNOW: 'snow',
 };
 
-const ORIGIN_WATER_COORDS = [
-  [-1, -1],
-  [0, -1],
-  [1, -1],
-  [-1, 0],
-  [0, 0],
-  [1, 0],
-  [2, 0],
-  [-1, 1],
-  [0, 1],
-  [1, 1],
-  [0, 2],
+export const WORLD_PATHS = [
+  { id: 0, name: 'Fieldlands Trail', biome: BIOMES.PLAINS, seed: 3.1 },
+  { id: 1, name: 'Sandglass Flats', biome: BIOMES.DESERT, seed: 18.6 },
+  { id: 2, name: 'Frostpine Pass', biome: BIOMES.SNOW, seed: 42.2 },
+  { id: 3, name: 'Coastal Run', biome: BIOMES.PLAINS, seed: 75.4 },
+  { id: 4, name: 'Crimson Mire', biome: BIOMES.PLAINS, seed: 103.9 },
+  { id: 5, name: 'Coronet Approach', biome: BIOMES.SNOW, seed: 160.3 },
 ];
 
-const GRID_EPSILON = 0.000001;
+export const CREATURE_ASSET_MANIFEST = {
+  0: {
+    ordinary: [
+      { file: 'ordinary/creature_01.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+      { file: 'ordinary/creature_02.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+    ],
+    alpha: { file: 'alpha.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+  },
+  1: {
+    ordinary: [
+      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+      { file: 'ordinary/creature_02.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    ],
+    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+  },
+  2: {
+    ordinary: [
+      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    ],
+    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+  },
+  3: {
+    ordinary: [
+      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    ],
+    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+  },
+  4: {
+    ordinary: [
+      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    ],
+    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+  },
+  5: {
+    ordinary: [
+      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+      { file: 'ordinary/creature_02.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    ],
+    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+  },
+};
 
-const ORIGIN_WATER_KEYS = new Set(
-  ORIGIN_WATER_COORDS.map(([x, z]) =>
-    toTileKey(x * VOXEL_SIZE, z * VOXEL_SIZE)
-  )
-);
+const GRID_EPSILON = 0.000001;
+const BLOCK_TYPES = ['desert', 'dirt', 'grass', 'snow', 'stone', 'water'];
+const SPAWN_PAD_RADIUS = 9;
+const SPAWN_APPROACH_RADIUS = 17;
+
+export const MapCache = {
+  biomes: {},
+};
+
+export const WORLD_MAPS = MapCache.biomes;
+
+let activeBiome = 0;
+
+export function setActivePathId(pathId) {
+  activeBiome = Number(pathId) || 0;
+}
+
+export function getActivePathId() {
+  return activeBiome;
+}
+
+export function clearBiomeCache(currentBiome = activeBiome) {
+  delete MapCache.biomes[currentBiome];
+}
+
+export function clearAllBiomeCaches() {
+  MapCache.biomes = {};
+}
 
 export function snapToVoxel(value) {
   const snapped = Math.floor((value + GRID_EPSILON) / VOXEL_SIZE) * VOXEL_SIZE;
@@ -49,10 +127,6 @@ export function snapToVoxel(value) {
 
 export function getVoxelIndex(value) {
   return Math.floor((value + GRID_EPSILON) / VOXEL_SIZE);
-}
-
-export function toTileKey(x, z) {
-  return `${snapToVoxel(x)}:${snapToVoxel(z)}`;
 }
 
 export function getTileCoord(value) {
@@ -66,279 +140,279 @@ export function worldToGrid(x, z) {
   };
 }
 
-function seededRandom(x, z = 0) {
-  const value = Math.sin(x * 127.1 + z * 311.7) * 43758.5453123;
+export function toTileKey(x, z) {
+  return `${snapToVoxel(x)}:${snapToVoxel(z)}`;
+}
+
+function seededRandom(x, z = 0, seed = 0) {
+  const value = Math.sin(x * 127.1 + z * 311.7 + seed * 41.9) * 43758.5453123;
 
   return value - Math.floor(value);
 }
 
-function isNearInitialSpawn(x, z) {
-  return Math.hypot(x + 7, z + 7) < 4;
+function getBiomeDefinition(currentBiome = activeBiome) {
+  return WORLD_PATHS.find((path) => path.id === currentBiome) || WORLD_PATHS[0];
 }
 
-function getLakeNoise(x, z) {
-  return (
-    Math.sin(x * 0.21) * 0.7 +
-    Math.cos(z * 0.18) * 0.65 +
-    Math.sin((x + z) * 0.11) * 0.55 +
-    Math.cos((x - z) * 0.08) * 0.4
-  );
+function getCreatureAssetManifest(currentBiome = activeBiome) {
+  return CREATURE_ASSET_MANIFEST[currentBiome] || CREATURE_ASSET_MANIFEST[0];
 }
 
-export function getBiomeValue(x, z) {
-  const { gridX: tileX, gridZ: tileZ } = worldToGrid(x, z);
-  const tileIndexX = getVoxelIndex(tileX);
-  const tileIndexZ = getVoxelIndex(tileZ);
-  const biomeNoise =
-    Math.sin(tileIndexX * 0.045 + 12.3) * 0.35 +
-    Math.cos(tileIndexZ * 0.052 - 3.1) * 0.35 +
-    Math.sin((tileIndexX + tileIndexZ) * 0.029) * 0.2 +
-    seededRandom(Math.floor(tileIndexX / 8), Math.floor(tileIndexZ / 8)) * 0.1;
+function getCreatureAssetUrl(currentBiome, file) {
+  const biome = getBiomeDefinition(currentBiome);
 
-  return Math.max(0, Math.min(1, biomeNoise * 0.5 + 0.5));
+  return encodeURI(`/assets/${biome.name}/${file}`);
 }
 
-export function getBiomeForTile(x, z) {
-  const value = getBiomeValue(x, z);
-
-  if (value < 0.33) {
-    return BIOMES.DESERT;
-  }
-
-  if (value > 0.66) {
-    return BIOMES.SNOW;
-  }
-
-  return BIOMES.PLAINS;
-}
-
-export function isWaterTile(x, z) {
-  const { gridX: tileX, gridZ: tileZ } = worldToGrid(x, z);
-
-  if (ORIGIN_WATER_KEYS.has(toTileKey(tileX, tileZ))) {
-    return true;
-  }
-
-  if (isNearInitialSpawn(tileX, tileZ)) {
-    return false;
-  }
-
-  return getLakeNoise(tileX, tileZ) < -1.45 && seededRandom(tileX, tileZ) > 0.22;
-}
-
-export function isTreeTile(x, z) {
-  const { gridX: tileX, gridZ: tileZ } = worldToGrid(x, z);
-  const biome = getBiomeForTile(tileX, tileZ);
-
-  if (
-    isNearInitialSpawn(tileX, tileZ) ||
-    isWaterTile(tileX, tileZ) ||
-    biome === BIOMES.DESERT
-  ) {
-    return false;
-  }
-
-  const treeChance = seededRandom(tileX + 19.2, tileZ - 4.7);
-  const spacingNoise = seededRandom(Math.floor(tileX / 2), Math.floor(tileZ / 2));
-
-  return treeChance > (biome === BIOMES.SNOW ? 0.972 : 0.965) && spacingNoise > 0.45;
-}
-
-export function isCactusTile(x, z) {
-  const { gridX: tileX, gridZ: tileZ } = worldToGrid(x, z);
-
-  if (
-    isNearInitialSpawn(tileX, tileZ) ||
-    isWaterTile(tileX, tileZ) ||
-    getBiomeForTile(tileX, tileZ) !== BIOMES.DESERT
-  ) {
-    return false;
-  }
-
-  return seededRandom(tileX - 8.8, tileZ + 21.4) > 0.975;
-}
-
-export function getTerrainSurfaceY(x, z) {
-  const { gridX: tileX, gridZ: tileZ } = worldToGrid(x, z);
-  const tileIndexX = getVoxelIndex(tileX);
-  const tileIndexZ = getVoxelIndex(tileZ);
-
-  if (isWaterTile(tileX, tileZ)) {
-    return WATER_SURFACE_Y;
-  }
-
-  const rollingHill =
-    Math.sin(tileIndexX * 0.45) * 0.45 +
-    Math.cos(tileIndexZ * 0.35) * 0.35 +
-    Math.sin((tileIndexX + tileIndexZ) * 0.22) * 0.25 +
-    Math.cos((tileIndexX - tileIndexZ) * 0.13) * 0.18;
-
-  return Math.round(rollingHill) * VOXEL_SIZE;
-}
-
-export function getTerrainBlockCenterY(x, z) {
-  const surfaceY = getTerrainSurfaceY(x, z);
-  const height = isWaterTile(x, z) ? WATER_BLOCK_HEIGHT : BLOCK_HEIGHT;
-
-  return surfaceY - height / 2;
-}
-
-export function getEntityY(x, z, entityHeight, previousY = undefined) {
-  const surfaceY = getTerrainSurfaceY(x, z);
-
-  if (!Number.isFinite(surfaceY)) {
-    return Number.isFinite(previousY) ? previousY : entityHeight / 2;
-  }
-
-  return surfaceY + entityHeight / 2 + ENTITY_FOOT_CLEARANCE;
-}
-
-const PLAYER_START_X = getTileCoord(-7);
-const PLAYER_START_Z = getTileCoord(-7);
-
-export const PLAYER_START = [
-  PLAYER_START_X,
-  getEntityY(PLAYER_START_X, PLAYER_START_Z, PLAYER_HEIGHT),
-  PLAYER_START_Z,
-];
-
-export function isInsideWorld() {
-  return true;
-}
-
-export function isWaterCollision(x, z, radius = PLAYER_RADIUS) {
-  const minX = snapToVoxel(x - radius - VOXEL_SIZE);
-  const maxX = snapToVoxel(x + radius + VOXEL_SIZE);
-  const minZ = snapToVoxel(z - radius - VOXEL_SIZE);
-  const maxZ = snapToVoxel(z + radius + VOXEL_SIZE);
-
-  for (let tileX = minX; tileX <= maxX + GRID_EPSILON; tileX += VOXEL_SIZE) {
-    const snappedX = snapToVoxel(tileX);
-
-    for (let tileZ = minZ; tileZ <= maxZ + GRID_EPSILON; tileZ += VOXEL_SIZE) {
-      const snappedZ = snapToVoxel(tileZ);
-
-      if (
-        isWaterTile(snappedX, snappedZ) &&
-        Math.abs(x - snappedX) < VOXEL_SIZE / 2 + radius &&
-        Math.abs(z - snappedZ) < VOXEL_SIZE / 2 + radius
-      ) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
-export function isTreeCollision(x, z, radius = PLAYER_RADIUS) {
-  const minX = snapToVoxel(x - TREE_RADIUS - radius);
-  const maxX = snapToVoxel(x + TREE_RADIUS + radius);
-  const minZ = snapToVoxel(z - TREE_RADIUS - radius);
-  const maxZ = snapToVoxel(z + TREE_RADIUS + radius);
-
-  for (let tileX = minX; tileX <= maxX + GRID_EPSILON; tileX += VOXEL_SIZE) {
-    const snappedX = snapToVoxel(tileX);
-
-    for (let tileZ = minZ; tileZ <= maxZ + GRID_EPSILON; tileZ += VOXEL_SIZE) {
-      const snappedZ = snapToVoxel(tileZ);
-
-      if (
-        isTreeTile(snappedX, snappedZ) &&
-        Math.abs(x - snappedX) < TREE_RADIUS + radius &&
-        Math.abs(z - snappedZ) < TREE_RADIUS + radius
-      ) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
-export function isCactusCollision(x, z, radius = PLAYER_RADIUS) {
-  const minX = snapToVoxel(x - CACTUS_RADIUS - radius);
-  const maxX = snapToVoxel(x + CACTUS_RADIUS + radius);
-  const minZ = snapToVoxel(z - CACTUS_RADIUS - radius);
-  const maxZ = snapToVoxel(z + CACTUS_RADIUS + radius);
-
-  for (let tileX = minX; tileX <= maxX + GRID_EPSILON; tileX += VOXEL_SIZE) {
-    const snappedX = snapToVoxel(tileX);
-
-    for (let tileZ = minZ; tileZ <= maxZ + GRID_EPSILON; tileZ += VOXEL_SIZE) {
-      const snappedZ = snapToVoxel(tileZ);
-
-      if (
-        isCactusTile(snappedX, snappedZ) &&
-        Math.abs(x - snappedX) < CACTUS_RADIUS + radius &&
-        Math.abs(z - snappedZ) < CACTUS_RADIUS + radius
-      ) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
-export function isWalkablePosition(x, z, radius = PLAYER_RADIUS) {
-  return (
-    !isWaterCollision(x, z, radius) &&
-    !isTreeCollision(x, z, radius) &&
-    !isCactusCollision(x, z, radius)
-  );
-}
-
-export function clampToWorld(value) {
-  return value;
-}
-
-export function createTerrainTiles(
-  centerX = 0,
-  centerZ = 0,
-  radius = TERRAIN_RADIUS
+export function getOrdinaryCreatureAsset(
+  currentBiome = activeBiome,
+  spawnIndex = 0
 ) {
-  const tiles = [];
-  const startX = snapToVoxel(centerX - radius);
-  const endX = snapToVoxel(centerX + radius);
-  const startZ = snapToVoxel(centerZ - radius);
-  const endZ = snapToVoxel(centerZ + radius);
+  const manifest = getCreatureAssetManifest(currentBiome);
+  const ordinary = manifest.ordinary.length > 0
+    ? manifest.ordinary
+    : [{ file: 'ordinary.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] }];
+  const asset = ordinary[spawnIndex % ordinary.length];
 
-  for (
-    let x = startX;
-    x <= endX + GRID_EPSILON;
-    x += VOXEL_SIZE
-  ) {
-    const tileX = snapToVoxel(x);
+  return {
+    ...asset,
+    url: getCreatureAssetUrl(currentBiome, asset.file),
+  };
+}
 
-    for (
-      let z = startZ;
-      z <= endZ + GRID_EPSILON;
-      z += VOXEL_SIZE
-    ) {
-      const tileZ = snapToVoxel(z);
-      const biome = getBiomeForTile(tileX, tileZ);
-      const surfaceY = getTerrainSurfaceY(tileX, tileZ);
-      const isWater = isWaterTile(tileX, tileZ);
+export function getAlphaCreatureAsset(currentBiome = activeBiome) {
+  const manifest = getCreatureAssetManifest(currentBiome);
+  const asset = manifest.alpha || {
+    file: 'alpha.glb',
+    scale: 0.95,
+    rotation: [0, Math.PI / 2, 0],
+  };
 
-      if (isWater || surfaceY < WATER_LEVEL) {
+  return {
+    ...asset,
+    url: getCreatureAssetUrl(currentBiome, asset.file),
+  };
+}
+
+export function getCreatureModelUrl(
+  currentBiome = activeBiome,
+  isAlpha = false,
+  spawnIndex = 0
+) {
+  return isAlpha
+    ? getAlphaCreatureAsset(currentBiome).url
+    : getOrdinaryCreatureAsset(currentBiome, spawnIndex).url;
+}
+
+function createEmptyCounts() {
+  return BLOCK_TYPES.reduce((counts, type) => {
+    counts[type] = 0;
+    return counts;
+  }, {});
+}
+
+export function getChunkKey(cx, cz) {
+  return `${cx},${cz}`;
+}
+
+export function getChunkCoord(value) {
+  return Math.floor(value / CHUNK_WORLD_SIZE);
+}
+
+export function getChunkCoordsForPosition(x, z) {
+  return {
+    cx: getChunkCoord(x),
+    cz: getChunkCoord(z),
+  };
+}
+
+export function getSurroundingChunks(centerX = 0, centerZ = 0) {
+  const chunks = [];
+
+  for (let cz = -BIOME_CHUNK_RADIUS; cz <= BIOME_CHUNK_RADIUS; cz += 1) {
+    for (let cx = -BIOME_CHUNK_RADIUS; cx <= BIOME_CHUNK_RADIUS; cx += 1) {
+      chunks.push({
+        cx,
+        cz,
+        key: getChunkKey(cx, cz),
+      });
+    }
+  }
+
+  return chunks;
+}
+
+function getBiomeSurfaceY(tileIndexX, tileIndexZ, currentBiome) {
+  const biome = getBiomeDefinition(currentBiome);
+  const rollingHill =
+    Math.sin(tileIndexX * 0.22 + biome.seed) * 0.95 +
+    Math.cos(tileIndexZ * 0.2 - biome.seed * 0.5) * 0.8 +
+    Math.sin((tileIndexX + tileIndexZ) * 0.11 + biome.seed) * 0.55;
+  const biomeLift = currentBiome === 2 || currentBiome === 5 ? 2.4 : 1.4;
+  const desertFlatten = currentBiome === 1 ? -0.6 : 0;
+  const centerLift =
+    Math.max(0, 1 - Math.hypot(tileIndexX, tileIndexZ) / MAP_HALF_BLOCKS) *
+    biomeLift;
+  const mountainLift =
+    currentBiome === 5
+      ? Math.max(0, 32 - Math.hypot(tileIndexX, tileIndexZ + 12) * 1.5)
+      : 0;
+  const edgeDrop =
+    Math.max(
+      0,
+      (Math.max(Math.abs(tileIndexX), Math.abs(tileIndexZ)) -
+        MAP_HALF_BLOCKS * 0.88) /
+        (MAP_HALF_BLOCKS * 0.12)
+    ) * 5;
+
+  const rawHeight = Math.round(
+    rollingHill + centerLift + desertFlatten + mountainLift - edgeDrop
+  ) * VOXEL_SIZE;
+  const spawnBaseY = currentBiome === 2 || currentBiome === 5 ? VOXEL_SIZE : 0;
+  const spawnDistance = Math.hypot(tileIndexX, tileIndexZ);
+
+  if (spawnDistance <= SPAWN_PAD_RADIUS) {
+    return spawnBaseY;
+  }
+
+  if (spawnDistance <= SPAWN_APPROACH_RADIUS) {
+    const blend =
+      (spawnDistance - SPAWN_PAD_RADIUS) /
+      (SPAWN_APPROACH_RADIUS - SPAWN_PAD_RADIUS);
+    const blendedY = spawnBaseY + (rawHeight - spawnBaseY) * blend;
+
+    return Math.round(blendedY / VOXEL_SIZE) * VOXEL_SIZE;
+  }
+
+  return rawHeight;
+}
+
+function getSurfaceBlockType(currentBiome, surfaceY) {
+  if (surfaceY >= SNOW_LINE_Y || currentBiome === 2 || currentBiome === 5) {
+    return 'snow';
+  }
+
+  if (surfaceY >= STONE_LINE_Y) {
+    return 'stone';
+  }
+
+  if (currentBiome === 1) {
+    return 'desert';
+  }
+
+  return 'grass';
+}
+
+export function generateBiomeChunk(currentBiome, cx, cz) {
+  try {
+    return createBiomeChunk(currentBiome, cx, cz);
+  } catch (error) {
+    if (currentBiome === 3) {
+      return createCoastalFallbackChunk(cx, cz);
+    }
+
+    throw error;
+  }
+}
+
+function createCoastalFallbackChunk(cx, cz) {
+  const blocks = [];
+  const counts = createEmptyCounts();
+  const heightLookup = new Map();
+  const startX = (cx + BIOME_CHUNK_RADIUS) * CHUNK_SIZE - MAP_HALF_BLOCKS;
+  const startZ = (cz + BIOME_CHUNK_RADIUS) * CHUNK_SIZE - MAP_HALF_BLOCKS;
+
+  for (let lx = 0; lx < CHUNK_SIZE; lx += 1) {
+    const tileIndexX = startX + lx;
+    const x = snapToVoxel(tileIndexX * VOXEL_SIZE);
+
+    for (let lz = 0; lz < CHUNK_SIZE; lz += 1) {
+      const tileIndexZ = startZ + lz;
+      const z = snapToVoxel(tileIndexZ * VOXEL_SIZE);
+      const shoreline = Math.sin(tileIndexX * 0.12) * 5 + Math.cos(tileIndexZ * 0.08) * 3;
+      const isWater = tileIndexZ + shoreline < -10;
+      const surfaceY = isWater ? WATER_LEVEL : 0;
+      const type = isWater ? 'water' : 'desert';
+
+      heightLookup.set(toTileKey(x, z), {
+        biome: BIOMES.PLAINS,
+        isWater,
+        surfaceY,
+      });
+      blocks.push({
+        x,
+        y: surfaceY - VOXEL_SIZE / 2,
+        z,
+        type,
+      });
+      counts[type] += 1;
+    }
+  }
+
+  return {
+    blocks,
+    counts,
+    cx,
+    cz,
+    heightLookup,
+    key: getChunkKey(cx, cz),
+  };
+}
+
+function createBiomeChunk(currentBiome, cx, cz) {
+  const blocks = [];
+  const counts = createEmptyCounts();
+  const heightLookup = new Map();
+  const startX = (cx + BIOME_CHUNK_RADIUS) * CHUNK_SIZE - MAP_HALF_BLOCKS;
+  const startZ = (cz + BIOME_CHUNK_RADIUS) * CHUNK_SIZE - MAP_HALF_BLOCKS;
+
+  for (let lx = 0; lx < CHUNK_SIZE; lx += 1) {
+    const tileIndexX = startX + lx;
+    const x = snapToVoxel(tileIndexX * VOXEL_SIZE);
+
+    for (let lz = 0; lz < CHUNK_SIZE; lz += 1) {
+      const tileIndexZ = startZ + lz;
+      const z = snapToVoxel(tileIndexZ * VOXEL_SIZE);
+      const rawSurfaceY = getBiomeSurfaceY(tileIndexX, tileIndexZ, currentBiome);
+      const waterNoise =
+        Math.sin((tileIndexX + currentBiome * 7) * 0.19) +
+        Math.cos((tileIndexZ - currentBiome * 5) * 0.17);
+      const spawnDistance = Math.hypot(tileIndexX, tileIndexZ);
+      const coastalWater =
+        currentBiome === 3 &&
+        spawnDistance > SPAWN_APPROACH_RADIUS &&
+        (tileIndexZ < -18 || waterNoise < -1.18);
+      const isWater =
+        spawnDistance > SPAWN_APPROACH_RADIUS &&
+        (rawSurfaceY <= WATER_LEVEL ||
+          coastalWater ||
+          (currentBiome === 4 && waterNoise < -1.45) ||
+          seededRandom(tileIndexX, tileIndexZ, currentBiome) < 0.004);
+      const surfaceY = isWater ? WATER_LEVEL : rawSurfaceY;
+
+      heightLookup.set(toTileKey(x, z), {
+        biome: getBiomeDefinition(currentBiome).biome,
+        isWater,
+        surfaceY,
+      });
+
+      if (isWater) {
+        const waterBottomY = Math.min(rawSurfaceY, WATER_LEVEL);
+
         for (
           let topY = WATER_LEVEL;
-          topY >= surfaceY - GRID_EPSILON;
+          topY >= waterBottomY - GRID_EPSILON;
           topY -= VOXEL_SIZE
         ) {
           const snappedTopY = snapToVoxel(topY);
 
-          tiles.push({
-            key: `${toTileKey(tileX, tileZ)}:water:${snappedTopY}`,
-            x: tileX,
-            z: tileZ,
-            biome,
-            height: WATER_BLOCK_HEIGHT,
+          blocks.push({
+            x,
+            y: snappedTopY - WATER_BLOCK_HEIGHT / 2,
+            z,
             type: 'water',
-            surfaceY: WATER_LEVEL,
-            centerY: snappedTopY - WATER_BLOCK_HEIGHT / 2,
           });
+          counts.water += 1;
         }
 
         continue;
@@ -350,121 +424,323 @@ export function createTerrainTiles(
         topY -= VOXEL_SIZE
       ) {
         const snappedTopY = snapToVoxel(topY);
-        const type = snappedTopY === surfaceY ? 'surface' : 'dirt';
+        const isSurface = snappedTopY === surfaceY;
+        const type = isSurface
+          ? currentBiome === 3
+            ? 'desert'
+            : getSurfaceBlockType(currentBiome, surfaceY)
+          : snappedTopY >= STONE_LINE_Y
+            ? 'stone'
+            : 'dirt';
 
-        tiles.push({
-          key: `${toTileKey(tileX, tileZ)}:${type}:${snappedTopY}`,
-          x: tileX,
-          z: tileZ,
-          biome,
-          height: BLOCK_HEIGHT,
+        blocks.push({
+          x,
+          y: snappedTopY - BLOCK_HEIGHT / 2,
+          z,
           type,
-          surfaceY,
-          centerY: snappedTopY - BLOCK_HEIGHT / 2,
         });
+        counts[type] += 1;
       }
     }
   }
 
-  return tiles;
+  return {
+    blocks,
+    counts,
+    cx,
+    cz,
+    heightLookup,
+    key: getChunkKey(cx, cz),
+  };
 }
 
-export function createTrees(
+export function generateBiomeMap(currentBiome = activeBiome) {
+  if (MapCache.biomes[currentBiome]) {
+    return MapCache.biomes[currentBiome];
+  }
+
+  const chunks = [];
+  const heightLookup = new Map();
+  const counts = createEmptyCounts();
+
+  for (let cx = -1; cx <= 1; cx += 1) {
+    for (let cz = -1; cz <= 1; cz += 1) {
+      const chunk = generateBiomeChunk(currentBiome, cx, cz);
+
+      chunks.push(chunk);
+      Object.keys(counts).forEach((type) => {
+        counts[type] += chunk.counts[type];
+      });
+      chunk.heightLookup.forEach((tile, key) => {
+        heightLookup.set(key, tile);
+      });
+    }
+  }
+
+  MapCache.biomes[currentBiome] = {
+    ...getBiomeDefinition(currentBiome),
+    bounds: {
+      minX: -BIOME_BOUNDARY,
+      maxX: BIOME_BOUNDARY,
+      minZ: -BIOME_BOUNDARY,
+      maxZ: BIOME_BOUNDARY,
+    },
+    chunks,
+    counts,
+    heightLookup,
+  };
+
+  return MapCache.biomes[currentBiome];
+}
+
+export function preloadBiome(currentBiome = activeBiome) {
+  return generateBiomeMap(currentBiome);
+}
+
+export function getBiomeMap(currentBiome = activeBiome) {
+  return generateBiomeMap(currentBiome);
+}
+
+export function getRawTerrainSurfaceY(x, z) {
+  const { gridX, gridZ } = worldToGrid(x, z);
+  const tileIndexX = getVoxelIndex(gridX);
+  const tileIndexZ = getVoxelIndex(gridZ);
+
+  return getBiomeSurfaceY(tileIndexX, tileIndexZ, activeBiome);
+}
+
+export function getBiomeValue(x, z) {
+  const { gridX, gridZ } = worldToGrid(x, z);
+  const tileIndexX = getVoxelIndex(gridX);
+  const tileIndexZ = getVoxelIndex(gridZ);
+  const value =
+    Math.sin(tileIndexX * 0.045 + 12.3) * 0.35 +
+    Math.cos(tileIndexZ * 0.052 - 3.1) * 0.35 +
+    seededRandom(tileIndexX, tileIndexZ, activeBiome) * 0.3;
+
+  return Math.max(0, Math.min(1, value * 0.5 + 0.5));
+}
+
+export function getBiomeForTile() {
+  return getBiomeDefinition(activeBiome).biome;
+}
+
+export function getTerrainSurfaceY(x, z, currentBiome = activeBiome) {
+  const { gridX, gridZ } = worldToGrid(x, z);
+  const biomeMap = generateBiomeMap(currentBiome);
+  const tile = biomeMap.heightLookup.get(toTileKey(gridX, gridZ));
+
+  return tile ? tile.surfaceY : WATER_LEVEL;
+}
+
+export function isWaterTile(x, z, currentBiome = activeBiome) {
+  const { gridX, gridZ } = worldToGrid(x, z);
+  const biomeMap = generateBiomeMap(currentBiome);
+  const tile = biomeMap.heightLookup.get(toTileKey(gridX, gridZ));
+
+  return tile ? tile.isWater : true;
+}
+
+export function getTerrainBlockCenterY(x, z, currentBiome = activeBiome) {
+  const surfaceY = getTerrainSurfaceY(x, z, currentBiome);
+  const height = isWaterTile(x, z, currentBiome)
+    ? WATER_BLOCK_HEIGHT
+    : BLOCK_HEIGHT;
+
+  return surfaceY - height / 2;
+}
+
+export function getEntityY(
+  x,
+  z,
+  entityHeight,
+  previousY = undefined,
+  currentBiome = activeBiome
+) {
+  const surfaceY = getTerrainSurfaceY(x, z, currentBiome);
+
+  if (!Number.isFinite(surfaceY)) {
+    return Number.isFinite(previousY) ? previousY : entityHeight / 2;
+  }
+
+  return surfaceY + entityHeight / 2 + ENTITY_FOOT_CLEARANCE;
+}
+
+export function isInsideWorld(x = 0, z = 0, radius = 0) {
+  return (
+    x >= -BIOME_BOUNDARY + radius &&
+    x <= BIOME_BOUNDARY - radius &&
+    z >= -BIOME_BOUNDARY + radius &&
+    z <= BIOME_BOUNDARY - radius
+  );
+}
+
+export function isWaterCollision(x, z, radius = PLAYER_RADIUS, currentBiome = activeBiome) {
+  const minX = snapToVoxel(x - radius);
+  const maxX = snapToVoxel(x + radius);
+  const minZ = snapToVoxel(z - radius);
+  const maxZ = snapToVoxel(z + radius);
+
+  for (let tileX = minX; tileX <= maxX + GRID_EPSILON; tileX += VOXEL_SIZE) {
+    for (let tileZ = minZ; tileZ <= maxZ + GRID_EPSILON; tileZ += VOXEL_SIZE) {
+      if (isWaterTile(tileX, tileZ, currentBiome)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+export function isWalkablePosition(
+  x,
+  z,
+  radius = PLAYER_RADIUS,
+  currentBiome = activeBiome
+) {
+  return (
+    isInsideWorld(x, z, radius) &&
+    !isWaterCollision(x, z, radius, currentBiome)
+  );
+}
+
+function isSafeSpawnTile(x, z, currentBiome = activeBiome) {
+  const centerY = getTerrainSurfaceY(x, z, currentBiome);
+
+  if (
+    !Number.isFinite(centerY) ||
+    centerY <= WATER_LEVEL ||
+    isWaterTile(x, z, currentBiome) ||
+    !isInsideWorld(x, z, PLAYER_RADIUS)
+  ) {
+    return false;
+  }
+
+  for (let offsetX = -1; offsetX <= 1; offsetX += 1) {
+    for (let offsetZ = -1; offsetZ <= 1; offsetZ += 1) {
+      const sampleX = x + offsetX * VOXEL_SIZE;
+      const sampleZ = z + offsetZ * VOXEL_SIZE;
+      const sampleY = getTerrainSurfaceY(sampleX, sampleZ, currentBiome);
+
+      if (
+        !Number.isFinite(sampleY) ||
+        isWaterTile(sampleX, sampleZ, currentBiome) ||
+        Math.abs(sampleY - centerY) > VOXEL_SIZE
+      ) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+export function clampToWorld(value, radius = 0) {
+  return Math.max(
+    -BIOME_BOUNDARY + radius,
+    Math.min(BIOME_BOUNDARY - radius, value)
+  );
+}
+
+export function getSafeSpawnPosition({
   centerX = 0,
   centerZ = 0,
-  radius = TERRAIN_RADIUS
-) {
-  const trees = [];
-  const startX = snapToVoxel(centerX - radius);
-  const endX = snapToVoxel(centerX + radius);
-  const startZ = snapToVoxel(centerZ - radius);
-  const endZ = snapToVoxel(centerZ + radius);
+  entityHeight = PLAYER_HEIGHT,
+  lift = 2,
+  currentBiome = activeBiome,
+} = {}) {
+  const biomeMap = generateBiomeMap(currentBiome);
+  const candidates = [];
 
-  for (
-    let x = startX;
-    x <= endX + GRID_EPSILON;
-    x += VOXEL_SIZE
-  ) {
-    const tileX = snapToVoxel(x);
-
-    for (
-      let z = startZ;
-      z <= endZ + GRID_EPSILON;
-      z += VOXEL_SIZE
-    ) {
-      const tileZ = snapToVoxel(z);
-
-      if (isTreeTile(tileX, tileZ)) {
-        trees.push({
-          key: toTileKey(tileX, tileZ),
-          x: tileX,
-          z: tileZ,
-          surfaceY: getTerrainSurfaceY(tileX, tileZ),
-        });
-      }
+  biomeMap.heightLookup.forEach((tile, key) => {
+    if (tile.isWater || tile.surfaceY <= WATER_LEVEL) {
+      return;
     }
+
+    const [x, z] = key.split(':').map(Number);
+
+    if (!isSafeSpawnTile(x, z, currentBiome)) {
+      return;
+    }
+
+    candidates.push({
+      distance: Math.hypot(x - centerX, z - centerZ),
+      surfaceY: tile.surfaceY,
+      x,
+      z,
+    });
+  });
+
+  if (candidates.length === 0) {
+    return [0, 10, 0];
   }
 
-  return trees;
+  candidates.sort((a, b) => a.distance - b.distance);
+  const safe = candidates[0];
+  const safeLift = Math.max(
+    lift,
+    entityHeight / 2 + ENTITY_FOOT_CLEARANCE
+  );
+
+  return [
+    safe.x,
+    safe.surfaceY + safeLift,
+    safe.z,
+  ];
 }
 
-export function createCacti(
-  centerX = 0,
-  centerZ = 0,
-  radius = TERRAIN_RADIUS
+export function getPathSpawnPoint(
+  currentBiome = activeBiome,
+  entityHeight = PLAYER_HEIGHT
 ) {
-  const cacti = [];
-  const startX = snapToVoxel(centerX - radius);
-  const endX = snapToVoxel(centerX + radius);
-  const startZ = snapToVoxel(centerZ - radius);
-  const endZ = snapToVoxel(centerZ + radius);
-
-  for (
-    let x = startX;
-    x <= endX + GRID_EPSILON;
-    x += VOXEL_SIZE
-  ) {
-    const tileX = snapToVoxel(x);
-
-    for (
-      let z = startZ;
-      z <= endZ + GRID_EPSILON;
-      z += VOXEL_SIZE
-    ) {
-      const tileZ = snapToVoxel(z);
-
-      if (isCactusTile(tileX, tileZ)) {
-        cacti.push({
-          key: toTileKey(tileX, tileZ),
-          x: tileX,
-          z: tileZ,
-          surfaceY: getTerrainSurfaceY(tileX, tileZ),
-        });
-      }
-    }
-  }
-
-  return cacti;
+  return getSafeSpawnPosition({
+    centerX: 0,
+    centerZ: 0,
+    currentBiome,
+    entityHeight,
+    lift: entityHeight / 2 + ENTITY_FOOT_CLEARANCE,
+  });
 }
+
+export const PLAYER_START = [0, 10, 0];
 
 export function getRandomGrassPosition(
   radius = 0.45,
   entityHeight = 1,
   centerX = PLAYER_START[0],
   centerZ = PLAYER_START[2],
-  spawnRadius = 7
+  spawnRadius = 7,
+  currentBiome = activeBiome
 ) {
-  for (let attempts = 0; attempts < 100; attempts += 1) {
+  for (let attempts = 0; attempts < 120; attempts += 1) {
     const x = getTileCoord(centerX + Math.random() * spawnRadius * 2 - spawnRadius);
     const z = getTileCoord(centerZ + Math.random() * spawnRadius * 2 - spawnRadius);
 
-    if (isWalkablePosition(x, z, radius)) {
-      return [x, getEntityY(x, z, entityHeight), z];
+    if (isWalkablePosition(x, z, radius, currentBiome)) {
+      return [x, getEntityY(x, z, entityHeight, undefined, currentBiome), z];
     }
   }
 
-  const fallbackX = getTileCoord(WORLD_HALF - 2);
-  const fallbackZ = getTileCoord(WORLD_HALF - 2);
+  return getSafeSpawnPosition({
+    centerX,
+    centerZ,
+    entityHeight,
+    currentBiome,
+  });
+}
 
-  return [fallbackX, getEntityY(fallbackX, fallbackZ, entityHeight), fallbackZ];
+export function generateStaticPathData(currentBiome = activeBiome) {
+  return generateBiomeMap(currentBiome);
+}
+
+export function ensurePathInCache(currentBiome = activeBiome) {
+  return generateBiomeMap(currentBiome);
+}
+
+export function preloadPath(currentBiome = activeBiome) {
+  return generateBiomeMap(currentBiome);
+}
+
+export function getPathMap(currentBiome = activeBiome) {
+  return generateBiomeMap(currentBiome);
 }

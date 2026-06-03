@@ -1,9 +1,9 @@
-.game-shell {
+﻿.game-shell {
   position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: #87CEEB;
+  background-color: #87ceeb;
 }
 
 .hud {
@@ -152,4 +152,121 @@
   height: 100%;
   background: linear-gradient(90deg, #fff3a8, #ffd928);
   border-radius: inherit;
+}
+
+.path-menu {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 60;
+  display: grid;
+  gap: 8px;
+  width: 210px;
+  pointer-events: auto;
+}
+
+.path-menu button {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 10px;
+  color: #f8fbff;
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  background: rgba(20, 35, 48, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.path-menu button:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.path-menu button.active {
+  border-color: #fff3a8;
+  box-shadow: 0 0 0 2px rgba(255, 243, 168, 0.22);
+}
+
+.path-menu span {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  color: #24313c;
+  font-weight: 700;
+  background: #fff3a8;
+  border-radius: 50%;
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  color: #f8fbff;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255, 179, 128, 0.24), transparent 38%),
+    rgba(17, 27, 46, 0.74);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.loading-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.loading-panel {
+  display: grid;
+  gap: 8px;
+  min-width: 280px;
+  padding: 18px 20px;
+  text-align: center;
+  background: rgba(20, 35, 48, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.32);
+}
+
+.loading-label {
+  color: #ffd9b7;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.loading-panel strong {
+  font-size: 18px;
+}
+
+.loading-bar {
+  height: 7px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+.loading-bar-fill {
+  display: block;
+  width: 46%;
+  height: 100%;
+  background: linear-gradient(90deg, #fff3a8, #ffb380);
+  border-radius: inherit;
+  animation: loading-slide 900ms ease-in-out infinite alternate;
+}
+
+@keyframes loading-slide {
+  from {
+    transform: translateX(-35%);
+  }
+
+  to {
+    transform: translateX(135%);
+  }
 }

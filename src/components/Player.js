@@ -2,12 +2,13 @@ import { Box } from '@react-three/drei';
 import {
   Suspense,
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
 } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Vector3 } from 'three';
+import { MathUtils, Vector3 } from 'three';
 import AnimatedModel from './AnimatedModel';
 import ModelErrorBoundary from './ModelErrorBoundary';
 import VoxelFallback from './VoxelFallback';
@@ -17,23 +18,37 @@ import {
   PLAYER_HEIGHT,
   PLAYER_RADIUS,
   PLAYER_START,
-  clampToWorld,
+  BIOME_BOUNDARY,
+  VOXEL_SIZE,
+  WATER_LEVEL,
   getEntityY,
+  getTerrainSurfaceY,
+  isWaterTile,
   isWalkablePosition,
 } from '../game/world';
 
 const MOVE_SPEED = 4.5;
 const SPRINT_SPEED = 9.0;
+const WATER_MOVE_MULTIPLIER = 0.72;
+const WATER_BUOYANCY_SPEED = 5.5;
+const HEIGHT_LERP_FACTOR = 0.18;
+const STEP_SAFETY_OFFSET = 0.05;
 const ROTATION_SMOOTHING = 14;
 const DISPLACE_EPSILON = 0.0008;
-const MODEL_ROTATION = [0, 0, 0];
 const MODEL_SCALE = 0.32;
 const MODEL_URL = '/player.glb';
 const movement = new Vector3();
 const cameraForward = new Vector3();
 const cameraRight = new Vector3();
 
-const Player = forwardRef(function Player(_, ref) {
+const Player = forwardRef(function Player(
+  {
+    currentPathId = 0,
+    modelRotation = [-Math.PI / 2, 0, 0],
+    spawnPosition = PLAYER_START,
+  },
+  ref
+) {
   const playerRef = useRef();
   const movingRef = useRef(false);
   const previousY = useRef(PLAYER_START[1]);
@@ -54,6 +69,22 @@ const Player = forwardRef(function Player(_, ref) {
   });
 
   useImperativeHandle(ref, () => playerRef.current, []);
+
+  useEffect(() => {
+    if (!playerRef.current) {
+      return;
+    }
+
+    playerRef.current.position.set(
+      spawnPosition[0],
+      spawnPosition[1],
+      spawnPosition[2]
+    );
+    previousY.current = spawnPosition[1];
+    previousXZ.current = { x: spawnPosition[0], z: spawnPosition[2] };
+    vy.current = 0;
+    setIsJumping(false);
+  }, [spawnPosition]);
 
   useFrame(({ camera }, delta) => {
     if (!playerRef.current) {
@@ -80,21 +111,25 @@ const Player = forwardRef(function Player(_, ref) {
       player.position.x,
       player.position.z,
       PLAYER_HEIGHT,
-      previousY.current
+      previousY.current,
+      currentPathId
     );
 
-    if (player.position.y <= groundY + 0.05) {
-      if (pressed.jump && !isJumping) {
+    const airborne = isJumping || vy.current !== 0;
+
+    if (!airborne && player.position.y <= groundY + 0.05) {
+      if (pressed.jump) {
         vy.current = 5.2;
         setIsJumping(true);
         animInputRef.current.isJumping = true;
       } else {
-        player.position.y = groundY;
         vy.current = 0;
         setIsJumping(false);
         animInputRef.current.isJumping = false;
       }
-    } else {
+    }
+
+    if (airborne || vy.current !== 0) {
       vy.current -= 14 * delta;
       player.position.y += vy.current * delta;
       animInputRef.current.isJumping = true;
@@ -105,9 +140,54 @@ const Player = forwardRef(function Player(_, ref) {
         setIsJumping(false);
         animInputRef.current.isJumping = false;
       }
+    } else {
+      const surfaceY = getTerrainSurfaceY(
+        player.position.x,
+        player.position.z,
+        currentPathId
+      );
+      const isInWater = isWaterTile(
+        player.position.x,
+        player.position.z,
+        currentPathId
+      );
+      const isSubmerged = player.position.y < WATER_LEVEL;
+      const targetY = getEntityY(
+        player.position.x,
+        player.position.z,
+        PLAYER_HEIGHT,
+        previousY.current,
+        currentPathId
+      );
+
+      if (isInWater || isSubmerged || surfaceY <= WATER_LEVEL) {
+        const buoyantY = WATER_LEVEL + PLAYER_HEIGHT / 2;
+        player.position.y = MathUtils.lerp(
+          player.position.y,
+          Math.max(targetY, buoyantY),
+          Math.min(1, WATER_BUOYANCY_SPEED * delta)
+        );
+      } else {
+        player.position.y = MathUtils.lerp(
+          player.position.y,
+          targetY,
+          HEIGHT_LERP_FACTOR
+        );
+      }
+
+      previousY.current = targetY;
     }
 
-    previousY.current = player.position.y;
+    player.position.x = MathUtils.clamp(
+      player.position.x,
+      -BIOME_BOUNDARY,
+      BIOME_BOUNDARY
+    );
+    player.position.z = MathUtils.clamp(
+      player.position.z,
+      -BIOME_BOUNDARY,
+      BIOME_BOUNDARY
+    );
 
     animInputRef.current.forwardInput =
       Number(pressed.forward) - Number(pressed.backward);
@@ -176,39 +256,91 @@ const Player = forwardRef(function Player(_, ref) {
       );
     }
 
+    const isInWater = isWaterTile(
+      player.position.x,
+      player.position.z,
+      currentPathId
+    );
+    const isSubmerged = player.position.y < WATER_LEVEL;
+
     const currentMoveSpeed = crouchActive
       ? MOVE_SPEED * 0.45
       : sprintActive
         ? SPRINT_SPEED
         : MOVE_SPEED;
-    movement.multiplyScalar(currentMoveSpeed * delta);
+
+    movement.multiplyScalar(
+      currentMoveSpeed *
+        (isInWater || isSubmerged ? WATER_MOVE_MULTIPLIER : 1) *
+        delta
+    );
 
     const prevX = player.position.x;
     const prevZ = player.position.z;
-    const nextX = clampToWorld(prevX + movement.x, PLAYER_RADIUS);
-    const nextZ = clampToWorld(prevZ + movement.z, PLAYER_RADIUS);
+    const nextX = MathUtils.clamp(
+      prevX + movement.x,
+      -BIOME_BOUNDARY,
+      BIOME_BOUNDARY
+    );
+    const nextZ = MathUtils.clamp(
+      prevZ + movement.z,
+      -BIOME_BOUNDARY,
+      BIOME_BOUNDARY
+    );
+
+    const currentGroundHeight = getTerrainSurfaceY(
+      player.position.x,
+      player.position.z,
+      currentPathId
+    );
+    const nextGroundHeight = getTerrainSurfaceY(nextX, nextZ, currentPathId);
+    const stepDelta = nextGroundHeight - currentGroundHeight;
+    const canStepUp = stepDelta <= VOXEL_SIZE + STEP_SAFETY_OFFSET;
+    const canEscapeWater =
+      (isInWater || isSubmerged) &&
+      nextGroundHeight <= currentGroundHeight + VOXEL_SIZE * 1.5;
 
     let actuallyMoved = false;
 
-    if (isWalkablePosition(nextX, nextZ, PLAYER_RADIUS)) {
+    if (
+      canStepUp &&
+      (isWalkablePosition(nextX, nextZ, PLAYER_RADIUS, currentPathId) ||
+        canEscapeWater)
+    ) {
       player.position.x = nextX;
       player.position.z = nextZ;
       actuallyMoved =
         Math.hypot(nextX - prevX, nextZ - prevZ) > DISPLACE_EPSILON;
     }
 
-    const nextTargetY = getEntityY(
-      player.position.x,
-      player.position.z,
-      PLAYER_HEIGHT,
-      previousY.current
-    );
+    if (!airborne && vy.current === 0) {
+      const nextTargetY = getEntityY(
+        player.position.x,
+        player.position.z,
+        PLAYER_HEIGHT,
+        previousY.current,
+        currentPathId
+      );
 
-    if (vy.current === 0 && !isJumping) {
-      player.position.y = nextTargetY;
+      if (isWaterTile(player.position.x, player.position.z, currentPathId)) {
+        player.position.y = MathUtils.lerp(
+          player.position.y,
+          Math.max(nextTargetY, WATER_LEVEL + PLAYER_HEIGHT / 2 + VOXEL_SIZE),
+          Math.min(1, WATER_BUOYANCY_SPEED * delta)
+        );
+      } else {
+        player.position.y = MathUtils.lerp(
+          player.position.y,
+          nextTargetY,
+          HEIGHT_LERP_FACTOR
+        );
+      }
+
+      previousY.current = nextTargetY;
+    } else {
+      previousY.current = player.position.y;
     }
 
-    previousY.current = player.position.y;
     previousXZ.current.x = player.position.x;
     previousXZ.current.z = player.position.z;
 
@@ -229,12 +361,12 @@ const Player = forwardRef(function Player(_, ref) {
     width: 0.65,
     depth: 0.65,
     position: [0, modelYOffset, 0],
-    rotation: MODEL_ROTATION,
+    rotation: modelRotation,
     scale: MODEL_SCALE,
   };
 
   return (
-    <group ref={playerRef} position={PLAYER_START}>
+    <group ref={playerRef} position={spawnPosition}>
       <Box args={[0.65, PLAYER_HEIGHT, 0.65]} visible={false}>
         <meshBasicMaterial transparent opacity={0} />
       </Box>
@@ -248,7 +380,7 @@ const Player = forwardRef(function Player(_, ref) {
             }
             fallbackActionName={isMoving ? ['Run', 'Walk', 'Idle'] : ['Idle', 'Walk']}
             position={[0, modelYOffset, 0]}
-            rotation={MODEL_ROTATION}
+            rotation={modelRotation}
             scale={MODEL_SCALE}
             inputRef={animInputRef}
           />
