@@ -1,4 +1,4 @@
-﻿export const VOXEL_SIZE = 0.75;
+export const VOXEL_SIZE = 0.75;
 export const CHUNK_SIZE = 32;
 export const CHUNK_WORLD_SIZE = CHUNK_SIZE * VOXEL_SIZE;
 export const BIOME_CHUNK_RADIUS = 1;
@@ -52,7 +52,6 @@ export const CREATURE_ASSET_MANIFEST = {
   0: {
     ordinary: [
       { file: 'ordinary/creature_01.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
-      { file: 'ordinary/creature_02.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
     ],
     alpha: { file: 'alpha.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
   },
@@ -84,7 +83,6 @@ export const CREATURE_ASSET_MANIFEST = {
   5: {
     ordinary: [
       { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
-      { file: 'ordinary/creature_02.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
     ],
     alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
   },
@@ -97,6 +95,7 @@ const SPAWN_APPROACH_RADIUS = 17;
 
 export const MapCache = {
   biomes: {},
+  props: {},
 };
 
 export const WORLD_MAPS = MapCache.biomes;
@@ -113,10 +112,12 @@ export function getActivePathId() {
 
 export function clearBiomeCache(currentBiome = activeBiome) {
   delete MapCache.biomes[currentBiome];
+  delete MapCache.props[currentBiome];
 }
 
 export function clearAllBiomeCaches() {
   MapCache.biomes = {};
+  MapCache.props = {};
 }
 
 export function snapToVoxel(value) {
@@ -262,7 +263,7 @@ function getBiomeSurfaceY(tileIndexX, tileIndexZ, currentBiome) {
       0,
       (Math.max(Math.abs(tileIndexX), Math.abs(tileIndexZ)) -
         MAP_HALF_BLOCKS * 0.88) /
-        (MAP_HALF_BLOCKS * 0.12)
+      (MAP_HALF_BLOCKS * 0.12)
     ) * 5;
 
   const rawHeight = Math.round(
@@ -501,6 +502,126 @@ export function getBiomeMap(currentBiome = activeBiome) {
   return generateBiomeMap(currentBiome);
 }
 
+const TREE_BIOMES = new Set([0, 3, 4]);
+const PINE_TREE_BIOMES = new Set([2, 5]);
+const TREE_DENSITY = 0.07;
+const PINE_DENSITY = 0.065;
+const CACTUS_DENSITY = 0.055;
+
+function getSurfaceBlockTypeForProp(currentBiome, surfaceY) {
+  if (surfaceY >= SNOW_LINE_Y || currentBiome === 2 || currentBiome === 5) {
+    return 'snow';
+  }
+
+  if (surfaceY >= STONE_LINE_Y) {
+    return 'stone';
+  }
+
+  if (currentBiome === 1) {
+    return 'desert';
+  }
+
+  return 'grass';
+}
+
+function generateBiomeProps(currentBiome = activeBiome) {
+  const biomeMap = generateBiomeMap(currentBiome);
+  const trees = [];
+  const pineTrees = [];
+  const cacti = [];
+
+  biomeMap.heightLookup.forEach((tile, key) => {
+    if (tile.isWater || tile.surfaceY <= WATER_LEVEL) {
+      return;
+    }
+
+    const [x, z] = key.split(':').map(Number);
+    const tileIndexX = getVoxelIndex(x);
+    const tileIndexZ = getVoxelIndex(z);
+    const spawnDistance = Math.hypot(tileIndexX, tileIndexZ);
+
+    if (spawnDistance <= SPAWN_PAD_RADIUS) {
+      return;
+    }
+
+    const surfaceType = getSurfaceBlockTypeForProp(currentBiome, tile.surfaceY);
+    const roll = seededRandom(tileIndexX, tileIndexZ, currentBiome + 91);
+
+    if (
+      currentBiome === 1 &&
+      surfaceType === 'desert' &&
+      roll < CACTUS_DENSITY
+    ) {
+      cacti.push({
+        key: `cactus-${key}`,
+        x,
+        z,
+        surfaceY: tile.surfaceY,
+      });
+      return;
+    }
+
+    if (
+      PINE_TREE_BIOMES.has(currentBiome) &&
+      surfaceType === 'snow' &&
+      roll < PINE_DENSITY
+    ) {
+      pineTrees.push({
+        key: `pine-${key}`,
+        x,
+        z,
+        surfaceY: tile.surfaceY,
+      });
+      return;
+    }
+
+    if (
+      TREE_BIOMES.has(currentBiome) &&
+      surfaceType === 'grass' &&
+      roll < TREE_DENSITY
+    ) {
+      trees.push({
+        key: `tree-${key}`,
+        x,
+        z,
+        surfaceY: tile.surfaceY,
+      });
+    }
+  });
+
+  return { trees, pineTrees, cacti };
+}
+
+export function getBiomeProps(currentBiome = activeBiome) {
+  if (!MapCache.props[currentBiome]) {
+    MapCache.props[currentBiome] = generateBiomeProps(currentBiome);
+  }
+
+  return MapCache.props[currentBiome];
+}
+
+function collidesWithBiomeProp(x, z, radius, currentBiome) {
+  const { trees, pineTrees, cacti } = getBiomeProps(currentBiome);
+
+  for (const tree of [...trees, ...pineTrees]) {
+    const combined = radius + TREE_RADIUS;
+
+    if ((x - tree.x) ** 2 + (z - tree.z) ** 2 < combined ** 2) {
+      return true;
+    }
+  }
+
+  for (const cactus of cacti) {
+    const combined = radius + CACTUS_RADIUS;
+
+    if ((x - cactus.x) ** 2 + (z - cactus.z) ** 2 < combined ** 2) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export function getRawTerrainSurfaceY(x, z) {
   const { gridX, gridZ } = worldToGrid(x, z);
   const tileIndexX = getVoxelIndex(gridX);
@@ -600,7 +721,8 @@ export function isWalkablePosition(
 ) {
   return (
     isInsideWorld(x, z, radius) &&
-    !isWaterCollision(x, z, radius, currentBiome)
+    !isWaterCollision(x, z, radius, currentBiome) &&
+    !collidesWithBiomeProp(x, z, radius, currentBiome)
   );
 }
 

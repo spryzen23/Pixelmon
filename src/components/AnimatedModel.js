@@ -1,9 +1,11 @@
-﻿import { useAnimations, useGLTF } from '@react-three/drei';
+import { useAnimations, useGLTF } from '@react-three/drei';
 import { useEffect, useMemo, useRef } from 'react';
+import { Box3, LoopRepeat, Vector3 } from 'three';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { useFrame } from '@react-three/fiber';
 import {
   isLeftSide,
+  isPrimaryIdle,
   isPrimaryWalking,
   isStrafeLeanPart,
   matchesCategory,
@@ -31,11 +33,13 @@ export default function AnimatedModel({
   inputRef = null,
 }) {
   const modelRef = useRef();
+  const rootRef = useRef();
   const gltf = useGLTF(url);
   const scene = useMemo(() => clone(gltf.scene), [gltf.scene]);
-  const { actions, names } = useAnimations(gltf.animations, scene);
+  const { actions, names } = useAnimations(gltf.animations, rootRef);
   const activeAction = useRef(null);
   const idleTime = useRef(0);
+  const mixerLogged = useRef(false);
 
   const originalRotations = useMemo(() => {
     const rotations = {};
@@ -51,11 +55,30 @@ export default function AnimatedModel({
 
   const swingTime = useRef(0);
   const resolvedClipName = resolveAnimationClip(names, actionName, fallbackActionName);
-  const useNativeMixer = Boolean(
+  const locomotionClipReady = Boolean(
     resolvedClipName &&
     actions[resolvedClipName] &&
     shouldUseNativeLocomotionClip(resolvedClipName)
   );
+  const useNativeMixer =
+    locomotionClipReady &&
+    (isPrimaryWalking(actionName) || isPrimaryIdle(actionName));
+  const isIdleLocomotion =
+    useNativeMixer &&
+    isPrimaryIdle(actionName) &&
+    !isPrimaryWalking(actionName);
+
+  useEffect(() => {
+    if (!url.includes('player.glb')) {
+      return;
+    }
+    const box = new Box3().setFromObject(scene);
+    const size = new Vector3();
+    box.getSize(size);
+    // #region agent log
+    fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'efcfd8' }, body: JSON.stringify({ sessionId: 'efcfd8', runId: 'pre-fix', hypothesisId: 'H2', location: 'AnimatedModel.js:scene-bbox', message: 'player glb bind-pose AABB (local, before group rotation)', data: { url, rotation, rotationDeg: rotation.map((r) => +(r * 180 / Math.PI).toFixed(1)), bboxSize: { x: +size.x.toFixed(3), y: +size.y.toFixed(3), z: +size.z.toFixed(3) }, tallestAxis: size.y >= size.x && size.y >= size.z ? 'y' : size.z >= size.x ? 'z' : 'x' }, timestamp: Date.now() }) }).catch(() => { });
+    // #endregion
+  }, [url, scene, rotation]);
 
   useFrame((state, delta) => {
     const liveInput = inputRef?.current;
@@ -66,7 +89,9 @@ export default function AnimatedModel({
     const liveSpeed = liveInput?.moveSpeedFactor ?? moveSpeedFactor;
 
     if (useNativeMixer && activeAction.current) {
-      const timeScale = Math.max(0.25, Math.min(2.5, liveSpeed));
+      const timeScale = isIdleLocomotion
+        ? 0.42
+        : Math.max(0.25, Math.min(2.5, liveSpeed));
       activeAction.current.setEffectiveTimeScale(timeScale);
 
       if (liveJumping || liveCrouching) {
@@ -77,12 +102,21 @@ export default function AnimatedModel({
           activeAction.current.play();
         }
       }
+
+      if (url.includes('player.glb') && !mixerLogged.current) {
+        mixerLogged.current = true;
+        // #region agent log
+        fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'efcfd8' }, body: JSON.stringify({ sessionId: 'efcfd8', runId: 'tpose-fix-v4', hypothesisId: 'H4', location: 'AnimatedModel.js:mixer', message: 'native mixer state', data: { clipName: resolvedClipName, isRunning: activeAction.current.isRunning(), paused: activeAction.current.paused, timeScale, actionName, useNativeMixer, isIdleLocomotion }, timestamp: Date.now() }) }).catch(() => { });
+        // #endregion
+      }
     }
 
     const skipFullProcedural =
       useNativeMixer && !liveJumping && !liveCrouching;
 
-    const isWalking = isPrimaryWalking(actionName);
+    const hasLocomotionInput =
+      Math.abs(liveForward) > 0.01 || Math.abs(liveStrafe) > 0.01;
+    const isWalking = isPrimaryWalking(actionName) || hasLocomotionInput;
     const speed = Math.max(0.25, Math.min(2.5, liveSpeed));
     const swingRate = 10 + 8 * speed;
 
@@ -117,6 +151,7 @@ export default function AnimatedModel({
       const name = node.name;
       const lower = name.toLowerCase();
       const origRot = originalRotations[name];
+      const left = isLeftSide(name);
 
       if (!origRot) {
         return;
@@ -124,23 +159,14 @@ export default function AnimatedModel({
 
       if (!skipFullProcedural) {
         node.rotation.copy(origRot);
-      } else if (liveStrafe !== 0 && isStrafeLeanPart(name)) {
-        const rollAngle = -liveStrafe * 0.14;
-        node.rotation.z += rollAngle;
-        return;
-      } else if (!isWalking && idleTime.current > 0) {
-        if (matchesCategory(name, 'spine') || matchesCategory(name, 'head')) {
-          node.rotation.x += idleSway;
-          node.rotation.z += idleWeightShift;
-        } else if (matchesCategory(name, 'tail')) {
-          node.rotation.z += idleSway * 0.6;
+      } else if (skipFullProcedural) {
+        if (liveStrafe !== 0 && isStrafeLeanPart(name)) {
+          const rollAngle = -liveStrafe * 0.14;
+          node.rotation.z += rollAngle;
         }
-        return;
-      } else {
         return;
       }
 
-      const left = isLeftSide(name);
       const legSign = left ? 1 : -1;
       const armSign = left ? -1 : 1;
 
@@ -273,7 +299,18 @@ export default function AnimatedModel({
     try {
       const clipName = resolveAnimationClip(names, actionName, fallbackActionName);
 
-      if (!clipName || !actions[clipName] || !shouldUseNativeLocomotionClip(clipName)) {
+      if (url.includes('player.glb')) {
+        // #region agent log
+        fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'efcfd8' }, body: JSON.stringify({ sessionId: 'efcfd8', runId: 'tpose-fix-v4', hypothesisId: 'H3', location: 'AnimatedModel.js:clip-resolve', message: 'player animation clip resolution', data: { actionName, clipName, nativeOk: locomotionClipReady, useNativeMixer, isIdleLocomotion, clipNames: names?.slice(0, 12) }, timestamp: Date.now() }) }).catch(() => { });
+        // #endregion
+      }
+
+      if (
+        !clipName ||
+        !actions[clipName] ||
+        !shouldUseNativeLocomotionClip(clipName) ||
+        (!isPrimaryWalking(actionName) && !isPrimaryIdle(actionName))
+      ) {
         if (activeAction.current) {
           activeAction.current.stop();
           activeAction.current = null;
@@ -287,7 +324,7 @@ export default function AnimatedModel({
         return undefined;
       }
 
-      nextAction.reset().fadeIn(0.2).play();
+      nextAction.reset().setLoop(LoopRepeat, Infinity).fadeIn(0.2).play();
 
       if (activeAction.current) {
         activeAction.current.crossFadeTo(nextAction, 0.25, false);
@@ -299,11 +336,20 @@ export default function AnimatedModel({
     } catch (error) {
       return undefined;
     }
-  }, [actionName, actions, fallbackActionName, names]);
+  }, [
+    actionName,
+    actions,
+    fallbackActionName,
+    names,
+    url,
+    locomotionClipReady,
+    useNativeMixer,
+    isIdleLocomotion,
+  ]);
 
   return (
     <group ref={modelRef} position={position} rotation={rotation} scale={scale}>
-      <primitive object={scene} />
+      <primitive ref={rootRef} object={scene} />
     </group>
   );
 }

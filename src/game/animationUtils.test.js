@@ -23,9 +23,10 @@ test('resolveAnimationClip picks Walking for Walk action', () => {
   ).toBe('Walking');
 });
 
-test('resolveAnimationClip picks standing clip for Idle action', () => {
-  const clip = resolveAnimationClip(playerClips, 'Idle', ['Idle', 'Walk']);
-  expect(['House', 'Talking']).toContain(clip);
+test('resolveAnimationClip picks Walking for Idle when no Idle clip exists', () => {
+  expect(resolveAnimationClip(playerClips, 'Idle', ['Idle', 'Walk'])).toBe(
+    'Walking'
+  );
 });
 
 test('resolveAnimationClip returns null when no clip matches intent', () => {

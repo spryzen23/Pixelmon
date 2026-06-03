@@ -44,7 +44,7 @@ const cameraRight = new Vector3();
 const Player = forwardRef(function Player(
   {
     currentPathId = 0,
-    modelRotation = [-Math.PI / 2, 0, 0],
+    modelRotation = [0, 0, 0],
     spawnPosition = PLAYER_START,
   },
   ref
@@ -67,8 +67,15 @@ const Player = forwardRef(function Player(
     isCrouching: false,
     moveSpeedFactor: 1,
   });
+  const movementLogTimer = useRef(0);
 
   useImperativeHandle(ref, () => playerRef.current, []);
+
+  useEffect(() => {
+    // #region agent log
+    fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'efcfd8' }, body: JSON.stringify({ sessionId: 'efcfd8', runId: 'pre-fix', hypothesisId: 'H1', location: 'Player.js:mount', message: 'player model transform props', data: { modelUrl: MODEL_URL, modelRotation, modelRotationDeg: modelRotation.map((r) => +(r * 180 / Math.PI).toFixed(1)) }, timestamp: Date.now() }) }).catch(() => { });
+    // #endregion
+  }, [modelRotation]);
 
   useEffect(() => {
     if (!playerRef.current) {
@@ -212,8 +219,11 @@ const Player = forwardRef(function Player(
       player.rotation.y = lerpAngle(
         player.rotation.y,
         cameraYaw,
-        rotationAlpha * 0.25
+        rotationAlpha * 0.7
       );
+      player.rotation.y =
+        MathUtils.euclideanModulo(player.rotation.y + Math.PI, Math.PI * 2) -
+        Math.PI;
 
       if (movingRef.current) {
         movingRef.current = false;
@@ -254,6 +264,9 @@ const Player = forwardRef(function Player(
         movementYaw,
         rotationAlpha
       );
+      player.rotation.y =
+        MathUtils.euclideanModulo(player.rotation.y + Math.PI, Math.PI * 2) -
+        Math.PI;
     }
 
     const isInWater = isWaterTile(
@@ -271,8 +284,8 @@ const Player = forwardRef(function Player(
 
     movement.multiplyScalar(
       currentMoveSpeed *
-        (isInWater || isSubmerged ? WATER_MOVE_MULTIPLIER : 1) *
-        delta
+      (isInWater || isSubmerged ? WATER_MOVE_MULTIPLIER : 1) *
+      delta
     );
 
     const prevX = player.position.x;
@@ -351,6 +364,55 @@ const Player = forwardRef(function Player(
 
     if (sprintActive !== isSprinting) {
       setIsSprinting(sprintActive);
+    }
+
+    movementLogTimer.current += delta;
+    if (movementLogTimer.current >= 0.5) {
+      movementLogTimer.current = 0;
+      const playerYawDeg = +((player.rotation.y * 180) / Math.PI).toFixed(1);
+      const cameraYawDeg = +((cameraYaw * 180) / Math.PI).toFixed(1);
+      const yawDeltaDeg = +(
+        Math.abs(
+          MathUtils.euclideanModulo(
+            (player.rotation.y - cameraYaw) + Math.PI,
+            Math.PI * 2
+          ) - Math.PI
+        ) * 180 /
+        Math.PI
+      ).toFixed(1);
+      // #region agent log
+      fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Debug-Session-Id': 'efcfd8',
+        },
+        body: JSON.stringify({
+          sessionId: 'efcfd8',
+          runId: 'movement-ux-v2',
+          hypothesisId: 'H3',
+          location: 'Player.js:useFrame',
+          message: 'camera-relative movement sample',
+          data: {
+            keys: {
+              forward: pressed.forward,
+              backward: pressed.backward,
+              left: pressed.left,
+              right: pressed.right,
+              sprint: pressed.sprint,
+            },
+            forwardInput: animInputRef.current.forwardInput,
+            strafeInput: animInputRef.current.strafeInput,
+            moveLen: +movement.length().toFixed(4),
+            actuallyMoved,
+            playerYawDeg,
+            cameraYawDeg,
+            yawDeltaDeg,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => { });
+      // #endregion
     }
   });
 

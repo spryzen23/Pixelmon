@@ -12,6 +12,7 @@ import Projectile from './Projectile';
 import Sandstorm from './Sandstorm';
 import Snowstorm from './Snowstorm';
 import ThirdPersonCamera from './ThirdPersonCamera';
+import BiomeProps from './BiomeProps';
 import VoxelWorld from './VoxelWorld';
 import WildCreature from './WildCreature';
 import {
@@ -36,9 +37,9 @@ const alphaForward = new Vector3();
 const alphaSpawnTarget = new Vector3();
 
 const MODEL_ROTATIONS = {
-  player: [-Math.PI / 2, 0, 0],
+  player: [0, 0, 0],
   wildCreature: [0, Math.PI / 2, 0],
-  companion: [0, Math.PI / 2, 0],
+  companion: [0, 0, 0],
 };
 const CREATURE_MODEL_SCALES = {
   0: 0.25,
@@ -129,9 +130,9 @@ function getAlphaSpawnPosition(player, camera, currentBiome) {
 export default function GameScene({
   currentBiome = 0,
   equippedBall = DEFAULT_BALL,
-  onBiomeReady = () => {},
-  onCreatureCaught = () => {},
-  onOrdinaryCountChange = () => {},
+  onBiomeReady = () => { },
+  onCreatureCaught = () => { },
+  onOrdinaryCountChange = () => { },
   throwPower,
 }) {
   const { camera } = useThree();
@@ -413,6 +414,7 @@ export default function GameScene({
           currentBiome={currentBiome}
           onBiomeReady={onBiomeReady}
         />
+        <BiomeProps currentBiome={currentBiome} />
       </Suspense>
       <Suspense fallback={null}>
         <Player

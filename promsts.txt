@@ -1,0 +1,208 @@
+========================================
+PIXELMON (VOXEL LEGENDS) - PROJECT PROMPTS REFERENCE
+========================================
+
+This file contains reusable prompts for AI-assisted development on this codebase.
+For shell commands and workflows, see: commands.txt
+For gameplay and asset documentation, see: README.md
+For automated validation, run: codebase.bat
+
+========================================
+GENERAL WORKFLOW (USE ON EVERY TASK)
+========================================
+
+Learn, understand, and analyze this codebase deeply, then break your tasks into smaller tasks.
+
+Review key files first: README.md, src/App.jsx, src/components/GameScene.js, src/game/world.js.
+
+Identify all errors and warnings, then resolve them one by one. Learn, understand, and analyze deeply, breaking tasks into smaller steps.
+
+After changes: run `npm test -- --watchAll=false` and `npm run build`, or run `codebase.bat`.
+
+Maintain consistency with existing patterns (functional React components, game logic in src/game/, R3F in src/components/).
+
+========================================
+UI / HUD PROMPTS (2D OVERLAY)
+========================================
+
+Improve the Hotbar (src/components/Hotbar.js) and biome menu in App.jsx: clearer labels, ball icons, catch count, and ordinary-left counter. Keep styles in App.css with unique class names; avoid inline styles.
+
+Make the HUD fully responsive on mobile and tablet: biome list, throw power indicator, and instructions readable without covering the canvas.
+
+Add a polished LoadingOverlay for biome transitions: progress text, fade in/out, and ensure it never sticks (fix race between preloadBiome and handleBiomeReady).
+
+Add a title / welcome screen before entering the Canvas, with a "Play" button and control summary.
+
+Add pause menu (Escape): resume, switch biome, reset catch count, controls reference.
+
+Apply a cohesive dark UI theme to all overlay panels with high contrast over the 3D scene.
+
+========================================
+3D SCENE & R3F PROMPTS
+========================================
+
+Refactor GameScene.js into smaller modules: creature spawning, projectile/catch logic, companion state, and weather — without changing gameplay behavior. Learn, understand, and analyze deeply, then break tasks into smaller tasks.
+
+Add a new R3F component following patterns in AnimatedModel.js and ModelErrorBoundary.js: Suspense, error fallback to VoxelFallback, and manifest-driven scale/rotation.
+
+Improve ThirdPersonCamera.js: smoother follow, collision-aware zoom optional, and stable behavior during pointer lock.
+
+Optimize VoxelWorld.js instanced mesh updates when biome cache changes; avoid full remount when possible.
+
+Extend Atmosphere.js and OceanHorizon.js for biome-specific sky color, fog, and sun position (use SUN_POSITION from Atmosphere.js).
+
+========================================
+GAMEPLAY PROMPTS
+========================================
+
+Add a new biome to WORLD_PATHS and CREATURE_ASSET_MANIFEST in src/game/world.js, with public/assets/<Biome Name>/ folder, biome button in App.jsx, and weather rules in GameScene.js.
+
+Add multiple ordinary creature GLBs to one biome; update manifest so spawner cycles types (see getOrdinaryCreatureAsset in world.js).
+
+Support multiple alpha variants: alpha folder + random selection in getAlphaCreatureAsset().
+
+Tune capture mechanics in GameScene.js: captureChance from balls.js, hit detection, CaptureBurst feedback, and alpha spawn when all ordinary creatures are caught.
+
+Improve WildCreature.js AI: wander within walkable tiles (isWalkablePosition), flee from player, or idle animations.
+
+Implement companion recall/send (E key) with CompanionRecallEffect; align companion height with COMPANION_HEIGHT in world.js.
+
+Add new ball type in src/game/balls.js: wire key binding in App.jsx and visual in Projectile.js / Hotbar.js.
+
+========================================
+PHYSICS & CONTROLS PROMPTS
+========================================
+
+Refine projectilePhysics.js: arc height, power clamp (MIN/MAX_THROW_POWER), and parallax throw vector for third-person aim.
+
+Improve Player.js movement: slope handling, biome boundary clamp (BIOME_BOUNDARY), and water/non-walkable blocking via world.js helpers.
+
+Enhance useKeyboardControls.js or centralize input in a single hook used by Player and App.
+
+Improve AimReticle.js and AimIndicator.js for throw direction feedback when pointer locked.
+
+========================================
+ASSET PIPELINE PROMPTS
+========================================
+
+Document and validate all GLB paths under public/assets against CREATURE_ASSET_MANIFEST; report missing files.
+
+Fix a model that appears sideways or wrong scale using only manifest rotation [x,y,z] and scale — do not hack mesh.scale in components unless necessary.
+
+Migrate legacy public/poke_glb usage to public/assets biome folders; remove dead pokeModels.js code if unused.
+
+Add texture variants for terrain (grass.png, dirt.png, grass_dirt.png) per biome type in world.js BIOMES.
+
+========================================
+PERFORMANCE PROMPTS
+========================================
+
+Biome switch takes too long — profile preloadBiome, MapCache, and GLB preloading (PokeGlbPreloader.js). Optimize to feel instant where possible. Learn, understand, and analyze deeply, breaking tasks into smaller steps.
+
+Reduce React re-renders during gameplay: memoize callbacks, split GameScene state, and avoid parent App re-renders on every frame.
+
+Reduce draw calls and texture memory: audit drei helpers, shadow map size, and number of active WildCreature instances.
+
+Production build bundle size — analyze build output; lazy-load non-critical components if needed.
+
+========================================
+CODE QUALITY & ARCHITECTURE PROMPTS
+========================================
+
+Check all files and organize into: shell (App), scene components, game logic (src/game/), hooks, and styles. Propose folder moves in small PR-sized steps.
+
+Read this codebase file by file; remove unused code and files (including duplicate paths under src if any). Learn, understand, and analyze deeply, then break tasks into smaller tasks.
+
+Read this codebase file by file; remove dead code and unreachable exports. Then modify the codebase in small verified steps.
+
+Read this codebase file by file; remove duplicate logic (e.g. repeated spawn math, duplicated constants). Consolidate into world.js or shared utils.
+
+Find all console statements; remove or replace with a small logger utility for dev-only logging. Break tasks into smaller tasks and create a plan.
+
+Add unit tests for pure functions in world.js, projectilePhysics.js, and animationUtils.js following animationUtils.test.js patterns.
+
+Add ESLint and Prettier config if missing; align with codebase.bat expectations.
+
+========================================
+TESTING PROMPTS
+========================================
+
+Add tests for getEntityY, isWalkablePosition, and biome cache helpers in world.js.
+
+Add React component smoke test for App.jsx with Canvas mocked or shallow-rendered.
+
+Run `set CI=true&& npm test -- --watchAll=false --coverage` and improve coverage on src/game/*.
+
+========================================
+VERSION ROADMAP (SUGGESTED)
+========================================
+
+Use these as planning buckets; create docs/versions.md when ready.
+
+0.x.x — Foundation: CRA setup, voxel terrain, pointer lock, codebase.bat, docs
+1.x.x — Core loop: catching, balls, companion, alpha spawn, 6 biomes stable
+2.x.x — Content: more creatures per biome, biome-specific props (Tree, Cactus), audio
+3.x.x — Progression: save/load (localStorage), pokedex UI, biome unlock order
+4.x.x — Polish: menus, settings, graphics options, mobile-friendly HUD
+5.x.x — Multiplayer or backend (only if scoped): accounts, cloud saves
+6.x.x — Performance and production deploy pipeline
+
+Prompt for roadmap work:
+@README.md @commands.txt @promsts.txt read these files and plan the next 0.x milestone with a checklist (version_0.1.md style). Learn, understand, and analyze deeply, then break your tasks into smaller tasks.
+
+========================================
+FILE-SPECIFIC PROMPTS
+========================================
+
+@src/game/world.js — Add biome 6 "Sunlit Grove" with plains terrain, two ordinary GLBs, one alpha, and register in manifest. Update App biome menu.
+
+@src/components/GameScene.js — Explain catch flow from projectile hit to CaptureBurst to alpha spawn. Then suggest one bug fix with test plan.
+
+@src/components/AnimatedModel.js — Harden GLB loading: timeout, retry once, fallback to VoxelFallback with distinct color per creature id.
+
+@src/App.jsx — Extract biome switch and throw-power keyboard logic into custom hooks without changing behavior.
+
+@codebase.bat — Align step labels with README; add optional check for each WORLD_PATHS biome folder containing alpha.glb.
+
+========================================
+AGENT SESSION STARTER
+========================================
+
+You are working on Pixelmon (Voxel Legends), a React + Three.js voxel creature-catching game.
+
+Read README.md, commands.txt, and src/game/world.js first.
+Respect existing biome names and asset paths under public/assets/.
+Do not add a backend unless explicitly requested.
+After edits, run tests and build or suggest running codebase.bat.
+
+Task: <describe your goal here>
+
+Learn, understand, and analyze this deeply, then break your tasks into smaller tasks.
+
+========================================
+NOTES
+========================================
+
+- No Contact360 / GraphQL / auth prompts apply to this repo unless you add a backend later.
+- Do not commit real API keys or credentials in prompts or code.
+- Biome folder names must match WORLD_PATHS[].name exactly (including spaces).
+- Prefer manifest scale/rotation over per-component magic numbers.
+- Update commands.txt when adding npm scripts or new tooling.
+- Update this file when you discover reusable prompts that worked well.
+
+
+Read this codebase and review it file by file and then thick about use properly or remove all unused code and files. Then, modify my codebase, learn, understand, and analyse it deeply. Next, break your tasks into smaller tasks.
+
+Read this codebase and review it file by file and then thick about use properly or remove all dead code and files. Then, modify my codebase, learn, understand, and analyse it deeply. Next, break your tasks into smaller tasks.
+
+Read this codebase and review it file by file and then thick about use properly or remove all duplicate code and files. Then, modify my codebase, learn, understand, and analyse it deeply. Next, break your tasks into smaller tasks.
+
+Read this codebase and then optimise my codebase. Learn, understand, and analyse this deeply, and then break your tasks into smaller tasks.
+
+In the codebase, find all console statements and remove all console statements and replace with logger statements, then modify the codebase. Break tasks into smaller tasks and create a plan
+
+Review all Progress Trackers and all Checkboxes, and if all tasks are completed, fill all checkboxes one by one
+
+Identify all errors and warnings, then resolve them one by one. Learn, understand, and analyze deeply, breaking tasks into smaller steps
+
+

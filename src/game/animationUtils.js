@@ -113,9 +113,24 @@ export function resolveAnimationClip(names, actionName, fallbackActionName) {
   }
 
   if (/idle/i.test(primary)) {
+    const exactIdle = names.find((name) => /^(idle|idling)$/i.test(name));
+    if (exactIdle) {
+      return exactIdle;
+    }
+
+    const walkClip = names.find((name) =>
+      /^(walking|walk|jog|run|running)$/i.test(name)
+    );
+    if (walkClip) {
+      return walkClip;
+    }
+
     return (
-      names.find((name) => /idle|stand|house|talk|wait|breath/i.test(name)) ||
-      null
+      names.find(
+        (name) =>
+          /^(stand|standing|wait|breath)$/i.test(name) &&
+          !/house|hip|rap|salsa|talk|fight|sing/i.test(name)
+      ) || null
     );
   }
 

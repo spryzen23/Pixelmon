@@ -111,7 +111,7 @@ function App() {
           intensity={1.35}
           position={SUN_POSITION}
         />
-        <SafePointerLockControls pointerSpeed={0.65} />
+        <SafePointerLockControls pointerSpeed={0.5} minPolarAngle={0.35} maxPolarAngle={2.45} />
         <GameScene
           currentBiome={currentBiome}
           equippedBall={equippedBall}
