@@ -2,34 +2,43 @@ import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
 import { Vector3 } from 'three';
 
-const SHOULDER_OFFSET_X = 1.2;
-const CAMERA_HEIGHT = 1.8;
-const CAMERA_DISTANCE = 3;
-const POSITION_SMOOTHING = 12;
+const SHOULDER_OFFSET_X = 1;
+const CAMERA_HEIGHT = 2;
+const CAMERA_DISTANCE = 4;
 
 export default function ThirdPersonCamera({ targetRef }) {
   const desiredPosition = useRef(new Vector3());
   const forward = useRef(new Vector3());
   const right = useRef(new Vector3());
-  const initialized = useRef(false);
 
-  useFrame(({ camera }, delta) => {
+  useFrame(({ camera }) => {
     const target = targetRef.current;
 
     if (!target) {
       return;
     }
 
-    forward.current.set(
-      Math.sin(target.rotation.y),
-      0,
-      Math.cos(target.rotation.y)
-    );
-    right.current.set(
-      Math.cos(target.rotation.y),
-      0,
-      -Math.sin(target.rotation.y)
-    );
+    camera.getWorldDirection(forward.current);
+    forward.current.y = 0;
+
+    if (forward.current.lengthSq() < 0.0001) {
+      forward.current.set(
+        Math.sin(target.rotation.y),
+        0,
+        Math.cos(target.rotation.y)
+      );
+    }
+
+    forward.current.normalize();
+
+    right.current.set(1, 0, 0).applyQuaternion(camera.quaternion);
+    right.current.y = 0;
+
+    if (right.current.lengthSq() < 0.0001) {
+      right.current.set(forward.current.z, 0, -forward.current.x);
+    }
+
+    right.current.normalize();
 
     desiredPosition.current
       .copy(target.position)
@@ -37,14 +46,7 @@ export default function ThirdPersonCamera({ targetRef }) {
       .addScaledVector(forward.current, -CAMERA_DISTANCE);
     desiredPosition.current.y = target.position.y + CAMERA_HEIGHT;
 
-    if (!initialized.current) {
-      camera.position.copy(desiredPosition.current);
-      initialized.current = true;
-      return;
-    }
-
-    const positionAlpha = 1 - Math.exp(-POSITION_SMOOTHING * delta);
-    camera.position.lerp(desiredPosition.current, positionAlpha);
+    camera.position.copy(desiredPosition.current);
   });
 
   return null;

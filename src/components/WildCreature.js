@@ -1,10 +1,8 @@
-import { Box } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { Suspense, useEffect, useMemo, useRef } from 'react';
+import { useAnimations, useGLTF } from '@react-three/drei';
+import { useEffect, useMemo, useRef } from 'react';
 import { Vector3 } from 'three';
-import AnimatedModel from './AnimatedModel';
-import ModelErrorBoundary from './ModelErrorBoundary';
-import VoxelFallback from './VoxelFallback';
+import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import {
   WILD_CREATURE_HEIGHT,
   getEntityY,
@@ -16,35 +14,28 @@ const WANDER_SPEED = 1.35;
 const FLEE_SPEED = 5.5;
 const FLEE_DURATION = 2;
 const ARRIVAL_DISTANCE = 0.08;
-const MODEL_ROTATION = [-Math.PI / 2, 0, 0];
-const MODEL_SCALE = 0.25;
-const MODEL_URL = '/wild_creature.glb';
+const DEFAULT_MODEL_SCALE = 0.35;
+const DEFAULT_ALPHA_MULTIPLIER = 2.5;
+const DEFAULT_MODEL_URL = '/assets/wild_creature.glb';
 const direction = new Vector3();
-
-function WildFallback() {
-  return (
-    <VoxelFallback
-      color="#dc2f32"
-      height={WILD_CREATURE_HEIGHT}
-      width={0.75}
-      depth={0.75}
-    />
-  );
-}
 
 function randomPause() {
   return 1.5 + Math.random() * 2.5;
 }
 
-function randomNearbyTarget(origin) {
+function randomNearbyTarget(origin, pathId) {
   for (let attempts = 0; attempts < 30; attempts += 1) {
     const angle = Math.random() * Math.PI * 2;
     const distance = 1 + Math.random() * WANDER_RADIUS;
     const x = origin.x + Math.cos(angle) * distance;
     const z = origin.z + Math.sin(angle) * distance;
 
-    if (isWalkablePosition(x, z, 0.45)) {
-      return new Vector3(x, getEntityY(x, z, WILD_CREATURE_HEIGHT), z);
+    if (isWalkablePosition(x, z, 0.45, pathId)) {
+      return new Vector3(
+        x,
+        getEntityY(x, z, WILD_CREATURE_HEIGHT, undefined, pathId),
+        z
+      );
     }
   }
 
@@ -52,22 +43,71 @@ function randomNearbyTarget(origin) {
 }
 
 export default function WildCreature({
+  currentPathId = 0,
   id,
   initialPosition,
+  isAlpha = false,
+  modelScale = DEFAULT_MODEL_SCALE,
+  modelUrl = DEFAULT_MODEL_URL,
+  modelRotation = [Math.PI / 2, 0, 0],
   onFleeComplete,
   playerRef,
   registerRef,
   status = 'active',
 }) {
   const creatureRef = useRef();
+  const modelRef = useRef();
   const fleeTimer = useRef(0);
+  const activeAction = useRef(null);
   const previousY = useRef(initialPosition[1]);
   const start = useMemo(() => new Vector3(...initialPosition), [initialPosition]);
+  const gltf = useGLTF(modelUrl);
+  const gltfScene = useMemo(() => clone(gltf.scene), [gltf.scene]);
+  const visualScale = modelScale * (isAlpha ? DEFAULT_ALPHA_MULTIPLIER : 1);
+  const { actions, names } = useAnimations(gltf.animations, modelRef);
   const ai = useRef({
     mode: 'pause',
     pauseTimer: randomPause(),
     target: start.clone(),
   });
+
+  useEffect(() => {
+    gltfScene.traverse((node) => {
+      if (node.isMesh) {
+        node.castShadow = true;
+        node.receiveShadow = true;
+      }
+    });
+  }, [gltfScene]);
+
+  useEffect(() => {
+    const clipName =
+      ['Idle', 'Walk']
+        .map((preferredName) =>
+          names.find((name) => name.toLowerCase() === preferredName.toLowerCase())
+        )
+        .find(Boolean) || names[0];
+
+    if (!clipName || !actions[clipName]) {
+      return undefined;
+    }
+
+    const nextAction = actions[clipName];
+
+    if (activeAction.current === nextAction) {
+      return undefined;
+    }
+
+    nextAction.reset().fadeIn(0.2).play();
+
+    if (activeAction.current) {
+      activeAction.current.crossFadeTo(nextAction, 0.25, false);
+    }
+
+    activeAction.current = nextAction;
+
+    return undefined;
+  }, [actions, names]);
 
   useEffect(() => {
     registerRef(id, creatureRef.current);
@@ -92,7 +132,8 @@ export default function WildCreature({
       creature.position.x,
       creature.position.z,
       WILD_CREATURE_HEIGHT,
-      previousY.current
+      previousY.current,
+      currentPathId
     );
     previousY.current = creature.position.y;
 
@@ -118,13 +159,14 @@ export default function WildCreature({
         const nextX = creature.position.x + direction.x * FLEE_SPEED * delta;
         const nextZ = creature.position.z + direction.z * FLEE_SPEED * delta;
 
-        if (isWalkablePosition(nextX, nextZ, 0.45)) {
+        if (isWalkablePosition(nextX, nextZ, 0.45, currentPathId)) {
           creature.position.x = nextX;
           creature.position.y = getEntityY(
             nextX,
             nextZ,
             WILD_CREATURE_HEIGHT,
-            previousY.current
+            previousY.current,
+            currentPathId
           );
           previousY.current = creature.position.y;
           creature.position.z = nextZ;
@@ -142,7 +184,7 @@ export default function WildCreature({
       ai.current.pauseTimer -= delta;
 
       if (ai.current.pauseTimer <= 0) {
-        ai.current.target.copy(randomNearbyTarget(creature.position));
+        ai.current.target.copy(randomNearbyTarget(creature.position, currentPathId));
         ai.current.mode = 'walk';
       }
 
@@ -163,13 +205,14 @@ export default function WildCreature({
     const nextX = creature.position.x + direction.x * WANDER_SPEED * delta;
     const nextZ = creature.position.z + direction.z * WANDER_SPEED * delta;
 
-    if (isWalkablePosition(nextX, nextZ, 0.45)) {
+    if (isWalkablePosition(nextX, nextZ, 0.45, currentPathId)) {
       creature.position.x = nextX;
       creature.position.y = getEntityY(
         nextX,
         nextZ,
         WILD_CREATURE_HEIGHT,
-        previousY.current
+        previousY.current,
+        currentPathId
       );
       previousY.current = creature.position.y;
       creature.position.z = nextZ;
@@ -183,28 +226,28 @@ export default function WildCreature({
     <group
       ref={creatureRef}
       position={initialPosition}
-      visible={status !== 'capturing'}
     >
-      {/* Absolute world-space physics root: do not nest this under the player. */}
-      <Box args={[0.75, WILD_CREATURE_HEIGHT, 0.75]} visible={false}>
-        <meshBasicMaterial transparent opacity={0} />
-      </Box>
-
-      <ModelErrorBoundary
-        resetKey={MODEL_URL}
-        fallback={<WildFallback />}
+      <group
+        ref={modelRef}
+        position={[0, -WILD_CREATURE_HEIGHT / 2, 0]}
+        scale={visualScale}
+        visible={status !== 'capturing'}
       >
-        <Suspense fallback={<WildFallback />}>
-          <AnimatedModel
-            url={MODEL_URL}
-            actionName="Idle"
-            fallbackActionName="Walk"
-            position={[0, -WILD_CREATURE_HEIGHT / 2, 0]}
-            rotation={MODEL_ROTATION}
-            scale={MODEL_SCALE}
-          />
-        </Suspense>
-      </ModelErrorBoundary>
+        <group rotation={modelRotation}>
+          <primitive object={gltfScene} />
+        </group>
+      </group>
+
+      {isAlpha && (
+        <pointLight
+          color="red"
+          distance={5}
+          intensity={2}
+          position={[0, 2, 0]}
+        />
+      )}
     </group>
   );
 }
+
+useGLTF.preload(DEFAULT_MODEL_URL);

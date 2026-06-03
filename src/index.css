@@ -3,7 +3,7 @@ body {
   margin: 0;
   width: 100%;
   min-height: 100%;
-  background-color: #87CEEB;
+  background-color: #87ceeb;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -13,7 +13,7 @@ body {
 
 #root {
   min-height: 100vh;
-  background-color: #87CEEB;
+  background-color: #87ceeb;
 }
 
 code {

@@ -1,4 +1,3 @@
-import { Box } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import {
   Suspense,
@@ -20,9 +19,8 @@ import {
 const FOLLOW_SPEED = 5;
 const MIN_FOLLOW_DISTANCE = 0.95;
 const TRAIL_DISTANCE = 1.6;
-const MODEL_ROTATION = [-Math.PI / 2, 0, 0];
 const MODEL_SCALE = 0.25;
-const MODEL_URL = '/companion.glb';
+const MODEL_URL = '/assets/companion.glb';
 const companionStart = [
   -8.5,
   getEntityY(-8.5, -6.8, COMPANION_HEIGHT),
@@ -32,7 +30,12 @@ const targetPosition = new Vector3();
 const playerForward = new Vector3();
 
 const CompanionCreature = forwardRef(function CompanionCreature(
-  { playerRef, spawnPosition = companionStart },
+  {
+    currentPathId = 0,
+    modelRotation = [0, 0, -Math.PI / 2],
+    playerRef,
+    spawnPosition = companionStart,
+  },
   ref
 ) {
   const companionRef = useRef();
@@ -69,7 +72,9 @@ const CompanionCreature = forwardRef(function CompanionCreature(
     targetPosition.y = getEntityY(
       targetPosition.x,
       targetPosition.z,
-      COMPANION_HEIGHT
+      COMPANION_HEIGHT,
+      undefined,
+      currentPathId
     );
 
     const distanceToTarget = companion.position.distanceTo(targetPosition);
@@ -81,7 +86,7 @@ const CompanionCreature = forwardRef(function CompanionCreature(
       const nextZ =
         companion.position.z + (targetPosition.z - companion.position.z) * smoothing;
 
-      if (isWalkablePosition(nextX, nextZ, 0.35)) {
+      if (isWalkablePosition(nextX, nextZ, 0.35, currentPathId)) {
         companion.position.x = nextX;
         companion.position.z = nextZ;
         setMoving(true);
@@ -101,7 +106,8 @@ const CompanionCreature = forwardRef(function CompanionCreature(
       companion.position.x,
       companion.position.z,
       COMPANION_HEIGHT,
-      previousY.current
+      previousY.current,
+      currentPathId
     );
     companion.position.y = targetY;
     previousY.current = targetY;
@@ -112,9 +118,15 @@ const CompanionCreature = forwardRef(function CompanionCreature(
       ref={companionRef}
       position={spawnPosition}
     >
-      <Box args={[0.7, COMPANION_HEIGHT, 0.7]} visible={false}>
-        <meshBasicMaterial transparent opacity={0} />
-      </Box>
+      <mesh castShadow={false} receiveShadow={false}>
+        <boxGeometry args={[0.7, COMPANION_HEIGHT, 0.7]} />
+        <meshBasicMaterial
+          colorWrite={false}
+          depthWrite={false}
+          opacity={0}
+          transparent
+        />
+      </mesh>
 
       <ModelErrorBoundary
         resetKey={MODEL_URL}
@@ -142,7 +154,7 @@ const CompanionCreature = forwardRef(function CompanionCreature(
             actionName={isMoving ? 'Walk' : 'Idle'}
             fallbackActionName={isMoving ? ['Run', 'Walk', 'Idle'] : ['Idle', 'Walk']}
             position={[0, -COMPANION_HEIGHT / 2, 0]}
-            rotation={MODEL_ROTATION}
+            rotation={modelRotation}
             scale={MODEL_SCALE}
           />
         </Suspense>

@@ -65,12 +65,14 @@ export default function AnimatedModel({
   }, [actionName, actions, fallbackActionName, names]);
 
   return (
-    <group ref={modelRef} position={position} rotation={rotation} scale={scale}>
-      <primitive object={scene} />
+    <group ref={modelRef} position={position} scale={scale}>
+      <group rotation={rotation}>
+        <primitive object={scene} />
+      </group>
     </group>
   );
 }
 
-useGLTF.preload('/player.glb');
-useGLTF.preload('/companion.glb');
-useGLTF.preload('/wild_creature.glb');
+useGLTF.preload('/assets/player.glb');
+useGLTF.preload('/assets/companion.glb');
+useGLTF.preload('/assets/wild_creature.glb');

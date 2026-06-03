@@ -14,6 +14,13 @@ jest.mock('@react-three/fiber', () => ({
 
 jest.mock('@react-three/drei', () => ({
   PointerLockControls: () => <div data-testid="pointer-lock-controls" />,
+  Sky: () => <div data-testid="sky" />,
+}));
+
+jest.mock('./components/Atmosphere', () => ({
+  __esModule: true,
+  default: () => <div data-testid="atmosphere" />,
+  SUN_POSITION: [80, 35, -120],
 }));
 
 jest.mock('./components/GameScene', () => function MockGameScene() {

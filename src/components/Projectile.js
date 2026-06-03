@@ -14,12 +14,14 @@ import {
 
 const BOUNCE_DAMPING = 0.48;
 const MAX_BOUNCES = 2;
-const HIT_RADIUS = 0.68;
+const HIT_RADIUS = 1.5;
 const SHAKE_DURATION = 2;
 const SHAKE_COUNT = 3;
 const SHAKE_AMOUNT = 0.13;
 const SUCCESS_CHANCE = 0.8;
 const SUCCESS_BURST_DURATION = 0.45;
+const ballWorldPos = new Vector3();
+const creatureWorldPos = new Vector3();
 
 export default function Projectile({
   ball,
@@ -72,14 +74,19 @@ export default function Projectile({
     onExpire(id);
   };
 
-  const startCapture = (wildId, wild) => {
+  const startCapture = (wildId, wildWorldPosition) => {
     capturedWildId.current = wildId;
     mode.current = 'shaking';
     shakeTimer.current = 0;
 
     const groundY =
-      getTerrainSurfaceY(wild.position.x, wild.position.z) + PROJECTILE_RADIUS;
-    baseShakePosition.current.set(wild.position.x, groundY, wild.position.z);
+      getTerrainSurfaceY(wildWorldPosition.x, wildWorldPosition.z) +
+      PROJECTILE_RADIUS;
+    baseShakePosition.current.set(
+      wildWorldPosition.x,
+      groundY,
+      wildWorldPosition.z
+    );
     projectileRef.current.position.copy(baseShakePosition.current);
     onCaptureStart(wildId);
   };
@@ -95,8 +102,11 @@ export default function Projectile({
         return;
       }
 
-      if (projectile.position.distanceTo(wild.position) <= HIT_RADIUS) {
-        startCapture(wildId, wild);
+      projectile.getWorldPosition(ballWorldPos);
+      wild.getWorldPosition(creatureWorldPos);
+
+      if (ballWorldPos.distanceTo(creatureWorldPos) <= HIT_RADIUS) {
+        startCapture(wildId, creatureWorldPos);
       }
     });
   };
