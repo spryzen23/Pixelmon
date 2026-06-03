@@ -1,12 +1,15 @@
+import { View } from '@react-three/drei';
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import { Vector3 } from 'three';
 import AimIndicator from './AimIndicator';
+import BallHotbarViews from './BallHotbarViews';
 import CaptureBurst from './CaptureBurst';
 import CompanionCreature from './CompanionCreature';
 import CompanionRecallEffect from './CompanionRecallEffect';
 import OceanHorizon from './OceanHorizon';
 import Player from './Player';
+import PokeballShowcase from './PokeballShowcase';
 import PokeGlbPreloader from './PokeGlbPreloader';
 import Projectile from './Projectile';
 import Sandstorm from './Sandstorm';
@@ -128,6 +131,8 @@ function getAlphaSpawnPosition(player, camera, currentBiome) {
 }
 
 export default function GameScene({
+  ballSlotRefs = [],
+  ballSlotsReady = false,
   currentBiome = 0,
   equippedBall = DEFAULT_BALL,
   onBiomeReady = () => { },
@@ -407,7 +412,9 @@ export default function GameScene({
 
   return (
     <>
+      <View.Port />
       <PokeGlbPreloader />
+      {ballSlotsReady ? <BallHotbarViews ballSlotRefs={ballSlotRefs} /> : null}
       <Suspense fallback={null}>
         <OceanHorizon />
         <VoxelWorld
@@ -422,6 +429,12 @@ export default function GameScene({
           currentPathId={currentBiome}
           ref={playerRef}
           modelRotation={MODEL_ROTATIONS.player}
+          spawnPosition={playerSpawnPosition}
+        />
+      </Suspense>
+      <Suspense fallback={null}>
+        <PokeballShowcase
+          currentBiome={currentBiome}
           spawnPosition={playerSpawnPosition}
         />
       </Suspense>

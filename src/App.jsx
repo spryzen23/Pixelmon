@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
 import Atmosphere, { SUN_POSITION } from './components/Atmosphere';
@@ -23,6 +23,32 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [ordinaryLeft, setOrdinaryLeft] = useState(0);
   const [throwPower, setThrowPower] = useState(DEFAULT_THROW_POWER);
+  const ballSlotRef0 = useRef(null);
+  const ballSlotRef1 = useRef(null);
+  const ballSlotRef2 = useRef(null);
+  const ballSlotRefs = useMemo(
+    () => [ballSlotRef0, ballSlotRef1, ballSlotRef2],
+    []
+  );
+  const [ballSlotsReady, setBallSlotsReady] = useState(false);
+  const setBallSlotRef = useCallback(
+    (index) => (element) => {
+      if (ballSlotRefs[index].current === element) {
+        return;
+      }
+
+      ballSlotRefs[index].current = element;
+
+      if (!element || ballSlotsReady) {
+        return;
+      }
+
+      if (ballSlotRefs.every((ref) => ref.current)) {
+        setBallSlotsReady(true);
+      }
+    },
+    [ballSlotRefs, ballSlotsReady]
+  );
   const equippedBall = useMemo(() => {
     return BALL_TYPES.find((ball) => ball.id === equippedBallId) || DEFAULT_BALL;
   }, [equippedBallId]);
@@ -113,6 +139,8 @@ function App() {
         />
         <SafePointerLockControls pointerSpeed={0.5} minPolarAngle={0.35} maxPolarAngle={2.45} />
         <GameScene
+          ballSlotRefs={ballSlotRefs}
+          ballSlotsReady={ballSlotsReady}
           currentBiome={currentBiome}
           equippedBall={equippedBall}
           onBiomeReady={handleBiomeReady}
@@ -141,7 +169,11 @@ function App() {
         <span className="crosshair-dot" />
       </div>
 
-      <Hotbar equippedBallId={equippedBallId} throwPower={throwPower} />
+      <Hotbar
+        setBallSlotRef={setBallSlotRef}
+        equippedBallId={equippedBallId}
+        throwPower={throwPower}
+      />
 
       <div className="path-menu">
         {WORLD_PATHS.map((biome) => (

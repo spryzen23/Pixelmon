@@ -1,6 +1,8 @@
 import { Sphere } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useEffect, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useMemo, useRef } from 'react';
+import BallModel from './BallModel';
+import ModelErrorBoundary from './ModelErrorBoundary';
 import { Vector3 } from 'three';
 import { getTerrainSurfaceY } from '../game/world';
 import {
@@ -224,14 +226,34 @@ export default function Projectile({
     }
   });
 
+  const fallbackColor = ball?.color || '#e61f2c';
+
   return (
-    <Sphere
-      ref={projectileRef}
-      args={[PROJECTILE_RADIUS, 16, 16]}
-      castShadow
-      position={initialPosition}
-    >
-      <meshStandardMaterial color={ball?.color || '#e61f2c'} roughness={0.42} />
-    </Sphere>
+    <group ref={projectileRef} position={initialPosition}>
+      <ModelErrorBoundary
+        resetKey={ball?.id}
+        fallback={
+          <Sphere args={[PROJECTILE_RADIUS, 16, 16]} castShadow>
+            <meshStandardMaterial color={fallbackColor} roughness={0.42} />
+          </Sphere>
+        }
+      >
+        <Suspense
+          fallback={
+            <Sphere args={[PROJECTILE_RADIUS, 16, 16]} castShadow>
+              <meshStandardMaterial color={fallbackColor} roughness={0.42} />
+            </Sphere>
+          }
+        >
+          {ball?.modelUrl ? (
+            <BallModel url={ball.modelUrl} modelScale={ball.modelScale ?? 1} />
+          ) : (
+            <Sphere args={[PROJECTILE_RADIUS, 16, 16]} castShadow>
+              <meshStandardMaterial color={fallbackColor} roughness={0.42} />
+            </Sphere>
+          )}
+        </Suspense>
+      </ModelErrorBoundary>
+    </group>
   );
 }
