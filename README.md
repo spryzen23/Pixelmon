@@ -262,3 +262,13 @@ tools/biome_dashboard/app.py        Streamlit metrics dashboard
 - Spaces in biome folder names are allowed because asset URLs are encoded in `world.js`.
 - If a model appears sideways or too large, adjust only its manifest `rotation` or `scale`.
 - If a biome has new creature files but they do not appear, confirm they were added to `CREATURE_ASSET_MANIFEST`.
+
+
+
+cd tools/biome_dashboard
+pip install -r requirements.txt
+streamlit run app.py
+
+npm run br:server
+
+https://www.cgtrader.com/designers/artistofthemonth?utm_source=credit&utm_source=credit_item_page

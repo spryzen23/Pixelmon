@@ -2,9 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
 import Atmosphere, { SUN_POSITION } from './components/Atmosphere';
+import BattleRoyaleShell from './components/BattleRoyaleShell';
 import GameScene from './components/GameScene';
 import Hotbar from './components/Hotbar';
 import LoadingOverlay from './components/LoadingOverlay';
+import ModeSelectScreen from './components/ModeSelectScreen';
 import SafePointerLockControls from './components/SafePointerLockControls';
 import { BALL_TYPES, DEFAULT_BALL } from './game/balls';
 import {
@@ -80,7 +82,7 @@ function getMetricNow() {
   return typeof performance !== 'undefined' ? performance.now() : Date.now();
 }
 
-function App() {
+function NormalGame() {
   const pendingBiomeLoadRef = useRef({
     biomeId: WORLD_PATHS[0].id,
     biomeName: WORLD_PATHS[0].name,
@@ -297,6 +299,20 @@ function App() {
       />
     </main>
   );
+}
+
+function App() {
+  const [gameMode, setGameMode] = useState(null);
+
+  if (gameMode === 'normal') {
+    return <NormalGame />;
+  }
+
+  if (gameMode === 'battleRoyale') {
+    return <BattleRoyaleShell onBackToMenu={() => setGameMode(null)} />;
+  }
+
+  return <ModeSelectScreen onSelectMode={setGameMode} />;
 }
 
 export default App;

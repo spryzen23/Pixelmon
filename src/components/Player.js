@@ -30,7 +30,8 @@ const WATER_MOVE_MULTIPLIER = 0.72;
 const WATER_BUOYANCY_SPEED = 5.5;
 const HEIGHT_LERP_FACTOR = 0.18;
 const STEP_SAFETY_OFFSET = 0.05;
-const MODEL_SCALE = 0.32;
+const MODEL_SCALE = 1.1;
+const MODEL_FOOT_OFFSET_Y = -PLAYER_HEIGHT / 2;
 const MODEL_URL = '/assets/player.glb';
 const movement = new Vector3();
 const cameraForward = new Vector3();
@@ -39,7 +40,7 @@ const cameraRight = new Vector3();
 const Player = forwardRef(function Player(
   {
     currentPathId = 0,
-    modelRotation = [-Math.PI / 2, 0, 0],
+    modelRotation = [0, 0, 0],
     spawnPosition = PLAYER_START,
   },
   ref
@@ -291,7 +292,7 @@ const Player = forwardRef(function Player(
 
       <group
         ref={modelRef}
-        position={[0, -PLAYER_HEIGHT / 2, 0]}
+        position={[0, MODEL_FOOT_OFFSET_Y, 0]}
         scale={MODEL_SCALE}
       >
         <group rotation={modelRotation}>

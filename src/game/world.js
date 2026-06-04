@@ -136,7 +136,7 @@ export const CREATURE_ASSET_MANIFEST = {
 };
 
 const GRID_EPSILON = 0.000001;
-const TERRAIN_GENERATION_VERSION = 8;
+const TERRAIN_GENERATION_VERSION = 9;
 const BLOCK_TYPES = [
   'basalt',
   'cave',
@@ -156,6 +156,11 @@ const VOLCANO_CENTER_TILE_Z = Math.round(VOLCANO_CENTER_Z / VOXEL_SIZE);
 export const VOLCANO_BASE_RADIUS_TILES = 112;
 export const VOLCANO_CRATER_RADIUS_TILES = 18;
 export const VOLCANO_LAVA_RADIUS_TILES = 9;
+const VOLCANO_LAVA_FLOW_DIRECTIONS = [
+  -Math.PI * 0.52,
+  Math.PI * 0.12,
+  Math.PI * 0.78,
+];
 
 export const MapCache = {
   biomes: {},
@@ -347,6 +352,13 @@ function getVolcanoDistance(tileIndexX, tileIndexZ) {
   );
 }
 
+function getAngleDelta(angle, targetAngle) {
+  return Math.atan2(
+    Math.sin(angle - targetAngle),
+    Math.cos(angle - targetAngle)
+  );
+}
+
 function getVolcanoSurfaceY(tileIndexX, tileIndexZ, baseSurfaceY) {
   const distance = getVolcanoDistance(tileIndexX, tileIndexZ);
 
@@ -384,6 +396,37 @@ function getVolcanoSurfaceY(tileIndexX, tileIndexZ, baseSurfaceY) {
 
 function isVolcanoLavaTile(tileIndexX, tileIndexZ) {
   return getVolcanoDistance(tileIndexX, tileIndexZ) <= VOLCANO_LAVA_RADIUS_TILES;
+}
+
+function isVolcanoOverflowLavaTile(tileIndexX, tileIndexZ) {
+  const offsetX = tileIndexX - VOLCANO_CENTER_TILE_X;
+  const offsetZ = tileIndexZ - VOLCANO_CENTER_TILE_Z;
+  const distance = Math.hypot(offsetX, offsetZ);
+
+  if (
+    distance <= VOLCANO_LAVA_RADIUS_TILES ||
+    distance >= VOLCANO_BASE_RADIUS_TILES * 0.78
+  ) {
+    return false;
+  }
+
+  const angle = Math.atan2(offsetZ, offsetX);
+
+  return VOLCANO_LAVA_FLOW_DIRECTIONS.some((direction, index) => {
+    const wobble =
+      Math.sin(distance * 0.12 + index * 2.9) * 0.09 +
+      Math.sin(distance * 0.035 + index * 6.1) * 0.05;
+    const flowWidth =
+      0.055 +
+      (1 - distance / (VOLCANO_BASE_RADIUS_TILES * 0.78)) * 0.13;
+    const brokenEdge =
+      seededRandom(tileIndexX, tileIndexZ, 91 + index) > 0.08;
+
+    return (
+      Math.abs(getAngleDelta(angle, direction + wobble)) < flowWidth &&
+      brokenEdge
+    );
+  });
 }
 
 export function getVolcanoPrimalPosition() {
@@ -494,6 +537,8 @@ function getGeneratedTileInfo(tileIndexX, tileIndexZ, currentBiome) {
     spawnDistance > SPAWN_APPROACH_RADIUS * 1.35 &&
     waterNoise < -1.5;
   const lavaPool = isVolcanic && isVolcanoLavaTile(tileIndexX, tileIndexZ);
+  const lavaOverflow =
+    isVolcanic && isVolcanoOverflowLavaTile(tileIndexX, tileIndexZ);
   const terrainWater =
     rawSurfaceY <= WATER_LEVEL &&
     (
@@ -501,7 +546,7 @@ function getGeneratedTileInfo(tileIndexX, tileIndexZ, currentBiome) {
       biomeType === BIOMES.MOSSY ||
       biomeType === BIOMES.CAVE
     );
-  const isLava = lavaPool;
+  const isLava = lavaPool || lavaOverflow;
   const isLiquid =
     spawnDistance > SPAWN_APPROACH_RADIUS &&
     (terrainWater || coastalWater || mireWater || isLava);

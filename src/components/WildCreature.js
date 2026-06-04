@@ -173,6 +173,7 @@ export default function WildCreature({
   id,
   initialPosition,
   isAlpha = false,
+  isStatic = false,
   modelScale = DEFAULT_MODEL_SCALE,
   modelUrl = DEFAULT_MODEL_URL,
   modelRotation = [Math.PI / 2, 0, 0],
@@ -221,6 +222,10 @@ export default function WildCreature({
     previousY.current = creature.position.y;
 
     if (status === 'capturing') {
+      return;
+    }
+
+    if (isStatic) {
       return;
     }
 

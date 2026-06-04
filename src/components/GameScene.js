@@ -38,7 +38,7 @@ const alphaForward = new Vector3();
 const alphaSpawnTarget = new Vector3();
 
 const MODEL_ROTATIONS = {
-  player: [-Math.PI / 2, 0, 0],
+  player: [0, 0, 0],
   wildCreature: [0, Math.PI / 2, 0],
   companion: [0, Math.PI / 2, 0],
 };
