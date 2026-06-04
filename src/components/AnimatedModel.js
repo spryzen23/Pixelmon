@@ -11,7 +11,10 @@ export default function AnimatedModel({
   scale = 1,
 }) {
   const modelRef = useRef();
-  const gltf = useGLTF(url);
+  const safeUrl = typeof url === 'string' && url.trim()
+    ? url
+    : '/assets/wild_creature.glb';
+  const gltf = useGLTF(safeUrl);
   const scene = useMemo(() => clone(gltf.scene), [gltf.scene]);
   const { actions, names } = useAnimations(gltf.animations, modelRef);
   const activeAction = useRef(null);

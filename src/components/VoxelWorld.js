@@ -1,30 +1,24 @@
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useFrame } from '@react-three/fiber';
 import {
   BoxGeometry,
-  MeshBasicMaterial,
-  MeshStandardMaterial,
-  NearestFilter,
   Object3D,
-  SRGBColorSpace,
 } from 'three';
-import { useTexture } from '@react-three/drei';
 import {
+  RENDER_DISTANCE,
   VOXEL_SIZE,
+  getBiomeChunksAround,
   getBiomeMap,
-  preloadBiome,
+  getChunkCoordsForPosition,
+  WORLD_PATHS,
 } from '../game/world';
+import { createProceduralVoxelMaterials } from '../game/proceduralVoxelMaterials';
 
-const BLOCK_TYPES = ['dirt', 'grass', 'desert', 'stone', 'snow', 'water'];
 const dummy = new Object3D();
-const WATER_COLOR = '#45b7e8';
-const DESERT_COLOR = '#d8bd68';
-const DIRT_COLOR = '#7a512e';
-const STONE_COLOR = '#737a82';
-const SNOW_COLOR = '#f2fbff';
 
 function ChunkBucket({ blocks, geometry, material, type }) {
   const meshRef = useRef();
-  const isWater = type === 'water';
+  const isLiquid = type === 'water' || type === 'lava';
 
   useLayoutEffect(() => {
     const mesh = meshRef.current;
@@ -59,33 +53,34 @@ function ChunkBucket({ blocks, geometry, material, type }) {
     <instancedMesh
       ref={meshRef}
       args={[geometry, material, blocks.length]}
-      castShadow={!isWater}
-      receiveShadow={!isWater}
-      renderOrder={isWater ? 1 : 0}
+      castShadow={!isLiquid}
+      receiveShadow={!isLiquid}
+      renderOrder={isLiquid ? 1 : 0}
     />
   );
 }
 
 function ChunkMesh({ chunk, geometry, materials }) {
   const buckets = useMemo(() => {
-    const grouped = BLOCK_TYPES.reduce((nextGrouped, type) => {
-      nextGrouped[type] = [];
-      return nextGrouped;
-    }, {});
+    const grouped = {};
 
     chunk.blocks.forEach((block) => {
+      if (!grouped[block.type]) {
+        grouped[block.type] = [];
+      }
+
       grouped[block.type].push(block);
     });
 
-    return grouped;
+    return Object.entries(grouped);
   }, [chunk]);
 
   return (
     <group>
-      {BLOCK_TYPES.map((type) => (
+      {buckets.map(([type, blocks]) => (
         <ChunkBucket
           key={`${chunk.key}-${type}`}
-          blocks={buckets[type]}
+          blocks={blocks}
           geometry={geometry}
           material={materials[type]}
           type={type}
@@ -98,74 +93,77 @@ function ChunkMesh({ chunk, geometry, materials }) {
 export default function VoxelWorld({
   currentBiome = 0,
   onBiomeReady = () => {},
+  playerRef,
 }) {
-  const [grassTexture, dirtTexture] = useTexture([
-    '/assets/grass.png',
-    '/assets/dirt.png',
-  ]);
-  const biomeMap = useMemo(() => {
-    return preloadBiome(currentBiome);
-  }, [currentBiome]);
+  const [centerChunk, setCenterChunk] = useState(() =>
+    getChunkCoordsForPosition(0, 0)
+  );
+  const activeChunks = useMemo(() => {
+    return getBiomeChunksAround(
+      currentBiome,
+      centerChunk.cx,
+      centerChunk.cz,
+      RENDER_DISTANCE
+    );
+  }, [centerChunk.cx, centerChunk.cz, currentBiome]);
   const geometry = useMemo(() => {
     return new BoxGeometry(VOXEL_SIZE, VOXEL_SIZE, VOXEL_SIZE);
   }, []);
 
   useEffect(() => {
-    [grassTexture, dirtTexture].forEach((texture) => {
-      texture.minFilter = NearestFilter;
-      texture.magFilter = NearestFilter;
-      texture.colorSpace = SRGBColorSpace;
-      texture.generateMipmaps = false;
-      texture.needsUpdate = true;
-    });
-  }, [dirtTexture, grassTexture]);
+    setCenterChunk(getChunkCoordsForPosition(0, 0));
+  }, [currentBiome]);
+
+  useFrame(() => {
+    const player = playerRef?.current;
+
+    if (!player) {
+      return;
+    }
+
+    const nextChunk = getChunkCoordsForPosition(
+      player.position.x,
+      player.position.z
+    );
+
+    if (
+      nextChunk.cx !== centerChunk.cx ||
+      nextChunk.cz !== centerChunk.cz
+    ) {
+      setCenterChunk(nextChunk);
+    }
+  });
 
   const materials = useMemo(() => {
+    const nextMaterials = createProceduralVoxelMaterials();
+    const biome = WORLD_PATHS.find((path) => path.id === currentBiome);
+
+    if (biome?.biome === 'volcanic') {
+      nextMaterials.water = nextMaterials.lava;
+    }
+
+    return nextMaterials;
+  }, [currentBiome]);
+  const activeChunkSummary = useMemo(() => {
     return {
-      desert: new MeshStandardMaterial({
-        color: DESERT_COLOR,
-        roughness: 0.92,
-        metalness: 0,
-      }),
-      dirt: new MeshStandardMaterial({
-        color: DIRT_COLOR,
-        map: dirtTexture,
-        roughness: 0.9,
-        metalness: 0,
-      }),
-      grass: new MeshStandardMaterial({
-        color: '#ffffff',
-        map: grassTexture,
-        roughness: 0.85,
-        metalness: 0,
-      }),
-      snow: new MeshStandardMaterial({
-        color: SNOW_COLOR,
-        roughness: 0.86,
-        metalness: 0,
-      }),
-      stone: new MeshStandardMaterial({
-        color: STONE_COLOR,
-        roughness: 0.88,
-        metalness: 0,
-      }),
-      water: new MeshBasicMaterial({
-        color: WATER_COLOR,
-        depthWrite: false,
-        fog: true,
-        transparent: true,
-        opacity: 0.42,
-      }),
+      activeBlockCount: activeChunks.reduce(
+        (total, chunk) => total + chunk.blocks.length,
+        0
+      ),
+      activeChunkCount: activeChunks.length,
     };
-  }, [dirtTexture, grassTexture]);
+  }, [activeChunks]);
 
   useLayoutEffect(() => {
-    onBiomeReady(getBiomeMap(currentBiome));
-  }, [currentBiome, onBiomeReady]);
+    onBiomeReady({
+      ...activeChunkSummary,
+      biomeMap: getBiomeMap(currentBiome),
+    });
+  }, [activeChunkSummary, currentBiome, onBiomeReady]);
 
   return (
     <group key={`biome-${currentBiome}`}>
-      {biomeMap.chunks.map((chunk) => (
+      {activeChunks.map((chunk) => (
         <ChunkMesh
           key={`${currentBiome}-${chunk.key}`}
           chunk={chunk}

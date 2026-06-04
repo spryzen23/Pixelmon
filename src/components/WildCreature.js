@@ -1,6 +1,6 @@
 import { useFrame } from '@react-three/fiber';
 import { useAnimations, useGLTF } from '@react-three/drei';
-import { useEffect, useMemo, useRef } from 'react';
+import { Component, useEffect, useMemo, useRef } from 'react';
 import { Vector3 } from 'three';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import {
@@ -18,6 +18,38 @@ const DEFAULT_MODEL_SCALE = 0.35;
 const DEFAULT_ALPHA_MULTIPLIER = 2.5;
 const DEFAULT_MODEL_URL = '/assets/wild_creature.glb';
 const direction = new Vector3();
+
+class CreatureModelErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidUpdate(previousProps) {
+    if (
+      previousProps.resetKey !== this.props.resetKey &&
+      this.state.hasError
+    ) {
+      this.setState({ hasError: false });
+    }
+  }
+
+  componentDidCatch(error) {
+    console.warn('Creature model failed to load, using fallback.', error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+
+    return this.props.children;
+  }
+}
 
 function randomPause() {
   return 1.5 + Math.random() * 2.5;
@@ -42,34 +74,47 @@ function randomNearbyTarget(origin, pathId) {
   return origin.clone();
 }
 
-export default function WildCreature({
-  currentPathId = 0,
-  id,
-  initialPosition,
-  isAlpha = false,
-  modelScale = DEFAULT_MODEL_SCALE,
-  modelUrl = DEFAULT_MODEL_URL,
-  modelRotation = [Math.PI / 2, 0, 0],
-  onFleeComplete,
-  playerRef,
-  registerRef,
-  status = 'active',
+function CreatureModelFallback({
+  isAlpha,
+  modelScale,
+  status,
 }) {
-  const creatureRef = useRef();
-  const modelRef = useRef();
-  const fleeTimer = useRef(0);
+  const visualScale = modelScale * (isAlpha ? DEFAULT_ALPHA_MULTIPLIER : 1);
+
+  return (
+    <group
+      position={[0, -WILD_CREATURE_HEIGHT / 2, 0]}
+      scale={visualScale}
+      visible={status !== 'capturing'}
+    >
+      <mesh castShadow receiveShadow>
+        <sphereGeometry args={[1, 12, 8]} />
+        <meshStandardMaterial color={isAlpha ? '#7b1d1d' : '#b83232'} />
+      </mesh>
+      <mesh castShadow receiveShadow position={[0.65, 0.1, 0.1]}>
+        <sphereGeometry args={[0.28, 8, 6]} />
+        <meshStandardMaterial color="#262626" />
+      </mesh>
+    </group>
+  );
+}
+
+function CreatureModel({
+  isAlpha,
+  modelRef,
+  modelRotation,
+  modelScale,
+  modelUrl,
+  status,
+}) {
   const activeAction = useRef(null);
-  const previousY = useRef(initialPosition[1]);
-  const start = useMemo(() => new Vector3(...initialPosition), [initialPosition]);
-  const gltf = useGLTF(modelUrl);
+  const safeModelUrl = typeof modelUrl === 'string' && modelUrl.trim()
+    ? modelUrl
+    : DEFAULT_MODEL_URL;
+  const gltf = useGLTF(safeModelUrl);
   const gltfScene = useMemo(() => clone(gltf.scene), [gltf.scene]);
   const visualScale = modelScale * (isAlpha ? DEFAULT_ALPHA_MULTIPLIER : 1);
   const { actions, names } = useAnimations(gltf.animations, modelRef);
-  const ai = useRef({
-    mode: 'pause',
-    pauseTimer: randomPause(),
-    target: start.clone(),
-  });
 
   useEffect(() => {
     gltfScene.traverse((node) => {
@@ -108,6 +153,44 @@ export default function WildCreature({
 
     return undefined;
   }, [actions, names]);
+
+  return (
+    <group
+      ref={modelRef}
+      position={[0, -WILD_CREATURE_HEIGHT / 2, 0]}
+      scale={visualScale}
+      visible={status !== 'capturing'}
+    >
+      <group rotation={modelRotation}>
+        <primitive object={gltfScene} />
+      </group>
+    </group>
+  );
+}
+
+export default function WildCreature({
+  currentPathId = 0,
+  id,
+  initialPosition,
+  isAlpha = false,
+  modelScale = DEFAULT_MODEL_SCALE,
+  modelUrl = DEFAULT_MODEL_URL,
+  modelRotation = [Math.PI / 2, 0, 0],
+  onFleeComplete,
+  playerRef,
+  registerRef,
+  status = 'active',
+}) {
+  const creatureRef = useRef();
+  const modelRef = useRef();
+  const fleeTimer = useRef(0);
+  const previousY = useRef(initialPosition[1]);
+  const start = useMemo(() => new Vector3(...initialPosition), [initialPosition]);
+  const ai = useRef({
+    mode: 'pause',
+    pauseTimer: randomPause(),
+    target: start.clone(),
+  });
 
   useEffect(() => {
     registerRef(id, creatureRef.current);
@@ -227,16 +310,25 @@ export default function WildCreature({
       ref={creatureRef}
       position={initialPosition}
     >
-      <group
-        ref={modelRef}
-        position={[0, -WILD_CREATURE_HEIGHT / 2, 0]}
-        scale={visualScale}
-        visible={status !== 'capturing'}
+      <CreatureModelErrorBoundary
+        resetKey={modelUrl}
+        fallback={
+          <CreatureModelFallback
+            isAlpha={isAlpha}
+            modelScale={modelScale}
+            status={status}
+          />
+        }
       >
-        <group rotation={modelRotation}>
-          <primitive object={gltfScene} />
-        </group>
-      </group>
+        <CreatureModel
+          isAlpha={isAlpha}
+          modelRef={modelRef}
+          modelRotation={modelRotation}
+          modelScale={modelScale}
+          modelUrl={modelUrl}
+          status={status}
+        />
+      </CreatureModelErrorBoundary>
 
       {isAlpha && (
         <pointLight

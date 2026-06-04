@@ -2,6 +2,7 @@ import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { useThree } from '@react-three/fiber';
 import { Vector3 } from 'three';
 import AimIndicator from './AimIndicator';
+import Ashfall from './Ashfall';
 import CaptureBurst from './CaptureBurst';
 import CompanionCreature from './CompanionCreature';
 import CompanionRecallEffect from './CompanionRecallEffect';
@@ -11,6 +12,7 @@ import Projectile from './Projectile';
 import Sandstorm from './Sandstorm';
 import Snowstorm from './Snowstorm';
 import ThirdPersonCamera from './ThirdPersonCamera';
+import VolcanoCrater from './VolcanoCrater';
 import VoxelWorld from './VoxelWorld';
 import WildCreature from './WildCreature';
 import {
@@ -23,6 +25,7 @@ import {
   getRandomGrassPosition,
   isWalkablePosition,
   setActivePathId,
+  WORLD_PATHS,
 } from '../game/world';
 import { DEFAULT_BALL } from '../game/balls';
 import {
@@ -47,8 +50,14 @@ const CREATURE_MODEL_SCALES = {
   4: 0.45,
   5: 0.45,
 };
+const DEFAULT_CREATURE_MODEL_URL = '/assets/wild_creature.glb';
 const ALPHA_SPAWN_RADIUS = 1.4;
 const ALPHA_SPAWN_DISTANCES = [16, 18, 20, 22, 24, 14, 12];
+
+function getBiomeType(currentBiome) {
+  return (WORLD_PATHS.find((path) => path.id === currentBiome) || WORLD_PATHS[0])
+    .biome;
+}
 
 function createWildCreatures(pathId = 0) {
   const count = 3 + Math.floor(Math.random() * 3);
@@ -62,7 +71,7 @@ function createWildCreatures(pathId = 0) {
       isAlpha: false,
       modelRotation: asset.rotation || MODEL_ROTATIONS.wildCreature,
       modelScale: asset.scale ?? CREATURE_MODEL_SCALES[pathId] ?? 0.35,
-      modelUrl: asset.url,
+      modelUrl: asset.url || DEFAULT_CREATURE_MODEL_URL,
       // Absolute world positions, biased into the active path's spawn area.
       position: getRandomGrassPosition(
         0.45,
@@ -135,6 +144,7 @@ export default function GameScene({
   throwPower,
 }) {
   const { camera } = useThree();
+  const biomeType = getBiomeType(currentBiome);
   const playerRef = useRef();
   const companionRef = useRef();
   const wildRefs = useRef(new Map());
@@ -213,7 +223,7 @@ export default function GameScene({
       isAlpha: true,
       modelRotation: asset.rotation || MODEL_ROTATIONS.wildCreature,
       modelScale: asset.scale ?? CREATURE_MODEL_SCALES[currentBiome] ?? 0.35,
-      modelUrl: asset.url,
+      modelUrl: asset.url || DEFAULT_CREATURE_MODEL_URL,
       position,
       status: 'active',
     });
@@ -407,11 +417,15 @@ export default function GameScene({
   return (
     <>
       <Suspense fallback={null}>
-        <OceanHorizon />
+        <OceanHorizon biomeType={biomeType} />
         <VoxelWorld
           currentBiome={currentBiome}
           onBiomeReady={onBiomeReady}
+          playerRef={playerRef}
         />
+        {biomeType === 'volcanic' && (
+          <VolcanoCrater currentBiome={currentBiome} />
+        )}
       </Suspense>
       <Suspense fallback={null}>
         <Player
@@ -427,10 +441,9 @@ export default function GameScene({
         playerRef={playerRef}
         throwPower={throwPower}
       />
-      {currentBiome === 1 && <Sandstorm playerRef={playerRef} />}
-      {(currentBiome === 2 || currentBiome === 5) && (
-        <Snowstorm playerRef={playerRef} />
-      )}
+      {biomeType === 'desert' && <Sandstorm playerRef={playerRef} />}
+      {biomeType === 'volcanic' && <Ashfall playerRef={playerRef} />}
+      {biomeType === 'icy' && <Snowstorm playerRef={playerRef} />}
       {isCompanionOut && (
         <CompanionCreature
           key={`companion-${currentBiome}`}

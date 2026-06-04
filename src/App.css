@@ -11,16 +11,20 @@
   left: 24px;
   top: 20px;
   display: grid;
-  gap: 4px;
+  gap: 5px;
   padding: 12px 14px;
-  color: #f8fbff;
+  color: #ffffff;
   font-size: 14px;
   line-height: 1.3;
   text-align: left;
-  background: rgba(20, 35, 48, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 8px;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.72);
+  background: rgba(18, 18, 18, 0.66);
+  border: 2px solid rgba(255, 255, 255, 0.38);
+  border-bottom-color: rgba(0, 0, 0, 0.72);
+  border-right-color: rgba(0, 0, 0, 0.72);
+  border-radius: 2px;
   pointer-events: none;
+  image-rendering: pixelated;
 }
 
 .hud strong {
@@ -69,16 +73,22 @@
   left: 50%;
   bottom: 22px;
   display: grid;
-  gap: 8px;
-  width: min(430px, calc(100vw - 32px));
+  gap: 7px;
+  width: min(456px, calc(100vw - 32px));
   transform: translateX(-50%);
   pointer-events: none;
 }
 
 .hotbar {
   display: grid;
-  grid-template-columns: repeat(3, minmax(104px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: 4px;
+  padding: 4px;
+  background: rgba(18, 18, 18, 0.58);
+  border: 2px solid rgba(0, 0, 0, 0.82);
+  border-top-color: rgba(255, 255, 255, 0.28);
+  border-left-color: rgba(255, 255, 255, 0.28);
+  border-radius: 2px;
 }
 
 .hotbar-slot {
@@ -88,17 +98,24 @@
   align-items: center;
   gap: 8px;
   min-width: 118px;
-  padding: 9px 10px;
-  color: #f8fbff;
+  min-height: 42px;
+  padding: 7px 8px;
+  color: #ffffff;
   font-size: 12px;
-  background: rgba(20, 35, 48, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 8px;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.72);
+  background: rgba(82, 82, 82, 0.72);
+  border: 2px solid rgba(24, 24, 24, 0.92);
+  border-top-color: rgba(183, 183, 183, 0.76);
+  border-left-color: rgba(183, 183, 183, 0.76);
+  border-radius: 1px;
 }
 
 .hotbar-slot.equipped {
-  border-color: #fff3a8;
-  box-shadow: 0 0 0 2px rgba(255, 243, 168, 0.24);
+  background: rgba(110, 110, 110, 0.86);
+  border-color: #fff9d1;
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.45),
+    0 0 0 2px rgba(0, 0, 0, 0.7);
 }
 
 .hotbar-key {
@@ -108,8 +125,9 @@
   height: 18px;
   color: #dfefff;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 1px;
 }
 
 .hotbar-ball {
@@ -134,23 +152,32 @@
   display: grid;
   gap: 5px;
   padding: 8px 10px;
-  color: #f8fbff;
+  color: #ffffff;
   font-size: 12px;
-  background: rgba(20, 35, 48, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 8px;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.72);
+  background: rgba(18, 18, 18, 0.64);
+  border: 2px solid rgba(0, 0, 0, 0.82);
+  border-top-color: rgba(255, 255, 255, 0.28);
+  border-left-color: rgba(255, 255, 255, 0.28);
+  border-radius: 2px;
 }
 
 .power-track {
-  height: 7px;
+  height: 9px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 1px;
 }
 
 .power-fill {
   height: 100%;
-  background: linear-gradient(90deg, #fff3a8, #ffd928);
+  background:
+    linear-gradient(
+      to bottom,
+      #fff7a8 0 38%,
+      #ffd928 39% 100%
+    );
   border-radius: inherit;
 }
 
@@ -171,13 +198,16 @@
   align-items: center;
   gap: 8px;
   padding: 9px 10px;
-  color: #f8fbff;
+  color: #ffffff;
   font: inherit;
   font-size: 12px;
   text-align: left;
-  background: rgba(20, 35, 48, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 8px;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.72);
+  background: rgba(35, 35, 35, 0.68);
+  border: 2px solid rgba(0, 0, 0, 0.82);
+  border-top-color: rgba(255, 255, 255, 0.28);
+  border-left-color: rgba(255, 255, 255, 0.28);
+  border-radius: 2px;
   cursor: pointer;
 }
 
@@ -188,7 +218,9 @@
 
 .path-menu button.active {
   border-color: #fff3a8;
-  box-shadow: 0 0 0 2px rgba(255, 243, 168, 0.22);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.3),
+    0 0 0 2px rgba(0, 0, 0, 0.68);
 }
 
 .path-menu span {
@@ -199,7 +231,38 @@
   color: #24313c;
   font-weight: 700;
   background: #fff3a8;
-  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.48);
+  border-radius: 2px;
+}
+
+.analytics-actions {
+  position: absolute;
+  right: 20px;
+  top: 326px;
+  z-index: 60;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 210px;
+  pointer-events: auto;
+}
+
+.analytics-actions button {
+  padding: 8px 9px;
+  color: #ffffff;
+  font: inherit;
+  font-size: 11px;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.72);
+  background: rgba(35, 35, 35, 0.68);
+  border: 2px solid rgba(0, 0, 0, 0.82);
+  border-top-color: rgba(255, 255, 255, 0.28);
+  border-left-color: rgba(255, 255, 255, 0.28);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.analytics-actions button:hover {
+  border-color: #fff3a8;
 }
 
 .loading-overlay {

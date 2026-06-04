@@ -11,14 +11,30 @@ import { WATER_LEVEL } from '../game/world';
 
 const OCEAN_SIZE = 1400;
 const SEA_SURFACE_SIZE = 520;
-const DEEP_WATER = new Color('#36aadd');
-const MID_WATER = new Color('#55c2ee');
-const HORIZON_WATER = new Color('#9eddf4');
-const SKY_WATER = new Color('#d8eefb');
-const SEA_SURFACE = '#4dbdeb';
-const HAZE_COLOR = '#e8f7ff';
+const OCEAN_PALETTES = {
+  default: {
+    deep: '#36aadd',
+    haze: '#e8f7ff',
+    horizon: '#9eddf4',
+    mid: '#55c2ee',
+    sky: '#d8eefb',
+    surface: '#4dbdeb',
+    surfaceOpacity: 0.72,
+  },
+  volcanic: {
+    deep: '#170e12',
+    haze: '#6b4038',
+    horizon: '#7b3324',
+    mid: '#2a1516',
+    sky: '#4a2928',
+    surface: '#1d1114',
+    surfaceOpacity: 0.52,
+  },
+};
 
-export default function OceanHorizon() {
+export default function OceanHorizon({ biomeType = 'grass' }) {
+  const palette = OCEAN_PALETTES[biomeType] || OCEAN_PALETTES.default;
+  const showHazeWalls = biomeType !== 'volcanic';
   const geometry = useMemo(() => {
     return new PlaneGeometry(OCEAN_SIZE, OCEAN_SIZE, 1, 1);
   }, []);
@@ -27,21 +43,21 @@ export default function OceanHorizon() {
   }, []);
   const seaSurfaceMaterial = useMemo(() => {
     return new MeshBasicMaterial({
-      color: SEA_SURFACE,
+      color: palette.surface,
       depthWrite: false,
       fog: true,
-      opacity: 0.72,
+      opacity: palette.surfaceOpacity,
       transparent: true,
     });
-  }, []);
+  }, [palette.surface, palette.surfaceOpacity]);
   const material = useMemo(() => {
     return new ShaderMaterial({
       uniforms: {
         ...UniformsUtils.clone(UniformsLib.fog),
-        deepWater: { value: DEEP_WATER },
-        horizonWater: { value: HORIZON_WATER },
-        midWater: { value: MID_WATER },
-        skyWater: { value: SKY_WATER },
+        deepWater: { value: new Color(palette.deep) },
+        horizonWater: { value: new Color(palette.horizon) },
+        midWater: { value: new Color(palette.mid) },
+        skyWater: { value: new Color(palette.sky) },
         oceanHalfSize: { value: OCEAN_SIZE * 0.5 },
       },
       vertexShader: `
@@ -80,16 +96,16 @@ export default function OceanHorizon() {
       transparent: true,
       depthWrite: false,
     });
-  }, []);
+  }, [palette.deep, palette.horizon, palette.mid, palette.sky]);
   const hazeMaterial = useMemo(() => {
     return new MeshBasicMaterial({
-      color: HAZE_COLOR,
+      color: palette.haze,
       depthWrite: false,
       fog: false,
-      opacity: 0.1,
+      opacity: biomeType === 'volcanic' ? 0.16 : 0.1,
       transparent: true,
     });
-  }, []);
+  }, [biomeType, palette.haze]);
 
   return (
     <group>
@@ -107,18 +123,22 @@ export default function OceanHorizon() {
         renderOrder={1}
         rotation={[-Math.PI / 2, 0, 0]}
       />
-      <mesh material={hazeMaterial} position={[0, 26, -430]}>
-        <planeGeometry args={[1200, 72]} />
-      </mesh>
-      <mesh material={hazeMaterial} position={[0, 26, 430]} rotation={[0, Math.PI, 0]}>
-        <planeGeometry args={[1200, 72]} />
-      </mesh>
-      <mesh material={hazeMaterial} position={[-430, 26, 0]} rotation={[0, Math.PI / 2, 0]}>
-        <planeGeometry args={[1200, 72]} />
-      </mesh>
-      <mesh material={hazeMaterial} position={[430, 26, 0]} rotation={[0, -Math.PI / 2, 0]}>
-        <planeGeometry args={[1200, 72]} />
-      </mesh>
+      {showHazeWalls && (
+        <>
+          <mesh material={hazeMaterial} position={[0, 26, -430]}>
+            <planeGeometry args={[1200, 72]} />
+          </mesh>
+          <mesh material={hazeMaterial} position={[0, 26, 430]} rotation={[0, Math.PI, 0]}>
+            <planeGeometry args={[1200, 72]} />
+          </mesh>
+          <mesh material={hazeMaterial} position={[-430, 26, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <planeGeometry args={[1200, 72]} />
+          </mesh>
+          <mesh material={hazeMaterial} position={[430, 26, 0]} rotation={[0, -Math.PI / 2, 0]}>
+            <planeGeometry args={[1200, 72]} />
+          </mesh>
+        </>
+      )}
     </group>
   );
 }

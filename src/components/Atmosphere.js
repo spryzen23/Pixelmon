@@ -4,6 +4,8 @@ import { DoubleSide } from 'three';
 const SUN_POSITION = [70, 55, -95];
 const CLOUD_COLOR = '#f5f8fb';
 const CLOUD_SHADOW = '#d7e0e7';
+const ASH_CLOUD_COLOR = '#5d5551';
+const ASH_CLOUD_SHADOW = '#2f2927';
 
 const CLOUDS = [
   {
@@ -42,24 +44,27 @@ const CLOUDS = [
   },
 ];
 
-function CloudBlock({ block }) {
+function CloudBlock({ block, color = CLOUD_COLOR, shadowColor = CLOUD_SHADOW }) {
   const [x, y, z, width, height, depth] = block;
 
   return (
     <group position={[x, y, z]}>
       <mesh>
         <boxGeometry args={[width, height, depth]} />
-        <meshBasicMaterial color={CLOUD_COLOR} fog={false} transparent opacity={0.9} />
+        <meshBasicMaterial color={color} fog={false} transparent opacity={0.9} />
       </mesh>
       <mesh position={[0, -height / 2 - 0.04, 0]}>
         <boxGeometry args={[width, 0.16, depth]} />
-        <meshBasicMaterial color={CLOUD_SHADOW} fog={false} transparent opacity={0.32} />
+        <meshBasicMaterial color={shadowColor} fog={false} transparent opacity={0.32} />
       </mesh>
     </group>
   );
 }
 
-function BlockyClouds() {
+function BlockyClouds({ volcanic = false }) {
+  const color = volcanic ? ASH_CLOUD_COLOR : CLOUD_COLOR;
+  const shadowColor = volcanic ? ASH_CLOUD_SHADOW : CLOUD_SHADOW;
+
   return (
     <group>
       {CLOUDS.map((cloud, cloudIndex) => (
@@ -69,7 +74,12 @@ function BlockyClouds() {
           rotation={[0, cloudIndex % 2 === 0 ? 0.12 : -0.08, 0]}
         >
           {cloud.blocks.map((block, blockIndex) => (
-            <CloudBlock key={blockIndex} block={block} />
+            <CloudBlock
+              key={blockIndex}
+              block={block}
+              color={color}
+              shadowColor={shadowColor}
+            />
           ))}
         </group>
       ))}
@@ -91,19 +101,21 @@ function SquareSun() {
   );
 }
 
-export default function Atmosphere() {
+export default function Atmosphere({ biomeType = 'grass' }) {
+  const volcanic = biomeType === 'volcanic';
+
   return (
     <>
       <Sky
         distance={450000}
-        mieCoefficient={0.0025}
-        mieDirectionalG={0.58}
-        rayleigh={1.6}
-        sunPosition={SUN_POSITION}
-        turbidity={3.2}
+        mieCoefficient={volcanic ? 0.018 : 0.0025}
+        mieDirectionalG={volcanic ? 0.82 : 0.58}
+        rayleigh={volcanic ? 0.55 : 1.6}
+        sunPosition={volcanic ? [22, 12, -28] : SUN_POSITION}
+        turbidity={volcanic ? 12 : 3.2}
       />
-      <SquareSun />
-      <BlockyClouds />
+      {!volcanic && <SquareSun />}
+      <BlockyClouds volcanic={volcanic} />
     </>
   );
 }

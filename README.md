@@ -37,6 +37,14 @@ Create a production build:
 npm run build
 ```
 
+Run the biome load analytics dashboard:
+
+```bash
+cd tools/biome_dashboard
+pip install -r requirements.txt
+streamlit run app.py
+```
+
 ## Gameplay Controls
 
 - Click the game window to lock the mouse.
@@ -46,6 +54,7 @@ npm run build
 - Adjust throw power with `Q`, `R`, or the mouse wheel.
 - Switch ball type with `1`, `2`, and `3`.
 - Switch biomes with the biome menu on the right side of the screen.
+- Export or clear biome load metrics with the analytics buttons under the biome menu.
 
 ## Current Game Architecture
 
@@ -53,7 +62,7 @@ The game currently uses a segmented biome system instead of an infinite world.
 
 - There are 6 finite biomes.
 - Only one biome is active at a time.
-- Each biome renders a cached 3x3 chunk map.
+- Each biome is a 36x36 chunk map, with a cached 5x5 active render window around the player.
 - Terrain blocks are rendered with instanced meshes for performance.
 - The player is clamped inside the active biome bounds.
 - Creature spawns are reset when switching biomes.
@@ -64,29 +73,28 @@ The game currently uses a segmented biome system instead of an infinite world.
 The active biomes are defined in `src/game/world.js`:
 
 ```txt
-0 Fieldlands Trail
-1 Sandglass Flats
-2 Frostpine Pass
-3 Coastal Run
-4 Crimson Mire
-5 Coronet Approach
+0 Grass Biome
+1 Desert Biome
+2 Volcanic Biome
+3 Mossy Biome
+4 Cave Biome
+5 Icy Biome
 ```
 
 ## Asset Folder Structure
 
-Global player, companion, terrain, and fallback assets live directly under `public/assets`:
+Global player, companion, and fallback assets live directly under `public/assets`:
 
 ```txt
 public/assets/
   player.glb
   companion.glb
   wild_creature.glb
-  grass.png
-  dirt.png
-  grass_dirt.png
 ```
 
-Each biome has its own folder for ordinary creatures and alpha creatures:
+Terrain block textures are generated procedurally in code by `src/game/proceduralVoxelMaterials.js`, so you do not need to provide PNG textures for grass, dirt, stone, sand, snow, moss, water, lava, cave, or basalt blocks.
+
+Each biome has its own folder for ordinary creatures and alpha creatures. The UI now uses the simplified biome names above, while `assetFolder` in `WORLD_PATHS` points to the existing folders below so current assets keep working:
 
 ```txt
 public/assets/
@@ -94,7 +102,6 @@ public/assets/
     alpha.glb
     ordinary/
       creature_01.glb
-      creature_02.glb
 
   Sandglass Flats/
     alpha.glb
@@ -123,7 +130,7 @@ public/assets/
       creature_01.glb
 ```
 
-Folder names must match the biome names in `WORLD_PATHS`.
+Folder names must match the `assetFolder` value in `WORLD_PATHS`.
 
 ## Adding More Ordinary Creatures
 
@@ -198,9 +205,38 @@ This lets normal creatures share a consistent gameplay size while still correcti
 
 ## Weather And Atmosphere
 
-- Sandglass Flats has intermittent sandstorms with blowing particles and fog.
-- Frostpine Pass and Coronet Approach have snowy storms.
+- Desert Biome has intermittent sandstorms with blowing particles and fog.
+- Icy Biome has snowy storms.
+- Grass, Volcanic, Mossy, and Cave biomes stay clear by default.
 - The world uses a cloudy voxel sky and extended ocean horizon to hide map edges and make each biome feel larger.
+
+## Biome Load Metrics Dashboard
+
+The React game records biome load timings in browser `localStorage`. It tracks:
+
+- biome id, name, and type
+- total load duration in milliseconds
+- whether the load was a first load or a cached reload
+- whether the cache already existed before loading
+- active rendered chunk and block counts
+- accumulated cached chunk count
+- chunks generated during that specific load
+
+To inspect the data:
+
+1. Run the React game.
+2. Switch between biomes a few times.
+3. Click `Export Metrics` in the game UI.
+4. Run the Streamlit dashboard from `tools/biome_dashboard`.
+5. Upload the exported `biome_load_metrics.json`.
+
+You can also place the exported file at:
+
+```txt
+tools/biome_dashboard/biome_load_metrics.json
+```
+
+The dashboard shows average wait time, average first-load time, average cached reload time, per-biome summaries, and a load-duration timeline.
 
 ## Important Source Files
 
@@ -214,7 +250,10 @@ src/components/OceanHorizon.js      Extended ocean and horizon blending
 src/components/Sandstorm.js         Desert weather
 src/components/Snowstorm.js         Snow biome weather
 src/game/world.js                   Biome data, terrain math, asset manifest
+src/game/biomeLoadMetrics.js        Browser-side biome load telemetry
+src/game/proceduralVoxelMaterials.js Generated pixel-art voxel materials
 src/game/projectilePhysics.js       Throw origin and trajectory math
+tools/biome_dashboard/app.py        Streamlit metrics dashboard
 ```
 
 ## Notes

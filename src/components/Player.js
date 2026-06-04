@@ -20,6 +20,7 @@ import {
   WATER_LEVEL,
   getEntityY,
   getTerrainSurfaceY,
+  isLandmarkCollision,
   isWaterTile,
   isWalkablePosition,
 } from '../game/world';
@@ -231,10 +232,14 @@ const Player = forwardRef(function Player(
     );
     const nextGroundHeight = getTerrainSurfaceY(nextX, nextZ, currentPathId);
     const stepDelta = nextGroundHeight - currentGroundHeight;
-    const canStepUp = stepDelta <= VOXEL_SIZE + STEP_SAFETY_OFFSET;
+    const stepLimit = currentPathId === 2
+      ? VOXEL_SIZE * 1.75
+      : VOXEL_SIZE;
+    const canStepUp = stepDelta <= stepLimit + STEP_SAFETY_OFFSET;
     const canEscapeWater =
       (isInWater || isSubmerged) &&
-      nextGroundHeight <= currentGroundHeight + VOXEL_SIZE * 1.5;
+      nextGroundHeight <= currentGroundHeight + VOXEL_SIZE * 1.5 &&
+      !isLandmarkCollision(nextX, nextZ, PLAYER_RADIUS, currentPathId);
 
     if (
       canStepUp &&

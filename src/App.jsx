@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
 import Atmosphere, { SUN_POSITION } from './components/Atmosphere';
@@ -13,21 +13,110 @@ import {
   MIN_THROW_POWER,
   THROW_POWER_STEP,
 } from './game/projectilePhysics';
-import { WORLD_PATHS, clearAllBiomeCaches, preloadBiome } from './game/world';
+import {
+  WORLD_PATHS,
+  getBiomeCacheSummary,
+  preloadBiome,
+} from './game/world';
+import {
+  clearBiomeLoadMetrics,
+  downloadBiomeLoadMetrics,
+  recordBiomeLoadMetric,
+} from './game/biomeLoadMetrics';
 import './App.css';
 
+const BIOME_SCENE_THEMES = {
+  cave: {
+    background: '#1d2428',
+    fog: '#2f3538',
+    fogNear: 25,
+    fogFar: 150,
+    ambient: 0.48,
+    sun: 0.85,
+  },
+  desert: {
+    background: '#9ed8f2',
+    fog: '#e7d8b3',
+    fogNear: 45,
+    fogFar: 240,
+    ambient: 0.76,
+    sun: 1.38,
+  },
+  grass: {
+    background: '#87ceeb',
+    fog: '#d8eefb',
+    fogNear: 60,
+    fogFar: 320,
+    ambient: 0.72,
+    sun: 1.35,
+  },
+  icy: {
+    background: '#d9edf8',
+    fog: '#eaf7ff',
+    fogNear: 35,
+    fogFar: 210,
+    ambient: 0.82,
+    sun: 1.05,
+  },
+  mossy: {
+    background: '#8bc8d7',
+    fog: '#c6e5d9',
+    fogNear: 48,
+    fogFar: 250,
+    ambient: 0.68,
+    sun: 1.18,
+  },
+  volcanic: {
+    background: '#4c3433',
+    fog: '#6a3d35',
+    fogNear: 32,
+    fogFar: 190,
+    ambient: 0.44,
+    sun: 0.92,
+  },
+};
+
+function getMetricNow() {
+  return typeof performance !== 'undefined' ? performance.now() : Date.now();
+}
+
 function App() {
+  const pendingBiomeLoadRef = useRef({
+    biomeId: WORLD_PATHS[0].id,
+    biomeName: WORLD_PATHS[0].name,
+    biomeType: WORLD_PATHS[0].biome,
+    cacheBefore: getBiomeCacheSummary(WORLD_PATHS[0].id),
+    startMs: getMetricNow(),
+    trigger: 'initial_mount',
+  });
   const [caughtCount, setCaughtCount] = useState(0);
   const [currentBiome, setCurrentBiome] = useState(0);
   const [equippedBallId, setEquippedBallId] = useState(DEFAULT_BALL.id);
   const [isLoading, setIsLoading] = useState(false);
   const [ordinaryLeft, setOrdinaryLeft] = useState(0);
   const [throwPower, setThrowPower] = useState(DEFAULT_THROW_POWER);
+  const activeBiome = WORLD_PATHS.find((biome) => biome.id === currentBiome) ||
+    WORLD_PATHS[0];
+  const sceneTheme = BIOME_SCENE_THEMES[activeBiome.biome] ||
+    BIOME_SCENE_THEMES.grass;
   const equippedBall = useMemo(() => {
     return BALL_TYPES.find((ball) => ball.id === equippedBallId) || DEFAULT_BALL;
   }, [equippedBallId]);
   const handleCreatureCaught = useCallback((amount = 1) => {
     setCaughtCount((current) => current + amount);
+  }, []);
+  const beginBiomeLoadMetric = useCallback((biomeId, trigger) => {
+    const biome = WORLD_PATHS.find((path) => path.id === biomeId) ||
+      WORLD_PATHS[0];
+
+    pendingBiomeLoadRef.current = {
+      biomeId,
+      biomeName: biome.name,
+      biomeType: biome.biome,
+      cacheBefore: getBiomeCacheSummary(biomeId),
+      startMs: getMetricNow(),
+      trigger,
+    };
   }, []);
   const handleBiomeSwitch = useCallback((biomeId) => {
     if (biomeId === currentBiome) {
@@ -35,15 +124,48 @@ function App() {
     }
 
     setIsLoading(true);
-    clearAllBiomeCaches();
-    preloadBiome(biomeId);
+    beginBiomeLoadMetric(biomeId, 'biome_switch');
     setCurrentBiome(biomeId);
-  }, [currentBiome]);
-  const handleBiomeReady = useCallback(() => {
+  }, [beginBiomeLoadMetric, currentBiome]);
+  const handleBiomeReady = useCallback((loadSummary = {}) => {
+    const pending = pendingBiomeLoadRef.current;
+
+    if (pending && pending.biomeId === currentBiome) {
+      const cacheAfter = getBiomeCacheSummary(currentBiome);
+      const cacheHit = pending.cacheBefore.chunkCount > 0;
+      const activeBlockCount =
+        loadSummary.activeBlockCount ?? cacheAfter.blockCount;
+      const activeChunkCount =
+        loadSummary.activeChunkCount ?? cacheAfter.chunkCount;
+      const generatedChunkCountThisLoad = Math.max(
+        0,
+        cacheAfter.chunkCount - pending.cacheBefore.chunkCount
+      );
+      const durationMs = getMetricNow() - pending.startMs;
+
+      recordBiomeLoadMetric({
+        activeBlockCount,
+        activeChunkCount,
+        biomeId: currentBiome,
+        biomeName: pending.biomeName,
+        biomeType: pending.biomeType,
+        blockCount: activeBlockCount,
+        cacheHit,
+        cachedChunkCount: cacheAfter.chunkCount,
+        chunkCount: activeChunkCount,
+        durationMs: Number(durationMs.toFixed(2)),
+        firstLoad: !cacheHit,
+        generatedChunkCountThisLoad,
+        hydratedChunkCount: activeChunkCount,
+        trigger: pending.trigger,
+      });
+      pendingBiomeLoadRef.current = null;
+    }
+
     window.setTimeout(() => {
       setIsLoading(false);
     }, 220);
-  }, []);
+  }, [currentBiome]);
 
   useEffect(() => {
     preloadBiome(currentBiome);
@@ -101,14 +223,17 @@ function App() {
           gl.toneMappingExposure = 1;
         }}
       >
-        <color attach="background" args={['#87ceeb']} />
-        <fog attach="fog" args={['#d8eefb', 60, 320]} />
-        <Atmosphere />
-        <ambientLight intensity={0.72} />
+        <color attach="background" args={[sceneTheme.background]} />
+        <fog
+          attach="fog"
+          args={[sceneTheme.fog, sceneTheme.fogNear, sceneTheme.fogFar]}
+        />
+        <Atmosphere biomeType={activeBiome.biome} />
+        <ambientLight intensity={sceneTheme.ambient} />
         <directionalLight
           castShadow
           color="#ffffff"
-          intensity={1.35}
+          intensity={sceneTheme.sun}
           position={SUN_POSITION}
         />
         <SafePointerLockControls pointerSpeed={0.65} />
@@ -155,6 +280,15 @@ function App() {
             {biome.name}
           </button>
         ))}
+      </div>
+
+      <div className="analytics-actions">
+        <button type="button" onClick={downloadBiomeLoadMetrics}>
+          Export Metrics
+        </button>
+        <button type="button" onClick={clearBiomeLoadMetrics}>
+          Clear Metrics
+        </button>
       </div>
 
       <LoadingOverlay
