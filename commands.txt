@@ -89,6 +89,12 @@ set CI=true&& npm test -- --watchAll=false --coverage --passWithNoTests
 # Eject from CRA (irreversible — avoid unless necessary):
 npm run eject
 #
+# Regenerate Pokemon regional/spawn/type catalogs from docs/Pokemon-master:
+npm run generate-catalogs
+#
+# Regenerate pokemons.md + public/assets/dataSet/pokemons.json (by biome, spawn level, evolution stage):
+npm run generate-pokemons-md
+#
 # ========================================
 # 4. CODEBASE.BAT (FULL PIPELINE)
 # ========================================
@@ -364,3 +370,9 @@ git commit -m "Add project command and prompt references"
 # - Prefer README.md for asset conventions; use promsts.txt when working with AI agents.
 # - Run codebase.bat after large refactors or before opening a PR.
 # - Keep commands.txt and promsts.txt updated when adding biomes, scripts, or tooling.
+git init
+git remote add origin https://github.com/spryzen23/Pixelmon.git
+git branch -M main
+git add .
+git commit -m "emailapis deployment v1"
+git push -u origin main

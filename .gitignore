@@ -7,10 +7,17 @@
 
 # testing
 /coverage
+/reports
 
 # production
 /build
+/client/dist
 /docs
+/node_modules
+/server/node_modules
+/client/node_modules
+/data/players/*.json
+!data/players/.gitkeep
 
 # misc
 .DS_Store

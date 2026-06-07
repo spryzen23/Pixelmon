@@ -1,0 +1,208 @@
+
+E:\maha\Pixelmon>codebase.bat
+
+========================================
+  PIXELMON CODEBASE STATE CHECK
+========================================
+
+Current directory: E:\maha\Pixelmon
+
+[0/9] Game asset inventory...
+----------------------------------------
+  Core GLBs, biome model count, reports\asset-inventory.txt
+  public\assets GLB files (recursive): 2649
+  OK Core game assets present
+
+[1/9] Cleaning and preparing...
+----------------------------------------
+  Removing node_modules (root, server, client), client\dist, coverage, build
+  OK Clean completed
+
+  Running: npm.cmd install (root, server, client)
+
+added 223 packages, and audited 224 packages in 16s
+
+108 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+added 78 packages, and audited 79 packages in 1s
+
+17 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+npm warn deprecated three-mesh-bvh@0.7.8: Deprecated due to three.js version incompatibility. Please use v0.8.0, instead.
+
+added 217 packages, and audited 218 packages in 11s
+
+30 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+  OK Dependencies installed
+  Running: npm.cmd audit --prefix client (advisory)
+found 0 vulnerabilities
+  OK client audit clean
+
+[2/9] Data preflight (pokemons.slim.json)...
+----------------------------------------
+  Same role as Contact360 codegen: ensures slim catalog exists before build.
+  OK data\game\pokemons.slim.json already present
+
+[3/9] Type checking...
+----------------------------------------
+  Skipped: JavaScript monorepo (client Vite + server Express; no tsc).
+
+[4/9] Prettier (format check)...
+----------------------------------------
+  Skipped (no .prettierrc; set RUN_PRETTIER=1 to format client/server JS)
+
+[5/9] Linting (ESLint)...
+----------------------------------------
+  Running: npm.cmd run lint
+
+> pixelmon@0.1.0 lint
+> eslint client/src server/src
+
+  OK No linting errors
+
+[6/9] Running tests...
+----------------------------------------
+  server: node --test   client: vitest --run
+  Running: npm.cmd run test
+
+> pixelmon@0.1.0 test
+> npm test --prefix server && npm test --prefix client -- --run
+
+
+> pixelmon-server@0.1.0 test
+> node --test test/**/*.test.js
+
+▶ spawnService
+  ✔ unlocks at 50% (0.8395ms)
+  ✔ alpha when ladder complete (0.1586ms)
+✔ spawnService (1.9624ms)
+ℹ tests 2
+ℹ suites 1
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 99.5558
+
+> pixelmon-client@0.1.0 test
+> vitest --run
+
+
+ RUN  v4.1.8 E:/maha/Pixelmon/client
+
+ ✓ src/game/projectilePhysics.test.js (2 tests) 7ms
+ ✓ src/game/spawnController.test.js (4 tests) 9ms
+ ✓ src/game/assets.test.js (2 tests) 9ms
+ ✓ src/game/plantAssets.test.js (5 tests) 21ms
+ ✓ src/game/animationUtils.test.js (9 tests) 14ms
+ ✓ src/game/biomeDisplay.test.js (5 tests) 7ms
+ ✓ src/game/world.props.test.js (3 tests) 105ms
+
+ Test Files  7 passed (7)
+      Tests  30 passed (30)
+   Start at  06:41:49
+   Duration  854ms (transform 736ms, setup 0ms, import 1.18s, tests 172ms, environment 2ms)
+
+  OK All tests passed
+
+[6b] Coverage skipped (set RUN_TEST_COVERAGE=1 for vitest --coverage)
+
+[7/9] Production build check...
+----------------------------------------
+  Running: node scripts\build-slim.js
+Wrote E:\maha\Pixelmon\data\game\pokemons.slim.json (1350 entries)
+  Running: npm.cmd run build --prefix client
+
+> pixelmon-client@0.1.0 build
+> vite build
+
+vite v6.4.3 building for production...
+✓ 680 modules transformed.
+dist/index.html                   0.83 kB │ gzip:   0.44 kB
+dist/assets/index-CdXLgHVU.css    7.61 kB │ gzip:   2.25 kB
+dist/assets/index-ChvqV_6B.js   102.02 kB │ gzip:  29.97 kB
+dist/assets/react-DrnAN-Kh.js   142.90 kB │ gzip:  45.76 kB
+dist/assets/three-xb307O9v.js   924.86 kB │ gzip: 250.87 kB
+✓ built in 3m 9s
+  OK Build successful (client\dist\index.html)
+
+
+========================================
+  SUMMARY
+========================================
+
+Section Status:
+  [0] Game asset inventory:             PASSED  (glb=2649, reports\asset-inventory.txt)
+  [1] Cleanup and npm install:          PASSED
+  [2] Data preflight (build-slim):      PASSED
+  [3] Type checking (JS - skipped):     SKIPPED
+  [4] Prettier:                         SKIPPED
+  [5] ESLint:                           PASSED
+  [6] Tests (node:test + vitest):       PASSED
+  [6b] Vitest coverage:                 SKIPPED
+  [7] Build (slim + vite):              PASSED
+
+  OK All blocking checks passed
+
+  Start development server? (Y/N)
+ Y
+
+[8/9] Starting development server...
+  Client: http://localhost:3000
+  API:    http://localhost:4000/api/health
+  Press Ctrl+C to stop
+
+
+> pixelmon@0.1.0 dev
+> concurrently -n server,client -c blue,green "npm run dev --prefix server" "npm run dev --prefix client"
+
+[server]
+[server] > pixelmon-server@0.1.0 dev
+[server] > node --watch src/index.js
+[server]
+[client]
+[client] > pixelmon-client@0.1.0 dev
+[client] > vite
+[client]
+[server] Pixelmon server http://localhost:4000
+[client]
+[client]   VITE v6.4.3  ready in 460 ms
+[client]
+[client]   ➜  Local:   http://localhost:3000/
+[client]   ➜  Network: use --host to expose
+[server] Error: ENOENT: no such file or directory, rename 'E:\maha\Pixelmon\data\players\7f28e5e6-6bce-4ae5-82ec-65be34792373.json.tmp' -> 'E:\maha\Pixelmon\data\players\7f28e5e6-6bce-4ae5-82ec-65be34792373.json'
+[server]     at async Object.rename (node:internal/fs/promises:785:10)
+[server]     at async savePlayer (file:///E:/maha/Pixelmon/server/src/lib/dataStore.js:118:3)
+[server]     at async file:///E:/maha/Pixelmon/server/src/routes/api.js:187:5 {
+[server]   errno: -4058,
+[server]   code: 'ENOENT',
+[server]   syscall: 'rename',
+[server]   path: 'E:\\maha\\Pixelmon\\data\\players\\7f28e5e6-6bce-4ae5-82ec-65be34792373.json.tmp',
+[server]   dest: 'E:\\maha\\Pixelmon\\data\\players\\7f28e5e6-6bce-4ae5-82ec-65be34792373.json'
+[server] }
+[server] Error: ENOENT: no such file or directory, rename 'E:\maha\Pixelmon\data\players\0a94cc87-b271-4a1d-8240-bac1c3dbd94f.json.tmp' -> 'E:\maha\Pixelmon\data\players\0a94cc87-b271-4a1d-8240-bac1c3dbd94f.json'
+[server]     at async Object.rename (node:internal/fs/promises:785:10)
+[server]     at async savePlayer (file:///E:/maha/Pixelmon/server/src/lib/dataStore.js:118:3)
+[server]     at async file:///E:/maha/Pixelmon/server/src/routes/api.js:187:5 {
+[server]   errno: -4058,
+[server]   code: 'ENOENT',
+[server]   syscall: 'rename',
+[server]   path: 'E:\\maha\\Pixelmon\\data\\players\\0a94cc87-b271-4a1d-8240-bac1c3dbd94f.json.tmp',
+[server]   dest: 'E:\\maha\\Pixelmon\\data\\players\\0a94cc87-b271-4a1d-8240-bac1c3dbd94f.json'
+[server] }
+
+07:02:13.870 content.js:1 common loaded
+07:02:13.872 content.js:1 common loaded
+07:02:14.427 content.js:1 releaseNoteVersionReceived
+07:05:54.407 :3000/api/players/7f28e5e6-6bce-4ae5-82ec-65be34792373/session/start:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+07:06:03.979 :3000/api/players/0a94cc87-b271-4a1d-8240-bac1c3dbd94f/session/start:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
