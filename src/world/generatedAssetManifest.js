@@ -4,8 +4,48 @@ export const AUTO_ASSET_MANIFEST = {
   "0": {
     "ordinary": [
       {
-        "file": "ordinary/creature_01.glb",
-        "name": "creature_01",
+        "file": "ordinary/bellsprout.glb",
+        "name": "bellsprout",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.35
+      },
+      {
+        "file": "ordinary/bulbasaur.glb",
+        "name": "bulbasaur",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.35
+      },
+      {
+        "file": "ordinary/cacnea.glb",
+        "name": "cacnea",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.35
+      },
+      {
+        "file": "ordinary/oddish.glb",
+        "name": "oddish",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.35
+      },
+      {
+        "file": "ordinary/skiddo.glb",
+        "name": "skiddo",
         "rotation": [
           0,
           1.5707963267948966,
@@ -15,8 +55,8 @@ export const AUTO_ASSET_MANIFEST = {
       }
     ],
     "alpha": {
-      "file": "alpha/alpha_01.glb",
-      "name": "alpha_01",
+      "file": "alpha/venusaur.glb",
+      "name": "venusaur",
       "rotation": [
         0,
         1.5707963267948966,
@@ -26,8 +66,8 @@ export const AUTO_ASSET_MANIFEST = {
     },
     "alphaVariants": [
       {
-        "file": "alpha/alpha_01.glb",
-        "name": "alpha_01",
+        "file": "alpha/venusaur.glb",
+        "name": "venusaur",
         "rotation": [
           0,
           1.5707963267948966,
@@ -36,13 +76,24 @@ export const AUTO_ASSET_MANIFEST = {
         "scale": 0.35
       }
     ],
-    "legendary": []
+    "legendary": [
+      {
+        "file": "legendary/virizion.glb",
+        "name": "virizion",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 1
+      }
+    ]
   },
   "1": {
     "ordinary": [
       {
-        "file": "ordinary/creature_01.glb",
-        "name": "creature_01",
+        "file": "ordinary/gible.glb",
+        "name": "gible",
         "rotation": [
           0,
           1.5707963267948966,
@@ -51,8 +102,38 @@ export const AUTO_ASSET_MANIFEST = {
         "scale": 0.45
       },
       {
-        "file": "ordinary/creature_02.glb",
-        "name": "creature_02",
+        "file": "ordinary/sandaconda.glb",
+        "name": "sandaconda",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/sandile.glb",
+        "name": "sandile",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/sandshrew.glb",
+        "name": "sandshrew",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/trapinch.glb",
+        "name": "trapinch",
         "rotation": [
           0,
           1.5707963267948966,
@@ -62,8 +143,8 @@ export const AUTO_ASSET_MANIFEST = {
       }
     ],
     "alpha": {
-      "file": "alpha/alpha_01.glb",
-      "name": "alpha_01",
+      "file": "alpha/garchomp.glb",
+      "name": "garchomp",
       "rotation": [
         0,
         1.5707963267948966,
@@ -73,8 +154,8 @@ export const AUTO_ASSET_MANIFEST = {
     },
     "alphaVariants": [
       {
-        "file": "alpha/alpha_01.glb",
-        "name": "alpha_01",
+        "file": "alpha/garchomp.glb",
+        "name": "garchomp",
         "rotation": [
           0,
           1.5707963267948966,
@@ -83,13 +164,74 @@ export const AUTO_ASSET_MANIFEST = {
         "scale": 0.45
       }
     ],
-    "legendary": []
+    "legendary": [
+      {
+        "file": "legendary/landorus.glb",
+        "name": "landorus",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 1
+      },
+      {
+        "file": "legendary/regirock.glb",
+        "name": "regirock",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 1
+      }
+    ]
   },
   "2": {
     "ordinary": [
       {
-        "file": "ordinary/creature_01.glb",
-        "name": "creature_01",
+        "file": "ordinary/houndour.glb",
+        "name": "houndour",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/magby.glb",
+        "name": "magby",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/numel.glb",
+        "name": "numel",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/slugma.glb",
+        "name": "slugma",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/tepig.glb",
+        "name": "tepig",
         "rotation": [
           0,
           1.5707963267948966,
@@ -99,8 +241,8 @@ export const AUTO_ASSET_MANIFEST = {
       }
     ],
     "alpha": {
-      "file": "alpha/alpha_01.glb",
-      "name": "alpha_01",
+      "file": "alpha/camerupt.glb",
+      "name": "camerupt",
       "rotation": [
         0,
         1.5707963267948966,
@@ -110,8 +252,8 @@ export const AUTO_ASSET_MANIFEST = {
     },
     "alphaVariants": [
       {
-        "file": "alpha/alpha_01.glb",
-        "name": "alpha_01",
+        "file": "alpha/camerupt.glb",
+        "name": "camerupt",
         "rotation": [
           0,
           1.5707963267948966,
@@ -136,8 +278,48 @@ export const AUTO_ASSET_MANIFEST = {
   "3": {
     "ordinary": [
       {
-        "file": "ordinary/creature_01.glb",
-        "name": "creature_01",
+        "file": "ordinary/cleffa.glb",
+        "name": "cleffa",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/igglybuff.glb",
+        "name": "igglybuff",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/morelull.glb",
+        "name": "morelull",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/munna.glb",
+        "name": "munna",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/zorua.glb",
+        "name": "zorua",
         "rotation": [
           0,
           1.5707963267948966,
@@ -147,8 +329,8 @@ export const AUTO_ASSET_MANIFEST = {
       }
     ],
     "alpha": {
-      "file": "alpha/alpha_01.glb",
-      "name": "alpha_01",
+      "file": "alpha/absol.glb",
+      "name": "absol",
       "rotation": [
         0,
         1.5707963267948966,
@@ -158,8 +340,8 @@ export const AUTO_ASSET_MANIFEST = {
     },
     "alphaVariants": [
       {
-        "file": "alpha/alpha_01.glb",
-        "name": "alpha_01",
+        "file": "alpha/absol.glb",
+        "name": "absol",
         "rotation": [
           0,
           1.5707963267948966,
@@ -168,13 +350,74 @@ export const AUTO_ASSET_MANIFEST = {
         "scale": 0.45
       }
     ],
-    "legendary": []
+    "legendary": [
+      {
+        "file": "legendary/cresselia.glb",
+        "name": "cresselia",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 1
+      },
+      {
+        "file": "legendary/darkrai.glb",
+        "name": "darkrai",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 1
+      }
+    ]
   },
   "4": {
     "ordinary": [
       {
-        "file": "ordinary/creature_01.glb",
-        "name": "creature_01",
+        "file": "ordinary/drilbur.glb",
+        "name": "drilbur",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/geodude.glb",
+        "name": "geodude",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/joltik.glb",
+        "name": "joltik",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/roggenrola.glb",
+        "name": "roggenrola",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/tynamo.glb",
+        "name": "tynamo",
         "rotation": [
           0,
           1.5707963267948966,
@@ -184,8 +427,8 @@ export const AUTO_ASSET_MANIFEST = {
       }
     ],
     "alpha": {
-      "file": "alpha/alpha_01.glb",
-      "name": "alpha_01",
+      "file": "alpha/eelektross.glb",
+      "name": "eelektross",
       "rotation": [
         0,
         1.5707963267948966,
@@ -195,8 +438,8 @@ export const AUTO_ASSET_MANIFEST = {
     },
     "alphaVariants": [
       {
-        "file": "alpha/alpha_01.glb",
-        "name": "alpha_01",
+        "file": "alpha/eelektross.glb",
+        "name": "eelektross",
         "rotation": [
           0,
           1.5707963267948966,
@@ -205,13 +448,64 @@ export const AUTO_ASSET_MANIFEST = {
         "scale": 0.45
       }
     ],
-    "legendary": []
+    "legendary": [
+      {
+        "file": "legendary/regieleki.glb",
+        "name": "regieleki",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 1
+      }
+    ]
   },
   "5": {
     "ordinary": [
       {
-        "file": "ordinary/creature_01.glb",
-        "name": "creature_01",
+        "file": "ordinary/snom.glb",
+        "name": "snom",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/snorunt.glb",
+        "name": "snorunt",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/snover.glb",
+        "name": "snover",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/vanillite.glb",
+        "name": "vanillite",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "ordinary/vulpix.glb",
+        "name": "vulpix",
         "rotation": [
           0,
           1.5707963267948966,
@@ -221,8 +515,8 @@ export const AUTO_ASSET_MANIFEST = {
       }
     ],
     "alpha": {
-      "file": "alpha/alpha_01.glb",
-      "name": "alpha_01",
+      "file": "alpha/froslass.glb",
+      "name": "froslass",
       "rotation": [
         0,
         1.5707963267948966,
@@ -232,8 +526,18 @@ export const AUTO_ASSET_MANIFEST = {
     },
     "alphaVariants": [
       {
-        "file": "alpha/alpha_01.glb",
-        "name": "alpha_01",
+        "file": "alpha/froslass.glb",
+        "name": "froslass",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.45
+      },
+      {
+        "file": "alpha/glalie.glb",
+        "name": "glalie",
         "rotation": [
           0,
           1.5707963267948966,
@@ -268,8 +572,8 @@ export const AUTO_ASSET_MANIFEST = {
   "6": {
     "ordinary": [
       {
-        "file": "ordinary/creature_01.glb",
-        "name": "creature_01",
+        "file": "ordinary/cottonee.glb",
+        "name": "cottonee",
         "rotation": [
           0,
           1.5707963267948966,
@@ -278,8 +582,38 @@ export const AUTO_ASSET_MANIFEST = {
         "scale": 0.35
       },
       {
-        "file": "ordinary/creature_02.glb",
-        "name": "creature_02",
+        "file": "ordinary/drifloon.glb",
+        "name": "drifloon",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.35
+      },
+      {
+        "file": "ordinary/hoppip.glb",
+        "name": "hoppip",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.35
+      },
+      {
+        "file": "ordinary/swablu.glb",
+        "name": "swablu",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.35
+      },
+      {
+        "file": "ordinary/togetic.glb",
+        "name": "togetic",
         "rotation": [
           0,
           1.5707963267948966,
@@ -289,8 +623,8 @@ export const AUTO_ASSET_MANIFEST = {
       }
     ],
     "alpha": {
-      "file": "alpha/alpha_01.glb",
-      "name": "alpha_01",
+      "file": "alpha/altaria.glb",
+      "name": "altaria",
       "rotation": [
         0,
         1.5707963267948966,
@@ -300,8 +634,8 @@ export const AUTO_ASSET_MANIFEST = {
     },
     "alphaVariants": [
       {
-        "file": "alpha/alpha_01.glb",
-        "name": "alpha_01",
+        "file": "alpha/altaria.glb",
+        "name": "altaria",
         "rotation": [
           0,
           1.5707963267948966,
@@ -310,13 +644,64 @@ export const AUTO_ASSET_MANIFEST = {
         "scale": 0.42
       }
     ],
-    "legendary": []
+    "legendary": [
+      {
+        "file": "legendary/rayquaza.glb",
+        "name": "rayquaza",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 1
+      }
+    ]
   },
   "7": {
     "ordinary": [
       {
-        "file": "ordinary/creature_01.glb",
-        "name": "creature_01",
+        "file": "ordinary/elgyem.glb",
+        "name": "elgyem",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.42
+      },
+      {
+        "file": "ordinary/gastly.glb",
+        "name": "gastly",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.42
+      },
+      {
+        "file": "ordinary/minior.glb",
+        "name": "minior",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.42
+      },
+      {
+        "file": "ordinary/shedinja.glb",
+        "name": "shedinja",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 0.42
+      },
+      {
+        "file": "ordinary/sigilyph.glb",
+        "name": "sigilyph",
         "rotation": [
           0,
           1.5707963267948966,
@@ -326,8 +711,8 @@ export const AUTO_ASSET_MANIFEST = {
       }
     ],
     "alpha": {
-      "file": "alpha/alpha_01.glb",
-      "name": "alpha_01",
+      "file": "alpha/banette.glb",
+      "name": "banette",
       "rotation": [
         0,
         1.5707963267948966,
@@ -337,8 +722,8 @@ export const AUTO_ASSET_MANIFEST = {
     },
     "alphaVariants": [
       {
-        "file": "alpha/alpha_01.glb",
-        "name": "alpha_01",
+        "file": "alpha/banette.glb",
+        "name": "banette",
         "rotation": [
           0,
           1.5707963267948966,
@@ -347,6 +732,17 @@ export const AUTO_ASSET_MANIFEST = {
         "scale": 0.58
       }
     ],
-    "legendary": []
+    "legendary": [
+      {
+        "file": "legendary/giratina.glb",
+        "name": "giratina",
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": 1
+      }
+    ]
   }
 };

@@ -33,8 +33,8 @@ import {
   getIceRoomSpawnPosition,
   getAlphaCreatureAsset,
   getEntityY,
+  getOrdinaryCreatureAssets,
   getPathSpawnPoint,
-  getRandomOrdinaryCreatureAsset,
   getRandomGrassPosition,
   isWalkablePosition,
   setActivePathId,
@@ -66,6 +66,8 @@ const CREATURE_MODEL_SCALES = {
 const DEFAULT_CREATURE_MODEL_URL = '/assets/shared/wild_creature.glb';
 const ALPHA_SPAWN_RADIUS = 1.4;
 const ALPHA_SPAWN_DISTANCES = [16, 18, 20, 22, 24, 14, 12];
+const MIN_ORDINARY_SPAWNS = 8;
+const MAX_ORDINARY_SPAWNS = 12;
 
 function getBiomeType(currentBiome) {
   return (WORLD_PATHS.find((path) => path.id === currentBiome) || WORLD_PATHS[0])
@@ -73,14 +75,19 @@ function getBiomeType(currentBiome) {
 }
 
 function createWildCreatures(pathId = 0, caveZone) {
-  const count = 3 + Math.floor(Math.random() * 3);
+  const assetPool = getOrdinaryCreatureAssets(pathId);
+  const count = Math.min(
+    MAX_ORDINARY_SPAWNS,
+    Math.max(MIN_ORDINARY_SPAWNS, assetPool.length * 2)
+  );
+  const mixedAssets = [...assetPool].sort(() => Math.random() - 0.5);
   const spawnZone = pathId === CAVE_BIOME_ID
     ? CAVE_ZONES.INTERIOR
     : caveZone;
   const spawn = getPathSpawnPoint(pathId, WILD_CREATURE_HEIGHT, spawnZone);
 
   return Array.from({ length: count }, (_, index) => {
-    const asset = getRandomOrdinaryCreatureAsset(pathId);
+    const asset = mixedAssets[index % mixedAssets.length] || assetPool[0];
 
     return {
       id: `wild-${index}`,
