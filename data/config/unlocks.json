@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "sequentialUnlock": true,
+  "starterPathId": 0,
+  "order": [
+    "kanto",
+    "johto",
+    "hoenn",
+    "sinnoh",
+    "unova",
+    "kalos",
+    "alola",
+    "galar",
+    "paldea"
+  ]
+}
