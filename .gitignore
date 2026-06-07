@@ -8,7 +8,7 @@
 # testing
 /coverage
 /reports
-
+/public/assets/idea_glbs
 # production
 /build
 /client/dist
