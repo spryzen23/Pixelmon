@@ -3,12 +3,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Color, FogExp2, MathUtils } from 'three';
 
 const PARTICLE_COUNT = 3000;
-const TORNADO_PARTICLE_COUNT = 850;
+const TORNADO_PARTICLE_COUNT = 1200;
 const STORM_RADIUS = 30;
 const STORM_HEIGHT = 20;
 const TORNADO_HEIGHT = 17;
-const TORNADO_BOTTOM_RADIUS = 0.35;
-const TORNADO_TOP_RADIUS = 4.8;
+const TORNADO_BOTTOM_RADIUS = 1.15;
+const TORNADO_TOP_RADIUS = 7.2;
 const CLEAR_FOG_DENSITY = 0.006;
 const STORM_FOG_DENSITY = 0.055;
 const CLEAR_FOG_COLOR = new Color('#d8eefb');
@@ -53,7 +53,7 @@ export default function Sandstorm({ playerRef }) {
 
       heights[index] = heightPercent * TORNADO_HEIGHT;
       angles[index] = randomRange(0, Math.PI * 2);
-      radiusOffsets[index] = randomRange(-0.35, 0.45);
+      radiusOffsets[index] = randomRange(-0.85, 1.1);
       speeds[index] = randomRange(2.6, 4.8);
       nextPositions[offset] = 0;
       nextPositions[offset + 1] = heights[index];
@@ -197,19 +197,24 @@ export default function Sandstorm({ playerRef }) {
           tornadoData.radiusOffsets[index] +
           Math.sin(elapsedTime * 2.2 + index) * 0.18;
 
-        tornadoArray[offset] = tornadoCenterX + Math.cos(swirlAngle) * radius;
+        tornadoArray[offset] =
+          tornadoCenterX +
+          Math.cos(swirlAngle) * radius +
+          Math.sin(elapsedTime * 1.3 + index * 0.17) * 0.45;
         tornadoArray[offset + 1] =
-          height + Math.sin(elapsedTime * 3 + index * 0.11) * 0.18;
-        tornadoArray[offset + 2] = tornadoCenterZ + Math.sin(swirlAngle) * radius;
+          height + Math.sin(elapsedTime * 3 + index * 0.11) * 0.35;
+        tornadoArray[offset + 2] =
+          tornadoCenterZ +
+          Math.sin(swirlAngle) * radius +
+          Math.cos(elapsedTime * 1.1 + index * 0.13) * 0.45;
       }
 
       tornadoAttribute.needsUpdate = true;
       tornado.material.opacity = MathUtils.lerp(
         tornado.material.opacity,
-        stormIntensity * 0.62,
+        stormIntensity * 0.28,
         0.04
       );
-      tornado.rotation.y += delta * 0.6;
     }
 
     if (scene.fog?.isFogExp2) {
@@ -259,7 +264,7 @@ export default function Sandstorm({ playerRef }) {
           color="#c6a06d"
           depthWrite={false}
           opacity={0}
-          size={0.22}
+          size={0.12}
           transparent
         />
       </points>
