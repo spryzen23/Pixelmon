@@ -53,6 +53,9 @@ function createMatchCreatures(room) {
     const distance = 8 + seededRandom(room.biomeId * 2000 + index * 5.1) * 56;
 
     return {
+      assetIndex: Math.floor(
+        seededRandom(room.biomeId * 3000 + index * 7.9) * 1000
+      ),
       id: `br-creature-${room.code}-${index}`,
       x: Number((Math.cos(angle) * distance).toFixed(2)),
       z: Number((Math.sin(angle) * distance).toFixed(2)),

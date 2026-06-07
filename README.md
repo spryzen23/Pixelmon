@@ -1,6 +1,6 @@
 # Voxel Legends Prototype
 
-Voxel Legends is a React + Three.js prototype for a creature-catching voxel adventure. It blends a blocky, biome-based world with third-person movement, companion recall, projectile catching, weather effects, and region-specific creature assets.
+Voxel Legends is a React + Three.js prototype for a creature-catching voxel adventure. It blends biome-based voxel terrain, third-person movement, companion recall, projectile catching, weather, alpha encounters, Battle Royale experiments, and biome-specific GLB assets.
 
 ## Tech Stack
 
@@ -13,36 +13,25 @@ Voxel Legends is a React + Three.js prototype for a creature-catching voxel adve
 
 ## Running The Project
 
-Install dependencies:
-
 ```bash
 npm install
-```
-
-Start the local dev server:
-
-```bash
 npm start
-```
-
-Run tests:
-
-```bash
 npm test -- --watchAll=false
-```
-
-Create a production build:
-
-```bash
 npm run build
 ```
 
-Run the biome load analytics dashboard:
+Biome metrics dashboard:
 
 ```bash
 cd tools/biome_dashboard
 pip install -r requirements.txt
 streamlit run app.py
+```
+
+Battle Royale server:
+
+```bash
+npm run br:server
 ```
 
 ## Gameplay Controls
@@ -53,180 +42,212 @@ streamlit run app.py
 - Recall or send out the companion with `E`.
 - Adjust throw power with `Q`, `R`, or the mouse wheel.
 - Switch ball type with `1`, `2`, and `3`.
+- Exit caves or special rooms with `X`.
 - Switch biomes with the biome menu on the right side of the screen.
 - Export or clear biome load metrics with the analytics buttons under the biome menu.
 
-## Current Game Architecture
+## Current Biomes
 
-The game currently uses a segmented biome system instead of an infinite world.
-
-- There are 6 finite biomes.
-- Only one biome is active at a time.
-- Each biome is a 36x36 chunk map, with a cached 5x5 active render window around the player.
-- Terrain blocks are rendered with instanced meshes for performance.
-- The player is clamped inside the active biome bounds.
-- Creature spawns are reset when switching biomes.
-- Catching all ordinary creatures in a biome spawns that biome's alpha creature.
-
-## Biomes
-
-The active biomes are defined in `src/game/world.js`:
+Biome data is defined in `src/world/index.js`.
 
 ```txt
 0 Grass Biome
 1 Desert Biome
 2 Volcanic Biome
-3 Mossy Biome
+3 Moonlit Biome
 4 Cave Biome
 5 Icy Biome
+6 Sky Biome
+7 Distortion Realm
 ```
 
 ## Asset Folder Structure
 
-Global player, companion, and fallback assets live directly under `public/assets`:
+Shared models live in `public/assets/shared`.
 
 ```txt
 public/assets/
-  player.glb
-  companion.glb
-  wild_creature.glb
+  shared/
+    player.glb
+    companion.glb
+    wild_creature.glb
 ```
 
-Terrain block textures are generated procedurally in code by `src/game/proceduralVoxelMaterials.js`, so you do not need to provide PNG textures for grass, dirt, stone, sand, snow, moss, water, lava, cave, or basalt blocks.
-
-Each biome has its own folder for ordinary creatures and alpha creatures. The UI now uses the simplified biome names above, while `assetFolder` in `WORLD_PATHS` points to the existing folders below so current assets keep working:
+Each biome owns its ordinary creatures, alpha creature, and legendary/static encounters.
 
 ```txt
 public/assets/
-  Fieldlands Trail/
-    alpha.glb
+  Grass Biome/
     ordinary/
       creature_01.glb
+    alpha/
+      alpha_01.glb
+    legendary/
 
-  Sandglass Flats/
-    alpha.glb
+  Desert Biome/
     ordinary/
-      creature_01.glb
-      creature_02.glb
+    alpha/
+    legendary/
 
-  Frostpine Pass/
-    alpha.glb
+  Volcanic Biome/
     ordinary/
-      creature_01.glb
+    alpha/
+    legendary/
+      primal_groudon.glb
 
-  Coastal Run/
-    alpha.glb
+  Moonlit Biome/
     ordinary/
-      creature_01.glb
+    alpha/
+    legendary/
 
-  Crimson Mire/
-    alpha.glb
+  Cave Biome/
     ordinary/
-      creature_01.glb
+    alpha/
+    legendary/
 
-  Coronet Approach/
-    alpha.glb
+  Icy Biome/
     ordinary/
-      creature_01.glb
+    alpha/
+    legendary/
+      black_kyurem.glb
+      white_kyurem.glb
+
+  Sky Biome/
+    ordinary/
+    alpha/
+    legendary/
+
+  Distortion Realm/
+    ordinary/
+    alpha/
+    legendary/
 ```
 
-Folder names must match the `assetFolder` value in `WORLD_PATHS`.
+Folder names should match the `assetFolder` value in `WORLD_PATHS`.
 
-## Adding More Ordinary Creatures
+Terrain block textures are generated procedurally in `src/game/proceduralVoxelMaterials.js`, so PNG terrain textures are not required.
 
-Put additional ordinary GLB files inside the biome's `ordinary` folder:
+## Adding Ordinary Creatures
+
+Put any number of ordinary GLB files inside a biome's `ordinary` folder:
 
 ```txt
-public/assets/Fieldlands Trail/ordinary/creature_03.glb
-public/assets/Fieldlands Trail/ordinary/creature_04.glb
+public/assets/Grass Biome/ordinary/butterfree.glb
+public/assets/Grass Biome/ordinary/shinx.glb
+public/assets/Grass Biome/ordinary/anything-you-like.glb
 ```
 
-Then register them in `CREATURE_ASSET_MANIFEST` inside `src/game/world.js`:
+File names do not need to follow `creature_01.glb`. Any `.glb` in `ordinary/` is discovered automatically.
 
-```js
-0: {
-  ordinary: [
-    { file: 'ordinary/creature_01.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
-    { file: 'ordinary/creature_02.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
-    { file: 'ordinary/creature_03.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
-  ],
-  alpha: { file: 'alpha.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
-}
+The asset manifest is generated by:
+
+```bash
+npm run generate:assets
 ```
 
-The ordinary spawner cycles through this list, so a biome can have multiple creature types active at once.
+It also runs automatically before:
 
-## Adding More Alpha Models
+```bash
+npm start
+npm test
+npm run build
+```
 
-The current gameplay uses one active alpha encounter per biome. The default structure is:
+Normal Mode randomly chooses ordinary models from the active biome folder. Battle Royale can use a synced `assetIndex` from the server so every player sees the same shared creature model.
+
+## Adding Alpha And Legendary Models
+
+The current gameplay uses one active alpha encounter per biome. Put one or more files in `alpha/`:
 
 ```txt
-public/assets/<Biome Name>/alpha.glb
+public/assets/<Biome Name>/alpha/alpha.glb
+public/assets/<Biome Name>/alpha/boss_variant.glb
 ```
 
-For multiple alpha variants, use an `alpha` folder:
+The first alpha file alphabetically is used as the biome's alpha spawn unless you override metadata.
+
+Special static models belong in `legendary`:
 
 ```txt
-public/assets/Fieldlands Trail/alpha/
-  alpha_01.glb
-  alpha_02.glb
-  alpha_03.glb
+public/assets/Volcanic Biome/legendary/primal_groudon.glb
+public/assets/Icy Biome/legendary/black_kyurem.glb
+public/assets/Icy Biome/legendary/white_kyurem.glb
 ```
 
-Then update `CREATURE_ASSET_MANIFEST` to point at the alpha model you want to spawn:
-
-```js
-0: {
-  ordinary: [
-    { file: 'ordinary/creature_01.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
-  ],
-  alpha: { file: 'alpha/alpha_01.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
-}
-```
-
-To rotate alpha variants randomly, change the `alpha` field into a list and update `getAlphaCreatureAsset()` in `src/game/world.js` to select from that list.
+`legendary` means special biome models or static encounters. It does not mean ordinary catchable creatures or alpha spawns.
+Legendary files are optional and are exposed to biome scene code as static/special encounters.
 
 ## Model Scale And Rotation
 
-Different GLB files often use different export axes and real-world sizes. Each manifest entry supports:
+Different GLB files often use different export axes and real-world sizes. You can add an optional `assets.json` file inside any biome folder to tune defaults or specific files without editing React code.
 
-- `file`: relative file path inside the biome folder.
-- `scale`: visual model scale.
-- `rotation`: corrective `[x, y, z]` rotation in radians.
+Example:
 
-Examples:
-
-```js
-{ file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] }
-{ file: 'ordinary/creature_02.glb', scale: 0.3, rotation: [-Math.PI / 2, 0, 0] }
+```json
+{
+  "defaults": {
+    "ordinary": { "scale": 0.45, "rotation": [0, 1.5707963268, 0] },
+    "alpha": { "scale": 0.9, "rotation": [0, 1.5707963268, 0] },
+    "legendary": { "scale": 1 }
+  },
+  "files": {
+    "ordinary/sideways_model.glb": {
+      "scale": 0.32,
+      "rotation": [-1.5707963268, 0, 0],
+      "name": "Sideways Model"
+    }
+  }
+}
 ```
 
-This lets normal creatures share a consistent gameplay size while still correcting each model independently.
+Supported metadata fields are `scale`, `rotation`, and `name`.
 
-## Weather And Atmosphere
+## Source Folder Structure
 
-- Desert Biome has intermittent sandstorms with blowing particles and fog.
-- Icy Biome has snowy storms.
-- Grass, Volcanic, Mossy, and Cave biomes stay clear by default.
-- The world uses a cloudy voxel sky and extended ocean horizon to hide map edges and make each biome feel larger.
+```txt
+src/
+  app/                 Root app shell, mode selection, global CSS
+  biomes/              Biome-specific visual dressing and weather
+  entities/            Player, companion, wild creature, GLB model wrappers
+  environment/         Sky, atmosphere, horizon
+  game/                Shared game constants unrelated to terrain
+  hooks/               Input hooks
+  scenes/              Normal Mode and Battle Royale scene flows
+  systems/             Camera, projectiles, aim indicator, capture effects
+  ui/                  HUD and reusable overlay UI
+  world/               Biomes, terrain generation, cache, height lookup, assets
+```
 
-## Biome Load Metrics Dashboard
+Important files:
+
+```txt
+src/app/App.jsx
+src/scenes/normal/GameScene.js
+src/scenes/battleRoyale/BattleRoyaleShell.js
+src/entities/Player.js
+src/entities/WildCreature.js
+src/world/index.js
+src/world/VoxelWorld.js
+src/game/proceduralVoxelMaterials.js
+tools/biome_dashboard/app.py
+```
+
+## Biome Load Metrics
 
 The React game records biome load timings in browser `localStorage`. It tracks:
 
 - biome id, name, and type
 - total load duration in milliseconds
-- whether the load was a first load or a cached reload
-- whether the cache already existed before loading
+- first load vs cached reload
 - active rendered chunk and block counts
 - accumulated cached chunk count
-- chunks generated during that specific load
+- chunks generated during that load
 
 To inspect the data:
 
 1. Run the React game.
-2. Switch between biomes a few times.
-3. Click `Export Metrics` in the game UI.
+2. Switch between biomes.
+3. Click `Export Metrics`.
 4. Run the Streamlit dashboard from `tools/biome_dashboard`.
 5. Upload the exported `biome_load_metrics.json`.
 
@@ -236,39 +257,9 @@ You can also place the exported file at:
 tools/biome_dashboard/biome_load_metrics.json
 ```
 
-The dashboard shows average wait time, average first-load time, average cached reload time, per-biome summaries, and a load-duration timeline.
-
-## Important Source Files
-
-```txt
-src/App.jsx                         Root Canvas and UI shell
-src/components/GameScene.js         Main gameplay scene and creature state
-src/components/Player.js            Player movement and camera-relative walking
-src/components/WildCreature.js      Creature AI, GLB rendering, alpha scaling
-src/components/VoxelWorld.js        Instanced terrain renderer
-src/components/OceanHorizon.js      Extended ocean and horizon blending
-src/components/Sandstorm.js         Desert weather
-src/components/Snowstorm.js         Snow biome weather
-src/game/world.js                   Biome data, terrain math, asset manifest
-src/game/biomeLoadMetrics.js        Browser-side biome load telemetry
-src/game/proceduralVoxelMaterials.js Generated pixel-art voxel materials
-src/game/projectilePhysics.js       Throw origin and trajectory math
-tools/biome_dashboard/app.py        Streamlit metrics dashboard
-```
-
 ## Notes
 
 - Files in `public/assets` are served from `/assets/...`.
-- Spaces in biome folder names are allowed because asset URLs are encoded in `world.js`.
-- If a model appears sideways or too large, adjust only its manifest `rotation` or `scale`.
-- If a biome has new creature files but they do not appear, confirm they were added to `CREATURE_ASSET_MANIFEST`.
-
-
-
-cd tools/biome_dashboard
-pip install -r requirements.txt
-streamlit run app.py
-
-npm run br:server
-
-https://www.cgtrader.com/designers/artistofthemonth?utm_source=credit&utm_source=credit_item_page
+- Spaces in biome folder names are allowed because asset URLs are encoded.
+- If a model appears sideways or too large, adjust its biome `assets.json` metadata.
+- If a biome has new creature files but they do not appear, run `npm run generate:assets` or restart the dev server.

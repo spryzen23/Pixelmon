@@ -19,8 +19,12 @@
   },
   "scripts": {
     "br:server": "node server/battleRoyaleServer.js",
+    "generate:assets": "node scripts/generateAssetManifest.js",
+    "prestart": "npm run generate:assets",
     "start": "react-scripts start",
+    "prebuild": "npm run generate:assets",
     "build": "react-scripts build",
+    "pretest": "npm run generate:assets",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

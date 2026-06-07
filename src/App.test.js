@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { io as mockSocketIo } from 'socket.io-client';
-import App from './App.jsx';
+import App from './app/App.jsx';
 
 jest.mock('socket.io-client', () => ({
   io: jest.fn(),
@@ -22,21 +22,21 @@ jest.mock('@react-three/drei', () => ({
   Sky: () => <div data-testid="sky" />,
 }));
 
-jest.mock('./components/Atmosphere', () => ({
+jest.mock('./environment/Atmosphere', () => ({
   __esModule: true,
   default: () => <div data-testid="atmosphere" />,
   SUN_POSITION: [80, 35, -120],
 }));
 
-jest.mock('./components/GameScene', () => function MockGameScene() {
+jest.mock('./scenes/normal/GameScene', () => function MockGameScene() {
   return <div data-testid="game-scene" />;
 });
 
-jest.mock('./components/BattleRoyaleArena', () => function MockBattleRoyaleArena() {
+jest.mock('./scenes/battleRoyale/BattleRoyaleArena', () => function MockBattleRoyaleArena() {
   return <div data-testid="battle-royale-arena" />;
 });
 
-jest.mock('./components/BattleRoyaleDropScene', () => function MockBattleRoyaleDropScene() {
+jest.mock('./scenes/battleRoyale/BattleRoyaleDropScene', () => function MockBattleRoyaleDropScene() {
   return <div data-testid="battle-royale-drop-scene" />;
 });
 
