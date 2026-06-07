@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "regions": [
+    {
+      "regionId": "kanto",
+      "displayName": "Kanto",
+      "pathId": 0,
+      "terrainName": "Fieldlands Trail",
+      "folderName": "Fieldlands Trail",
+      "minDex": 1,
+      "maxDex": 151,
+      "plantBiomeIndices": [
+        0,
+        3,
+        4
+      ],
+      "terrainType": "grassland",
+      "unlockAfter": null,
+      "playable": true
+    },
+    {
+      "regionId": "johto",
+      "displayName": "Johto",
+      "pathId": 1,
+      "terrainName": "Sandglass Flats",
+      "folderName": "Sandglass Flats",
+      "minDex": 152,
+      "maxDex": 251,
+      "plantBiomeIndices": [
+        1
+      ],
+      "terrainType": "desert",
+      "unlockAfter": "kanto",
+      "playable": true
+    },
+    {
+      "regionId": "hoenn",
+      "displayName": "Hoenn",
+      "pathId": 2,
+      "terrainName": "Frostpine Pass",
+      "folderName": "Frostpine Pass",
+      "minDex": 252,
+      "maxDex": 386,
+      "plantBiomeIndices": [
+        2,
+        5
+      ],
+      "terrainType": "snow",
+      "unlockAfter": "johto",
+      "playable": true
+    },
+    {
+      "regionId": "sinnoh",
+      "displayName": "Sinnoh",
+      "pathId": 3,
+      "terrainName": "Coastal Run",
+      "folderName": "Coastal Run",
+      "minDex": 387,
+      "maxDex": 493,
+      "plantBiomeIndices": [
+        0,
+        3,
+        4
+      ],
+      "terrainType": "coastal",
+      "unlockAfter": "hoenn",
+      "playable": true
+    },
+    {
+      "regionId": "unova",
+      "displayName": "Unova",
+      "pathId": 4,
+      "terrainName": "Crimson Mire",
+      "folderName": "Crimson Mire",
+      "minDex": 494,
+      "maxDex": 649,
+      "plantBiomeIndices": [
+        0,
+        3,
+        4
+      ],
+      "terrainType": "mire",
+      "unlockAfter": "sinnoh",
+      "playable": true
+    },
+    {
+      "regionId": "kalos",
+      "displayName": "Kalos",
+      "pathId": 5,
+      "terrainName": "Coronet Approach",
+      "folderName": "Coronet Approach",
+      "minDex": 650,
+      "maxDex": 721,
+      "plantBiomeIndices": [
+        2,
+        5
+      ],
+      "terrainType": "mountain",
+      "unlockAfter": "unova",
+      "playable": true
+    },
+    {
+      "regionId": "alola",
+      "displayName": "Alola",
+      "pathId": 6,
+      "terrainName": "Fantasy World",
+      "folderName": "Fantasy World",
+      "minDex": 722,
+      "maxDex": 809,
+      "plantBiomeIndices": [
+        6
+      ],
+      "terrainType": "tropical",
+      "unlockAfter": "kalos",
+      "playable": true
+    },
+    {
+      "regionId": "galar",
+      "displayName": "Galar",
+      "pathId": 7,
+      "terrainName": "Village World",
+      "folderName": "Village World",
+      "minDex": 810,
+      "maxDex": 905,
+      "plantBiomeIndices": [
+        7
+      ],
+      "terrainType": "village",
+      "unlockAfter": "alola",
+      "playable": true
+    },
+    {
+      "regionId": "paldea",
+      "displayName": "Paldea",
+      "pathId": 8,
+      "terrainName": "Paldea Highlands",
+      "folderName": "Paldea Highlands",
+      "minDex": 906,
+      "maxDex": 1025,
+      "plantBiomeIndices": [
+        8
+      ],
+      "terrainType": "highlands",
+      "unlockAfter": "galar",
+      "playable": false
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+:root {
+  --px-sky: #87ceeb;
+  --px-sky-deep: #9fd0ef;
+  --px-text: #f8fbff;
+  --px-text-muted: rgba(248, 251, 255, 0.72);
+  --px-accent: #fff3a8;
+  --px-accent-warm: #ffd9b7;
+  --px-panel: rgba(20, 35, 48, 0.72);
+  --px-panel-solid: rgba(20, 35, 48, 0.88);
+  --px-border: rgba(255, 255, 255, 0.18);
+  --px-shadow: 0 20px 80px rgba(0, 0, 0, 0.32);
+  --px-radius: 8px;
+  --px-success: #3fb950;
+  --px-danger: #f85149;
+}
