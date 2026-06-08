@@ -10,15 +10,15 @@ export default [
       '**/dist/**',
       '**/build/**',
       '**/coverage/**',
-      'client/dist/**',
+      '.next/**',
       'data/**',
       'public/**',
-      'server/src/showdown/**',
+      'src/server/showdown/**',
     ],
   },
   js.configs.recommended,
   {
-    files: ['client/src/**/*.{js,jsx}'],
+    files: ['src/**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
@@ -45,7 +45,7 @@ export default [
     },
   },
   {
-    files: ['client/src/**/*.test.js'],
+    files: ['src/**/*.test.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
@@ -61,7 +61,7 @@ export default [
     },
   },
   {
-    files: ['client/src/game/**/*.js', 'client/src/hooks/**/*.js', 'client/src/components/**/*.js'],
+    files: ['src/game/**/*.js', 'src/hooks/**/*.js', 'src/components/**/*.js'],
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -70,7 +70,7 @@ export default [
     },
   },
   {
-    files: ['server/src/**/*.js', 'server/test/**/*.js'],
+    files: ['src/server/**/*.js', 'server/test/**/*.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',

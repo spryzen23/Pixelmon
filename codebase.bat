@@ -104,14 +104,6 @@ if not exist "%PROJECT_DIR%\package.json" (
     call :color_echo "%RED%" "ERROR: package.json not found under: %PROJECT_DIR%"
     goto :end_fail
 )
-if not exist "%PROJECT_DIR%\client\package.json" (
-    call :color_echo "%RED%" "ERROR: client\package.json not found"
-    goto :end_fail
-)
-if not exist "%PROJECT_DIR%\server\package.json" (
-    call :color_echo "%RED%" "ERROR: server\package.json not found"
-    goto :end_fail
-)
 
 cd /d "%PROJECT_DIR%"
 echo.
@@ -180,18 +172,16 @@ call :color_echo "%CYAN%" "[1/9] Cleaning and preparing..."
 echo ----------------------------------------
 if /i "%SKIP_CLEAN%"=="1" (
     call :color_echo "%YELLOW%" "  SKIP_CLEAN=1: keeping node_modules"
-    if exist "client\dist" (
-        call :color_echo "%YELLOW%" "  Removing client\dist\"
-        rd /s /q "client\dist"
+    if exist ".next" (
+        call :color_echo "%YELLOW%" "  Removing .next\"
+        rd /s /q ".next"
     )
     if exist "coverage" rd /s /q "coverage"
     if exist "build" rd /s /q "build"
 ) else (
-    call :color_echo "%YELLOW%" "  Removing node_modules (root, server, client), client\dist, coverage, build"
+    call :color_echo "%YELLOW%" "  Removing node_modules, .next, coverage, build"
     if exist "node_modules" rd /s /q "node_modules"
-    if exist "server\node_modules" rd /s /q "server\node_modules"
-    if exist "client\node_modules" rd /s /q "client\node_modules"
-    if exist "client\dist" rd /s /q "client\dist"
+    if exist ".next" rd /s /q ".next"
     if exist "coverage" rd /s /q "coverage"
     if exist "build" rd /s /q "build"
     call :color_echo "%GREEN%" "  OK Clean completed"
@@ -201,13 +191,9 @@ if /i "%SKIP_NPM_INSTALL%"=="1" (
     call :color_echo "%YELLOW%" "  Skipped install (SKIP_NPM_INSTALL=1)"
     set "SECTION1_STATUS=SKIPPED"
 ) else (
-    call :color_echo "%YELLOW%" "  Running: npm.cmd install (root, server, client)"
+    call :color_echo "%YELLOW%" "  Running: npm.cmd install"
     set "STEP01_FAIL=0"
     call npm.cmd install
-    if errorlevel 1 set "STEP01_FAIL=1"
-    call npm.cmd install --prefix server
-    if errorlevel 1 set "STEP01_FAIL=1"
-    call npm.cmd install --prefix client
     if errorlevel 1 set "STEP01_FAIL=1"
     if "!STEP01_FAIL!"=="1" (
         set /a ERROR_COUNT+=1
@@ -217,13 +203,13 @@ if /i "%SKIP_NPM_INSTALL%"=="1" (
     ) else (
         set "SECTION1_STATUS=PASSED"
         call :color_echo "%GREEN%" "  OK Dependencies installed"
-        call :color_echo "%BLUE%" "  Running: npm.cmd audit --prefix client (advisory)"
-        call npm.cmd audit --prefix client 2>nul
+        call :color_echo "%BLUE%" "  Running: npm.cmd audit (advisory)"
+        call npm.cmd audit 2>nul
         if errorlevel 1 (
             set /a WARNING_COUNT+=1
-            call :color_echo "%YELLOW%" "  ! npm audit reported issues in client (run: npm audit --prefix client)"
+            call :color_echo "%YELLOW%" "  ! npm audit reported issues (run: npm audit)"
         ) else (
-            call :color_echo "%GREEN%" "  OK client audit clean"
+            call :color_echo "%GREEN%" "  OK audit clean"
         )
     )
 )
@@ -241,8 +227,8 @@ if /i "%SKIP_DATA_SETUP%"=="1" (
         set "SECTION2_STATUS=PASSED"
         call :color_echo "%GREEN%" "  OK data\game\pokemons.slim.json already present"
     ) else (
-        call :color_echo "%YELLOW%" "  Running: node scripts\build-slim.js"
-        call node scripts\build-slim.js
+        call :color_echo "%YELLOW%" "  Running: node scripts\build-slim.cjs"
+        call node scripts\build-slim.cjs
         if errorlevel 1 (
             if /i "%DATA_SETUP_NO_FAIL%"=="1" (
                 set /a WARNING_COUNT+=1
@@ -289,20 +275,20 @@ if /i "%SKIP_PRETTIER%"=="1" (
             set "SECTION4_STATUS=WARNING"
             call :color_echo "%YELLOW%" "  ! npx not on PATH — install Node.js or set SKIP_PRETTIER=1"
         ) else (
-            call :color_echo "%BLUE%" "  Targets: client\src, server\src, eslint.config.mjs, package.json files"
+            call :color_echo "%BLUE%" "  Targets: src, eslint.config.mjs, package.json"
             call :color_echo "%YELLOW%" "  Running: npx prettier --check ..."
-            call npx prettier --check "client/src/**/*.{js,jsx}" "server/src/**/*.js" "server/test/**/*.js" eslint.config.mjs package.json client/package.json server/package.json
+            call npx prettier --check "src/**/*.{js,jsx}" eslint.config.mjs package.json
             if errorlevel 1 (
                 set /a WARNING_COUNT+=1
                 set "SECTION4_STATUS=WARNING"
                 call :color_echo "%YELLOW%" "  Prettier found issues — running: npx prettier --write ..."
-                call npx prettier --write "client/src/**/*.{js,jsx}" "server/src/**/*.js" "server/test/**/*.js" eslint.config.mjs package.json client/package.json server/package.json
+                call npx prettier --write "src/**/*.{js,jsx}" eslint.config.mjs package.json
                 if errorlevel 1 (
                     set /a ERROR_COUNT+=1
                     set "SECTION4_STATUS=FAILED"
                     call :color_echo "%RED%" "  X Prettier --write failed"
                 ) else (
-                    call npx prettier --check "client/src/**/*.{js,jsx}" "server/src/**/*.js" "server/test/**/*.js" eslint.config.mjs package.json client/package.json server/package.json
+                    call npx prettier --check "src/**/*.{js,jsx}" eslint.config.mjs package.json
                     if errorlevel 1 (
                         set /a ERROR_COUNT+=1
                         set "SECTION4_STATUS=FAILED"
@@ -357,9 +343,9 @@ if /i "%SKIP_TESTS%"=="1" (
     call :color_echo "%YELLOW%" "  Skipped (SKIP_TESTS=1)"
     set "SECTION6_STATUS=SKIPPED"
 ) else (
-    call :color_echo "%BLUE%" "  server: node --test   client: vitest --run"
-    call :color_echo "%YELLOW%" "  Running: npm.cmd run test"
-    call npm.cmd run test
+    call :color_echo "%BLUE%" "  server: node --test"
+    call :color_echo "%YELLOW%" "  Running: npm.cmd run test:server"
+    call npm.cmd run test:server
     if errorlevel 1 (
         set /a ERROR_COUNT+=1
         set "SECTION6_STATUS=FAILED"
@@ -372,29 +358,8 @@ if /i "%SKIP_TESTS%"=="1" (
 echo.
 
 REM --- [6b] Coverage ---
-if /i "%RUN_TEST_COVERAGE%"=="1" (
-    if /i "%SKIP_TESTS%"=="1" (
-        call :color_echo "%YELLOW%" "[6b] Coverage skipped (SKIP_TESTS=1)"
-        set "SECTION6_COVERAGE_STATUS=SKIPPED"
-    ) else (
-        call :color_echo "%CYAN%" "[6b] Vitest coverage (RUN_TEST_COVERAGE=1)..."
-        echo ----------------------------------------
-        call :color_echo "%YELLOW%" "  Running: npm.cmd test --prefix client -- --run --coverage"
-        call npm.cmd test --prefix client -- --run --coverage
-        if errorlevel 1 (
-            set /a WARNING_COUNT+=1
-            set "SECTION6_COVERAGE_STATUS=WARNING"
-            call :color_echo "%YELLOW%" "  Warning: coverage failed (install @vitest/coverage-v8 in client if missing)"
-        ) else (
-            set "SECTION6_COVERAGE_STATUS=PASSED"
-            call :color_echo "%GREEN%" "  OK Coverage run completed"
-        )
-    )
-    echo.
-) else (
-    call :color_echo "%BLUE%" "[6b] Coverage skipped (set RUN_TEST_COVERAGE=1 for vitest --coverage)"
-    echo.
-)
+call :color_echo "%BLUE%" "[6b] Coverage skipped (Client Vitest migrated to unified repository)"
+echo.
 
 REM --- [7] Build ---
 call :color_echo "%CYAN%" "[7/9] Production build check..."
@@ -403,21 +368,21 @@ if /i "%SKIP_BUILD%"=="1" (
     call :color_echo "%YELLOW%" "  Skipped (SKIP_BUILD=1)"
     set "SECTION7_STATUS=SKIPPED"
 ) else (
-    call :color_echo "%YELLOW%" "  Running: node scripts\build-slim.js"
-    call node scripts\build-slim.js
-    call :color_echo "%YELLOW%" "  Running: npm.cmd run build --prefix client"
-    call npm.cmd run build --prefix client
+    call :color_echo "%YELLOW%" "  Running: node scripts\build-slim.cjs"
+    call node scripts\build-slim.cjs
+    call :color_echo "%YELLOW%" "  Running: npm.cmd run build"
+    call npm.cmd run build
     if errorlevel 1 (
         set /a ERROR_COUNT+=1
         set "SECTION7_STATUS=FAILED"
         call :color_echo "%RED%" "  X Build failed"
-    ) else if exist "client\dist\index.html" (
+    ) else if exist ".next" (
         set "SECTION7_STATUS=PASSED"
-        call :color_echo "%GREEN%" "  OK Build successful (client\dist\index.html)"
+        call :color_echo "%GREEN%" "  OK Build successful (.next)"
     ) else (
         set /a ERROR_COUNT+=1
         set "SECTION7_STATUS=FAILED"
-        call :color_echo "%RED%" "  X client\dist\index.html not found"
+        call :color_echo "%RED%" "  X .next build output not found"
     )
 )
 echo.
@@ -435,9 +400,9 @@ echo   [2] Data preflight (build-slim):      !SECTION2_STATUS!
 echo   [3] Type checking (JS - skipped):     !SECTION3_STATUS!
 echo   [4] Prettier:                         !SECTION4_STATUS!
 echo   [5] ESLint:                           !SECTION5_STATUS!
-echo   [6] Tests (node:test + vitest):       !SECTION6_STATUS!
+echo   [6] Tests (node:test):                !SECTION6_STATUS!
 echo   [6b] Vitest coverage:                 !SECTION6_COVERAGE_STATUS!
-echo   [7] Build (slim + vite):              !SECTION7_STATUS!
+echo   [7] Build (Next.js):                  !SECTION7_STATUS!
 echo.
 
 if !ERROR_COUNT! EQU 0 (
@@ -462,8 +427,8 @@ if !ERROR_COUNT! EQU 0 (
 :dev_server
 echo.
 call :color_echo "%CYAN%" "[8/9] Starting development server..."
-call :color_echo "%BLUE%" "  Client: http://localhost:3000"
-call :color_echo "%BLUE%" "  API:    http://localhost:4000/api/health"
+call :color_echo "%BLUE%" "  Game & API: http://localhost:3000"
+call :color_echo "%BLUE%" "  API Health: http://localhost:3000/api/health"
 call :color_echo "%YELLOW%" "  Press Ctrl+C to stop"
 echo.
 call npm.cmd run dev
