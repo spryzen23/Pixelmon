@@ -38,4 +38,8 @@ export const api = {
     request(`/api/players/${id}/catch`, { method: 'POST', body: JSON.stringify(body) }),
   mapComplete: (id, body) =>
     request(`/api/players/${id}/map-complete`, { method: 'POST', body: JSON.stringify(body) }),
+  startBattle: (body) =>
+    request('/api/battle/start', { method: 'POST', body: JSON.stringify(body) }),
+  submitBattleChoice: (body) =>
+    request('/api/battle/choice', { method: 'POST', body: JSON.stringify(body) }),
 };

@@ -1,15 +1,33 @@
 :root {
-  --px-sky: #87ceeb;
-  --px-sky-deep: #9fd0ef;
-  --px-text: #f8fbff;
-  --px-text-muted: rgba(248, 251, 255, 0.72);
-  --px-accent: #fff3a8;
-  --px-accent-warm: #ffd9b7;
-  --px-panel: rgba(20, 35, 48, 0.72);
-  --px-panel-solid: rgba(20, 35, 48, 0.88);
-  --px-border: rgba(255, 255, 255, 0.18);
-  --px-shadow: 0 20px 80px rgba(0, 0, 0, 0.32);
-  --px-radius: 8px;
-  --px-success: #3fb950;
-  --px-danger: #f85149;
+  /* Vibrant & Harmonious Color Palette */
+  --px-sky: #4f80e1;
+  --px-sky-deep: #1a2a4a;
+  --px-text: #f3f7fd;
+  --px-text-muted: rgba(243, 247, 253, 0.64);
+  
+  /* Glowing Accent Colors */
+  --px-accent: #ffd43f; /* Premium Gold */
+  --px-accent-warm: #ffaa66; /* Sunset Orange */
+  --px-accent-neon: #3fffa8; /* Healing Green */
+  
+  /* Glassmorphism Panels */
+  --px-panel: rgba(13, 22, 38, 0.45);
+  --px-panel-hover: rgba(13, 22, 38, 0.65);
+  --px-panel-solid: #0d1626;
+  --px-border: rgba(255, 255, 255, 0.08);
+  --px-border-focus: rgba(255, 212, 63, 0.5);
+  
+  /* Premium Shadow & Glass Effects */
+  --px-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  --px-glow: 0 0 20px rgba(255, 212, 63, 0.35);
+  --px-radius: 12px;
+  
+  /* Feedback States */
+  --px-success: #1cd45d;
+  --px-danger: #f84f4f;
+
+  /* Fonts */
+  --px-font-display: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  --px-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
+

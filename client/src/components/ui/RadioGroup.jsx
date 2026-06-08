@@ -1,6 +1,6 @@
-export function RadioGroup({ name, value, onChange, options, renderOption }) {
+export function RadioGroup({ name, value, onChange, options, renderOption, className }) {
   return (
-    <div className="starter-grid" role="radiogroup" aria-label={name}>
+    <div className={className || "starter-grid"} role="radiogroup" aria-label={name}>
       {options.map((option) => {
         const selected = value === option.value;
         const content = renderOption ? renderOption(option, selected) : option.label;

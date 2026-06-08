@@ -78,3 +78,9 @@ test('matchesCategory detects wing and fin bones', () => {
 test('resolveActionClip finds flee clips', () => {
   expect(resolveActionClip(['Idle', 'Flee_Run'], ['flee'])).toBe('Flee_Run');
 });
+
+test('resolveAnimationClip matches custom prefixed animation clips', () => {
+  const customClips = ['pm0023_00_idle', 'pm0023_00_walk', 'pm0023_00_run'];
+  expect(resolveAnimationClip(customClips, 'Idle', ['Walk'])).toBe('pm0023_00_idle');
+  expect(resolveAnimationClip(customClips, 'Walk', ['Idle'])).toBe('pm0023_00_walk');
+});

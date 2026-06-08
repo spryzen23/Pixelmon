@@ -2,6 +2,7 @@ import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { useThree } from '@react-three/fiber';
 import AimIndicator from './AimIndicator';
 import Atmosphere, { SUN_POSITION } from './Atmosphere';
+import BiomeLandmarks from './BiomeLandmarks';
 import BiomeProps from './BiomeProps';
 import CaptureBurst from './CaptureBurst';
 import CompanionCreature from './CompanionCreature';
@@ -21,8 +22,11 @@ import { VillageGltfProvider } from './VillageGltfProvider';
 import VoxelWorld from './VoxelWorld';
 import WildCreature from './WildCreature';
 import { DEFAULT_BALL } from '../game/balls';
-import { getTypeAnimProfile } from '../game/pokemonData';
+import { getTypeAnimProfile, getFitToHeightForPokemon, getRotationForPokemon } from '../game/pokemonData';
+import { resolveWildModel } from '../game/assetResolver';
+import { getBiomeDisplayInfo } from '../game/biomeDisplay';
 import { getSpawnCandidates, pickRandomSpawn, isAlphaEligible } from '../game/spawnController';
+import { getAlphaSpawnPosition } from '../game/spawnPlacement';
 import { useGameInput } from '../hooks/useGameInput';
 import { FANTASY_BIOME_ID } from '../game/fantasyAssets';
 import { VILLAGE_BIOME_ID } from '../game/villageAssets';
@@ -36,22 +40,32 @@ import {
 } from '../game/world';
 
 const WILD_ID = 'wild-0';
+
+function displayFantasyBiome(pathId) {
+  return getBiomeDisplayInfo(pathId).fantasyBiome;
+}
 const MODEL_ROTATIONS = {
   player: [0, 0, 0],
   wildCreature: [0, Math.PI / 2, 0],
   companion: [0, 0, 0],
 };
 
-function entryToWild(entry, position) {
+function entryToWild(entry, position, pathId = 0) {
   if (!entry) return null;
+  const resolved = resolveWildModel(entry, pathId);
+  const baseHeight = getFitToHeightForPokemon(entry);
+  const fitHeight = baseHeight * (entry.isAlpha ? 2.5 : 1.0);
+  const rot = getRotationForPokemon(entry);
+
   return {
     ...entry,
     id: WILD_ID,
     position,
     status: 'active',
-    modelUrl: entry.modelUrl || '/assets/wild_creature.glb',
-    modelScale: entry.isAlpha ? 0.35 * 2.5 : 0.35,
-    modelRotation: MODEL_ROTATIONS.wildCreature,
+    modelUrl: resolved.modelUrl,
+    modelScale: fitHeight,
+    fitToHeight: fitHeight,
+    modelRotation: rot,
     primaryType: entry.types?.[0] || 'normal',
     animProfile: getTypeAnimProfile(entry.types?.[0]),
     isAlpha: Boolean(entry.isAlpha),
@@ -67,8 +81,17 @@ export function GameScene({
   onCatchResult,
   paused,
   onSpawnProgress,
+  onBiomeReady = () => { },
+  caveZone,
+  iceRoomId = null,
+  onEnterCave = () => { },
+  onEnterIceRoom = () => { },
+  onExitIceRoom = () => { },
+  gameMode = 'campaign',
+  _multiWildCount = 1,
 }) {
   const currentBiome = session.pathId;
+  const fantasyBiome = session.fantasyBiome || displayFantasyBiome(currentBiome);
   const playerRef = useRef();
   const companionRef = useRef();
   const wildRefs = useRef(new Map());
@@ -100,17 +123,12 @@ export function GameScene({
     const byLevel = gameRuntime.byLevel;
     if (!state || !byLevel) return;
 
-    const pos = getRandomGrassPosition(
-      0.5,
-      WILD_CREATURE_HEIGHT,
-      playerRef.current?.position.x ?? 0,
-      playerRef.current?.position.z ?? 0,
-      14,
-      currentBiome
-    );
-
     let entry = null;
-    if (isAlphaEligible(state) && !state.alphaCaught && Math.random() < 0.3) {
+    let isAlphaSpawn = false;
+    const alphaRoll =
+      gameMode === 'sandbox' ? Math.random() < 0.3 : isAlphaEligible(state) && !state.alphaCaught;
+    if (alphaRoll && !state.alphaCaught) {
+      isAlphaSpawn = true;
       const lastLevel = String(state.levels[state.levels.length - 1]);
       const pool = byLevel[lastLevel] || [];
       entry = pool.find((p) => p.isLegendary) || pool[0];
@@ -124,11 +142,29 @@ export function GameScene({
       if (entry) entry = { ...entry, isAlpha: false };
     }
 
-    const mapped = entryToWild(entry, pos);
+    let pos;
+    if (
+      isAlphaSpawn &&
+      entry &&
+      playerRef.current
+    ) {
+      pos = getAlphaSpawnPosition(playerRef.current, camera, currentBiome);
+    } else {
+      pos = getRandomGrassPosition(
+        0.5,
+        WILD_CREATURE_HEIGHT,
+        playerRef.current?.position.x ?? 0,
+        playerRef.current?.position.z ?? 0,
+        14,
+        currentBiome
+      );
+    }
+
+    const mapped = entryToWild(entry, pos, currentBiome);
     setWild(mapped);
     wildStatusRef.current.set(WILD_ID, mapped ? 'active' : 'idle');
     onSpawnProgress?.(state);
-  }, [gameRuntime, currentBiome, onSpawnProgress]);
+  }, [gameRuntime, currentBiome, onSpawnProgress, camera, gameMode]);
 
   useEffect(() => {
     spawnWild();
@@ -212,6 +248,11 @@ export function GameScene({
   }, []);
 
   const handleCaptureFail = useCallback(() => {
+    setWild((w) => (w ? { ...w, status: 'fleeing' } : w));
+    wildStatusRef.current.set(WILD_ID, 'fleeing');
+  }, []);
+
+  const handleFleeComplete = useCallback(() => {
     setWild((w) => (w ? { ...w, status: 'active' } : w));
     wildStatusRef.current.set(WILD_ID, 'active');
   }, []);
@@ -232,8 +273,23 @@ export function GameScene({
 
   const worldContent = (
     <Suspense fallback={null}>
-      <OceanHorizon />
-      <VoxelWorld currentBiome={currentBiome} />
+      <OceanHorizon biomeType={fantasyBiome} />
+      <VoxelWorld
+        caveZone={caveZone}
+        currentBiome={currentBiome}
+        onBiomeReady={onBiomeReady}
+        playerRef={playerRef}
+      />
+      <BiomeLandmarks
+        caveZone={caveZone}
+        currentBiome={currentBiome}
+        fantasyBiome={fantasyBiome}
+        iceRoomId={iceRoomId}
+        onEnterCave={onEnterCave}
+        onEnterIceRoom={onEnterIceRoom}
+        onExitIceRoom={onExitIceRoom}
+        playerRef={playerRef}
+      />
       <BiomeProps currentBiome={currentBiome} />
       {currentBiome === FANTASY_BIOME_ID && <FantasyBiomeProps />}
       {currentBiome === VILLAGE_BIOME_ID && <VillageBiomeProps />}
@@ -249,7 +305,7 @@ export function GameScene({
 
   return (
     <>
-      <Atmosphere />
+      <Atmosphere biomeType={fantasyBiome} />
       <PlantGltfPreloader />
       {wrappedWorld}
 
@@ -266,15 +322,20 @@ export function GameScene({
 
       <AimIndicator ball={equippedBall} playerRef={playerRef} throwPower={throwPower} />
 
-      {currentBiome === 1 && <Sandstorm playerRef={playerRef} />}
-      {(currentBiome === 2 || currentBiome === 5) && <Snowstorm playerRef={playerRef} />}
+      {(currentBiome === 1 || fantasyBiome === 'desert') && (
+        <Sandstorm playerRef={playerRef} />
+      )}
+      {(currentBiome === 2 || currentBiome === 5 || fantasyBiome === 'icy') && (
+        <Snowstorm playerRef={playerRef} />
+      )}
 
       {isCompanionOut && (
         <CompanionCreature
           key={`companion-${currentBiome}`}
+          companion={player?.companion}
           currentPathId={currentBiome}
           ref={companionRef}
-          modelRotation={MODEL_ROTATIONS.companion}
+          modelRotation={getRotationForPokemon(player?.companion)}
           modelUrl={companionModelUrl}
           playerRef={playerRef}
           spawnPosition={companionSpawnPosition || playerSpawnPosition}
@@ -317,10 +378,8 @@ export function GameScene({
             playerRef={playerRef}
             registerRef={registerWildRef}
             status={wild.status}
-            onFleeComplete={() => {
-              setWild(null);
-              spawnWild();
-            }}
+            onFleeComplete={handleFleeComplete}
+            fitToHeight={wild.fitToHeight}
           />
         </Suspense>
       )}

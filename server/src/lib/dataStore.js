@@ -48,19 +48,52 @@ export async function getTypeAnimationCatalog() {
   }
 }
 
+function localifyModelUrl(remoteUrl) {
+  if (!remoteUrl || typeof remoteUrl !== 'string') return remoteUrl;
+  
+  const index = remoteUrl.indexOf('/models/');
+  if (index !== -1) {
+    let subPath = remoteUrl.slice(index + '/models/'.length);
+    if (subPath.startsWith('opt/')) {
+      subPath = subPath.slice('opt/'.length);
+    }
+    return `/assets/models/glb/${subPath}`;
+  }
+  
+  return remoteUrl;
+}
+
 export async function getPokemonsSlim() {
   const slim = path.join(DATA_GAME, 'pokemons.slim.json');
+  let data;
   try {
     await fs.access(slim);
-    return readJson(slim);
+    data = await readJson(slim);
   } catch {
     const full = await readJson(path.join(PUBLIC_DATASET, 'pokemons.json'));
-    return buildSlimFromFull(full);
+    data = buildSlimFromFull(full);
   }
+
+  if (data && data.entries) {
+    data.entries.forEach((p) => {
+      p.modelUrl = localifyModelUrl(p.modelUrl);
+    });
+  }
+  return data;
 }
 
 export async function getPokemonsFull() {
-  return readJson(path.join(PUBLIC_DATASET, 'pokemons.json'));
+  const full = await readJson(path.join(PUBLIC_DATASET, 'pokemons.json'));
+  if (full && full.biomes) {
+    for (const biome of Object.values(full.biomes)) {
+      for (const bucket of Object.values(biome.bySpawnLevel || {})) {
+        for (const p of bucket.pokemon || []) {
+          p.modelUrl = localifyModelUrl(p.modelUrl);
+        }
+      }
+    }
+  }
+  return full;
 }
 
 function buildSlimFromFull(full) {

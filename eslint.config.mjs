@@ -13,6 +13,7 @@ export default [
       'client/dist/**',
       'data/**',
       'public/**',
+      'server/src/showdown/**',
     ],
   },
   js.configs.recommended,

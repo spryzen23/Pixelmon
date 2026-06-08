@@ -1,78 +1,49 @@
 
-E:\maha\Pixelmon>codebase.bat
+[96m========================================
+[96m  PIXELMON CODEBASE STATE CHECK
+[96m========================================
 
-========================================
-  PIXELMON CODEBASE STATE CHECK
-========================================
+[94mCurrent directory: E:\maha\Pixelmon
 
-Current directory: E:\maha\Pixelmon
-
-[0/9] Game asset inventory...
+[96m[0/9] Game asset inventory...
 ----------------------------------------
-  Core GLBs, biome model count, reports\asset-inventory.txt
-  public\assets GLB files (recursive): 2649
-  OK Core game assets present
+[94m  Core GLBs, biome model count, reports\asset-inventory.txt
+[94m  public\assets GLB files (recursive): 2674
+[92m  OK Core game assets present
 
-[1/9] Cleaning and preparing...
+[96m[1/9] Cleaning and preparing...
 ----------------------------------------
-  Removing node_modules (root, server, client), client\dist, coverage, build
-  OK Clean completed
+[93m  SKIP_CLEAN=1: keeping node_modules
+[93m  Removing client\dist\
 
-  Running: npm.cmd install (root, server, client)
+[93m  Skipped install (SKIP_NPM_INSTALL=1)
 
-added 223 packages, and audited 224 packages in 16s
-
-108 packages are looking for funding
-  run `npm fund` for details
-
-found 0 vulnerabilities
-
-added 78 packages, and audited 79 packages in 1s
-
-17 packages are looking for funding
-  run `npm fund` for details
-
-found 0 vulnerabilities
-npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
-npm warn deprecated three-mesh-bvh@0.7.8: Deprecated due to three.js version incompatibility. Please use v0.8.0, instead.
-
-added 217 packages, and audited 218 packages in 11s
-
-30 packages are looking for funding
-  run `npm fund` for details
-
-found 0 vulnerabilities
-  OK Dependencies installed
-  Running: npm.cmd audit --prefix client (advisory)
-found 0 vulnerabilities
-  OK client audit clean
-
-[2/9] Data preflight (pokemons.slim.json)...
+[96m[2/9] Data preflight (pokemons.slim.json)...
 ----------------------------------------
-  Same role as Contact360 codegen: ensures slim catalog exists before build.
-  OK data\game\pokemons.slim.json already present
+[94m  Same role as Contact360 codegen: ensures slim catalog exists before build.
+[92m  OK data\game\pokemons.slim.json already present
 
-[3/9] Type checking...
+[96m[3/9] Type checking...
 ----------------------------------------
-  Skipped: JavaScript monorepo (client Vite + server Express; no tsc).
+[94m  Skipped: JavaScript monorepo (client Vite + server Express; no tsc).
 
-[4/9] Prettier (format check)...
+[96m[4/9] Prettier (format check)...
 ----------------------------------------
-  Skipped (no .prettierrc; set RUN_PRETTIER=1 to format client/server JS)
+[93m  Skipped (no .prettierrc; set RUN_PRETTIER=1 to format client/server JS)
 
-[5/9] Linting (ESLint)...
+[96m[5/9] Linting (ESLint)...
 ----------------------------------------
-  Running: npm.cmd run lint
+[93m  Running: npm.cmd run lint
 
 > pixelmon@0.1.0 lint
 > eslint client/src server/src
 
-  OK No linting errors
+[92m  OK No linting errors
 
-[6/9] Running tests...
+[96m[6/9] Running tests...
 ----------------------------------------
-  server: node --test   client: vitest --run
-  Running: npm.cmd run test
+[94m  server: node --test   client: vitest --run
+[93m  Running: npm.cmd run test
 
 > pixelmon@0.1.0 test
 > npm test --prefix server && npm test --prefix client -- --run
@@ -81,69 +52,93 @@ found 0 vulnerabilities
 > pixelmon-server@0.1.0 test
 > node --test test/**/*.test.js
 
+▶ battleService — startNewBattle()
+  ✔ returns a valid battleId (228.3645ms)
+  ✔ returns logs array with at least a switch-in event (7.397ms)
+  ✔ returns a request with active moves (13.7931ms)
+  ✔ returns a request with side team info (2.7286ms)
+  ✔ winner is null at the start of a new battle (3.0302ms)
+  ✔ includes weather event in logs when weather is set to rain (4.6113ms)
+  ✔ works with gym difficulty (medium) (4.6424ms)
+  ✔ works with boss difficulty (hard) (3.2052ms)
+✔ battleService — startNewBattle() (269.8439ms)
+▶ battleService — makeChoice()
+  ✔ executes move 1 and returns a non-empty log (20.6084ms)
+  ✔ returns an updated request after a turn (11.7197ms)
+  ✔ throws an error for an unknown battleId (0.6381ms)
+  ✔ executes a potion heal and includes heal event in logs (10.6976ms)
+  ✔ executes a full restore and includes heal event in logs (7.2103ms)
+  ✔ simulates a 3-turn battle loop without crashing (9.289ms)
+✔ battleService — makeChoice() (60.9442ms)
 ▶ spawnService
-  ✔ unlocks at 50% (0.8395ms)
-  ✔ alpha when ladder complete (0.1586ms)
-✔ spawnService (1.9624ms)
-ℹ tests 2
-ℹ suites 1
-ℹ pass 2
+  ✔ unlocks at 50% (1.6384ms)
+  ✔ alpha when ladder complete (0.2083ms)
+✔ spawnService (3.2101ms)
+ℹ tests 16
+ℹ suites 3
+ℹ pass 16
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 99.5558
+ℹ duration_ms 615.2125
 
 > pixelmon-client@0.1.0 test
 > vitest --run
 
 
- RUN  v4.1.8 E:/maha/Pixelmon/client
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.8 [39m[90mE:/maha/Pixelmon/client[39m
 
- ✓ src/game/projectilePhysics.test.js (2 tests) 7ms
- ✓ src/game/spawnController.test.js (4 tests) 9ms
- ✓ src/game/assets.test.js (2 tests) 9ms
- ✓ src/game/plantAssets.test.js (5 tests) 21ms
- ✓ src/game/animationUtils.test.js (9 tests) 14ms
- ✓ src/game/biomeDisplay.test.js (5 tests) 7ms
- ✓ src/game/world.props.test.js (3 tests) 105ms
+ [32m✓[39m src/game/assets.test.js [2m([22m[2m2 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/game/plantAssets.test.js [2m([22m[2m5 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m src/game/animationUtils.test.js [2m([22m[2m12 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/game/pokemonData.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/game/biomeDisplay.test.js [2m([22m[2m5 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/game/spawnPlacement.test.js [2m([22m[2m2 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/game/spawnController.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/game/assetResolver.test.js [2m([22m[2m2 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/game/projectilePhysics.test.js [2m([22m[2m2 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/game/world.props.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 676[2mms[22m[39m
 
- Test Files  7 passed (7)
-      Tests  30 passed (30)
-   Start at  06:41:49
-   Duration  854ms (transform 736ms, setup 0ms, import 1.18s, tests 172ms, environment 2ms)
+[2m Test Files [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[32m41 passed[39m[22m[90m (41)[39m
+[2m   Start at [22m 01:06:55
+[2m   Duration [22m 2.33s[2m (transform 1.25s, setup 0ms, import 2.19s, tests 808ms, environment 3ms)[22m
 
-  OK All tests passed
+[92m  OK All tests passed
 
-[6b] Coverage skipped (set RUN_TEST_COVERAGE=1 for vitest --coverage)
+[94m[6b] Coverage skipped (set RUN_TEST_COVERAGE=1 for vitest --coverage)
 
-[7/9] Production build check...
+[96m[7/9] Production build check...
 ----------------------------------------
-  Running: node scripts\build-slim.js
+[93m  Running: node scripts\build-slim.js
 Wrote E:\maha\Pixelmon\data\game\pokemons.slim.json (1350 entries)
-  Running: npm.cmd run build --prefix client
+[93m  Running: npm.cmd run build --prefix client
 
 > pixelmon-client@0.1.0 build
 > vite build
 
-vite v6.4.3 building for production...
-✓ 680 modules transformed.
-dist/index.html                   0.83 kB │ gzip:   0.44 kB
-dist/assets/index-CdXLgHVU.css    7.61 kB │ gzip:   2.25 kB
-dist/assets/index-ChvqV_6B.js   102.02 kB │ gzip:  29.97 kB
-dist/assets/react-DrnAN-Kh.js   142.90 kB │ gzip:  45.76 kB
-dist/assets/three-xb307O9v.js   924.86 kB │ gzip: 250.87 kB
-✓ built in 3m 9s
-  OK Build successful (client\dist\index.html)
+[36mvite v6.4.3 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 2467 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                 [39m[1m[2m  0.83 kB[22m[1m[22m[2m │ gzip:   0.44 kB[22m
+[2mdist/[22m[35massets/index-DQ8wYq3c.css  [39m[1m[2m 51.68 kB[22m[1m[22m[2m │ gzip:   9.97 kB[22m
+[2mdist/[22m[36massets/react-C3mHM_ep.js   [39m[1m[2m142.93 kB[22m[1m[22m[2m │ gzip:  45.78 kB[22m
+[2mdist/[22m[36massets/index-BUitmgBI.js   [39m[1m[2m318.72 kB[22m[1m[22m[2m │ gzip:  91.95 kB[22m
+[2mdist/[22m[36massets/three-B1fXv5it.js   [39m[1m[2m973.76 kB[22m[1m[22m[2m │ gzip: 265.64 kB[22m
+[32m✓ built in 3m 47s[39m
+[92m  OK Build successful (client\dist\index.html)
 
 
-========================================
-  SUMMARY
-========================================
+[96m========================================
+[96m  SUMMARY
+[96m========================================
 
-Section Status:
-  [0] Game asset inventory:             PASSED  (glb=2649, reports\asset-inventory.txt)
-  [1] Cleanup and npm install:          PASSED
+[94mSection Status:
+  [0] Game asset inventory:             PASSED  (glb=2674, reports\asset-inventory.txt)
+  [1] Cleanup and npm install:          SKIPPED
   [2] Data preflight (build-slim):      PASSED
   [3] Type checking (JS - skipped):     SKIPPED
   [4] Prettier:                         SKIPPED
@@ -152,57 +147,49 @@ Section Status:
   [6b] Vitest coverage:                 SKIPPED
   [7] Build (slim + vite):              PASSED
 
-  OK All blocking checks passed
-
-  Start development server? (Y/N)
- Y
-
-[8/9] Starting development server...
-  Client: http://localhost:3000
-  API:    http://localhost:4000/api/health
-  Press Ctrl+C to stop
+[92m  OK All blocking checks passed
 
 
-> pixelmon@0.1.0 dev
-> concurrently -n server,client -c blue,green "npm run dev --prefix server" "npm run dev --prefix client"
+[96m========================================
+[96m  CHECK COMPLETE
+[96m========================================
 
-[server]
-[server] > pixelmon-server@0.1.0 dev
-[server] > node --watch src/index.js
-[server]
-[client]
-[client] > pixelmon-client@0.1.0 dev
-[client] > vite
-[client]
-[server] Pixelmon server http://localhost:4000
-[client]
-[client]   VITE v6.4.3  ready in 460 ms
-[client]
-[client]   ➜  Local:   http://localhost:3000/
-[client]   ➜  Network: use --host to expose
-[server] Error: ENOENT: no such file or directory, rename 'E:\maha\Pixelmon\data\players\7f28e5e6-6bce-4ae5-82ec-65be34792373.json.tmp' -> 'E:\maha\Pixelmon\data\players\7f28e5e6-6bce-4ae5-82ec-65be34792373.json'
-[server]     at async Object.rename (node:internal/fs/promises:785:10)
-[server]     at async savePlayer (file:///E:/maha/Pixelmon/server/src/lib/dataStore.js:118:3)
-[server]     at async file:///E:/maha/Pixelmon/server/src/routes/api.js:187:5 {
-[server]   errno: -4058,
-[server]   code: 'ENOENT',
-[server]   syscall: 'rename',
-[server]   path: 'E:\\maha\\Pixelmon\\data\\players\\7f28e5e6-6bce-4ae5-82ec-65be34792373.json.tmp',
-[server]   dest: 'E:\\maha\\Pixelmon\\data\\players\\7f28e5e6-6bce-4ae5-82ec-65be34792373.json'
-[server] }
-[server] Error: ENOENT: no such file or directory, rename 'E:\maha\Pixelmon\data\players\0a94cc87-b271-4a1d-8240-bac1c3dbd94f.json.tmp' -> 'E:\maha\Pixelmon\data\players\0a94cc87-b271-4a1d-8240-bac1c3dbd94f.json'
-[server]     at async Object.rename (node:internal/fs/promises:785:10)
-[server]     at async savePlayer (file:///E:/maha/Pixelmon/server/src/lib/dataStore.js:118:3)
-[server]     at async file:///E:/maha/Pixelmon/server/src/routes/api.js:187:5 {
-[server]   errno: -4058,
-[server]   code: 'ENOENT',
-[server]   syscall: 'rename',
-[server]   path: 'E:\\maha\\Pixelmon\\data\\players\\0a94cc87-b271-4a1d-8240-bac1c3dbd94f.json.tmp',
-[server]   dest: 'E:\\maha\\Pixelmon\\data\\players\\0a94cc87-b271-4a1d-8240-bac1c3dbd94f.json'
-[server] }
+[html-in-canvas] Native API detected, polyfill skipped. Add ?polyfillHIC to URL to force.
+01:04:47.412 content.js:1 common loaded
+01:04:47.414 content.js:1 common loaded
+01:04:48.413 content.js:1 releaseNoteVersionReceived
+01:05:11.437 BattleArenaScreen.jsx:305 Uncaught ReferenceError: Cannot access 'getRequestMoves' before initialization
+    at BattleArenaScreen (BattleArenaScreen.jsx:305:59)
+    at renderWithHooks (chunk-DYKRQPZ6.js?v=45ce089e:11596:26)
+    at mountIndeterminateComponent (chunk-DYKRQPZ6.js?v=45ce089e:14974:21)
+    at beginWork (chunk-DYKRQPZ6.js?v=45ce089e:15962:22)
+    at HTMLUnknownElement.callCallback2 (chunk-DYKRQPZ6.js?v=45ce089e:3680:22)
+    at Object.invokeGuardedCallbackDev (chunk-DYKRQPZ6.js?v=45ce089e:3705:24)
+    at invokeGuardedCallback (chunk-DYKRQPZ6.js?v=45ce089e:3739:39)
+    at beginWork$1 (chunk-DYKRQPZ6.js?v=45ce089e:19818:15)
+    at performUnitOfWork (chunk-DYKRQPZ6.js?v=45ce089e:19251:20)
+    at workLoopSync (chunk-DYKRQPZ6.js?v=45ce089e:19190:13)Understand this error
+01:05:11.440 BattleArenaScreen.jsx:305 Uncaught ReferenceError: Cannot access 'getRequestMoves' before initialization
+    at BattleArenaScreen (BattleArenaScreen.jsx:305:59)
+    at renderWithHooks (chunk-DYKRQPZ6.js?v=45ce089e:11596:26)
+    at mountIndeterminateComponent (chunk-DYKRQPZ6.js?v=45ce089e:14974:21)
+    at beginWork (chunk-DYKRQPZ6.js?v=45ce089e:15962:22)
+    at HTMLUnknownElement.callCallback2 (chunk-DYKRQPZ6.js?v=45ce089e:3680:22)
+    at Object.invokeGuardedCallbackDev (chunk-DYKRQPZ6.js?v=45ce089e:3705:24)
+    at invokeGuardedCallback (chunk-DYKRQPZ6.js?v=45ce089e:3739:39)
+    at beginWork$1 (chunk-DYKRQPZ6.js?v=45ce089e:19818:15)
+    at performUnitOfWork (chunk-DYKRQPZ6.js?v=45ce089e:19251:20)
+    at workLoopSync (chunk-DYKRQPZ6.js?v=45ce089e:19190:13)Understand this error
+01:05:11.442 installHook.js:1 The above error occurred in the <BattleArenaScreen> component:
 
-07:02:13.870 content.js:1 common loaded
-07:02:13.872 content.js:1 common loaded
-07:02:14.427 content.js:1 releaseNoteVersionReceived
-07:05:54.407 :3000/api/players/7f28e5e6-6bce-4ae5-82ec-65be34792373/session/start:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
-07:06:03.979 :3000/api/players/0a94cc87-b271-4a1d-8240-bac1c3dbd94f/session/start:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+    at BattleArenaScreen (http://localhost:3000/src/screens/BattleArenaScreen.jsx:217:30)
+    at ScreenRouter (http://localhost:3000/src/App.jsx:37:28)
+    at div
+    at GameProvider (http://localhost:3000/src/context/GameContext.jsx:44:32)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+overrideMethod @ installHook.js:1Understand this error
+01:05:11.444 chunk-DYKRQPZ6.js?v=45ce089e:9176 Uncaught ReferenceError: Cannot access 'getRequestMoves' before initialization
+    at BattleArenaScreen (BattleArenaScreen.jsx:305:59)

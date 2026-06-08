@@ -1,9 +1,12 @@
+import http from 'http';
 import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { apiRouter } from './routes/api.js';
+import { battleRouter } from './routes/battle.js';
+import { attachBattleRoyale } from './br/battleRoyaleServer.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '../..');
@@ -18,6 +21,7 @@ app.use(compression());
 app.use(express.json({ limit: '1mb' }));
 
 app.use('/api', apiRouter);
+app.use('/api/battle', battleRouter);
 
 app.use(
   '/assets',
@@ -37,6 +41,9 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`Pixelmon server http://localhost:${PORT}`);
+const httpServer = http.createServer(app);
+attachBattleRoyale(httpServer);
+
+httpServer.listen(PORT, () => {
+  console.log(`Pixelmon server http://localhost:${PORT} (REST + Battle Royale Socket.io)`);
 });

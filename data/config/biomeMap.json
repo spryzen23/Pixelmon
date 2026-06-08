@@ -15,6 +15,7 @@
         4
       ],
       "terrainType": "grassland",
+      "fantasyBiome": "grass",
       "unlockAfter": null,
       "playable": true
     },
@@ -30,6 +31,7 @@
         1
       ],
       "terrainType": "desert",
+      "fantasyBiome": "desert",
       "unlockAfter": "kanto",
       "playable": true
     },
@@ -46,6 +48,7 @@
         5
       ],
       "terrainType": "snow",
+      "fantasyBiome": "icy",
       "unlockAfter": "johto",
       "playable": true
     },
@@ -63,6 +66,7 @@
         4
       ],
       "terrainType": "coastal",
+      "fantasyBiome": "cave",
       "unlockAfter": "hoenn",
       "playable": true
     },
@@ -80,6 +84,7 @@
         4
       ],
       "terrainType": "mire",
+      "fantasyBiome": "volcanic",
       "unlockAfter": "sinnoh",
       "playable": true
     },
@@ -96,6 +101,7 @@
         5
       ],
       "terrainType": "mountain",
+      "fantasyBiome": "icy",
       "unlockAfter": "unova",
       "playable": true
     },
@@ -111,6 +117,7 @@
         6
       ],
       "terrainType": "tropical",
+      "fantasyBiome": "sky",
       "unlockAfter": "kalos",
       "playable": true
     },
@@ -126,6 +133,7 @@
         7
       ],
       "terrainType": "village",
+      "fantasyBiome": "moonlit",
       "unlockAfter": "alola",
       "playable": true
     },
@@ -141,6 +149,7 @@
         8
       ],
       "terrainType": "highlands",
+      "fantasyBiome": "distortion",
       "unlockAfter": "galar",
       "playable": false
     }

@@ -18,6 +18,7 @@ import {
   getEntityY,
   isWalkablePosition,
 } from '../game/world';
+import { getFitToHeightForPokemon } from '../game/pokemonData';
 
 const FOLLOW_SPEED = 5;
 const MIN_FOLLOW_DISTANCE = 0.95;
@@ -36,6 +37,7 @@ const playerForward = new Vector3();
 
 const CompanionCreature = forwardRef(function CompanionCreature(
   {
+    companion = null,
     currentPathId = 0,
     modelRotation = [0, Math.PI / 2, 0],
     modelUrl = DEFAULT_MODEL_URL,
@@ -196,15 +198,19 @@ const CompanionCreature = forwardRef(function CompanionCreature(
     previousY.current = companion.position.y;
   });
 
+  const companionFitHeight = companion ? getFitToHeightForPokemon(companion) : null;
+  const companionPrimaryType = companion?.types?.[0] || 'normal';
+  const companionScale = companion ? 1.0 : MODEL_SCALE;
   const modelYOffset = -COMPANION_HEIGHT / 2 + (isCrouching ? -0.12 : 0);
+
   const fallbackProps = {
     color: '#ffd928',
-    height: COMPANION_HEIGHT,
+    height: companionFitHeight || COMPANION_HEIGHT,
     width: 0.7,
     depth: 0.7,
     position: [0, modelYOffset, 0],
     rotation: modelRotation,
-    scale: MODEL_SCALE,
+    scale: companionScale,
   };
 
   return (
@@ -221,7 +227,9 @@ const CompanionCreature = forwardRef(function CompanionCreature(
             fallbackActionName={isMoving ? ['Run', 'Walk', 'Idle'] : ['Idle', 'Walk']}
             position={[0, modelYOffset, 0]}
             rotation={modelRotation}
-            scale={MODEL_SCALE}
+            scale={companionScale}
+            fitToHeight={companionFitHeight}
+            primaryType={companionPrimaryType}
             inputRef={animInputRef}
           />
         </Suspense>

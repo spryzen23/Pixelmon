@@ -82,15 +82,7 @@ apiRouter.get('/config/spawn-ladder', async (req, res, next) => {
 apiRouter.get('/starters', async (req, res, next) => {
   try {
     const slim = await getPokemonsSlim();
-    const starters = slim.entries.filter(
-      (e) =>
-        e.region === 'kanto' &&
-        e.spawnLevel === 1 &&
-        e.formTier === 1 &&
-        !e.isLegendary &&
-        [1, 4, 7, 25].includes(e.speciesId)
-    );
-    res.json({ starters });
+    res.json({ starters: slim.entries });
   } catch (e) {
     next(e);
   }

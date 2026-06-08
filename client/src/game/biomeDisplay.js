@@ -1,14 +1,14 @@
 import { getPathEggGroups, getRegionForPath, REGIONAL_BIOMES } from './pokemonData';
 
 const PATH_TERRAIN = [
-  { id: 0, name: 'Fieldlands Trail', biome: 'plains' },
-  { id: 1, name: 'Sandglass Flats', biome: 'desert' },
-  { id: 2, name: 'Frostpine Pass', biome: 'snow' },
-  { id: 3, name: 'Coastal Run', biome: 'plains' },
-  { id: 4, name: 'Crimson Mire', biome: 'plains' },
-  { id: 5, name: 'Coronet Approach', biome: 'snow' },
-  { id: 6, name: 'Fantasy World', biome: 'fantasy' },
-  { id: 7, name: 'Village World', biome: 'village' },
+  { id: 0, name: 'Fieldlands Trail', biome: 'grassland', fantasyBiome: 'grass' },
+  { id: 1, name: 'Sandglass Flats', biome: 'desert', fantasyBiome: 'desert' },
+  { id: 2, name: 'Frostpine Pass', biome: 'snow', fantasyBiome: 'icy' },
+  { id: 3, name: 'Coastal Run', biome: 'coastal', fantasyBiome: 'cave' },
+  { id: 4, name: 'Crimson Mire', biome: 'mire', fantasyBiome: 'volcanic' },
+  { id: 5, name: 'Coronet Approach', biome: 'mountain', fantasyBiome: 'icy' },
+  { id: 6, name: 'Fantasy World', biome: 'tropical', fantasyBiome: 'sky' },
+  { id: 7, name: 'Village World', biome: 'village', fantasyBiome: 'moonlit' },
 ];
 
 function findRegionMeta(regionId) {
@@ -47,6 +47,7 @@ export function getBiomeDisplayInfo(pathId = 0) {
     pathId: path.id,
     terrainName: path.name,
     terrainType: path.biome,
+    fantasyBiome: path.fantasyBiome,
     regionId: region.id,
     regionName: region.name,
     dexRange: {

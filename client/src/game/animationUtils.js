@@ -114,68 +114,67 @@ export function resolveAnimationClip(names, actionName, fallbackActionName) {
     return null;
   }
 
-  const primary = String(actionName || '');
+  const primary = String(actionName || '').toLowerCase();
+  const preferred = [
+    actionName,
+    ...(Array.isArray(fallbackActionName) ? fallbackActionName : [fallbackActionName]),
+  ].filter(Boolean).map(x => x.toLowerCase());
+
+  // 1. Try exact matches first
+  for (const preferredName of preferred) {
+    const exact = names.find((name) => name.toLowerCase() === preferredName);
+    if (exact) {
+      return exact;
+    }
+  }
+
+  // 2. Standard regex mappings for walk/run/jump/crouch
   const findFirst = (patterns) =>
     names.find((name) => patterns.some((pattern) => pattern.test(name))) || null;
 
   if (/run|sprint|jog/i.test(primary)) {
-    return (
-      findFirst([/^run(ning)?$/i, /^jog(ging)?$/i, /run|jog/i]) ||
-      findFirst([/^walk(ing)?$/i, /walk/i])
-    );
+    const runClip = findFirst([/^run(ning)?$/i, /^jog(ging)?$/i, /run|jog/i]);
+    if (runClip) return runClip;
   }
 
   if (/walk/i.test(primary)) {
-    return (
-      findFirst([/^walk(ing)?$/i, /walk/i]) ||
-      findFirst([/^run(ning)?$/i, /^jog(ging)?$/i, /run|jog/i])
-    );
+    const walkClip = findFirst([/^walk(ing)?$/i, /walk/i]);
+    if (walkClip) return walkClip;
   }
 
   if (/jump|leap/i.test(primary)) {
-    return findFirst([/^jump(ing)?$/i, /jump|leap/i]);
+    const jumpClip = findFirst([/^jump(ing)?$/i, /jump|leap/i]);
+    if (jumpClip) return jumpClip;
   }
 
   if (/crouch|duck|sneak/i.test(primary)) {
-    return findFirst([/^crouch(ing)?$/i, /^duck(ing)?$/i, /crouch|duck|sneak/i]);
+    const crouchClip = findFirst([/^crouch(ing)?$/i, /^duck(ing)?$/i, /crouch|duck|sneak/i]);
+    if (crouchClip) return crouchClip;
   }
 
-  if (/idle/i.test(primary)) {
-    const exactIdle = names.find((name) => /^(idle|idling)$/i.test(name));
-    if (exactIdle) {
-      return exactIdle;
-    }
-
-    const walkClip = names.find((name) =>
-      /^(walking|walk|jog|run|running)$/i.test(name)
-    );
-    if (walkClip) {
-      return walkClip;
-    }
-
-    return (
-      names.find(
-        (name) =>
-          /^(stand|standing|wait|breath)$/i.test(name) &&
-          !/house|hip|rap|salsa|talk|fight|sing/i.test(name)
-      ) || null
-    );
-  }
-
-  const preferred = [
-    actionName,
-    ...(Array.isArray(fallbackActionName)
-      ? fallbackActionName
-      : [fallbackActionName]),
-  ].filter(Boolean);
-
+  // 3. Try partial matches for each preferred action in order (e.g. pm0023_00_idle containing idle)
   for (const preferredName of preferred) {
-    const exact = names.find(
-      (name) => name.toLowerCase() === String(preferredName).toLowerCase()
-    );
-    if (exact) {
-      return exact;
+    const partial = names.find((name) => name.toLowerCase().includes(preferredName));
+    if (partial) {
+      return partial;
     }
+  }
+
+  // 4. Default fallbacks for idle
+  if (/idle/i.test(primary)) {
+    const standClip = names.find(
+      (name) =>
+        /stand|standing|wait|breath/i.test(name) &&
+        !/house|hip|rap|salsa|talk|fight|sing/i.test(name)
+    );
+    if (standClip) return standClip;
+  }
+
+  // 5. Fallback to any clip containing common locomotion words
+  const fallbackWords = ['idle', 'walk', 'run', 'stand', 'wait'];
+  for (const word of fallbackWords) {
+    const fallback = names.find((name) => name.toLowerCase().includes(word));
+    if (fallback) return fallback;
   }
 
   return null;
@@ -230,7 +229,7 @@ export function shouldUseNativeAnimationClip(clipName) {
     return true;
   }
 
-  if (/^(idle|idling|walk|walking|run|running|jog|jogging|jump|jumping)$/.test(lower)) {
+  if (/idle|idling|walk|walking|run|running|jog|jogging|jump|jumping|stand|standing|wait|slither/i.test(lower)) {
     return true;
   }
 

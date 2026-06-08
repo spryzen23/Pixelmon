@@ -12,6 +12,8 @@
     "generate-pokemons-md": "node scripts/generate-pokemons-md.js",
     "build-slim": "node scripts/build-slim.js",
     "setup-data": "npm run generate-catalogs && npm run generate-pokemons-md && npm run build-slim",
+    "generate:assets": "node scripts/generate-asset-manifest.js",
+    "br:server": "node server/src/index.js",
     "lint": "eslint client/src server/src",
     "lint:fix": "eslint client/src server/src --fix",
     "ci": "npm run lint && npm run test && npm run build"

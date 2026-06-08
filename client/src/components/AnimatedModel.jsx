@@ -57,6 +57,7 @@ export default function AnimatedModel({
   }, [scene]);
 
   const profile = animProfile || getTypeAnimProfileForTypes([primaryType]);
+  const isFloatingLoco = profile?.locomotion === 'float' || profile?.locomotion === 'aerial';
   const procWeights = profile?.procedural || {};
   const swingTime = useRef(0);
   const resolvedClipName = resolveAnimationClip(names, actionName, fallbackActionName);
@@ -83,7 +84,11 @@ export default function AnimatedModel({
       };
     }
 
+    // Force update matrix world of the cloned hierarchy to ensure correct bounds calculation
+    scene.updateMatrixWorld(true);
+
     const box = new Box3().setFromObject(scene);
+
     const size = new Vector3();
     const center = new Vector3();
     box.getSize(size);
@@ -92,10 +97,10 @@ export default function AnimatedModel({
     const fitScale = size.y > 0 ? fitToHeight / size.y : 1;
 
     return {
-      offset: [-center.x, -box.min.y, -center.z],
+      offset: [-center.x, -box.min.y + (isFloatingLoco ? 0.25 : 0), -center.z],
       scale: baseScale.map((value) => value * fitScale),
     };
-  }, [fitToHeight, scale, scene]);
+  }, [fitToHeight, scale, scene, isFloatingLoco]);
 
   useFrame((state, delta) => {
     const liveInput = inputRef?.current;
@@ -164,7 +169,9 @@ export default function AnimatedModel({
       const bob =
         isWalking && !liveJumping && !liveCrouching
           ? Math.abs(Math.sin(swingTime.current)) * (isSprinting ? 0.055 : 0.035)
-          : Math.sin(idleTime.current * 1.4) * 0.01;
+          : isFloatingLoco
+            ? Math.sin(idleTime.current * 1.8) * 0.07
+            : Math.sin(idleTime.current * 1.4) * 0.01;
       const jumpLift = liveJumping ? 0.08 : 0;
       const crouchSink = liveCrouching ? -0.05 : 0;
       const forwardLean = isWalking
@@ -219,8 +226,39 @@ export default function AnimatedModel({
         return;
       }
 
+      const isSerpent = profile?.locomotion === 'serpent';
       const legSign = left ? 1 : -1;
       const armSign = left ? -1 : 1;
+
+      if (isSerpent) {
+        // Procedural serpent movement
+        const lowerName = name.toLowerCase();
+        const isSpineJoint = lowerName.includes('spine');
+        const isTailJoint = lowerName.includes('tail');
+
+        if (isSpineJoint || isTailJoint) {
+          // Extract joint index from name if present (e.g. Spine3 -> 3, Tail2 -> 2)
+          const match = name.match(/\d+/);
+          const jointIdx = match ? parseInt(match[0], 10) : 1;
+
+          if (isWalking) {
+            // Slithering wave animation: sine wave propagation along the body
+            const phaseShift = jointIdx * 0.45;
+            const wave = Math.sin(swingTime.current * 1.5 - phaseShift) * 0.28;
+            node.rotation.y = origRot.y + wave;
+          } else {
+            // Idle coiling animation: bend the spine/tail to rest flatly/coiled on the ground
+            // Gently coil the body using a progressive bias
+            const coilVal = Math.sin(idleTime.current * 1.1 + jointIdx * 0.35) * 0.05;
+            const staticCoil = 0.18; // Constant bending to form a curled shape
+            node.rotation.y = origRot.y + staticCoil + coilVal;
+            // Ensure the body stays flat/level on the ground
+            node.rotation.x = origRot.x;
+            node.rotation.z = origRot.z;
+          }
+          return;
+        }
+      }
 
       if (liveCrouching) {
         // Crouch movement animation! Creep procedurally if moving, otherwise stay static crouch.
@@ -373,7 +411,17 @@ export default function AnimatedModel({
             node.rotation.x -= Math.max(-0.45, Math.min(0.45, liveLookPitch));
           }
         } else if (matchesCategory(name, 'tail')) {
-          node.rotation.z = origRot.z + idleSway * 0.6;
+          const tailW = procWeights.tail || 0.3;
+          node.rotation.z = origRot.z + idleSway * 0.6 * tailW;
+          node.rotation.y = origRot.y + Math.sin(idleTime.current * 0.8) * 0.08 * tailW;
+        } else if (matchesCategory(name, 'wing') && (procWeights.wing || 0) > 0) {
+          const w = procWeights.wing || 0.5;
+          const idleFlap = Math.sin(idleTime.current * 1.8) * 0.12 * w;
+          node.rotation.z = origRot.z + idleFlap * (left ? 1 : -1);
+        } else if (matchesCategory(name, 'vine') && (procWeights.vine || 0) > 0) {
+          const w = procWeights.vine || 0.5;
+          node.rotation.x = origRot.x + Math.sin(idleTime.current * 1.2) * 0.08 * w;
+          node.rotation.z = origRot.z + Math.cos(idleTime.current * 1.0) * 0.04 * w * (left ? 1 : -1);
         }
       }
 

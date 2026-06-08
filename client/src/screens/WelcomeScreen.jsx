@@ -37,6 +37,7 @@ export function WelcomeScreen() {
         <Button variant="primary" onClick={() => goTo(SCREENS.playerSelect)}>
           Choose player
         </Button>
+        <Button onClick={() => goTo(SCREENS.modeSelect)}>Game modes</Button>
         <Button onClick={() => goTo(SCREENS.profileSetup)}>New trainer</Button>
       </div>
     </div>

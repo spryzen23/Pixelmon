@@ -32,10 +32,22 @@ Welcome → Player select → Name + companion → Map select → Load → Play 
 
 ## Scripts
 
-- `npm run dev` — client + server
+- `npm run dev` — client + server (REST API + Battle Royale Socket.io on port 4000)
 - `npm run build-slim` — compact spawn index from pokemons.json
 - `npm run generate-catalogs` — regenerate data/game catalogs
+- `npm run generate:assets` — scan biome GLB folders into `generatedAssetManifest.js`
 - `codebase.bat` — full validation pipeline (Windows)
+
+## Game modes
+
+- **Campaign** — regional progression, saves, pokedex (default welcome flow)
+- **Sandbox Explorer** — in-game biome switcher, no catch persistence (Welcome → Game modes)
+- **Battle Royale** — Socket.io rooms on the same server port
+
+## Controls
+
+- WASD move · F or Space throw · E companion · X exit cave/ice rooms
+- Sandbox: right-side biome menu + export biome load metrics
 
 ## Version roadmap
 

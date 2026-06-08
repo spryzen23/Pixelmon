@@ -27,22 +27,47 @@ export function PlayerSelectScreen() {
   return (
     <div className="screen screen-shell">
       <h2 className="screen-title">Choose trainer</h2>
+      <p className="screen-subtitle">Select your character profile</p>
       {loading && <p>Loading...</p>}
-      <ul className="player-list">
-        {players.map((p) => (
-          <li key={p.id}>
-            <button type="button" className="path-card" onClick={() => select(p.id)}>
-              <span className="path-badge">★</span>
-              <span className="path-card-labels">
-                <span className="path-card-terrain">{p.displayName}</span>
-                <span className="path-card-region">
-                  {normalizePlayerStyle(p.characterStyle).label} - Completed maps: {p.completedPathIds?.length ?? 0}
-                </span>
-              </span>
+      <div className="trainer-grid">
+        {players.map((p) => {
+          const styleInfo = normalizePlayerStyle(p.characterStyle);
+          return (
+            <button
+              key={p.id}
+              type="button"
+              className="trainer-card"
+              onClick={() => select(p.id)}
+            >
+              <div className="trainer-avatar">
+                {(p.displayName || 'Trainer').charAt(0).toUpperCase()}
+              </div>
+              <div className="trainer-details">
+                <h3 className="trainer-name">{p.displayName || 'Unnamed Trainer'}</h3>
+                <span className="trainer-style">{styleInfo.label}</span>
+                <div className="trainer-stats">
+                  <span className="stat-badge">
+                    🏆 {p.completedPathIds?.length ?? 0} Maps
+                  </span>
+                </div>
+              </div>
             </button>
-          </li>
-        ))}
-      </ul>
+          );
+        })}
+        <button
+          type="button"
+          className="trainer-card new-trainer-card"
+          onClick={() => goTo(SCREENS.profileSetup)}
+        >
+          <div className="trainer-avatar new-trainer-avatar">
+            ＋
+          </div>
+          <div className="trainer-details">
+            <h3 className="trainer-name">New Trainer</h3>
+            <span className="trainer-style">Create a new profile</span>
+          </div>
+        </button>
+      </div>
       <div className="btn-row">
         <Button onClick={() => goTo(SCREENS.welcome)}>Back</Button>
         <Button variant="primary" onClick={() => goTo(SCREENS.profileSetup)}>

@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { api } from '../api';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { Button } from '../components/ui/Button';
+import { getBiomeDisplayInfo } from '../game/biomeDisplay';
 import { initBiomeSpawnState } from '../game/spawnController';
 import { preloadBiome, setActivePathId } from '../game/world';
 import { useGame, SCREENS } from '../context/GameContext';
 
 export function LoadingScreen() {
-  const { player, session, setGameRuntime, setSpawnLadder, goTo, setPlayer } = useGame();
+  const { player, session, setSession, setGameRuntime, setSpawnLadder, goTo, setPlayer } = useGame();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -47,6 +48,11 @@ export function LoadingScreen() {
         const spawnState =
           result.spawnState || initBiomeSpawnState(session.regionId, byLevel, ladder);
 
+        const info = getBiomeDisplayInfo(session.pathId);
+        setSession({
+          ...session,
+          fantasyBiome: info.fantasyBiome,
+        });
         setPlayer(result.player || player);
         setGameRuntime({
           player: result.player || player,
@@ -69,7 +75,7 @@ export function LoadingScreen() {
       cancelled = true;
       controller.abort();
     };
-  }, [player, session, setGameRuntime, setSpawnLadder, goTo, setPlayer]);
+  }, [player, session, setGameRuntime, setSpawnLadder, goTo, setPlayer, setSession]);
 
   if (error) {
     return (

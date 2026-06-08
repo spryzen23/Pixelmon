@@ -1,24 +1,39 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
 import { api } from '../api';
-import { useGame, SCREENS } from '../context/GameContext';
-import { GameScene, SUN_POSITION } from './GameScene';
+import { useGame, SCREENS, GAME_MODES } from '../context/GameContext';
+import { GameScene } from './GameScene';
 import Hotbar from './Hotbar';
+import LoadingOverlay from './LoadingOverlay';
+import { SceneTheme } from './SceneTheme';
 import { BALL_TYPES, DEFAULT_BALL } from '../game/balls';
 import { PLAYER_STYLES } from '../game/playerStyles';
 import {
   formatSpawnProgressLine,
   getBiomeDisplayInfo,
 } from '../game/biomeDisplay';
-import { isAlphaEligible } from '../game/spawnController';
+import {
+  clearBiomeLoadMetrics,
+  downloadBiomeLoadMetrics,
+  recordBiomeLoadMetric,
+} from '../game/biomeLoadMetrics';
+import { isAlphaEligible, initBiomeSpawnState } from '../game/spawnController';
 import {
   DEFAULT_THROW_POWER,
   MAX_THROW_POWER,
   MIN_THROW_POWER,
   THROW_POWER_STEP,
 } from '../game/projectilePhysics';
-import { clearAllBiomeCaches } from '../game/world';
+import { resolveSceneTheme } from '../game/sceneThemes';
+import {
+  CAVE_ZONES,
+  WORLD_PATHS,
+  clearAllBiomeCaches,
+  getBiomeCacheSummary,
+  preloadBiome,
+  setActivePathId,
+} from '../game/world';
 import { Button } from './ui/Button';
 
 export function GameView() {
@@ -26,20 +41,68 @@ export function GameView() {
     player,
     setPlayer,
     session,
+    setSession,
     gameRuntime,
     setGameRuntime,
     goTo,
     setCompleteStats,
+    gameMode,
+    spawnLadder,
   } = useGame();
+  const isSandbox = gameMode === GAME_MODES.sandbox;
+  const pendingBiomeLoadRef = useRef(null);
+  const [sandboxPathId, setSandboxPathId] = useState(0);
+  const [caveZone, setCaveZone] = useState(CAVE_ZONES.EXTERIOR);
+  const [iceRoomId, setIceRoomId] = useState(null);
+  const [isCaveTransitioning, setIsCaveTransitioning] = useState(false);
+  const [isMapLoading, setIsMapLoading] = useState(false);
+  const [ordinaryLeft, setOrdinaryLeft] = useState(0);
   const [paused, setPaused] = useState(false);
   const [equippedBallId, setEquippedBallId] = useState(DEFAULT_BALL.id);
   const [throwPower, setThrowPower] = useState(DEFAULT_THROW_POWER);
   const [spawnProgress, setSpawnProgress] = useState({ level: 1, peak: 0, active: 0, maxLevel: 1 });
 
+  const activePathId = isSandbox ? sandboxPathId : session?.pathId ?? 0;
+
   const display = useMemo(
-    () => getBiomeDisplayInfo(session?.pathId ?? 0),
-    [session?.pathId]
+    () => getBiomeDisplayInfo(activePathId),
+    [activePathId]
   );
+
+  const sceneTheme = useMemo(
+    () =>
+      resolveSceneTheme({
+        terrainType: display.terrainType,
+        fantasyBiome: display.fantasyBiome,
+        caveZone,
+        iceRoomId,
+      }),
+    [display.terrainType, display.fantasyBiome, caveZone, iceRoomId]
+  );
+
+  useEffect(() => {
+    if (!isSandbox || session) return;
+    const info = getBiomeDisplayInfo(sandboxPathId);
+    setSession({
+      pathId: sandboxPathId,
+      regionId: info.regionId,
+      fantasyBiome: info.fantasyBiome,
+    });
+    setGameRuntime({
+      spawnState: initBiomeSpawnState(info.regionId, {}, spawnLadder || { regions: {} }),
+      byLevel: {},
+      caughtCount: 0,
+      alphaSpawned: false,
+    });
+    if (!player) {
+      setPlayer({
+        id: 'sandbox',
+        displayName: 'Explorer',
+        characterStyle: PLAYER_STYLES[0],
+        companion: { modelUrl: '/assets/companion.glb' },
+      });
+    }
+  }, [isSandbox, session, sandboxPathId, setSession, setGameRuntime, player, setPlayer, spawnLadder]);
 
   const equippedBall = useMemo(
     () => BALL_TYPES.find((b) => b.id === equippedBallId) || DEFAULT_BALL,
@@ -95,6 +158,10 @@ export function GameView() {
 
   const onCatchResult = useCallback(
     async (entry, isAlpha) => {
+      if (isSandbox) {
+        setOrdinaryLeft((n) => Math.max(0, n - 1));
+        return;
+      }
       try {
         const result = await api.catch(player.id, {
           entryId: entry.entryId,
@@ -132,8 +199,89 @@ export function GameView() {
         console.error(e);
       }
     },
-    [player, session, equippedBallId, setPlayer, setGameRuntime, goTo, setCompleteStats, onSpawnProgress]
+    [player, session, equippedBallId, setPlayer, setGameRuntime, goTo, setCompleteStats, onSpawnProgress, isSandbox]
   );
+
+  const handleBiomeReady = useCallback(
+    (loadSummary = {}) => {
+      const pending = pendingBiomeLoadRef.current;
+      if (pending && pending.biomeId === activePathId) {
+        const cacheAfter = getBiomeCacheSummary(activePathId, caveZone);
+        recordBiomeLoadMetric({
+          activeBlockCount: loadSummary.activeBlockCount ?? cacheAfter.blockCount,
+          activeChunkCount: loadSummary.activeChunkCount ?? cacheAfter.chunkCount,
+          biomeId: activePathId,
+          biomeName: display.label,
+          biomeType: display.fantasyBiome,
+          cacheHit: pending.cacheBefore.chunkCount > 0,
+          durationMs: performance.now() - pending.startMs,
+          trigger: pending.trigger,
+        });
+        pendingBiomeLoadRef.current = null;
+      }
+      window.setTimeout(() => setIsMapLoading(false), 220);
+    },
+    [activePathId, caveZone, display.fantasyBiome, display.label]
+  );
+
+  const handleSandboxBiomeSwitch = useCallback((pathId) => {
+    if (pathId === sandboxPathId) return;
+    setIsMapLoading(true);
+    setCaveZone(CAVE_ZONES.EXTERIOR);
+    setIceRoomId(null);
+    pendingBiomeLoadRef.current = {
+      biomeId: pathId,
+      cacheBefore: getBiomeCacheSummary(pathId, CAVE_ZONES.EXTERIOR),
+      startMs: performance.now(),
+      trigger: 'biome_switch',
+    };
+    setSandboxPathId(pathId);
+    setActivePathId(pathId);
+    preloadBiome(pathId);
+  }, [sandboxPathId]);
+
+  const handleEnterCave = useCallback(() => {
+    if (display.fantasyBiome !== 'cave' || caveZone === CAVE_ZONES.INTERIOR) return;
+    setIsCaveTransitioning(true);
+    window.setTimeout(() => {
+      setCaveZone(CAVE_ZONES.INTERIOR);
+      window.setTimeout(() => setIsCaveTransitioning(false), 260);
+    }, 220);
+  }, [caveZone, display.fantasyBiome]);
+
+  const handleExitCave = useCallback(() => {
+    if (caveZone !== CAVE_ZONES.INTERIOR) return;
+    setIsCaveTransitioning(true);
+    window.setTimeout(() => {
+      setCaveZone(CAVE_ZONES.EXTERIOR);
+      window.setTimeout(() => setIsCaveTransitioning(false), 260);
+    }, 220);
+  }, [caveZone]);
+
+  const handleExitIceRoom = useCallback((_roomId) => {
+    setIsCaveTransitioning(true);
+    window.setTimeout(() => {
+      setIceRoomId(null);
+      window.setTimeout(() => setIsCaveTransitioning(false), 260);
+    }, 220);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.code !== 'KeyX' || e.repeat) return;
+      if (iceRoomId) {
+        e.preventDefault();
+        handleExitIceRoom(iceRoomId);
+        return;
+      }
+      if (display.fantasyBiome === 'cave' && caveZone === CAVE_ZONES.INTERIOR) {
+        e.preventDefault();
+        handleExitCave();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [caveZone, display.fantasyBiome, handleExitCave, handleExitIceRoom, iceRoomId]);
 
   const quitToMenu = async () => {
     if (player?.id && gameRuntime?.spawnState) {
@@ -172,9 +320,71 @@ export function GameView() {
     }
   }, [gameRuntime?.spawnState, onSpawnProgress]);
 
-  if (!gameRuntime || !session) return null;
+  const uiCanvasRef = useRef(null);
+  const uiContainerRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = uiCanvasRef.current;
+    const uiContainer = uiContainerRef.current;
+    if (!canvas || !uiContainer) return;
+
+    const ctx = canvas.getContext('2d');
+
+    const handlePaint = () => {
+      ctx.reset();
+      const transform = ctx.drawElementImage(uiContainer, 0, 0);
+      uiContainer.style.transform = transform.toString();
+    };
+
+    canvas.onpaint = handlePaint;
+
+    const observer = new ResizeObserver(([entry]) => {
+      const dpc = entry.devicePixelContentBoxSize;
+      canvas.width = dpc
+        ? dpc[0].inlineSize
+        : Math.round(entry.contentRect.width * window.devicePixelRatio);
+      canvas.height = dpc
+        ? dpc[0].blockSize
+        : Math.round(entry.contentRect.height * window.devicePixelRatio);
+      canvas.requestPaint();
+    });
+
+    const supportsDevicePixelContentBox =
+      typeof ResizeObserverEntry !== 'undefined' &&
+      'devicePixelContentBoxSize' in ResizeObserverEntry.prototype;
+    const options = supportsDevicePixelContentBox ? { box: 'device-pixel-content-box' } : {};
+    observer.observe(canvas, options);
+
+    return () => {
+      observer.disconnect();
+      canvas.onpaint = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    uiCanvasRef.current?.requestPaint?.();
+  }, [
+    display,
+    player,
+    spawnProgress,
+    gameRuntime,
+    equippedBall,
+    throwPower,
+    isSandbox,
+    ordinaryLeft,
+    isMapLoading,
+    activePathId,
+    isCaveTransitioning,
+    paused,
+  ]);
+
+  if (!isSandbox && (!gameRuntime || !session)) return null;
+  if (isSandbox && (!gameRuntime || !session)) return <LoadingOverlay currentPathId={sandboxPathId} isLoading />;
 
   const spawnState = gameRuntime.spawnState;
+  const effectiveSession = isSandbox
+    ? { ...session, pathId: sandboxPathId, fantasyBiome: display.fantasyBiome }
+    : session;
 
   return (
     <main className="game-shell">
@@ -189,92 +399,131 @@ export function GameView() {
           gl.toneMappingExposure = 1;
         }}
       >
-        <color attach="background" args={['#9fd0ef']} />
-        <fogExp2 attach="fog" args={['#c5e4f8', 0.0034]} />
-        <ambientLight intensity={0.72} />
-        <directionalLight
-          castShadow
-          color="#ffffff"
-          intensity={1.35}
-          position={SUN_POSITION}
-        />
-        <GameScene
-          session={session}
-          player={player}
-          gameRuntime={gameRuntime}
-          equippedBall={equippedBall}
-          throwPower={throwPower}
-          onCatchResult={onCatchResult}
-          paused={paused}
-          onSpawnProgress={onSpawnProgress}
-        />
+        <SceneTheme theme={sceneTheme}>
+          <GameScene
+            session={effectiveSession}
+            player={player}
+            gameRuntime={gameRuntime}
+            equippedBall={equippedBall}
+            throwPower={throwPower}
+            onCatchResult={onCatchResult}
+            paused={paused}
+            onSpawnProgress={onSpawnProgress}
+            onBiomeReady={handleBiomeReady}
+            caveZone={caveZone}
+            iceRoomId={iceRoomId}
+            onEnterCave={handleEnterCave}
+            onEnterIceRoom={setIceRoomId}
+            onExitIceRoom={handleExitIceRoom}
+            gameMode={gameMode}
+            multiWildCount={isSandbox ? 4 : 1}
+          />
+        </SceneTheme>
       </Canvas>
 
-      <div className="hud">
-        <strong>{display.label}</strong>
-        <span>Trainer: {player.displayName}</span>
-        <span>Click game window · WASD move · F throw · E companion</span>
-        <span>Ball: {equippedBall.name}</span>
-        <span>
-          {formatSpawnProgressLine({
-            level: spawnProgress.level,
-            maxLevel: spawnProgress.maxLevel,
-            active: spawnProgress.active,
-            peak: spawnProgress.peak,
-            eggGroups: spawnProgress.eggGroups || spawnState?.activeEggGroups,
-            regionName: spawnProgress.regionName || display.regionName,
-          })}
-        </span>
-        <span>Creatures caught: {gameRuntime.caughtCount}</span>
-        {isAlphaEligible(spawnState) && !spawnState.alphaCaught && (
-          <span>Alpha eligible!</span>
-        )}
-      </div>
+      <canvas ref={uiCanvasRef} id="ui-canvas" className="ui-canvas" layoutsubtree="">
+        <div ref={uiContainerRef} id="ui-container">
+          <div className="hud">
+            <strong>{display.label}</strong>
+            <span>Trainer: {player.displayName}</span>
+            <span>Click game window · WASD move · F/Space throw · E companion · X exit zones</span>
+            <span>Ball: {equippedBall.name}</span>
+            <span>
+              {formatSpawnProgressLine({
+                level: spawnProgress.level,
+                maxLevel: spawnProgress.maxLevel,
+                active: spawnProgress.active,
+                peak: spawnProgress.peak,
+                eggGroups: spawnProgress.eggGroups || spawnState?.activeEggGroups,
+                regionName: spawnProgress.regionName || display.regionName,
+              })}
+            </span>
+            <span>Creatures caught: {gameRuntime.caughtCount}</span>
+            {isAlphaEligible(spawnState) && !spawnState.alphaCaught && (
+              <span>Alpha eligible!</span>
+            )}
+            {isSandbox && <span>Field spawns: {ordinaryLeft}</span>}
+          </div>
 
-      <div className="crosshair" aria-hidden="true">
-        <span className="crosshair-line crosshair-line-horizontal" />
-        <span className="crosshair-line crosshair-line-vertical" />
-        <span className="crosshair-dot" />
-      </div>
+          <div className="crosshair" aria-hidden="true">
+            <span className="crosshair-line crosshair-line-horizontal" />
+            <span className="crosshair-line crosshair-line-vertical" />
+            <span className="crosshair-dot" />
+          </div>
 
-      <Hotbar equippedBallId={equippedBallId} throwPower={throwPower} />
+          <Hotbar equippedBallId={equippedBallId} throwPower={throwPower} />
 
-      <div className="hud-actions">
-        <Button onClick={() => goTo(SCREENS.pokedex)}>Pokédex</Button>
-      </div>
+          <div className="hud-actions">
+            {!isSandbox && <Button onClick={() => goTo(SCREENS.pokedex)}>Pokédex</Button>}
+            {isSandbox && (
+              <Button onClick={() => goTo(SCREENS.modeSelect)}>Modes</Button>
+            )}
+          </div>
 
-      {paused && (
-        <div className="pause-overlay">
-          <div className="pause-menu">
-            <h3>Paused</h3>
-            <p>WASD move · F throw · Q/R power · E companion</p>
-            <div className="style-picker">
-              <h4>Change Trainer Style</h4>
-              <div className="style-grid">
-                {PLAYER_STYLES.map((style) => (
+          {isSandbox && (
+            <div className="path-menu">
+              <div className="path-list">
+                {WORLD_PATHS.map((biome) => (
                   <button
-                    key={style.id}
+                    key={biome.id}
+                    className={biome.id === sandboxPathId ? 'active' : ''}
+                    disabled={isMapLoading}
                     type="button"
-                    className={`style-btn ${
-                      (player.characterStyle?.id || 'player-21') === style.id ? 'active' : ''
-                    }`}
-                    onClick={() => changeStyle(style.id)}
+                    onClick={() => handleSandboxBiomeSwitch(biome.id)}
                   >
-                    <span className="style-id-num">{style.id.replace('player-', '')}</span>
-                    <span className="style-label-text">{style.label}</span>
+                    <span>{biome.id + 1}</span>
+                    {biome.name}
                   </button>
                 ))}
               </div>
+              <div className="analytics-actions">
+                <button type="button" onClick={downloadBiomeLoadMetrics}>
+                  Export Metrics
+                </button>
+                <button type="button" onClick={clearBiomeLoadMetrics}>
+                  Clear Metrics
+                </button>
+              </div>
             </div>
-            <div className="btn-row">
-              <Button variant="primary" onClick={() => setPaused(false)}>
-                Resume
-              </Button>
-              <Button onClick={quitToMenu}>Quit to menu</Button>
+          )}
+
+          <LoadingOverlay currentPathId={activePathId} isLoading={isMapLoading} />
+
+          <div className={`cave-fade-overlay ${isCaveTransitioning ? 'visible' : ''}`} />
+
+          {paused && (
+            <div className="pause-overlay">
+              <div className="pause-menu">
+                <h3>Paused</h3>
+                <p>WASD move · F throw · Q/R power · E companion</p>
+                <div className="style-picker">
+                  <h4>Change Trainer Style</h4>
+                  <div className="style-grid">
+                    {PLAYER_STYLES.map((style) => (
+                      <button
+                        key={style.id}
+                        type="button"
+                        className={`style-btn ${(player.characterStyle?.id || 'player-21') === style.id ? 'active' : ''
+                          }`}
+                        onClick={() => changeStyle(style.id)}
+                      >
+                        <span className="style-id-num">{style.id.replace('player-', '')}</span>
+                        <span className="style-label-text">{style.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="btn-row">
+                  <Button variant="primary" onClick={() => setPaused(false)}>
+                    Resume
+                  </Button>
+                  <Button onClick={quitToMenu}>Quit to menu</Button>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
-      )}
+      </canvas>
     </main>
   );
 }

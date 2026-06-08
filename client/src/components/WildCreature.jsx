@@ -25,11 +25,11 @@ const DISPLACE_EPSILON = 0.0008;
 const direction = new Vector3();
 const modelOffset = [0, -WILD_CREATURE_HEIGHT / 2, 0];
 
-function WildFallback({ rotation = [0, 0, 0], scale = DEFAULT_MODEL_SCALE }) {
+function WildFallback({ rotation = [0, 0, 0], scale = DEFAULT_MODEL_SCALE, height = WILD_CREATURE_HEIGHT }) {
   return (
     <VoxelFallback
       color="#dc2f32"
-      height={WILD_CREATURE_HEIGHT}
+      height={height}
       width={0.75}
       depth={0.75}
       position={modelOffset}
@@ -76,6 +76,7 @@ export default function WildCreature({
   playerRef,
   registerRef,
   status = 'active',
+  fitToHeight = null,
 }) {
   const creatureRef = useRef();
   const fleeTimer = useRef(0);
@@ -266,16 +267,17 @@ export default function WildCreature({
 
       <ModelErrorBoundary
         resetKey={modelUrl}
-        fallback={<WildFallback rotation={modelRotation} scale={visualScale} />}
+        fallback={<WildFallback rotation={modelRotation} scale={fitToHeight ? 1.0 : visualScale} height={fitToHeight || WILD_CREATURE_HEIGHT} />}
       >
-        <Suspense fallback={<WildFallback rotation={modelRotation} scale={visualScale} />}>
+        <Suspense fallback={<WildFallback rotation={modelRotation} scale={fitToHeight ? 1.0 : visualScale} height={fitToHeight || WILD_CREATURE_HEIGHT} />}>
           <AnimatedModel
             url={modelUrl}
             actionName={status === 'fleeing' ? 'Run' : isMoving ? 'Walk' : 'Idle'}
             fallbackActionName={status === 'fleeing' ? ['Flee', 'Run', 'Walk'] : isMoving ? ['Run', 'Walk', 'Idle'] : ['Idle', 'Walk']}
             position={modelOffset}
             rotation={modelRotation}
-            scale={visualScale}
+            scale={fitToHeight ? 1.0 : visualScale}
+            fitToHeight={fitToHeight}
             inputRef={animInputRef}
             primaryType={primaryType}
             animProfile={animProfile}

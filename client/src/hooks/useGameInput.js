@@ -56,7 +56,7 @@ export function useGameInput({
         return;
       }
 
-      if (event.code !== 'KeyF') return;
+      if (event.code !== 'KeyF' && event.code !== 'Space') return;
       event.preventDefault();
 
       getParallaxThrowVector(camera, player, throwOrigin, throwForward);

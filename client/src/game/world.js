@@ -41,8 +41,16 @@ export { getRegionForPath, getRegionalBiomeForDex, getPokemonForRegion, REGIONAL
 export const VOXEL_SIZE = 0.75;
 export const CHUNK_SIZE = 32;
 export const CHUNK_WORLD_SIZE = CHUNK_SIZE * VOXEL_SIZE;
+export const BIOME_CHUNK_MIN = -18;
+export const BIOME_CHUNK_MAX = 17;
+export const BIOME_CHUNKS_PER_AXIS = BIOME_CHUNK_MAX - BIOME_CHUNK_MIN + 1;
 export const BIOME_CHUNK_RADIUS = 1;
-export const BIOME_BOUNDARY = 35;
+export const BIOME_BOUNDARY =
+  (CHUNK_SIZE * BIOME_CHUNKS_PER_AXIS * VOXEL_SIZE) / 2 - VOXEL_SIZE * 2;
+export const SKY_BIOME_ID = 6;
+export const DISTORTION_BIOME_ID = 7;
+export const SKY_RENDER_DISTANCE = 1;
+export const DISTORTION_RENDER_DISTANCE = 1;
 export const BLOCK_HEIGHT = VOXEL_SIZE;
 export const WATER_BLOCK_HEIGHT = VOXEL_SIZE;
 export const WATER_SURFACE_Y = -VOXEL_SIZE;
@@ -56,7 +64,7 @@ export const COMPANION_HEIGHT = 0.8;
 export const WILD_CREATURE_HEIGHT = 0.8;
 export const TREE_RADIUS = 0.58;
 export const CACTUS_RADIUS = 0.45;
-export const MAP_SIZE = CHUNK_SIZE * 3;
+export const MAP_SIZE = CHUNK_SIZE * BIOME_CHUNKS_PER_AXIS;
 export const MAP_HALF_BLOCKS = MAP_SIZE / 2;
 export const MAP_HALF_WORLD_SIZE = MAP_HALF_BLOCKS * VOXEL_SIZE;
 export const TERRAIN_RADIUS = MAP_HALF_WORLD_SIZE;
@@ -67,7 +75,14 @@ export const PATH_GRID_SIZE = MAP_SIZE;
 export const PATH_HALF_BLOCKS = MAP_HALF_BLOCKS;
 export const PATH_WORLD_SIZE = MAP_SIZE * VOXEL_SIZE;
 export const PATH_HALF_WORLD_SIZE = PATH_WORLD_SIZE / 2;
-export const RENDER_DISTANCE = 1;
+export const RENDER_DISTANCE = 2;
+
+export const CAVE_ZONES = {
+  EXTERIOR: 'exterior',
+  INTERIOR: 'interior',
+};
+
+export const CAVE_BIOME_ID = 4;
 export const MOUNT_CORONET_X = 0;
 export const MOUNT_CORONET_Z = -16;
 export const MOUNT_CORONET_PEAK_HEIGHT = 80;
@@ -167,7 +182,11 @@ export function getActivePathId() {
 }
 
 export function clearBiomeCache(currentBiome = activeBiome) {
-  delete MapCache.biomes[currentBiome];
+  Object.keys(MapCache.biomes).forEach((key) => {
+    if (key.startsWith(`${currentBiome}:`) || key === String(currentBiome)) {
+      delete MapCache.biomes[key];
+    }
+  });
   delete MapCache.props[currentBiome];
 }
 
@@ -263,7 +282,11 @@ export function getChunkKey(cx, cz) {
 }
 
 export function getChunkCoord(value) {
-  return Math.floor(value / CHUNK_WORLD_SIZE);
+  const tileIndex = getVoxelIndex(snapToVoxel(value));
+
+  return (
+    Math.floor((tileIndex + MAP_HALF_BLOCKS) / CHUNK_SIZE) + BIOME_CHUNK_MIN
+  );
 }
 
 export function getChunkCoordsForPosition(x, z) {
@@ -273,11 +296,48 @@ export function getChunkCoordsForPosition(x, z) {
   };
 }
 
-export function getSurroundingChunks(_centerX = 0, _centerZ = 0) {
+function isChunkInsideBiome(cx, cz) {
+  return (
+    cx >= BIOME_CHUNK_MIN &&
+    cx <= BIOME_CHUNK_MAX &&
+    cz >= BIOME_CHUNK_MIN &&
+    cz <= BIOME_CHUNK_MAX
+  );
+}
+
+export function getBiomeBoundary(currentBiome = activeBiome) {
+  if (currentBiome === SKY_BIOME_ID) {
+    return CHUNK_WORLD_SIZE * 1.35;
+  }
+
+  if (currentBiome === DISTORTION_BIOME_ID) {
+    return CHUNK_WORLD_SIZE * 1.55;
+  }
+
+  return BIOME_BOUNDARY;
+}
+
+export function getBiomeRenderDistance(currentBiome = activeBiome) {
+  if (currentBiome === SKY_BIOME_ID) {
+    return SKY_RENDER_DISTANCE;
+  }
+
+  if (currentBiome === DISTORTION_BIOME_ID) {
+    return DISTORTION_RENDER_DISTANCE;
+  }
+
+  return RENDER_DISTANCE;
+}
+
+export function getSurroundingChunks(centerCx = 0, centerCz = 0, radius = RENDER_DISTANCE) {
   const chunks = [];
 
-  for (let cz = -BIOME_CHUNK_RADIUS; cz <= BIOME_CHUNK_RADIUS; cz += 1) {
-    for (let cx = -BIOME_CHUNK_RADIUS; cx <= BIOME_CHUNK_RADIUS; cx += 1) {
+  for (let cz = centerCz - radius; cz <= centerCz + radius; cz += 1) {
+    for (let cx = centerCx - radius; cx <= centerCx + radius; cx += 1) {
+      if (!isChunkInsideBiome(cx, cz)) {
+        continue;
+      }
+
       chunks.push({
         cx,
         cz,
@@ -374,8 +434,8 @@ function createCoastalFallbackChunk(cx, cz) {
   const blocks = [];
   const counts = createEmptyCounts();
   const heightLookup = new Map();
-  const startX = (cx + BIOME_CHUNK_RADIUS) * CHUNK_SIZE - MAP_HALF_BLOCKS;
-  const startZ = (cz + BIOME_CHUNK_RADIUS) * CHUNK_SIZE - MAP_HALF_BLOCKS;
+  const startX = (cx - BIOME_CHUNK_MIN) * CHUNK_SIZE - MAP_HALF_BLOCKS;
+  const startZ = (cz - BIOME_CHUNK_MIN) * CHUNK_SIZE - MAP_HALF_BLOCKS;
 
   for (let lx = 0; lx < CHUNK_SIZE; lx += 1) {
     const tileIndexX = startX + lx;
@@ -418,8 +478,8 @@ function createBiomeChunk(currentBiome, cx, cz) {
   const blocks = [];
   const counts = createEmptyCounts();
   const heightLookup = new Map();
-  const startX = (cx + BIOME_CHUNK_RADIUS) * CHUNK_SIZE - MAP_HALF_BLOCKS;
-  const startZ = (cz + BIOME_CHUNK_RADIUS) * CHUNK_SIZE - MAP_HALF_BLOCKS;
+  const startX = (cx - BIOME_CHUNK_MIN) * CHUNK_SIZE - MAP_HALF_BLOCKS;
+  const startZ = (cz - BIOME_CHUNK_MIN) * CHUNK_SIZE - MAP_HALF_BLOCKS;
 
   for (let lx = 0; lx < CHUNK_SIZE; lx += 1) {
     const tileIndexX = startX + lx;
@@ -509,51 +569,133 @@ function createBiomeChunk(currentBiome, cx, cz) {
   };
 }
 
-export function generateBiomeMap(currentBiome = activeBiome) {
-  if (MapCache.biomes[currentBiome]) {
-    return MapCache.biomes[currentBiome];
+function getBiomeCacheKey(currentBiome, caveZone = CAVE_ZONES.EXTERIOR) {
+  return `${currentBiome}:${caveZone}`;
+}
+
+export function generateBiomeMap(
+  currentBiome = activeBiome,
+  caveZone = CAVE_ZONES.EXTERIOR
+) {
+  const cacheKey = getBiomeCacheKey(currentBiome, caveZone);
+  const boundary = getBiomeBoundary(currentBiome);
+
+  if (MapCache.biomes[cacheKey]) {
+    return MapCache.biomes[cacheKey];
   }
 
-  const chunks = [];
-  const heightLookup = new Map();
-  const counts = createEmptyCounts();
-
-  for (let cx = -1; cx <= 1; cx += 1) {
-    for (let cz = -1; cz <= 1; cz += 1) {
-      const chunk = generateBiomeChunk(currentBiome, cx, cz);
-
-      chunks.push(chunk);
-      Object.keys(counts).forEach((type) => {
-        counts[type] += chunk.counts[type];
-      });
-      chunk.heightLookup.forEach((tile, key) => {
-        heightLookup.set(key, tile);
-      });
-    }
-  }
-
-  MapCache.biomes[currentBiome] = {
+  MapCache.biomes[cacheKey] = {
     ...getBiomeDefinition(currentBiome),
+    cacheKey,
+    caveZone,
     bounds: {
-      minX: -BIOME_BOUNDARY,
-      maxX: BIOME_BOUNDARY,
-      minZ: -BIOME_BOUNDARY,
-      maxZ: BIOME_BOUNDARY,
+      minX: -boundary,
+      maxX: boundary,
+      minZ: -boundary,
+      maxZ: boundary,
     },
-    chunks,
-    counts,
-    heightLookup,
+    chunkMap: {},
+    chunks: [],
+    counts: createEmptyCounts(),
+    heightLookup: new Map(),
   };
 
-  return MapCache.biomes[currentBiome];
+  return MapCache.biomes[cacheKey];
 }
 
-export function preloadBiome(currentBiome = activeBiome) {
-  return generateBiomeMap(currentBiome);
+export function ensureBiomeChunk(
+  currentBiome = activeBiome,
+  cx = 0,
+  cz = 0,
+  caveZone = CAVE_ZONES.EXTERIOR
+) {
+  if (!isChunkInsideBiome(cx, cz)) {
+    return null;
+  }
+
+  const biomeMap = generateBiomeMap(currentBiome, caveZone);
+  const key = getChunkKey(cx, cz);
+
+  if (biomeMap.chunkMap[key]) {
+    return biomeMap.chunkMap[key];
+  }
+
+  const chunk = generateBiomeChunk(currentBiome, cx, cz);
+
+  biomeMap.chunkMap[key] = chunk;
+  biomeMap.chunks = Object.values(biomeMap.chunkMap);
+  Object.keys(biomeMap.counts).forEach((type) => {
+    biomeMap.counts[type] += chunk.counts[type];
+  });
+  chunk.heightLookup.forEach((tile, tileKey) => {
+    biomeMap.heightLookup.set(tileKey, tile);
+  });
+
+  return chunk;
 }
 
-export function getBiomeMap(currentBiome = activeBiome) {
-  return generateBiomeMap(currentBiome);
+export function getBiomeChunksAround(
+  currentBiome = activeBiome,
+  centerCx = 0,
+  centerCz = 0,
+  radius = getBiomeRenderDistance(currentBiome),
+  caveZone = CAVE_ZONES.EXTERIOR
+) {
+  return getSurroundingChunks(centerCx, centerCz, radius)
+    .map((chunkCoord) =>
+      ensureBiomeChunk(currentBiome, chunkCoord.cx, chunkCoord.cz, caveZone)
+    )
+    .filter(Boolean);
+}
+
+export function getBiomeCacheSummary(
+  currentBiome = activeBiome,
+  caveZone = CAVE_ZONES.EXTERIOR
+) {
+  const cacheKey = getBiomeCacheKey(currentBiome, caveZone);
+  const biomeMap = MapCache.biomes[cacheKey];
+  const biome = getBiomeDefinition(currentBiome);
+  const counts = biomeMap?.counts || createEmptyCounts();
+  const chunkCount = biomeMap?.chunks?.length || 0;
+  const blockCount = Object.values(counts).reduce(
+    (total, count) => total + count,
+    0
+  );
+
+  return {
+    biomeId: currentBiome,
+    biomeName: biome.name,
+    biomeType: biome.biome,
+    cacheKey,
+    caveZone,
+    blockCount,
+    chunkCount,
+    counts: { ...counts },
+    isCached: chunkCount > 0,
+  };
+}
+
+export function preloadBiome(
+  currentBiome = activeBiome,
+  caveZone = CAVE_ZONES.EXTERIOR
+) {
+  generateBiomeMap(currentBiome, caveZone);
+  getBiomeChunksAround(
+    currentBiome,
+    0,
+    0,
+    getBiomeRenderDistance(currentBiome),
+    caveZone
+  );
+
+  return generateBiomeMap(currentBiome, caveZone);
+}
+
+export function getBiomeMap(
+  currentBiome = activeBiome,
+  caveZone = CAVE_ZONES.EXTERIOR
+) {
+  return generateBiomeMap(currentBiome, caveZone);
 }
 
 const PLAINS_TREE_BIOMES = new Set([0, 3, 4]);
@@ -829,6 +971,12 @@ function generateBiomeProps(currentBiome = activeBiome) {
     return generateVillageBiomeProps(currentBiome);
   }
 
+  getBiomeChunksAround(
+    currentBiome,
+    0,
+    0,
+    getBiomeRenderDistance(currentBiome)
+  );
   const biomeMap = generateBiomeMap(currentBiome);
   const cacti = [];
   const plantProps = [];
@@ -990,17 +1138,41 @@ export function getRawTerrainSurfaceY(x, z) {
   return getBiomeSurfaceY(tileIndexX, tileIndexZ, activeBiome);
 }
 
-export function getTerrainSurfaceY(x, z, currentBiome = activeBiome) {
+export function getTerrainSurfaceY(
+  x,
+  z,
+  currentBiome = activeBiome,
+  caveZone = CAVE_ZONES.EXTERIOR
+) {
   const { gridX, gridZ } = worldToGrid(x, z);
-  const biomeMap = generateBiomeMap(currentBiome);
+  const tileIndexX = getVoxelIndex(gridX);
+  const tileIndexZ = getVoxelIndex(gridZ);
+  const { cx, cz } = getChunkCoordsForPosition(gridX, gridZ);
+
+  ensureBiomeChunk(currentBiome, cx, cz, caveZone);
+
+  const biomeMap = generateBiomeMap(currentBiome, caveZone);
   const tile = biomeMap.heightLookup.get(toTileKey(gridX, gridZ));
 
-  return tile ? tile.surfaceY : WATER_LEVEL;
+  if (tile) {
+    return tile.surfaceY;
+  }
+
+  return getBiomeSurfaceY(tileIndexX, tileIndexZ, currentBiome);
 }
 
-export function isWaterTile(x, z, currentBiome = activeBiome) {
+export function isWaterTile(
+  x,
+  z,
+  currentBiome = activeBiome,
+  caveZone = CAVE_ZONES.EXTERIOR
+) {
   const { gridX, gridZ } = worldToGrid(x, z);
-  const biomeMap = generateBiomeMap(currentBiome);
+  const { cx, cz } = getChunkCoordsForPosition(gridX, gridZ);
+
+  ensureBiomeChunk(currentBiome, cx, cz, caveZone);
+
+  const biomeMap = generateBiomeMap(currentBiome, caveZone);
   const tile = biomeMap.heightLookup.get(toTileKey(gridX, gridZ));
 
   return tile ? tile.isWater : true;
@@ -1031,12 +1203,14 @@ export function getEntityY(
   return surfaceY + entityHeight / 2 + ENTITY_FOOT_CLEARANCE;
 }
 
-export function isInsideWorld(x = 0, z = 0, radius = 0) {
+export function isInsideWorld(x = 0, z = 0, radius = 0, currentBiome = activeBiome) {
+  const boundary = getBiomeBoundary(currentBiome);
+
   return (
-    x >= -BIOME_BOUNDARY + radius &&
-    x <= BIOME_BOUNDARY - radius &&
-    z >= -BIOME_BOUNDARY + radius &&
-    z <= BIOME_BOUNDARY - radius
+    x >= -boundary + radius &&
+    x <= boundary - radius &&
+    z >= -boundary + radius &&
+    z <= boundary - radius
   );
 }
 
@@ -1061,10 +1235,11 @@ export function isWalkablePosition(
   x,
   z,
   radius = PLAYER_RADIUS,
-  currentBiome = activeBiome
+  currentBiome = activeBiome,
+  _caveZone = CAVE_ZONES.EXTERIOR
 ) {
   return (
-    isInsideWorld(x, z, radius) &&
+    isInsideWorld(x, z, radius, currentBiome) &&
     !isWaterCollision(x, z, radius, currentBiome) &&
     !collidesWithBiomeProp(x, z, radius, currentBiome)
   );
