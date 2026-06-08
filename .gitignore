@@ -10,6 +10,7 @@
 /reports
 /.next
 /public/assets/idea_glbs
+
 # production
 /build
 /client/dist
