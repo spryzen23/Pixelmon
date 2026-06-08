@@ -5,10 +5,8 @@ const GameContext = createContext(null);
 
 export const SCREENS = {
   welcome: 'welcome',
-  modeSelect: 'modeSelect',
-  playerSelect: 'playerSelect',
+  dashboard: 'dashboard',
   profileSetup: 'profileSetup',
-  mapSelect: 'mapSelect',
   loading: 'loading',
   inGame: 'inGame',
   gameComplete: 'gameComplete',
@@ -30,6 +28,7 @@ export const GAME_MODES = {
 
 export function GameProvider({ children }) {
   const [screen, setScreen] = useState(SCREENS.welcome);
+  const [user, setUser] = useState(null);
   const [player, setPlayer] = useState(null);
   const [session, setSession] = useState(null);
   const [gameRuntime, setGameRuntime] = useState(null);
@@ -38,50 +37,54 @@ export function GameProvider({ children }) {
   const [spawnLadder, setSpawnLadder] = useState(null);
   const [gameMode, setGameMode] = useState(GAME_MODES.campaign);
 
-  const goTo = useCallback((next) => setScreen(next), []);
+  const goTo = useCallback((next) => {
+    setScreen(next);
+  }, []);
 
   const addCoins = useCallback(
     async (amount) => {
-      if (!player) {
+      if (!user) {
         const localCoins = Number(localStorage.getItem('pixelmon-localCoins') || 150) + amount;
         localStorage.setItem('pixelmon-localCoins', localCoins);
         return localCoins;
       }
-      const nextCoins = (player.coins || 150) + amount;
+      const nextCoins = (user.pokecoins ?? 500) + amount;
       try {
-        const updatedPlayer = await api.patchPlayer(player.id, { coins: nextCoins });
-        setPlayer(updatedPlayer);
+        const updatedUser = await api.patchPlayer(user.id, { pokecoins: nextCoins });
+        setUser(updatedUser);
+        setPlayer((prev) => (prev ? { ...prev, coins: nextCoins } : null));
         return nextCoins;
       } catch (err) {
         console.error('Failed to sync coins', err);
         return nextCoins;
       }
     },
-    [player]
+    [user]
   );
 
   const spendCoins = useCallback(
     async (amount) => {
-      if (!player) {
+      if (!user) {
         const currentLocal = Number(localStorage.getItem('pixelmon-localCoins') || 150);
         if (currentLocal < amount) return false;
         const nextCoins = currentLocal - amount;
         localStorage.setItem('pixelmon-localCoins', nextCoins);
         return true;
       }
-      const currentCoins = player.coins || 150;
+      const currentCoins = user.pokecoins ?? 500;
       if (currentCoins < amount) return false;
       const nextCoins = currentCoins - amount;
       try {
-        const updatedPlayer = await api.patchPlayer(player.id, { coins: nextCoins });
-        setPlayer(updatedPlayer);
+        const updatedUser = await api.patchPlayer(user.id, { pokecoins: nextCoins });
+        setUser(updatedUser);
+        setPlayer((prev) => (prev ? { ...prev, coins: nextCoins } : null));
         return true;
       } catch (err) {
         console.error('Failed to sync coins', err);
         return false;
       }
     },
-    [player]
+    [user]
   );
 
   const value = useMemo(
@@ -89,6 +92,8 @@ export function GameProvider({ children }) {
       screen,
       setScreen,
       goTo,
+      user,
+      setUser,
       player,
       setPlayer,
       session,
@@ -106,7 +111,7 @@ export function GameProvider({ children }) {
       addCoins,
       spendCoins,
     }),
-    [screen, goTo, player, session, gameRuntime, completeStats, biomeMap, spawnLadder, gameMode, addCoins, spendCoins]
+    [screen, goTo, user, player, session, gameRuntime, completeStats, biomeMap, spawnLadder, gameMode, addCoins, spendCoins]
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
@@ -117,4 +122,3 @@ export function useGame() {
   if (!ctx) throw new Error('useGame outside GameProvider');
   return ctx;
 }
-

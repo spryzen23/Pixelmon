@@ -1,14 +1,14 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useGame, SCREENS } from '../context/GameContext';
 import { api } from '../api';
-import { 
-  ArrowLeft, 
-  Swords, 
-  Flame, 
-  Droplet, 
-  CloudSun, 
-  Compass, 
-  Wind, 
+import {
+  ArrowLeft,
+  Swords,
+  Flame,
+  Droplet,
+  CloudSun,
+  Compass,
+  Wind,
   RotateCcw
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -52,24 +52,24 @@ const DIFFICULTIES = [
 
 // Official Pokémon type color palette
 const TYPE_COLORS = {
-  normal:   '#9fa19f',
-  fire:     '#e62829',
-  water:    '#2980ef',
-  grass:    '#3fa129',
+  normal: '#9fa19f',
+  fire: '#e62829',
+  water: '#2980ef',
+  grass: '#3fa129',
   electric: '#fac000',
-  ice:      '#3dcef3',
+  ice: '#3dcef3',
   fighting: '#ff8000',
-  poison:   '#9141cb',
-  ground:   '#915121',
-  flying:   '#81b9ef',
-  psychic:  '#ef4179',
-  bug:      '#91a119',
-  rock:     '#afa981',
-  ghost:    '#704170',
-  dragon:   '#5060e1',
-  dark:     '#624d4e',
-  steel:    '#60a1b8',
-  fairy:    '#ef70ef'
+  poison: '#9141cb',
+  ground: '#915121',
+  flying: '#81b9ef',
+  psychic: '#ef4179',
+  bug: '#91a119',
+  rock: '#afa981',
+  ghost: '#704170',
+  dragon: '#5060e1',
+  dark: '#624d4e',
+  steel: '#60a1b8',
+  fairy: '#ef70ef'
 };
 
 // Helper sound simulator using Web Audio API
@@ -212,7 +212,7 @@ function parseCondition(condStr) {
 
 export function BattleArenaScreen() {
   const { goTo, addCoins } = useGame();
-  
+
   // Game states
   const [stage, setStage] = useState('draft'); // 'draft' | 'battle' | 'summary'
   const [draftPool, setDraftPool] = useState([]);
@@ -231,7 +231,7 @@ export function BattleArenaScreen() {
   const [battleLogs, setBattleLogs] = useState([]);
   const [isActing, setIsActing] = useState(false);
   const [winner, setWinner] = useState(null);
-  
+
   // Animations
   const [playerAnim, setPlayerAnim] = useState('');
   const [enemyAnim, setEnemyAnim] = useState('');
@@ -373,9 +373,9 @@ export function BattleArenaScreen() {
   };
 
   const fetchPokemonDetailsFromAPI = async (name) => {
-    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`);
+    const res = await fetch(`/api/pokemon/${name.toLowerCase()}`);
     const data = await res.json();
-    
+
     const stats = {};
     data.stats.forEach(s => {
       stats[s.stat.name] = s.base_stat;
@@ -385,7 +385,7 @@ export function BattleArenaScreen() {
     const moves = [];
     for (const mName of moveNames) {
       try {
-        const mRes = await fetch(`https://pokeapi.co/api/v2/move/${mName}`);
+        const mRes = await fetch(`/api/move/${mName}`);
         const mData = await mRes.json();
         moves.push({
           name: mData.name,
@@ -434,7 +434,7 @@ export function BattleArenaScreen() {
   const playTurnEvents = async (logs, nextRequest, nextWinner, pTeam, eMon) => {
     setIsActing(true);
     setPlayerTurn(false);
-    
+
     let localTeam = [...pTeam];
     let localEnemy = eMon ? { ...eMon } : null;
 
@@ -465,7 +465,7 @@ export function BattleArenaScreen() {
           await new Promise(r => setTimeout(r, 450));
           setEnemyAnim('');
         }
-      } 
+      }
       else if (type === '-damage') {
         const target = parts[2];
         const hpStatus = parts[3];
@@ -494,7 +494,7 @@ export function BattleArenaScreen() {
           await new Promise(r => setTimeout(r, 450));
           setEnemyAnim('');
         }
-      } 
+      }
       else if (type === '-heal') {
         const target = parts[2];
         const hpStatus = parts[3];
@@ -559,7 +559,7 @@ export function BattleArenaScreen() {
 
     // Set final synced states
     setActiveRequest(nextRequest);
-    
+
     if (nextRequest && nextRequest.side && nextRequest.side.pokemon) {
       nextRequest.side.pokemon.forEach((mon, idx) => {
         const { currentHp, maxHp, status } = parseCondition(mon.condition);
@@ -587,7 +587,7 @@ export function BattleArenaScreen() {
     } else {
       setPlayerTurn(true);
     }
-    
+
     setIsActing(false);
   };
 
@@ -595,9 +595,9 @@ export function BattleArenaScreen() {
     if (!playerTurn || isActing || winner !== null) return;
     setShowItems(false);
     setShowSwitch(false);
-    
+
     const choice = `move ${moveSlotIndex + 1}`;
-    
+
     try {
       const result = await api.submitBattleChoice({ battleId, choice });
       playTurnEvents(result.logs, result.request, result.winner, playerTeam, enemy);
@@ -609,7 +609,7 @@ export function BattleArenaScreen() {
   const handleSwapActive = async (idx) => {
     if (!playerTurn || isActing || winner !== null || idx === activeIdx) return;
     setShowSwitch(false);
-    
+
     const choice = `switch ${idx + 1}`;
 
     try {
@@ -623,7 +623,7 @@ export function BattleArenaScreen() {
   const handleUseItem = async (type) => {
     if (!playerTurn || isActing || winner !== null) return;
     const choice = type === 'potion' ? 'potion' : 'fullrestore';
-    
+
     setItems(prev => ({
       ...prev,
       potions: type === 'potion' ? prev.potions - 1 : prev.potions,
@@ -700,8 +700,8 @@ export function BattleArenaScreen() {
                 <span className="config-section-title">Difficulty Mode</span>
                 <div className="config-btn-group">
                   {DIFFICULTIES.map(d => (
-                    <button 
-                      key={d.id} 
+                    <button
+                      key={d.id}
                       id={`diff-btn-${d.id}`}
                       className={`config-btn ${difficulty === d.id ? 'active' : ''}`}
                       onClick={() => setDifficulty(d.id)}
@@ -716,8 +716,8 @@ export function BattleArenaScreen() {
                 <span className="config-section-title">Field Weather Conditions</span>
                 <div className="config-btn-group">
                   {WEATHER_OPTIONS.map(w => (
-                    <button 
-                      key={w.id} 
+                    <button
+                      key={w.id}
                       id={`weather-btn-${w.id}`}
                       className={`config-btn ${weather === w.id ? 'active' : ''}`}
                       onClick={() => setWeather(w.id)}
@@ -733,8 +733,8 @@ export function BattleArenaScreen() {
               {draftPool.map(p => {
                 const isSelected = selectedTeam.some(s => s.entryId === p.entryId);
                 return (
-                  <div 
-                    key={p.entryId} 
+                  <div
+                    key={p.entryId}
                     id={`draft-card-${p.entryId}`}
                     className={`bento-card ${isSelected ? 'featured' : ''}`}
                     onClick={() => handleDraftToggle(p)}
@@ -753,8 +753,8 @@ export function BattleArenaScreen() {
             </div>
 
             <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
-              <button 
-                className="btn-back" 
+              <button
+                className="btn-back"
                 id="start-battle-btn"
                 disabled={selectedTeam.length !== 3}
                 onClick={startBattle}
@@ -769,11 +769,11 @@ export function BattleArenaScreen() {
         <div className="battle-arena-layout">
           {/* Battle board */}
           <div className="battle-arena-board">
-            
+
             {/* Stage */}
             <div className="battle-stage" id="battle-stage-arena">
               <div className="battle-stage-backdrop-effect" />
-              
+
               {/* Floor */}
               <div className="stage-floor" />
 
@@ -788,8 +788,8 @@ export function BattleArenaScreen() {
                           <span className="hp-pokemon-level">Lvl {enemy.level || 50}</span>
                         </div>
                         <div className="hp-bar-outer">
-                          <div 
-                            className={`hp-bar-inner ${enemy.currentHp / enemy.maxHp > 0.5 ? 'high' : enemy.currentHp / enemy.maxHp > 0.2 ? 'medium' : 'low'}`} 
+                          <div
+                            className={`hp-bar-inner ${enemy.currentHp / enemy.maxHp > 0.5 ? 'high' : enemy.currentHp / enemy.maxHp > 0.2 ? 'medium' : 'low'}`}
                             style={{ width: `${(enemy.currentHp / enemy.maxHp) * 100}%` }}
                           />
                         </div>
@@ -799,8 +799,8 @@ export function BattleArenaScreen() {
                         </div>
                       </div>
 
-                      <div 
-                        className={`pokemon-avatar-wrapper ${enemyAnim || 'idle'}`} 
+                      <div
+                        className={`pokemon-avatar-wrapper ${enemyAnim || 'idle'}`}
                         id="enemy-avatar-wrapper"
                         data-status={enemy.status !== 'none' ? enemy.status : undefined}
                       >
@@ -822,8 +822,8 @@ export function BattleArenaScreen() {
                           <span className="hp-pokemon-level">Lvl {playerTeam[activeIdx].level || 50}</span>
                         </div>
                         <div className="hp-bar-outer">
-                          <div 
-                            className={`hp-bar-inner ${playerTeam[activeIdx].currentHp / playerTeam[activeIdx].maxHp > 0.5 ? 'high' : playerTeam[activeIdx].currentHp / playerTeam[activeIdx].maxHp > 0.2 ? 'medium' : 'low'}`} 
+                          <div
+                            className={`hp-bar-inner ${playerTeam[activeIdx].currentHp / playerTeam[activeIdx].maxHp > 0.5 ? 'high' : playerTeam[activeIdx].currentHp / playerTeam[activeIdx].maxHp > 0.2 ? 'medium' : 'low'}`}
                             style={{ width: `${(playerTeam[activeIdx].currentHp / playerTeam[activeIdx].maxHp) * 100}%` }}
                           />
                         </div>
@@ -833,9 +833,9 @@ export function BattleArenaScreen() {
                         </div>
                       </div>
 
-                      <div 
-                        className={`pokemon-avatar-wrapper ${playerAnim || 'idle'}`} 
-                        id="player-avatar-wrapper" 
+                      <div
+                        className={`pokemon-avatar-wrapper ${playerAnim || 'idle'}`}
+                        id="player-avatar-wrapper"
                         style={{ transform: 'scaleX(-1)' }}
                         data-status={playerTeam[activeIdx].status !== 'none' ? playerTeam[activeIdx].status : undefined}
                       >
@@ -852,7 +852,7 @@ export function BattleArenaScreen() {
             <div className="battle-logs-card" id="battle-logs-card">
               <span className="battle-logs-title">Battle Combat Logs</span>
               <div className="battle-logs-stream">
-                {battleLogs.map((log, i) => (
+                {battleLogs.slice(-4).map((log, i) => (
                   <div key={i} className="battle-log-line" dangerouslySetInnerHTML={{ __html: log }} />
                 ))}
                 <div ref={logsEndRef} />
@@ -881,12 +881,12 @@ export function BattleArenaScreen() {
           {/* Action panels */}
           {winner === null && (
             <div className="battle-controls-hub" id="battle-controls-hub">
-              
+
               {/* Move selections */}
               <div className="action-grid">
                 {getMappedMoves().map((m, i) => (
-                  <button 
-                    key={m.id} 
+                  <button
+                    key={m.id}
                     id={`move-btn-${m.id}`}
                     className="btn-action-move"
                     data-type={m.type}
@@ -895,7 +895,7 @@ export function BattleArenaScreen() {
                   >
                     <span className="move-btn-keybind">Slot {i + 1}</span>
                     <span className="move-btn-name">{m.move.replace(/-/g, ' ')}</span>
-                    <span className="move-btn-type" style={{ 
+                    <span className="move-btn-type" style={{
                       background: TYPE_COLORS[m.type] || '#888',
                       color: '#fff'
                     }}>
@@ -935,8 +935,8 @@ export function BattleArenaScreen() {
                 const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
                 const isActive = reqMon ? reqMon.active : false;
                 return (
-                  <button 
-                    key={p.name} 
+                  <button
+                    key={p.name}
                     id={`switch-poke-btn-${i}`}
                     className={`config-btn ${activeIdx === i ? 'active' : ''}`}
                     disabled={isFainted || isActive}
@@ -975,45 +975,45 @@ export function BattleArenaScreen() {
               <button className="btn-back" onClick={() => setShowCalc(false)}>Close</button>
             </div>
 
-            <div className="dmg-calc-scrollable">
-              
+            <div className="dmg-calc-body">
+
               <div className="dmg-calc-panel">
                 <span className="config-section-title">Core Engine Variables</span>
                 <div className="dmg-calc-grid-2">
                   <div>
                     <label className="dmg-calc-label">Attacker Lvl</label>
-                    <input 
-                      type="number" 
-                      className="dmg-calc-input" 
-                      value={calcInputs.level} 
-                      onChange={e => setCalcInputs({...calcInputs, level: Math.max(1, Number(e.target.value))})} 
+                    <input
+                      type="number"
+                      className="dmg-calc-input"
+                      value={calcInputs.level}
+                      onChange={e => setCalcInputs({ ...calcInputs, level: Math.max(1, Number(e.target.value)) })}
                     />
                   </div>
                   <div>
                     <label className="dmg-calc-label">Move Power</label>
-                    <input 
-                      type="number" 
-                      className="dmg-calc-input" 
-                      value={calcInputs.power} 
-                      onChange={e => setCalcInputs({...calcInputs, power: Math.max(1, Number(e.target.value))})} 
+                    <input
+                      type="number"
+                      className="dmg-calc-input"
+                      value={calcInputs.power}
+                      onChange={e => setCalcInputs({ ...calcInputs, power: Math.max(1, Number(e.target.value)) })}
                     />
                   </div>
                   <div>
                     <label className="dmg-calc-label">Attack Stat (A)</label>
-                    <input 
-                      type="number" 
-                      className="dmg-calc-input" 
-                      value={calcInputs.atk} 
-                      onChange={e => setCalcInputs({...calcInputs, atk: Math.max(1, Number(e.target.value))})} 
+                    <input
+                      type="number"
+                      className="dmg-calc-input"
+                      value={calcInputs.atk}
+                      onChange={e => setCalcInputs({ ...calcInputs, atk: Math.max(1, Number(e.target.value)) })}
                     />
                   </div>
                   <div>
                     <label className="dmg-calc-label">Defense Stat (D)</label>
-                    <input 
-                      type="number" 
-                      className="dmg-calc-input" 
-                      value={calcInputs.def} 
-                      onChange={e => setCalcInputs({...calcInputs, def: Math.max(1, Number(e.target.value))})} 
+                    <input
+                      type="number"
+                      className="dmg-calc-input"
+                      value={calcInputs.def}
+                      onChange={e => setCalcInputs({ ...calcInputs, def: Math.max(1, Number(e.target.value)) })}
                     />
                   </div>
                 </div>
@@ -1022,13 +1022,13 @@ export function BattleArenaScreen() {
               <div className="dmg-calc-panel">
                 <span className="config-section-title">Modifier Sliders</span>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '6px' }}>
-                  
+
                   <div>
                     <label className="dmg-calc-label">Type Advantage Effectiveness</label>
-                    <select 
-                      className="dmg-calc-input" 
-                      value={calcInputs.type} 
-                      onChange={e => setCalcInputs({...calcInputs, type: Number(e.target.value)})}
+                    <select
+                      className="dmg-calc-input"
+                      value={calcInputs.type}
+                      onChange={e => setCalcInputs({ ...calcInputs, type: Number(e.target.value) })}
                     >
                       <option value="0.0">0x (Immune)</option>
                       <option value="0.25">0.25x (Double Resisted)</option>
@@ -1041,10 +1041,10 @@ export function BattleArenaScreen() {
 
                   <div>
                     <label className="dmg-calc-label">STAB Modifier</label>
-                    <select 
-                      className="dmg-calc-input" 
-                      value={calcInputs.stab} 
-                      onChange={e => setCalcInputs({...calcInputs, stab: Number(e.target.value)})}
+                    <select
+                      className="dmg-calc-input"
+                      value={calcInputs.stab}
+                      onChange={e => setCalcInputs({ ...calcInputs, stab: Number(e.target.value) })}
                     >
                       <option value="1.0">1x (None)</option>
                       <option value="1.5">1.5x (STAB Bonus)</option>
@@ -1054,10 +1054,10 @@ export function BattleArenaScreen() {
 
                   <div>
                     <label className="dmg-calc-label">Field Weather Modifier</label>
-                    <select 
-                      className="dmg-calc-input" 
-                      value={calcInputs.weather} 
-                      onChange={e => setCalcInputs({...calcInputs, weather: Number(e.target.value)})}
+                    <select
+                      className="dmg-calc-input"
+                      value={calcInputs.weather}
+                      onChange={e => setCalcInputs({ ...calcInputs, weather: Number(e.target.value) })}
                     >
                       <option value="1.0">1x (Neutral)</option>
                       <option value="1.5">1.5x (Boosted)</option>
@@ -1066,13 +1066,13 @@ export function BattleArenaScreen() {
                   </div>
 
                   <div style={{ display: 'flex', gap: '10px' }}>
-                    <button 
+                    <button
                       className={`config-btn w-full ${calcInputs.burn === 0.5 ? 'active' : ''}`}
                       onClick={() => setCalcInputs(p => ({ ...p, burn: p.burn === 0.5 ? 1.0 : 0.5 }))}
                     >
                       Burned (0.5x)
                     </button>
-                    <button 
+                    <button
                       className={`config-btn w-full ${calcInputs.crit === 1.5 ? 'active' : ''}`}
                       onClick={() => setCalcInputs(p => ({ ...p, crit: p.crit === 1.5 ? 1.0 : 1.5 }))}
                     >
@@ -1086,7 +1086,7 @@ export function BattleArenaScreen() {
               {/* Damage roll outputs */}
               <div className="dmg-calc-panel" style={{ background: 'rgba(255, 212, 63, 0.03)', borderColor: 'rgba(255, 212, 63, 0.2)' }}>
                 <span className="config-section-title" style={{ color: 'var(--px-accent)' }}>Roll Outputs (Chaos Variance)</span>
-                
+
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
                   <div>
                     <span className="dmg-calc-label">Min Damage (85%)</span>
@@ -1103,8 +1103,8 @@ export function BattleArenaScreen() {
                     <div key={idx} className="chart-roll-row">
                       <span className="chart-roll-percentage">{85 + idx}%</span>
                       <div className="chart-roll-bar-outer">
-                        <div 
-                          className="chart-roll-bar-inner" 
+                        <div
+                          className="chart-roll-bar-inner"
                           style={{ width: `${((roll) / calculatedBase) * 100}%` }}
                         />
                       </div>

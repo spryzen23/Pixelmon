@@ -1,10 +1,9 @@
 import { GameProvider, useGame, SCREENS } from './context/GameContext';
+import { ToastProvider } from './hooks/useToast';
 import { WelcomeScreen } from './screens/WelcomeScreen';
-import { ModeSelectScreen } from './screens/ModeSelectScreen';
+import { DashboardScreen } from './screens/DashboardScreen';
 import BattleRoyaleShell from './modes/battleRoyale/BattleRoyaleShell';
-import { PlayerSelectScreen } from './screens/PlayerSelectScreen';
 import { ProfileSetupScreen } from './screens/ProfileSetupScreen';
-import { MapSelectScreen } from './screens/MapSelectScreen';
 import { LoadingScreen } from './screens/LoadingScreen';
 import { GameCompleteScreen } from './screens/GameCompleteScreen';
 import { PokedexScreen } from './screens/PokedexScreen';
@@ -22,16 +21,12 @@ function ScreenRouter() {
   switch (screen) {
     case SCREENS.welcome:
       return <WelcomeScreen />;
-    case SCREENS.modeSelect:
-      return <ModeSelectScreen />;
+    case SCREENS.dashboard:
+      return <DashboardScreen />;
     case SCREENS.battleRoyale:
-      return <BattleRoyaleShell onBackToMenu={() => goTo(SCREENS.modeSelect)} />;
-    case SCREENS.playerSelect:
-      return <PlayerSelectScreen />;
+      return <BattleRoyaleShell onBackToMenu={() => goTo(SCREENS.dashboard)} />;
     case SCREENS.profileSetup:
       return <ProfileSetupScreen />;
-    case SCREENS.mapSelect:
-      return <MapSelectScreen />;
     case SCREENS.loading:
       return <LoadingScreen />;
     case SCREENS.inGame:
@@ -58,9 +53,11 @@ function ScreenRouter() {
 export default function App() {
   return (
     <GameProvider>
-      <div className="app-root">
-        <ScreenRouter />
-      </div>
+      <ToastProvider>
+        <div className="app-root">
+          <ScreenRouter />
+        </div>
+      </ToastProvider>
     </GameProvider>
   );
 }

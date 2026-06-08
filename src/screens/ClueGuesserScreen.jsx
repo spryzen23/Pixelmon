@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useGame, SCREENS } from '../context/GameContext';
+import { useToast } from '../hooks/useToast';
 import { api } from '../api';
-import { 
+import {
   ArrowLeft
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -19,7 +20,8 @@ function getDailyTargetIndex(listLength) {
 
 export function ClueGuesserScreen() {
   const { goTo, addCoins } = useGame();
-  
+  const { toast } = useToast();
+
   // Game states
   const [speciesList, setSpeciesList] = useState([]);
   const [target, setTarget] = useState(null);
@@ -42,11 +44,11 @@ export function ClueGuesserScreen() {
         if (starters.length > 0) {
           const tIdx = getDailyTargetIndex(starters.length);
           const tSlim = starters[tIdx];
-          
+
           // Fetch target details from PokéAPI
-          const tRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${tSlim.name}`);
+          const tRes = await fetch(`/api/pokemon/${tSlim.name}`);
           const tData = await tRes.json();
-          
+
           setTarget({
             speciesId: tSlim.speciesId,
             name: tSlim.name,
@@ -95,7 +97,7 @@ export function ClueGuesserScreen() {
       setFilteredSpecs([]);
     } else {
       const query = searchQuery.toLowerCase();
-      const filtered = speciesList.filter(p => 
+      const filtered = speciesList.filter(p =>
         p.name.includes(query) || p.displayName.toLowerCase().includes(query)
       );
       setFilteredSpecs(filtered.slice(0, 6));
@@ -108,7 +110,7 @@ export function ClueGuesserScreen() {
 
     // Check duplicates
     if (guesses.some(g => g.name === guessSlim.name)) {
-      alert("You already guessed that Pokémon!");
+      toast('You already guessed that Pokémon!', 'error');
       setSearchQuery('');
       return;
     }
@@ -116,9 +118,9 @@ export function ClueGuesserScreen() {
     setLoading(true);
     try {
       // Fetch guessed pokemon stats from PokéAPI
-      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${guessSlim.name}`);
+      const res = await fetch(`/api/pokemon/${guessSlim.name}`);
       const data = await res.json();
-      
+
       const guessDetails = {
         name: guessSlim.name,
         displayName: guessSlim.displayName,
@@ -151,7 +153,7 @@ export function ClueGuesserScreen() {
       }
     } catch (err) {
       console.error(err);
-      alert("API fetch error. Retry.");
+      toast('API fetch error. Retry.', 'error');
     } finally {
       setLoading(false);
     }
@@ -162,25 +164,25 @@ export function ClueGuesserScreen() {
     if (guessVal === targetVal) return { label: '🟢', color: 'bg-green-600/10 border-green-500 text-green-500' };
     const diff = Math.abs(guessVal - targetVal) / targetVal;
     if (diff <= 0.25) {
-      return { 
-        label: guessVal > targetVal ? '🟡 ↓' : '🟡 ↑', 
-        color: 'bg-yellow-500/10 border-yellow-500 text-yellow-500' 
+      return {
+        label: guessVal > targetVal ? '🟡 ↓' : '🟡 ↑',
+        color: 'bg-yellow-500/10 border-yellow-500 text-yellow-500'
       };
     }
-    return { 
-      label: guessVal > targetVal ? '🔴 ↓' : '🔴 ↑', 
-      color: 'bg-red-500/10 border-red-500 text-red-500' 
+    return {
+      label: guessVal > targetVal ? '🔴 ↓' : '🔴 ↑',
+      color: 'bg-red-500/10 border-red-500 text-red-500'
     };
   };
 
   const getTypeIndicator = (guessTypes, targetTypes) => {
-    const identical = guessTypes.length === targetTypes.length && 
-                      guessTypes.every(t => targetTypes.includes(t));
+    const identical = guessTypes.length === targetTypes.length &&
+      guessTypes.every(t => targetTypes.includes(t));
     if (identical) return { label: guessTypes.join('/'), color: 'bg-green-600/10 border-green-500 text-green-500' };
-    
+
     const shared = guessTypes.filter(t => targetTypes.includes(t));
     if (shared.length > 0) return { label: guessTypes.join('/'), color: 'bg-yellow-500/10 border-yellow-500 text-yellow-500' };
-    
+
     return { label: guessTypes.join('/'), color: 'bg-red-500/10 border-red-500 text-red-500' };
   };
 
@@ -205,7 +207,7 @@ export function ClueGuesserScreen() {
       ) : (
         <div className="minigame-container">
           <div className="minigame-content">
-            
+
             <div className="grid-status-alert" style={{ marginBottom: '24px' }}>
               <div className="grid-status-info">
                 <span>🧠</span>
@@ -220,15 +222,15 @@ export function ClueGuesserScreen() {
             {!gameOver && (
               <div style={{ position: 'relative', maxWidth: '400px', margin: '0 auto 30px auto' }}>
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <input 
-                    type="text" 
-                    className="dmg-calc-input" 
+                  <input
+                    type="text"
+                    className="dmg-calc-input"
                     placeholder="Type Pokémon name (e.g. Bulbasaur)..."
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                   />
                 </div>
-                
+
                 {filteredSpecs.length > 0 && (
                   <ul className="search-results-list" style={{ position: 'absolute', top: '100%', left: 0, width: '100%', zIndex: 100, background: '#0d1626', border: '1px solid var(--px-border)', borderRadius: '10px', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
                     {filteredSpecs.map(p => (
@@ -261,8 +263,8 @@ export function ClueGuesserScreen() {
                   <tbody>
                     {guesses.map((g, idx) => {
                       const tInd = getTypeIndicator(g.types, target.types);
-                      const rInd = g.region === target.region ? 
-                        { label: g.region, color: 'bg-green-600/10 border-green-500 text-green-500' } : 
+                      const rInd = g.region === target.region ?
+                        { label: g.region, color: 'bg-green-600/10 border-green-500 text-green-500' } :
                         { label: g.region, color: 'bg-red-500/10 border-red-500 text-red-500' };
                       const hInd = getStatIndicator(g.height, target.height);
                       const wInd = getStatIndicator(g.weight, target.weight);
@@ -289,12 +291,12 @@ export function ClueGuesserScreen() {
                           </td>
                           <td style={{ padding: '8px' }}>
                             <span className={`status-badge ${hInd.color}`} style={{ border: '1px solid' }}>
-                              {hInd.label} ({g.height/10}m)
+                              {hInd.label} ({g.height / 10}m)
                             </span>
                           </td>
                           <td style={{ padding: '8px' }}>
                             <span className={`status-badge ${wInd.color}`} style={{ border: '1px solid' }}>
-                              {wInd.label} ({g.weight/10}kg)
+                              {wInd.label} ({g.weight / 10}kg)
                             </span>
                           </td>
                           <td style={{ padding: '8px' }}>

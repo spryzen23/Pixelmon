@@ -16,7 +16,7 @@ const SPECIES_JSON =
     : path.join(ROOT, 'public/assets/dataSet/pokemon-species.json');
 const MERGED_OPT = path.join(ROOT, 'public/assets/models/MergedOpt.json');
 const OUT_DIR = path.join(ROOT, 'data/game');
-const OUT_DIR_CLIENT = path.join(ROOT, 'client/src/game/data');
+const OUT_DIR_CLIENT = path.join(ROOT, 'src/game/data');
 
 const FORM_BAND_SIZE = 5;
 

@@ -1,57 +1,37 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { useGame, SCREENS } from '../context/GameContext';
-import { 
-  ArrowLeft, 
-  Coins, 
-  Flame, 
-  Swords, 
-  Grid, 
-  Compass, 
-  GraduationCap, 
-  BookOpen, 
-  Keyboard 
+import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
+import { Modal } from '../components/ui/Modal';
+import {
+  ArrowLeft,
+  Coins,
+  Flame,
+  Swords,
+  Grid,
+  Compass,
+  GraduationCap,
+  BookOpen
 } from 'lucide-react';
 import '../styles/minigames.css';
 
 export function MinigameHubScreen() {
   const { goTo, player } = useGame();
-  
+
   // Load coins and streaks from profile or fallback
   const coins = player ? (player.coins ?? 150) : Number(localStorage.getItem('pixelmon-localCoins') || 150);
   const dailyStreak = player?.streaks?.dailyStreak ?? Number(localStorage.getItem('pixelmon-localDailyStreak') || 0);
   const guessStreak = player?.streaks?.guessStreak ?? Number(localStorage.getItem('pixelmon-localGuessStreak') || 0);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      // Ignore if inside an input field
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
 
-      switch (e.key) {
-        case '1':
-          goTo(SCREENS.dailyGrid);
-          break;
-        case '2':
-          goTo(SCREENS.clueGuesser);
-          break;
-        case '3':
-          goTo(SCREENS.battleArena);
-          break;
-        case '4':
-          goTo(SCREENS.triviaTraining);
-          break;
-        case '5':
-          goTo(SCREENS.pokedex);
-          break;
-        case 'Escape':
-          goTo(SCREENS.modeSelect);
-          break;
-        default:
-          break;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+  useKeyboardShortcuts({
+    '1': () => goTo(SCREENS.dailyGrid),
+    '2': () => goTo(SCREENS.clueGuesser),
+    '3': () => goTo(SCREENS.battleArena),
+    '4': () => goTo(SCREENS.triviaTraining),
+    '5': () => goTo(SCREENS.pokedex),
+    Escape: () => goTo(SCREENS.dashboard),
+    '?': () => setShortcutsOpen(true),
   }, [goTo]);
 
   return (
@@ -77,7 +57,10 @@ export function MinigameHubScreen() {
               <span>🎯 {guessStreak} Streak</span>
             </div>
           )}
-          <button className="btn-back" onClick={() => goTo(SCREENS.modeSelect)}>
+          <button type="button" className="btn-back" onClick={() => setShortcutsOpen(true)} title="Keyboard shortcuts">
+            ?
+          </button>
+          <button type="button" className="btn-back" onClick={() => goTo(SCREENS.dashboard)}>
             <ArrowLeft size={14} /> Back
           </button>
         </div>
@@ -86,9 +69,9 @@ export function MinigameHubScreen() {
       <main className="minigames-dashboard">
         <div className="minigames-section-label">🏆 Core Challenges</div>
         <div className="minigames-bento-grid main-challenges">
-          
+
           {/* Daily 3x3 Grid */}
-          <div className="bento-card featured" onClick={() => goTo(SCREENS.dailyGrid)}>
+          <button type="button" className="bento-card featured" onClick={() => goTo(SCREENS.dailyGrid)}>
             <span className="bento-keybind">Press 1</span>
             <div className="bento-icon-wrapper">
               <Grid size={22} />
@@ -100,10 +83,10 @@ export function MinigameHubScreen() {
             <div className="bento-footer">
               <span className="bento-reward-label">Daily Reward</span>
             </div>
-          </div>
+          </button>
 
           {/* Daily Clue Guesser */}
-          <div className="bento-card featured" onClick={() => goTo(SCREENS.clueGuesser)}>
+          <button type="button" className="bento-card featured" onClick={() => goTo(SCREENS.clueGuesser)}>
             <span className="bento-keybind">Press 2</span>
             <div className="bento-icon-wrapper">
               <Compass size={22} />
@@ -115,10 +98,10 @@ export function MinigameHubScreen() {
             <div className="bento-footer">
               <span className="bento-reward-label">Daily Reward</span>
             </div>
-          </div>
+          </button>
 
           {/* Battle Arena */}
-          <div className="bento-card battle-arena" onClick={() => goTo(SCREENS.battleArena)}>
+          <button type="button" className="bento-card battle-arena" onClick={() => goTo(SCREENS.battleArena)}>
             <span className="bento-keybind">Press 3</span>
             <div className="bento-icon-wrapper">
               <Swords size={22} />
@@ -130,15 +113,15 @@ export function MinigameHubScreen() {
             <div className="bento-footer">
               <span className="bento-reward-label">Active Combat</span>
             </div>
-          </div>
+          </button>
 
         </div>
 
         <div className="minigames-section-label">⚡ Training & Utilities</div>
         <div className="minigames-bento-grid training-labs">
-          
+
           {/* Training Labs */}
-          <div className="bento-card" onClick={() => goTo(SCREENS.triviaTraining)}>
+          <button type="button" className="bento-card" onClick={() => goTo(SCREENS.triviaTraining)}>
             <span className="bento-keybind">Press 4</span>
             <div className="bento-icon-wrapper">
               <GraduationCap size={20} />
@@ -147,10 +130,10 @@ export function MinigameHubScreen() {
               <h3 className="bento-title">Training Labs</h3>
               <p className="bento-desc">Sharpen your knowledge in Speed Run, Type Matchup, Silhouette, and combination quizzes.</p>
             </div>
-          </div>
+          </button>
 
           {/* View My Pokédex */}
-          <div className="bento-card" onClick={() => goTo(SCREENS.pokedex)}>
+          <button type="button" className="bento-card" onClick={() => goTo(SCREENS.pokedex)}>
             <span className="bento-keybind">Press 5</span>
             <div className="bento-icon-wrapper">
               <BookOpen size={20} />
@@ -159,21 +142,19 @@ export function MinigameHubScreen() {
               <h3 className="bento-title">View Pokédex</h3>
               <p className="bento-desc">Browse your caught Pokémon checklist, base stats, types, and unlocked entries catalog.</p>
             </div>
-          </div>
-
-          {/* Keyboard Help Card */}
-          <div className="bento-card" style={{ cursor: 'default', background: 'rgba(255,255,255,0.01)', borderColor: 'rgba(255,255,255,0.03)' }}>
-            <div className="bento-icon-wrapper">
-              <Keyboard size={20} style={{ opacity: 0.4 }} />
-            </div>
-            <div className="bento-details">
-              <h3 className="bento-title" style={{ opacity: 0.6 }}>Shortcuts Enabled</h3>
-              <p className="bento-desc" style={{ opacity: 0.5 }}>Use keys 1-5 to navigate challenges instantly. Press Escape to exit.</p>
-            </div>
-          </div>
+          </button>
 
         </div>
       </main>
+
+      <Modal open={shortcutsOpen} title="Keyboard Shortcuts" onClose={() => setShortcutsOpen(false)}>
+        <p>Press 1 — Daily PokéGrid</p>
+        <p>Press 2 — Clue Guesser</p>
+        <p>Press 3 — Battle Arena</p>
+        <p>Press 4 — Training Labs</p>
+        <p>Press 5 — Pokédex</p>
+        <p>Escape — Back to Dashboard</p>
+      </Modal>
     </div>
   );
 }

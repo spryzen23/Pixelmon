@@ -2,7 +2,9 @@
 
 .minigames-screen {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
   background: radial-gradient(circle at top, var(--px-sky-deep) 0%, #050a12 100%);
   color: var(--px-text);
   font-family: var(--px-font-sans);
@@ -85,8 +87,30 @@
   max-width: 1000px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
   animation: fadeIn 0.4s ease-out;
+}
+
+@media (max-height: 800px) {
+  .minigames-screen {
+    padding: 12px 16px;
+  }
+
+  .minigames-title {
+    font-size: 22px;
+  }
+
+  .bento-card {
+    min-height: 110px;
+    padding: 14px;
+  }
+
+  .minigames-bento-grid.training-labs {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .minigames-section-label {
@@ -110,6 +134,7 @@
   .minigames-bento-grid.main-challenges {
     grid-template-columns: repeat(3, 1fr);
   }
+
   .minigames-bento-grid.training-labs {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -123,6 +148,9 @@
   text-align: left;
   transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   cursor: pointer;
+  font: inherit;
+  color: inherit;
+  width: 100%;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -462,7 +490,7 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
 .species-label {
@@ -495,7 +523,7 @@
   background: #0d1626;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
 
@@ -514,7 +542,7 @@
 
 .search-input-field {
   width: 100%;
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--px-border);
   border-radius: 10px;
   padding: 10px 14px;
@@ -530,9 +558,9 @@
 }
 
 .search-results-list {
-  max-height: 240px;
-  overflow-y: auto;
-  padding: 8px 0;
+  max-height: none;
+  overflow: hidden;
+  padding: 4px 0;
   margin: 0;
   list-style: none;
   text-align: left;
@@ -596,7 +624,7 @@
 }
 
 .config-btn {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--px-border);
   color: var(--px-text-muted);
   padding: 6px 12px;
@@ -608,7 +636,7 @@
 }
 
 .config-btn:hover {
-  border-color: rgba(255,255,255,0.15);
+  border-color: rgba(255, 255, 255, 0.15);
   color: #fff;
 }
 
@@ -660,8 +688,8 @@
   left: 0;
   width: 100%;
   height: 80px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0.04) 100%);
-  border-top: 1px solid rgba(255,255,255,0.03);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
   transform: perspective(300px) rotateX(20deg);
   transform-origin: bottom;
   pointer-events: none;
@@ -717,7 +745,7 @@
 
 .hp-bar-outer {
   height: 6px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
   overflow: hidden;
   margin-bottom: 4px;
@@ -729,9 +757,17 @@
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.hp-bar-inner.high { background: var(--px-success); }
-.hp-bar-inner.medium { background: var(--px-accent); }
-.hp-bar-inner.low { background: var(--px-danger); }
+.hp-bar-inner.high {
+  background: var(--px-success);
+}
+
+.hp-bar-inner.medium {
+  background: var(--px-accent);
+}
+
+.hp-bar-inner.low {
+  background: var(--px-danger);
+}
 
 .hp-numeric {
   font-size: 10px;
@@ -769,9 +805,20 @@
   border-radius: 3px;
 }
 
-.status-badge.sleep { background: #5f75e2; color: #fff; }
-.status-badge.burn { background: #e25f5f; color: #fff; }
-.status-badge.recharge { background: #b05fe2; color: #fff; }
+.status-badge.sleep {
+  background: #5f75e2;
+  color: #fff;
+}
+
+.status-badge.burn {
+  background: #e25f5f;
+  color: #fff;
+}
+
+.status-badge.recharge {
+  background: #b05fe2;
+  color: #fff;
+}
 
 /* Control Panels & Logs */
 .battle-logs-card {
@@ -798,9 +845,9 @@
 }
 
 .battle-logs-stream {
-  flex-grow: 1;
-  overflow-y: auto;
-  max-height: 280px;
+  flex-grow: 0;
+  overflow: hidden;
+  max-height: 96px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -839,7 +886,7 @@
 }
 
 .btn-action-move {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--px-border);
   color: var(--px-text);
   border-radius: 12px;
@@ -886,7 +933,7 @@
   right: 8px;
   font-size: 8px;
   color: var(--px-text-muted);
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   padding: 1px 4px;
   border-radius: 3px;
 }
@@ -898,7 +945,7 @@
 }
 
 .btn-menu-action {
-  background: rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--px-border);
   color: var(--px-text);
   padding: 10px 14px;
@@ -914,8 +961,8 @@
 }
 
 .btn-menu-action:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .btn-menu-action.danger {
@@ -953,7 +1000,7 @@
 .dmg-calc-drawer-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.65);
+  background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(4px);
   z-index: 900;
 }
@@ -967,7 +1014,7 @@
   height: 100%;
   background: #0b111a;
   border-left: 1px solid var(--px-border);
-  box-shadow: -10px 0 40px rgba(0,0,0,0.5);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
   z-index: 950;
   display: flex;
   flex-direction: column;
@@ -982,10 +1029,11 @@
   align-items: center;
 }
 
+.dmg-calc-body,
 .dmg-calc-scrollable {
   flex-grow: 1;
-  overflow-y: auto;
-  padding: 20px;
+  overflow: hidden;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -993,7 +1041,7 @@
 }
 
 .dmg-calc-panel {
-  background: rgba(255,255,255,0.02);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--px-border);
   border-radius: 14px;
   padding: 14px;
@@ -1016,7 +1064,7 @@
 
 .dmg-calc-input {
   width: 100%;
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--px-border);
   color: #fff;
   border-radius: 8px;
@@ -1054,14 +1102,14 @@
 .chart-roll-bar-outer {
   flex-grow: 1;
   height: 10px;
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   border-radius: 5px;
   overflow: hidden;
 }
 
 .chart-roll-bar-inner {
   height: 100%;
-  background: linear-gradient(90deg, rgba(255,212,63,0.3) 0%, var(--px-accent) 100%);
+  background: linear-gradient(90deg, rgba(255, 212, 63, 0.3) 0%, var(--px-accent) 100%);
   border-radius: 5px;
   transition: width 0.3s;
 }
@@ -1078,40 +1126,101 @@
 
 /* Keyframe: player attack — lunge forward */
 @keyframes pkm-attack-p1 {
-  0%   { transform: scaleX(-1) translateX(0); }
-  30%  { transform: scaleX(-1) translateX(28px) scale(1.08); }
-  60%  { transform: scaleX(-1) translateX(-6px); }
-  100% { transform: scaleX(-1) translateX(0); }
+  0% {
+    transform: scaleX(-1) translateX(0);
+  }
+
+  30% {
+    transform: scaleX(-1) translateX(28px) scale(1.08);
+  }
+
+  60% {
+    transform: scaleX(-1) translateX(-6px);
+  }
+
+  100% {
+    transform: scaleX(-1) translateX(0);
+  }
 }
 
 /* Keyframe: enemy attack — lunge forward (no flip) */
 @keyframes pkm-attack-p2 {
-  0%   { transform: translateX(0); }
-  30%  { transform: translateX(-28px) scale(1.08); }
-  60%  { transform: translateX(6px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+
+  30% {
+    transform: translateX(-28px) scale(1.08);
+  }
+
+  60% {
+    transform: translateX(6px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 
 /* Keyframe: hit flash + recoil */
 @keyframes pkm-hit {
-  0%   { filter: brightness(1) saturate(1); transform: var(--pkm-base-transform, none); }
-  15%  { filter: brightness(3.5) saturate(0.1); transform: var(--pkm-hit-transform, translateX(10px)); }
-  30%  { filter: brightness(1) saturate(1); transform: var(--pkm-base-transform, none); }
-  50%  { filter: brightness(2) saturate(0.3); transform: var(--pkm-hit-transform, translateX(8px)); }
-  100% { filter: brightness(1) saturate(1); transform: var(--pkm-base-transform, none); }
+  0% {
+    filter: brightness(1) saturate(1);
+    transform: var(--pkm-base-transform, none);
+  }
+
+  15% {
+    filter: brightness(3.5) saturate(0.1);
+    transform: var(--pkm-hit-transform, translateX(10px));
+  }
+
+  30% {
+    filter: brightness(1) saturate(1);
+    transform: var(--pkm-base-transform, none);
+  }
+
+  50% {
+    filter: brightness(2) saturate(0.3);
+    transform: var(--pkm-hit-transform, translateX(8px));
+  }
+
+  100% {
+    filter: brightness(1) saturate(1);
+    transform: var(--pkm-base-transform, none);
+  }
 }
 
 /* Keyframe: faint — shrink and fall */
 @keyframes pkm-faint {
-  0%   { opacity: 1; transform: var(--pkm-base-transform, none) translateY(0) scale(1); filter: saturate(1); }
-  40%  { opacity: 0.7; filter: saturate(0.2) brightness(0.6); }
-  100% { opacity: 0; transform: var(--pkm-base-transform, none) translateY(60px) scale(0.6); filter: saturate(0) brightness(0.3); }
+  0% {
+    opacity: 1;
+    transform: var(--pkm-base-transform, none) translateY(0) scale(1);
+    filter: saturate(1);
+  }
+
+  40% {
+    opacity: 0.7;
+    filter: saturate(0.2) brightness(0.6);
+  }
+
+  100% {
+    opacity: 0;
+    transform: var(--pkm-base-transform, none) translateY(60px) scale(0.6);
+    filter: saturate(0) brightness(0.3);
+  }
 }
 
 /* Keyframe: idle floating bob */
 @keyframes pkm-idle-bob {
-  0%, 100% { transform: var(--pkm-base-transform, none) translateY(0); }
-  50%       { transform: var(--pkm-base-transform, none) translateY(-6px); }
+
+  0%,
+  100% {
+    transform: var(--pkm-base-transform, none) translateY(0);
+  }
+
+  50% {
+    transform: var(--pkm-base-transform, none) translateY(-6px);
+  }
 }
 
 /* Player pokemon avatar (flipped with scaleX(-1)) */
@@ -1151,11 +1260,25 @@
 
 /* HP bar flash on damage */
 @keyframes hp-drain {
-  0%   { opacity: 1; }
-  25%  { opacity: 0.4; }
-  50%  { opacity: 1; }
-  75%  { opacity: 0.6; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+
+  25% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 .hp-bar-inner.draining {
@@ -1167,19 +1290,49 @@
    ============================================= */
 
 /* Status glow overlays on the avatar wrapper */
-.pokemon-avatar-wrapper[data-status="brn"]  { filter: drop-shadow(0 0 10px rgba(255, 80, 20, 0.8)); }
-.pokemon-avatar-wrapper[data-status="psn"]  { filter: drop-shadow(0 0 10px rgba(160, 40, 220, 0.8)); }
-.pokemon-avatar-wrapper[data-status="tox"]  { filter: drop-shadow(0 0 10px rgba(130, 0, 200, 0.8)); }
-.pokemon-avatar-wrapper[data-status="par"]  { filter: drop-shadow(0 0 10px rgba(255, 220, 20, 0.9)); }
-.pokemon-avatar-wrapper[data-status="slp"]  { filter: drop-shadow(0 0 10px rgba(100, 120, 255, 0.7)) brightness(0.75); }
-.pokemon-avatar-wrapper[data-status="frz"]  { filter: drop-shadow(0 0 12px rgba(100, 200, 255, 0.9)) saturate(0.3) brightness(1.4); }
+.pokemon-avatar-wrapper[data-status="brn"] {
+  filter: drop-shadow(0 0 10px rgba(255, 80, 20, 0.8));
+}
+
+.pokemon-avatar-wrapper[data-status="psn"] {
+  filter: drop-shadow(0 0 10px rgba(160, 40, 220, 0.8));
+}
+
+.pokemon-avatar-wrapper[data-status="tox"] {
+  filter: drop-shadow(0 0 10px rgba(130, 0, 200, 0.8));
+}
+
+.pokemon-avatar-wrapper[data-status="par"] {
+  filter: drop-shadow(0 0 10px rgba(255, 220, 20, 0.9));
+}
+
+.pokemon-avatar-wrapper[data-status="slp"] {
+  filter: drop-shadow(0 0 10px rgba(100, 120, 255, 0.7)) brightness(0.75);
+}
+
+.pokemon-avatar-wrapper[data-status="frz"] {
+  filter: drop-shadow(0 0 12px rgba(100, 200, 255, 0.9)) saturate(0.3) brightness(1.4);
+}
 
 /* Paralysis flicker */
 @keyframes par-flicker {
-  0%, 100% { opacity: 1; }
-  45%      { opacity: 0.65; }
-  50%      { opacity: 1; }
-  65%      { opacity: 0.7; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  45% {
+    opacity: 0.65;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  65% {
+    opacity: 0.7;
+  }
 }
 
 .pokemon-avatar-wrapper[data-status="par"] img {
@@ -1188,9 +1341,19 @@
 
 /* Burn ember floating particles */
 @keyframes burn-ember {
-  0%   { opacity: 0; transform: translateY(0) scale(0.6); }
-  40%  { opacity: 1; }
-  100% { opacity: 0; transform: translateY(-40px) scale(1) translateX(8px); }
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(1) translateX(8px);
+  }
 }
 
 .pokemon-avatar-wrapper[data-status="brn"]::after {
@@ -1205,9 +1368,19 @@
 
 /* Sleep Zs floating up */
 @keyframes sleep-z {
-  0%   { opacity: 0; transform: translateY(0) scale(0.5); }
-  50%  { opacity: 1; }
-  100% { opacity: 0; transform: translateY(-36px) scale(1.1); }
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-36px) scale(1.1);
+  }
 }
 
 .pokemon-avatar-wrapper[data-status="slp"]::after {
@@ -1224,9 +1397,19 @@
 
 /* Poison drip */
 @keyframes poison-drip {
-  0%   { opacity: 0; transform: translateY(-8px); }
-  30%  { opacity: 1; }
-  100% { opacity: 0; transform: translateY(20px); }
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 }
 
 .pokemon-avatar-wrapper[data-status="psn"]::after,
@@ -1266,14 +1449,21 @@
   width: 140%;
   height: 100%;
   background: radial-gradient(ellipse at 40% 50%, rgba(79, 128, 225, 0.08) 0%, transparent 65%),
-              radial-gradient(ellipse at 70% 30%, rgba(248, 79, 79, 0.06) 0%, transparent 55%);
+    radial-gradient(ellipse at 70% 30%, rgba(248, 79, 79, 0.06) 0%, transparent 55%);
   animation: aurora-drift 12s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
 @keyframes aurora-drift {
-  from { transform: translateX(-5%) translateY(-3%); opacity: 0.8; }
-  to   { transform: translateX(5%) translateY(3%);  opacity: 1.0; }
+  from {
+    transform: translateX(-5%) translateY(-3%);
+    opacity: 0.8;
+  }
+
+  to {
+    transform: translateX(5%) translateY(3%);
+    opacity: 1.0;
+  }
 }
 
 /* HP panel glassmorphism upgrade */
@@ -1282,7 +1472,7 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 /* Battle log glassmorphism upgrade */
@@ -1295,28 +1485,104 @@
 }
 
 /* Move button hover glow by type */
-.btn-action-move[data-type="fire"]:hover:not(:disabled)   { border-color: rgba(255, 100, 30, 0.5); box-shadow: 0 4px 20px rgba(255, 100, 30, 0.2); }
-.btn-action-move[data-type="water"]:hover:not(:disabled)  { border-color: rgba(60, 160, 255, 0.5); box-shadow: 0 4px 20px rgba(60, 160, 255, 0.2); }
-.btn-action-move[data-type="grass"]:hover:not(:disabled)  { border-color: rgba(60, 200, 80, 0.5);  box-shadow: 0 4px 20px rgba(60, 200, 80, 0.2); }
-.btn-action-move[data-type="electric"]:hover:not(:disabled) { border-color: rgba(255, 220, 0, 0.5); box-shadow: 0 4px 20px rgba(255, 220, 0, 0.2); }
-.btn-action-move[data-type="psychic"]:hover:not(:disabled){ border-color: rgba(220, 80, 180, 0.5); box-shadow: 0 4px 20px rgba(220, 80, 180, 0.2); }
-.btn-action-move[data-type="ice"]:hover:not(:disabled)    { border-color: rgba(100, 220, 255, 0.5); box-shadow: 0 4px 20px rgba(100, 220, 255, 0.2); }
-.btn-action-move[data-type="dragon"]:hover:not(:disabled) { border-color: rgba(80, 60, 230, 0.5);  box-shadow: 0 4px 20px rgba(80, 60, 230, 0.2); }
-.btn-action-move[data-type="ghost"]:hover:not(:disabled)  { border-color: rgba(100, 50, 200, 0.5); box-shadow: 0 4px 20px rgba(100, 50, 200, 0.2); }
-.btn-action-move[data-type="dark"]:hover:not(:disabled)   { border-color: rgba(60, 40, 80, 0.8);  box-shadow: 0 4px 20px rgba(60, 40, 80, 0.4); }
-.btn-action-move[data-type="steel"]:hover:not(:disabled)  { border-color: rgba(180, 195, 215, 0.5); box-shadow: 0 4px 20px rgba(180, 195, 215, 0.2); }
-.btn-action-move[data-type="fighting"]:hover:not(:disabled){ border-color: rgba(200, 80, 40, 0.5); box-shadow: 0 4px 20px rgba(200, 80, 40, 0.2); }
-.btn-action-move[data-type="poison"]:hover:not(:disabled) { border-color: rgba(160, 40, 200, 0.5); box-shadow: 0 4px 20px rgba(160, 40, 200, 0.2); }
-.btn-action-move[data-type="ground"]:hover:not(:disabled) { border-color: rgba(200, 160, 60, 0.5); box-shadow: 0 4px 20px rgba(200, 160, 60, 0.2); }
-.btn-action-move[data-type="rock"]:hover:not(:disabled)   { border-color: rgba(170, 150, 100, 0.5); box-shadow: 0 4px 20px rgba(170, 150, 100, 0.2); }
-.btn-action-move[data-type="bug"]:hover:not(:disabled)    { border-color: rgba(100, 180, 30, 0.5); box-shadow: 0 4px 20px rgba(100, 180, 30, 0.2); }
-.btn-action-move[data-type="flying"]:hover:not(:disabled) { border-color: rgba(130, 170, 255, 0.5); box-shadow: 0 4px 20px rgba(130, 170, 255, 0.2); }
-.btn-action-move[data-type="fairy"]:hover:not(:disabled)  { border-color: rgba(240, 140, 200, 0.5); box-shadow: 0 4px 20px rgba(240, 140, 200, 0.2); }
+.btn-action-move[data-type="fire"]:hover:not(:disabled) {
+  border-color: rgba(255, 100, 30, 0.5);
+  box-shadow: 0 4px 20px rgba(255, 100, 30, 0.2);
+}
+
+.btn-action-move[data-type="water"]:hover:not(:disabled) {
+  border-color: rgba(60, 160, 255, 0.5);
+  box-shadow: 0 4px 20px rgba(60, 160, 255, 0.2);
+}
+
+.btn-action-move[data-type="grass"]:hover:not(:disabled) {
+  border-color: rgba(60, 200, 80, 0.5);
+  box-shadow: 0 4px 20px rgba(60, 200, 80, 0.2);
+}
+
+.btn-action-move[data-type="electric"]:hover:not(:disabled) {
+  border-color: rgba(255, 220, 0, 0.5);
+  box-shadow: 0 4px 20px rgba(255, 220, 0, 0.2);
+}
+
+.btn-action-move[data-type="psychic"]:hover:not(:disabled) {
+  border-color: rgba(220, 80, 180, 0.5);
+  box-shadow: 0 4px 20px rgba(220, 80, 180, 0.2);
+}
+
+.btn-action-move[data-type="ice"]:hover:not(:disabled) {
+  border-color: rgba(100, 220, 255, 0.5);
+  box-shadow: 0 4px 20px rgba(100, 220, 255, 0.2);
+}
+
+.btn-action-move[data-type="dragon"]:hover:not(:disabled) {
+  border-color: rgba(80, 60, 230, 0.5);
+  box-shadow: 0 4px 20px rgba(80, 60, 230, 0.2);
+}
+
+.btn-action-move[data-type="ghost"]:hover:not(:disabled) {
+  border-color: rgba(100, 50, 200, 0.5);
+  box-shadow: 0 4px 20px rgba(100, 50, 200, 0.2);
+}
+
+.btn-action-move[data-type="dark"]:hover:not(:disabled) {
+  border-color: rgba(60, 40, 80, 0.8);
+  box-shadow: 0 4px 20px rgba(60, 40, 80, 0.4);
+}
+
+.btn-action-move[data-type="steel"]:hover:not(:disabled) {
+  border-color: rgba(180, 195, 215, 0.5);
+  box-shadow: 0 4px 20px rgba(180, 195, 215, 0.2);
+}
+
+.btn-action-move[data-type="fighting"]:hover:not(:disabled) {
+  border-color: rgba(200, 80, 40, 0.5);
+  box-shadow: 0 4px 20px rgba(200, 80, 40, 0.2);
+}
+
+.btn-action-move[data-type="poison"]:hover:not(:disabled) {
+  border-color: rgba(160, 40, 200, 0.5);
+  box-shadow: 0 4px 20px rgba(160, 40, 200, 0.2);
+}
+
+.btn-action-move[data-type="ground"]:hover:not(:disabled) {
+  border-color: rgba(200, 160, 60, 0.5);
+  box-shadow: 0 4px 20px rgba(200, 160, 60, 0.2);
+}
+
+.btn-action-move[data-type="rock"]:hover:not(:disabled) {
+  border-color: rgba(170, 150, 100, 0.5);
+  box-shadow: 0 4px 20px rgba(170, 150, 100, 0.2);
+}
+
+.btn-action-move[data-type="bug"]:hover:not(:disabled) {
+  border-color: rgba(100, 180, 30, 0.5);
+  box-shadow: 0 4px 20px rgba(100, 180, 30, 0.2);
+}
+
+.btn-action-move[data-type="flying"]:hover:not(:disabled) {
+  border-color: rgba(130, 170, 255, 0.5);
+  box-shadow: 0 4px 20px rgba(130, 170, 255, 0.2);
+}
+
+.btn-action-move[data-type="fairy"]:hover:not(:disabled) {
+  border-color: rgba(240, 140, 200, 0.5);
+  box-shadow: 0 4px 20px rgba(240, 140, 200, 0.2);
+}
 
 /* Win/Lose banner animations */
 @keyframes winner-pulse {
-  0%, 100% { transform: scale(1);   box-shadow: 0 0 20px rgba(28, 212, 93, 0.4); }
-  50%       { transform: scale(1.04); box-shadow: 0 0 40px rgba(28, 212, 93, 0.7); }
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(28, 212, 93, 0.4);
+  }
+
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 40px rgba(28, 212, 93, 0.7);
+  }
 }
 
 .battle-winner-banner {
@@ -1342,8 +1608,15 @@
 
 /* Log line entry animation */
 @keyframes log-slide-in {
-  from { opacity: 0; transform: translateX(-8px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .battle-log-line {
@@ -1352,12 +1625,29 @@
 
 /* Shake Animation */
 @keyframes shake {
-  0% { transform: translateX(0); }
-  20% { transform: translateX(-8px); }
-  40% { transform: translateX(6px); }
-  60% { transform: translateX(-4px); }
-  80% { transform: translateX(3px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-8px);
+  }
+
+  40% {
+    transform: translateX(6px);
+  }
+
+  60% {
+    transform: translateX(-4px);
+  }
+
+  80% {
+    transform: translateX(3px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .animate-shake {
@@ -1365,19 +1655,38 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Animate-pulse for loading state */
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.45; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
+  }
 }
 
 .animate-pulse {

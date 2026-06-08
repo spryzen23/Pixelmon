@@ -9,6 +9,10 @@ const IN = path.join(ROOT, 'public/assets/dataSet/pokemons.json');
 const OUT = path.join(ROOT, 'data/game/pokemons.slim.json');
 
 function main() {
+  if (!fs.existsSync(IN)) {
+    console.warn(`Warning: Source file ${IN} not found. Skipping build-slim.`);
+    return;
+  }
   const full = JSON.parse(fs.readFileSync(IN, 'utf8'));
   const entries = [];
   for (const [regionId, biome] of Object.entries(full.biomes || {})) {

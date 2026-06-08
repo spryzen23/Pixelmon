@@ -207,3 +207,10 @@ Identify all errors and warnings, then resolve them one by one. Learn, understan
 
 
 @public/assets/players  now you take character style and and now user can chose his character style and also animted properly , so when user click diff keys in keyboard and move move movement , then according user keys and mouse movement , character move , idle , walk , jump ,sprite and crouch animate properly , so improve user experience proeprly , Learn, understand, and analyze deeply, breaking tasks into smaller steps
+
+
+read this image and properly modify this design and ui and ux and pages, tabs, buttons, input boxes, text, components, utilities, services, hooks, contexts ,progess bar , checkbox , radio button, flow and graph and css , Learn, understand, and analyze deeply, breaking tasks into smaller steps
+
+also all screen not need scrollbar , so all screens design in one screen frame , Learn, understand, and analyze deeply, breaking tasks into smaller steps
+
+

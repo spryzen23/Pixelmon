@@ -43,4 +43,7 @@ export const api = {
     request('/api/battle/start', { method: 'POST', body: JSON.stringify(body) }),
   submitBattleChoice: (body) =>
     request('/api/battle/choice', { method: 'POST', body: JSON.stringify(body) }),
+  login: (body) => request('/api/auth/login', { method: 'POST', body: JSON.stringify(body) }),
+  register: (body) => request('/api/auth/register', { method: 'POST', body: JSON.stringify(body) }),
+  verify: (token) => request(`/api/auth/verify?token=${token}`),
 };

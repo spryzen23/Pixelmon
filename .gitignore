@@ -8,6 +8,7 @@
 # testing
 /coverage
 /reports
+/.next
 /public/assets/idea_glbs
 # production
 /build

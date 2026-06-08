@@ -118,6 +118,28 @@ export function GameScene({
     setActivePathId(currentBiome);
   }, [currentBiome]);
 
+  const prevCompanionIdRef = useRef(player?.companion?.entryId);
+
+  useEffect(() => {
+    const currentId = player?.companion?.entryId;
+    if (currentId && prevCompanionIdRef.current && currentId !== prevCompanionIdRef.current) {
+      const oldPosition = companionRef.current
+        ? [companionRef.current.position.x, companionRef.current.position.y, companionRef.current.position.z]
+        : playerSpawnPosition;
+      
+      addCompanionEffect(oldPosition); // Recall effect at old position
+
+      const newSpawnPos = playerRef.current
+        ? [playerRef.current.position.x, playerRef.current.position.y, playerRef.current.position.z]
+        : playerSpawnPosition;
+
+      setCompanionSpawnPosition(newSpawnPos);
+      addCompanionEffect(newSpawnPos); // Summon effect at new position
+      setIsCompanionOut(true);
+    }
+    prevCompanionIdRef.current = currentId;
+  }, [player?.companion?.entryId, addCompanionEffect, playerSpawnPosition]);
+
   const spawnWild = useCallback(() => {
     const state = gameRuntime.spawnState;
     const byLevel = gameRuntime.byLevel;
@@ -331,7 +353,7 @@ export function GameScene({
 
       {isCompanionOut && (
         <CompanionCreature
-          key={`companion-${currentBiome}`}
+          key={`companion-${currentBiome}-${player?.companion?.entryId || 'default'}`}
           companion={player?.companion}
           currentPathId={currentBiome}
           ref={companionRef}

@@ -61,6 +61,10 @@ export function GameView() {
   const [equippedBallId, setEquippedBallId] = useState(DEFAULT_BALL.id);
   const [throwPower, setThrowPower] = useState(DEFAULT_THROW_POWER);
   const [spawnProgress, setSpawnProgress] = useState({ level: 1, peak: 0, active: 0, maxLevel: 1 });
+  const [pathPage, setPathPage] = useState(0);
+  const [stylePage, setStylePage] = useState(0);
+  const PATHS_PER_PAGE = 4;
+  const STYLES_PER_PAGE = 6;
 
   const activePathId = isSandbox ? sandboxPathId : session?.pathId ?? 0;
 
@@ -104,6 +108,26 @@ export function GameView() {
     }
   }, [isSandbox, session, sandboxPathId, setSession, setGameRuntime, player, setPlayer, spawnLadder]);
 
+  const switchCompanion = useCallback(async (index) => {
+    if (!player || !player.companions || !player.companions[index]) return;
+    const nextCompanion = player.companions[index];
+    if (player.companion?.entryId === nextCompanion.entryId) return;
+
+    const updatedPlayer = {
+      ...player,
+      companion: nextCompanion
+    };
+    setPlayer(updatedPlayer);
+
+    if (!isSandbox) {
+      try {
+        await api.patchPlayer(player.id, { companion: nextCompanion });
+      } catch (err) {
+        console.error('Failed to sync active companion to server:', err);
+      }
+    }
+  }, [player, setPlayer, isSandbox]);
+
   const equippedBall = useMemo(
     () => BALL_TYPES.find((b) => b.id === equippedBallId) || DEFAULT_BALL,
     [equippedBallId]
@@ -113,12 +137,38 @@ export function GameView() {
     const handleKeyDown = (e) => {
       if (e.code === 'Escape') setPaused((p) => !p);
       const ball = BALL_TYPES.find((b) => b.key === e.key);
-      if (ball) setEquippedBallId(ball.id);
+      if (ball) {
+        const isUnlimited = player?.id === 'sandbox' || ball.id === 'standard';
+        const count = isUnlimited ? 999 : (player?.inventory?.balls?.[ball.id] ?? 0);
+        if (count > 0) {
+          setEquippedBallId(ball.id);
+        }
+      }
       if (e.code === 'KeyR') {
         setThrowPower((c) => Math.min(MAX_THROW_POWER, c + THROW_POWER_STEP));
       }
       if (e.code === 'KeyQ') {
         setThrowPower((c) => Math.max(MIN_THROW_POWER, c - THROW_POWER_STEP));
+      }
+
+      // Companion hotkeys
+      if (player?.companions && player.companions.length > 0) {
+        if (e.code === 'Digit6') switchCompanion(0);
+        if (e.code === 'Digit7') switchCompanion(1);
+        if (e.code === 'Digit8') switchCompanion(2);
+        if (e.code === 'Digit9') switchCompanion(3);
+        if (e.code === 'Digit0') switchCompanion(4);
+
+        if (e.code === 'BracketLeft') {
+          const currentIdx = player.companions.findIndex((c) => c.entryId === player.companion?.entryId);
+          const nextIdx = (currentIdx - 1 + player.companions.length) % player.companions.length;
+          switchCompanion(nextIdx);
+        }
+        if (e.code === 'BracketRight') {
+          const currentIdx = player.companions.findIndex((c) => c.entryId === player.companion?.entryId);
+          const nextIdx = (currentIdx + 1) % player.companions.length;
+          switchCompanion(nextIdx);
+        }
       }
     };
     const handleWheel = (e) => {
@@ -136,7 +186,7 @@ export function GameView() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('wheel', handleWheel);
     };
-  }, []);
+  }, [player, switchCompanion]);
 
   const onSpawnProgress = useCallback(
     (state) => {
@@ -170,6 +220,12 @@ export function GameView() {
           isAlpha,
         });
         setPlayer(result.player);
+        if (equippedBallId !== 'standard') {
+          const remaining = result.player?.inventory?.balls?.[equippedBallId] ?? 0;
+          if (remaining <= 0) {
+            setEquippedBallId('standard');
+          }
+        }
         setGameRuntime((rt) => ({
           ...rt,
           spawnState: result.spawnState,
@@ -295,7 +351,7 @@ export function GameView() {
       });
     }
     clearAllBiomeCaches();
-    goTo(SCREENS.welcome);
+    goTo(SCREENS.dashboard);
   };
   const changeStyle = async (styleId) => {
     try {
@@ -453,17 +509,55 @@ export function GameView() {
 
           <Hotbar equippedBallId={equippedBallId} throwPower={throwPower} />
 
+          {/* Companion Hotbar Selector */}
+          {player?.companions && player.companions.length > 0 && (
+            <div className="companion-hotbar-hud">
+              <div className="companion-hud-title">Companions</div>
+              {player.companions.slice(0, 5).map((comp, idx) => {
+                const isActive = player.companion?.entryId === comp.entryId;
+                const type = comp.types?.[0] || 'normal';
+                const hotkeyLabel = idx === 4 ? '0' : String(idx + 6);
+                return (
+                  <button
+                    key={comp.entryId}
+                    type="button"
+                    className={`companion-hud-btn${isActive ? ' active' : ''}`}
+                    onClick={() => switchCompanion(idx)}
+                  >
+                    <div className="companion-hud-key">{hotkeyLabel}</div>
+                    <div className="companion-hud-details">
+                      <span className="companion-hud-name">{comp.displayName}</span>
+                      <span className="companion-hud-types">{comp.types?.join(' / ')}</span>
+                    </div>
+                    <div className={`type-badge-mini ${type}`} />
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
           <div className="hud-actions">
             {!isSandbox && <Button onClick={() => goTo(SCREENS.pokedex)}>Pokédex</Button>}
             {isSandbox && (
-              <Button onClick={() => goTo(SCREENS.modeSelect)}>Modes</Button>
+              <Button onClick={() => goTo(SCREENS.dashboard)}>Dashboard</Button>
             )}
           </div>
 
           {isSandbox && (
             <div className="path-menu">
+              <div className="path-pager-header">
+                <button type="button" disabled={pathPage <= 0} onClick={() => setPathPage((p) => p - 1)}>‹</button>
+                <span>Biomes {pathPage + 1}/{Math.ceil(WORLD_PATHS.length / PATHS_PER_PAGE)}</span>
+                <button
+                  type="button"
+                  disabled={pathPage >= Math.ceil(WORLD_PATHS.length / PATHS_PER_PAGE) - 1}
+                  onClick={() => setPathPage((p) => p + 1)}
+                >
+                  ›
+                </button>
+              </div>
               <div className="path-list">
-                {WORLD_PATHS.map((biome) => (
+                {WORLD_PATHS.slice(pathPage * PATHS_PER_PAGE, (pathPage + 1) * PATHS_PER_PAGE).map((biome) => (
                   <button
                     key={biome.id}
                     className={biome.id === sandboxPathId ? 'active' : ''}
@@ -498,13 +592,23 @@ export function GameView() {
                 <p>WASD move · F throw · Q/R power · E companion</p>
                 <div className="style-picker">
                   <h4>Change Trainer Style</h4>
+                  <div className="style-pager-header">
+                    <button type="button" disabled={stylePage <= 0} onClick={() => setStylePage((p) => p - 1)}>‹</button>
+                    <span>{stylePage + 1}/{Math.ceil(PLAYER_STYLES.length / STYLES_PER_PAGE)}</span>
+                    <button
+                      type="button"
+                      disabled={stylePage >= Math.ceil(PLAYER_STYLES.length / STYLES_PER_PAGE) - 1}
+                      onClick={() => setStylePage((p) => p + 1)}
+                    >
+                      ›
+                    </button>
+                  </div>
                   <div className="style-grid">
-                    {PLAYER_STYLES.map((style) => (
+                    {PLAYER_STYLES.slice(stylePage * STYLES_PER_PAGE, (stylePage + 1) * STYLES_PER_PAGE).map((style) => (
                       <button
                         key={style.id}
                         type="button"
-                        className={`style-btn ${(player.characterStyle?.id || 'player-21') === style.id ? 'active' : ''
-                          }`}
+                        className={`style-btn ${(player.characterStyle?.id || 'player-21') === style.id ? 'active' : ''}`}
                         onClick={() => changeStyle(style.id)}
                       >
                         <span className="style-id-num">{style.id.replace('player-', '')}</span>

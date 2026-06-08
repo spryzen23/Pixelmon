@@ -1,10 +1,11 @@
 export function Checkbox({ label, checked, onChange, id }) {
   const inputId = id || `cb-${label?.replace(/\s+/g, '-').toLowerCase()}`;
   return (
-    <label className="field-label" htmlFor={inputId} style={{ flexDirection: 'row', alignItems: 'center', gap: '0.5rem' }}>
+    <label className="px-checkbox-label" htmlFor={inputId}>
       <input
         id={inputId}
         type="checkbox"
+        className="px-checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
       />
