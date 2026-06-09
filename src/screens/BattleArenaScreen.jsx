@@ -47,7 +47,8 @@ const WEATHER_OPTIONS = [
 const DIFFICULTIES = [
   { id: 'wild', name: 'Wild Encounter', rating: 'Easy', coins: 30 },
   { id: 'gym', name: 'Gym Leader Ace', rating: 'Medium', coins: 75 },
-  { id: 'boss', name: 'Legendary Raid Boss', rating: 'Hard', coins: 150 }
+  { id: 'boss', name: 'Legendary Raid Boss', rating: 'Hard', coins: 150 },
+  { id: 'trainer3v3', name: 'Random Trainer Battle', rating: '3v3', coins: 200 }
 ];
 
 // Official Pokémon type color palette
@@ -389,7 +390,7 @@ export function BattleArenaScreen() {
     });
   };
 
-  const startBattle = async () => {
+  const startBattle = async (difficultyOverride = difficulty) => {
     if (selectedTeam.length < 3) return;
     setLoading(true);
     try {
@@ -404,7 +405,7 @@ export function BattleArenaScreen() {
       // Start Showdown Battle Simulation on Backend
       const result = await api.startBattle({
         team: resolvedTeam,
-        difficulty,
+        difficulty: difficultyOverride,
         weather
       });
 
@@ -437,6 +438,13 @@ export function BattleArenaScreen() {
       alert("Error starting battle: " + err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDifficultySelect = (nextDifficulty) => {
+    setDifficulty(nextDifficulty);
+    if (nextDifficulty === 'trainer3v3' && selectedTeam.length === 3 && !loading) {
+      startBattle(nextDifficulty);
     }
   };
 
@@ -638,7 +646,7 @@ export function BattleArenaScreen() {
     if (nextWinner) {
       setWinner(nextWinner);
       if (nextWinner === 'player') {
-        const payout = difficulty === 'wild' ? 30 : difficulty === 'gym' ? 75 : 150;
+        const payout = DIFFICULTIES.find((entry) => entry.id === difficulty)?.coins || 150;
         addCoins(payout);
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       }
@@ -770,7 +778,7 @@ export function BattleArenaScreen() {
                 className="btn-back"
                 id="start-battle-btn"
                 disabled={selectedTeam.length !== 3 || loading}
-                onClick={startBattle}
+                onClick={() => startBattle()}
                 style={{
                   background: selectedTeam.length === 3 ? 'var(--px-sky)' : 'rgba(255,255,255,0.02)',
                   borderColor: selectedTeam.length === 3 ? 'var(--px-sky)' : 'var(--px-border)',
@@ -791,7 +799,7 @@ export function BattleArenaScreen() {
                       key={d.id}
                       id={`diff-btn-${d.id}`}
                       className={`config-btn ${difficulty === d.id ? 'active' : ''}`}
-                      onClick={() => setDifficulty(d.id)}
+                      onClick={() => handleDifficultySelect(d.id)}
                     >
                       {d.name} ({d.rating})
                     </button>
@@ -844,7 +852,7 @@ export function BattleArenaScreen() {
                 className="btn-back"
                 id="start-battle-footer-btn"
                 disabled={selectedTeam.length !== 3 || loading}
-                onClick={startBattle}
+                onClick={() => startBattle()}
                 style={{ background: selectedTeam.length === 3 ? 'var(--px-sky)' : 'rgba(255,255,255,0.02)', borderColor: selectedTeam.length === 3 ? 'var(--px-sky)' : 'var(--px-border)' }}
               >
                 <Swords size={16} /> Start Battle

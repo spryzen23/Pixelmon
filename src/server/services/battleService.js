@@ -28,6 +28,193 @@ const DIFFICULTY_POOLS = {
   boss: ['mewtwo', 'rayquaza', 'arceus', 'kyogre', 'groudon', 'giratina'],
 };
 
+const TRAINER_PARTICIPANTS = [
+  {
+    side: 'p2',
+    user: { id: 'npc-red', name: 'Pokemon Trainer Red', type: 'npc' },
+    control: 'ai',
+    team: [
+      {
+        id: 'red-pikachu',
+        species: 'Pikachu',
+        displayName: 'Pikachu',
+        level: 81,
+        currentHp: 180,
+        maxHp: 180,
+        stats: { hp: 180, atk: 120, def: 95, spa: 115, spd: 110, spe: 185 },
+        moves: ['Volt Tackle', 'Iron Tail', 'Quick Attack', 'Thunderbolt'],
+        ability: 'Static',
+        item: 'Light Ball',
+        status: 'none',
+      },
+      {
+        id: 'red-snorlax',
+        species: 'Snorlax',
+        displayName: 'Snorlax',
+        level: 75,
+        currentHp: 350,
+        maxHp: 350,
+        stats: { hp: 350, atk: 195, def: 125, spa: 125, spd: 195, spe: 70 },
+        moves: ['Body Slam', 'Crunch', 'Blizzard', 'Shadow Ball'],
+        ability: 'Thick Fat',
+        item: 'Leftovers',
+        status: 'none',
+      },
+      {
+        id: 'red-charizard',
+        species: 'Charizard',
+        displayName: 'Charizard',
+        level: 77,
+        currentHp: 235,
+        maxHp: 235,
+        stats: { hp: 235, atk: 160, def: 150, spa: 195, spd: 160, spe: 185 },
+        moves: ['Flare Blitz', 'Blast Burn', 'Air Slash', 'Dragon Pulse'],
+        ability: 'Blaze',
+        item: '',
+        status: 'none',
+      },
+    ],
+  },
+  {
+    side: 'p2',
+    user: { id: 'npc-cynthia', name: 'Champion Cynthia', type: 'npc' },
+    control: 'ai',
+    team: [
+      {
+        id: 'cynthia-spiritomb',
+        species: 'Spiritomb',
+        displayName: 'Spiritomb',
+        level: 61,
+        currentHp: 155,
+        maxHp: 155,
+        stats: { hp: 155, atk: 135, def: 155, spa: 135, spd: 155, spe: 65 },
+        moves: ['Dark Pulse', 'Shadow Ball', 'Psychic', 'Embargo'],
+        ability: 'Pressure',
+        item: '',
+        status: 'none',
+      },
+      {
+        id: 'cynthia-lucario',
+        species: 'Lucario',
+        displayName: 'Lucario',
+        level: 63,
+        currentHp: 180,
+        maxHp: 180,
+        stats: { hp: 180, atk: 165, def: 115, spa: 170, spd: 115, spe: 140 },
+        moves: ['Aura Sphere', 'Dragon Pulse', 'Psychic', 'Earthquake'],
+        ability: 'Steadfast',
+        item: '',
+        status: 'none',
+      },
+      {
+        id: 'cynthia-garchomp',
+        species: 'Garchomp',
+        displayName: 'Garchomp',
+        level: 66,
+        currentHp: 240,
+        maxHp: 240,
+        stats: { hp: 240, atk: 200, def: 155, spa: 135, spd: 140, spe: 165 },
+        moves: ['Dragon Rush', 'Earthquake', 'Brick Break', 'Giga Impact'],
+        ability: 'Sand Veil',
+        item: 'Sitrus Berry',
+        status: 'none',
+      },
+    ],
+  },
+  {
+    side: 'p2',
+    user: { id: 'npc-blue', name: 'Rival Blue', type: 'npc' },
+    control: 'ai',
+    team: [
+      {
+        id: 'blue-pidgeot',
+        species: 'Pidgeot',
+        displayName: 'Pidgeot',
+        level: 61,
+        currentHp: 195,
+        maxHp: 195,
+        stats: { hp: 195, atk: 125, def: 115, spa: 110, spd: 110, spe: 150 },
+        moves: ['Return', 'Air Slash', 'Mirror Move', 'Whirlwind'],
+        ability: 'Keen Eye',
+        item: '',
+        status: 'none',
+      },
+      {
+        id: 'blue-alakazam',
+        species: 'Alakazam',
+        displayName: 'Alakazam',
+        level: 59,
+        currentHp: 150,
+        maxHp: 150,
+        stats: { hp: 150, atk: 80, def: 75, spa: 185, spd: 135, spe: 165 },
+        moves: ['Psychic', 'Recover', 'Reflect', 'Shadow Ball'],
+        ability: 'Synchronize',
+        item: '',
+        status: 'none',
+      },
+      {
+        id: 'blue-blastoise',
+        species: 'Blastoise',
+        displayName: 'Blastoise',
+        level: 65,
+        currentHp: 205,
+        maxHp: 205,
+        stats: { hp: 205, atk: 135, def: 155, spa: 135, spd: 160, spe: 125 },
+        moves: ['Hydro Pump', 'Ice Beam', 'Bite', 'Flash Cannon'],
+        ability: 'Torrent',
+        item: '',
+        status: 'none',
+      },
+    ],
+  },
+  {
+    side: 'p2',
+    user: { id: 'npc-ash', name: 'Ash Ketchum', type: 'npc' },
+    control: 'ai',
+    team: [
+      {
+        id: 'ash-pikachu',
+        species: 'Pikachu',
+        displayName: 'Pikachu',
+        level: 80,
+        currentHp: 175,
+        maxHp: 175,
+        stats: { hp: 175, atk: 115, def: 90, spa: 110, spd: 105, spe: 180 },
+        moves: ['Thunderbolt', 'Quick Attack', 'Iron Tail', 'Electroweb'],
+        ability: 'Static',
+        item: 'Pikashunium Z',
+        status: 'none',
+      },
+      {
+        id: 'ash-greninja',
+        species: 'Greninja',
+        displayName: 'Greninja',
+        level: 75,
+        currentHp: 220,
+        maxHp: 220,
+        stats: { hp: 220, atk: 165, def: 125, spa: 180, spd: 130, spe: 210 },
+        moves: ['Water Shuriken', 'Double Team', 'Cut', 'Aerial Ace'],
+        ability: 'Battle Bond',
+        item: '',
+        status: 'none',
+      },
+      {
+        id: 'ash-lucario',
+        species: 'Lucario',
+        displayName: 'Lucario',
+        level: 75,
+        currentHp: 215,
+        maxHp: 215,
+        stats: { hp: 215, atk: 195, def: 135, spa: 200, spd: 135, spe: 165 },
+        moves: ['Aura Sphere', 'Bullet Punch', 'Reversal', 'Double Team'],
+        ability: 'Inner Focus',
+        item: 'Lucarionite',
+        status: 'none',
+      },
+    ],
+  },
+];
+
 function capitalizeWords(value) {
   if (!value) return '';
   return String(value)
@@ -123,6 +310,25 @@ function getEnemyTeam(difficulty) {
   return [buildEnemyPokemon(enemyName)];
 }
 
+function getTrainerParticipant() {
+  const trainer = TRAINER_PARTICIPANTS[Math.floor(Math.random() * TRAINER_PARTICIPANTS.length)];
+  return {
+    ...trainer,
+    user: { ...trainer.user },
+    team: trainer.team.map((pokemon) => ({ ...pokemon, stats: { ...pokemon.stats } })),
+  };
+}
+
+function getEnemyParticipant(difficulty) {
+  if (difficulty === 'trainer3v3') return getTrainerParticipant();
+  return {
+    side: 'p2',
+    user: { id: 'arena-ai', name: 'AI', type: 'npc' },
+    control: 'ai',
+    team: getEnemyTeam(difficulty),
+  };
+}
+
 function mapWinner(winner) {
   if (winner === 'p1' || winner === 'Player') return 'player';
   if (winner === 'p2' || winner === 'AI') return 'enemy';
@@ -147,12 +353,7 @@ export function startNewBattle({ team, difficulty, weather }) {
         control: 'human',
         team: (team || []).map(mapClientPokemonToBattleReady),
       },
-      {
-        side: 'p2',
-        user: { id: 'arena-ai', name: 'AI', type: 'npc' },
-        control: 'ai',
-        team: getEnemyTeam(difficulty),
-      },
+      getEnemyParticipant(difficulty),
     ],
   });
 
