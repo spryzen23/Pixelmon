@@ -4,6 +4,9 @@ import { io } from 'socket.io-client';
 import BattleRoyaleArena from './BattleRoyaleArena';
 import BattleRoyaleDropScene from './BattleRoyaleDropScene';
 import { WORLD_PATHS } from '../../game/world';
+import { Button } from '../../components/ui/Button';
+import { TextField } from '../../components/ui/TextField';
+import { ScreenFrame, ScreenHeader } from '../../components/ui/layout/ScreenFrame';
 
 const BATTLE_ROYALE_SERVER_URL =
   process.env.NEXT_PUBLIC_BATTLE_ROYALE_SERVER_URL || '';
@@ -86,9 +89,9 @@ function BattleRoyaleMatchView({
               {room.phase === 'finished' && 'Match Complete'}
             </h1>
           </div>
-          <button className="ghost-button" type="button" onClick={onBackToMenu}>
+          <Button variant="ghost" sm onClick={onBackToMenu}>
             Exit
-          </button>
+          </Button>
         </div>
 
         <div className="match-grid">
@@ -140,7 +143,9 @@ function BattleRoyaleMatchView({
                     {index + 1}. {player.name}
                   </strong>
                   <span>{player.score || 0} catches</span>
-                  <em>{player.isReady ? 'Ready' : 'Not Ready'}</em>
+                  <em className={player.isReady ? 'ready-badge' : 'not-ready-badge'}>
+                    {player.isReady ? 'Ready' : 'Not Ready'}
+                  </em>
                 </li>
               ))}
             </ul>
@@ -416,124 +421,132 @@ function BattleRoyaleShell({ onBackToMenu }) {
     );
   }
 
+  const header = (
+    <ScreenHeader
+      eyebrow="Multiplayer Mode"
+      title="Battle Royale Lobby"
+      actions={
+        <Button variant="ghost" sm onClick={onBackToMenu}>
+          Back to Hub
+        </Button>
+      }
+    />
+  );
+
   return (
-    <main className="battle-royale-shell" data-testid="battle-royale-shell">
-      <section className="battle-royale-panel" aria-labelledby="battle-title">
-        <div className="battle-royale-heading">
-          <div>
-            <p className="mode-eyebrow">Multiplayer Prototype</p>
-            <h1 id="battle-title">Battle Royale Lobby</h1>
-          </div>
-          <button
-            className="ghost-button"
-            type="button"
-            onClick={onBackToMenu}
-          >
-            Back
-          </button>
-        </div>
-
-        <div className="battle-royale-lobby">
-          <section className="lobby-card">
-            <h2>Player</h2>
-            <label htmlFor="player-name">Player Name</label>
-            <input
-              id="player-name"
-              placeholder="Spryzen"
-              value={playerName}
-              onChange={(event) => {
-                setPlayerName(event.target.value);
-                emitLobbyUpdate({ playerName: event.target.value });
-              }}
-            />
-          </section>
-
-          <section className="lobby-card">
-            <h2>Room</h2>
-            <div className="room-actions">
-              <button type="button" onClick={handleCreateRoom}>
-                Create Room
-              </button>
-              <input
-                aria-label="Room Code"
-                placeholder="Room code"
-                value={roomCode}
-                onChange={(event) => setRoomCode(event.target.value.toUpperCase())}
+    <ScreenFrame className="battle-royale-lobby-screen" header={header}>
+      <div className="br-lobby-grid" data-testid="battle-royale-shell">
+        <div className="br-lobby-main">
+          <div className="br-lobby-row">
+            {/* Player Setup Card */}
+            <section className="lobby-card">
+              <h2>Player Setup</h2>
+              <TextField
+                label="Player Name"
+                placeholder="Spryzen"
+                value={playerName}
+                onChange={(event) => {
+                  setPlayerName(event.target.value);
+                  emitLobbyUpdate({ playerName: event.target.value });
+                }}
               />
-              <button type="button" onClick={handleJoinRoom}>
-                Join Room
-              </button>
-            </div>
-            <p className={`server-status server-status-${serverStatus}`}>
-              Server: {serverStatus}
-            </p>
-            {room && (
-              <p className="lobby-muted">
-                Room <strong>{room.code}</strong> has {roomPlayers.length}{' '}
-                player{roomPlayers.length === 1 ? '' : 's'}.
-              </p>
-            )}
-            {errorMessage && <p className="lobby-error">{errorMessage}</p>}
-          </section>
+            </section>
 
-          <section className="lobby-card">
-            <h2>Biome Selection</h2>
-            <div className="biome-choice-grid">
-              {WORLD_PATHS.map((biome) => (
-                <button
-                  key={biome.id}
-                  className={biome.id === selectedBiomeId ? 'selected' : ''}
-                  type="button"
-                  onClick={() => handleBiomeSelect(biome.id)}
-                >
-                  {biome.name}
-                </button>
-              ))}
-            </div>
-          </section>
+            {/* Room Setup Card */}
+            <section className="lobby-card">
+              <h2>Room Connection</h2>
+              <div className="room-actions">
+                <Button variant="ghost" sm onClick={handleCreateRoom}>
+                  Create Room
+                </Button>
+                <input
+                  aria-label="Room Code"
+                  placeholder="Code"
+                  maxLength={6}
+                  value={roomCode}
+                  onChange={(event) => setRoomCode(event.target.value.toUpperCase())}
+                />
+                <Button variant="primary" sm onClick={handleJoinRoom}>
+                  Join Room
+                </Button>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+                <p className={`server-status server-status-${serverStatus}`}>
+                  Server: {serverStatus}
+                </p>
+                {room && (
+                  <p className="lobby-muted">
+                    Room <strong>{room.code}</strong> has {roomPlayers.length} player{roomPlayers.length === 1 ? '' : 's'}
+                  </p>
+                )}
+              </div>
+              {errorMessage && <p className="lobby-error">{errorMessage}</p>}
+            </section>
+          </div>
 
-          <section className="lobby-card">
-            <h2>Drop Location</h2>
-            <div className="drop-point-grid">
-              {DROP_POINTS.map((point) => (
-                <button
-                  key={point.id}
-                  className={point.id === dropPointId ? 'selected' : ''}
-                  type="button"
-                  onClick={() => handleDropPointSelect(point.id)}
-                >
-                  {point.label}
-                </button>
-              ))}
+          <div className="br-lobby-row">
+            {/* Biome Selection Card */}
+            <section className="lobby-card">
+              <h2>Biome Selection</h2>
+              <div className="biome-choice-grid">
+                {WORLD_PATHS.map((biome) => (
+                  <button
+                    key={biome.id}
+                    className={biome.id === selectedBiomeId ? 'selected' : ''}
+                    type="button"
+                    onClick={() => handleBiomeSelect(biome.id)}
+                  >
+                    {biome.name}
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            {/* Drop Location Card */}
+            <section className="lobby-card">
+              <h2>Drop Point Selection</h2>
+              <div className="drop-point-grid">
+                {DROP_POINTS.map((point) => (
+                  <button
+                    key={point.id}
+                    className={point.id === dropPointId ? 'selected' : ''}
+                    type="button"
+                    onClick={() => handleDropPointSelect(point.id)}
+                  >
+                    {point.label}
+                  </button>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          {/* Lobby Status Footer inside main view */}
+          <footer className="battle-royale-status">
+            <div>
+              <span>Biome</span>
+              <strong>{selectedBiome.name}</strong>
             </div>
-          </section>
+            <div>
+              <span>Drop Point</span>
+              <strong>
+                {selectedDropPoint.label} ({selectedDropPoint.x}, {selectedDropPoint.z})
+              </strong>
+            </div>
+            <div>
+              <span>Status</span>
+              <strong>{isReady ? 'Ready' : 'Not Ready'}</strong>
+            </div>
+            <button
+              className={isReady ? 'ready-button ready' : 'ready-button'}
+              type="button"
+              onClick={handleReadyToggle}
+            >
+              {isReady ? 'Ready' : 'Mark Ready'}
+            </button>
+          </footer>
         </div>
 
-        <footer className="battle-royale-status">
-          <div>
-            <span>Biome</span>
-            <strong>{selectedBiome.name}</strong>
-          </div>
-          <div>
-            <span>Drop Point</span>
-            <strong>
-              {selectedDropPoint.label} ({selectedDropPoint.x},{' '}
-              {selectedDropPoint.z})
-            </strong>
-          </div>
-          <div>
-            <span>Status</span>
-            <strong>{isReady ? 'Ready' : 'Not Ready'}</strong>
-          </div>
-          <button
-            className={isReady ? 'ready-button ready' : 'ready-button'}
-            type="button"
-            onClick={handleReadyToggle}
-          >
-            {isReady ? 'Ready' : 'Mark Ready'}
-          </button>
-        </footer>
-
+        {/* Connected Players Sidebar Card */}
         <section className="lobby-card player-list-card" aria-labelledby="players-title">
           <h2 id="players-title">Connected Players</h2>
           {roomPlayers.length > 0 ? (
@@ -545,9 +558,15 @@ function BattleRoyaleShell({ onBackToMenu }) {
 
                 return (
                   <li key={player.id}>
-                    <strong>{player.name}</strong>
-                    <span>{playerDropPoint?.label || 'Center Ruins'}</span>
-                    <em>{player.isReady ? 'Ready' : 'Not Ready'}</em>
+                    <div>
+                      <strong>{player.name}</strong>
+                      <span style={{ display: 'block', fontSize: '9px', opacity: 0.6 }}>
+                        {playerDropPoint?.label || 'Center Ruins'}
+                      </span>
+                    </div>
+                    <em className={player.isReady ? 'ready-badge' : 'not-ready-badge'}>
+                      {player.isReady ? 'Ready' : 'Not Ready'}
+                    </em>
                   </li>
                 );
               })}
@@ -558,8 +577,8 @@ function BattleRoyaleShell({ onBackToMenu }) {
             </p>
           )}
         </section>
-      </section>
-    </main>
+      </div>
+    </ScreenFrame>
   );
 }
 

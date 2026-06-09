@@ -30,6 +30,8 @@ export function MinigameHubScreen() {
     '3': () => goTo(SCREENS.battleArena),
     '4': () => goTo(SCREENS.triviaTraining),
     '5': () => goTo(SCREENS.pokedex),
+    '6': () => goTo(SCREENS.gridPractice),
+    '7': () => goTo(SCREENS.clueGuesserPractice),
     Escape: () => goTo(SCREENS.dashboard),
     '?': () => setShortcutsOpen(true),
   }, [goTo]);
@@ -144,6 +146,30 @@ export function MinigameHubScreen() {
             </div>
           </button>
 
+          {/* PokéGrid Practice */}
+          <button type="button" className="bento-card" onClick={() => goTo(SCREENS.gridPractice)}>
+            <span className="bento-keybind">Press 6</span>
+            <div className="bento-icon-wrapper">
+              <Grid size={20} />
+            </div>
+            <div className="bento-details">
+              <h3 className="bento-title">3x3 PokéGrid</h3>
+              <p className="bento-desc">Practice matching region, typing, and legendary status criteria in a 3x3 PokeDoku grid puzzle.</p>
+            </div>
+          </button>
+
+          {/* Clue Guesser Practice */}
+          <button type="button" className="bento-card" onClick={() => goTo(SCREENS.clueGuesserPractice)}>
+            <span className="bento-keybind">Press 7</span>
+            <div className="bento-icon-wrapper">
+              <Compass size={20} />
+            </div>
+            <div className="bento-details">
+              <h3 className="bento-title">Clue Guesser</h3>
+              <p className="bento-desc">Practice guessing mystery Pokémon using Wordle-style feedback details on stats, regions, and types.</p>
+            </div>
+          </button>
+
         </div>
       </main>
 
@@ -153,6 +179,8 @@ export function MinigameHubScreen() {
         <p>Press 3 — Battle Arena</p>
         <p>Press 4 — Training Labs</p>
         <p>Press 5 — Pokédex</p>
+        <p>Press 6 — PokéGrid Practice</p>
+        <p>Press 7 — Clue Guesser Practice</p>
         <p>Escape — Back to Dashboard</p>
       </Modal>
     </div>

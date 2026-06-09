@@ -166,7 +166,6 @@
   grid-template-columns: 340px 1fr;
   gap: 14px;
   width: 100%;
-  max-width: 1440px;
   margin: 0 auto;
   flex: 1;
   min-height: 0;
@@ -195,6 +194,32 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+.db-tab-panel-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.db-tab-panel-scrollable::-webkit-scrollbar {
+  width: 4px;
+}
+
+.db-tab-panel-scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.db-tab-panel-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+
+.db-tab-panel-scrollable::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 212, 63, 0.25);
 }
 
 .trainer-modal-list {
@@ -521,6 +546,31 @@
 }
 
 /* ── Companion Roster ────────────────────────────────────── */
+.db-embedded-team-section {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.db-embedded-team-title {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.db-embedded-team-title::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: var(--px-accent);
+  border-radius: 50%;
+}
+
 .db-companion-subtitle {
   font-size: 10px;
   opacity: 0.45;
@@ -823,8 +873,9 @@
 
 /* ── Game Modes Grid ─────────────────────────────────────── */
 .modes-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
   gap: 14px;
   flex: 1;
   min-height: 0;
@@ -834,7 +885,6 @@
 
 @media (max-width: 900px) {
   .modes-grid {
-    grid-template-columns: 1fr;
     overflow: hidden;
   }
 }
@@ -984,8 +1034,10 @@
 
 .db-map-grid-inline {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+  column-gap: 15px;
+  row-gap: 15px;
 }
 
 .db-map-btn-inline {
@@ -1248,7 +1300,7 @@
   }
 
   .modes-grid {
-    grid-template-columns: 1fr;
+    overflow: hidden;
   }
 }
 
@@ -1265,4 +1317,16 @@
   .mode-hub-card {
     border-radius: 10px;
   }
+}
+
+.empty-preview-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { api } from '../api';
 import { useGame, SCREENS, GAME_MODES } from '../context/GameContext';
 import { Button } from '../components/ui/Button';
@@ -31,6 +31,39 @@ export function DashboardScreen() {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [purchaseLoading, setPurchaseLoading] = useState(false);
   const [purchaseSuccess, setPurchaseSuccess] = useState(null);
+  const [allPokemons, setAllPokemons] = useState([]);
+  const [selectedDexPokemon, setSelectedDexPokemon] = useState(null);
+
+  // Load all pokemons for matching caught entries
+  useEffect(() => {
+    api.getStarters()
+      .then((d) => {
+        setAllPokemons(d.starters || []);
+      })
+      .catch(console.error);
+  }, []);
+
+  const caughtPokemons = useMemo(() => {
+    const caughtIds = new Set();
+    if (player?.companions) {
+      player.companions.forEach((c) => caughtIds.add(c.entryId));
+    }
+    if (player?.perPathProgress) {
+      Object.values(player.perPathProgress).forEach((progress) => {
+        if (progress?.caughtEntryIds) {
+          progress.caughtEntryIds.forEach((id) => caughtIds.add(id));
+        }
+      });
+    }
+    return allPokemons.filter((p) => caughtIds.has(p.entryId));
+  }, [allPokemons, player]);
+
+  // Select first caught pokemon when switching to pokedex tab
+  useEffect(() => {
+    if (leftTab === 'pokedex' && !selectedDexPokemon && caughtPokemons.length > 0) {
+      setSelectedDexPokemon(caughtPokemons[0]);
+    }
+  }, [leftTab, caughtPokemons, selectedDexPokemon]);
 
   // Sync biomes
   useEffect(() => {
@@ -190,7 +223,7 @@ export function DashboardScreen() {
           <TabBar
             tabs={[
               { id: 'trainer', label: 'Trainer' },
-              { id: 'team', label: 'Team' },
+              { id: 'pokedex', label: 'Pokédex' },
               { id: 'shop', label: 'Shop' },
             ]}
             activeId={leftTab}
@@ -210,7 +243,7 @@ export function DashboardScreen() {
                   </Button>
                 </div>
               ) : (
-                <>
+                <div className="db-tab-panel-scrollable">
                   {/* Trainer info card */}
                   <div className="trainer-info-card">
                     <div className="trainer-avatar-circle">
@@ -261,6 +294,38 @@ export function DashboardScreen() {
                     </span>
                   </div>
 
+                  {/* Companion Team roster embedded */}
+                  {player.companions && player.companions.length > 0 && (
+                    <div className="db-embedded-team-section">
+                      <h4 className="db-embedded-team-title">Companion Team</h4>
+                      <div className="db-companions-grid">
+                        {player.companions.slice(0, 5).map((comp, idx) => {
+                          const isActive = player.companion?.entryId === comp.entryId;
+                          const type = comp.types?.[0] || 'normal';
+                          return (
+                            <div
+                              key={idx}
+                              className={`db-companion-slot ${type} ${isActive ? 'active' : ''}`}
+                              onClick={() => {
+                                setPlayer({ ...player, companion: comp });
+                                setPreviewType('companion');
+                              }}
+                              title={comp.displayName}
+                            >
+                              <div className="slot-initial">{comp.displayName.slice(0, 2).toUpperCase()}</div>
+                              <div className="slot-name">{comp.displayName}</div>
+                              <div className="type-icons">
+                                {comp.types?.slice(0, 2).map((t) => (
+                                  <img key={t} src={typeIconUrl(t)} alt={t} width={12} height={12} />
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Switch Trainer Selector */}
                   {trainers.length > 1 && (
                     <button
@@ -300,43 +365,83 @@ export function DashboardScreen() {
                       ＋ Create Another Trainer
                     </button>
                   )}
-                </>
+                </div>
               )}
             </div>
           )}
-
-          {leftTab === 'team' && player && player.companions && (
+          {leftTab === 'pokedex' && (
             <div className="db-panel db-tab-panel">
-              <h2 className="db-panel-title">Companion Team</h2>
-              <p className="db-companion-subtitle">
-                Tap a companion to set as active preview
-              </p>
+              <h2 className="db-panel-title">My Pokédex</h2>
 
-              <div className="db-companions-grid">
-                {player.companions.slice(0, 5).map((comp, idx) => {
-                  const isActive = player.companion?.entryId === comp.entryId;
-                  const type = comp.types?.[0] || 'normal';
-                  return (
-                    <div
-                      key={idx}
-                      className={`db-companion-slot ${type} ${isActive ? 'active' : ''}`}
-                      onClick={() => {
-                        setPlayer({ ...player, companion: comp });
-                        setPreviewType('companion');
-                      }}
-                      title={comp.displayName}
-                    >
-                      <div className="slot-initial">{comp.displayName.slice(0, 2).toUpperCase()}</div>
-                      <div className="slot-name">{comp.displayName}</div>
-                      <div className="type-icons">
-                        {comp.types?.slice(0, 2).map((t) => (
-                          <img key={t} src={typeIconUrl(t)} alt={t} width={12} height={12} />
-                        ))}
+              {!player ? (
+                <div className="onboarding-trainer-panel">
+                  <span className="onboarding-icon">🎒</span>
+                  <p>Trainer profile required to view your Pokédex progress.</p>
+                  <Button variant="primary" onClick={() => goTo(SCREENS.profileSetup)}>
+                    Create Trainer Profile
+                  </Button>
+                </div>
+              ) : (
+                <div className="db-tab-panel-scrollable">
+                  {/* 3D Preview Frame */}
+                  <div className="db-preview-container">
+                    {selectedDexPokemon ? (
+                      <CompanionPreview
+                        modelUrl={selectedDexPokemon.modelUrl}
+                        primaryType={selectedDexPokemon.types?.[0] || 'normal'}
+                        fitToHeight={getFitToHeightForPokemon(selectedDexPokemon)}
+                        isFloating={isPokemonFloating(selectedDexPokemon)}
+                        rotation={getRotationForPokemon(selectedDexPokemon)}
+                      />
+                    ) : (
+                      <div className="empty-preview-placeholder">
+                        <span>No Pokémon Selected</span>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    )}
+
+                    <span className="preview-label">
+                      {selectedDexPokemon
+                        ? `${selectedDexPokemon.displayName} #${String(selectedDexPokemon.speciesId).padStart(3, '0')}`
+                        : 'Select a Pokémon'}
+                    </span>
+                  </div>
+
+                  {/* Caught list grid */}
+                  <div className="db-embedded-team-section">
+                    <h4 className="db-embedded-team-title">
+                      Caught Pokémon ({caughtPokemons.length} / {allPokemons.length})
+                    </h4>
+                    {caughtPokemons.length === 0 ? (
+                      <div className="no-companions-msg">No Pokémon caught yet!</div>
+                    ) : (
+                      <div className="db-companions-grid">
+                        {caughtPokemons.map((comp, idx) => {
+                          const isActive = selectedDexPokemon?.entryId === comp.entryId;
+                          const type = comp.types?.[0] || 'normal';
+                          return (
+                            <div
+                              key={idx}
+                              className={`db-companion-slot ${type} ${isActive ? 'active' : ''}`}
+                              onClick={() => {
+                                setSelectedDexPokemon(comp);
+                              }}
+                              title={comp.displayName}
+                            >
+                              <div className="slot-initial">{comp.displayName.slice(0, 2).toUpperCase()}</div>
+                              <div className="slot-name">{comp.displayName}</div>
+                              <div className="type-icons">
+                                {comp.types?.slice(0, 2).map((t) => (
+                                  <img key={t} src={typeIconUrl(t)} alt={t} width={12} height={12} />
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

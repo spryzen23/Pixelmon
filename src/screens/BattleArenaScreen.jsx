@@ -210,6 +210,12 @@ function parseCondition(condStr) {
   };
 }
 
+function getLocalPokemonIndex(localTeam, mon) {
+  if (!mon || !mon.ident) return -1;
+  const monName = cleanName(mon.ident).toLowerCase();
+  return localTeam.findIndex(p => p.displayName.toLowerCase() === monName || p.name.toLowerCase() === monName);
+}
+
 export function BattleArenaScreen() {
   const { goTo, addCoins } = useGame();
 
@@ -473,13 +479,16 @@ export function BattleArenaScreen() {
 
         if (target.startsWith('p1a:')) {
           setPlayerAnim('hit');
-          const activeIdxInReq = nextRequest?.side?.pokemon?.findIndex(p => p.active) ?? 0;
-          localTeam[activeIdxInReq] = {
-            ...localTeam[activeIdxInReq],
-            currentHp,
-            maxHp,
-            status
-          };
+          const activeMonInReq = nextRequest?.side?.pokemon?.find(p => p.active);
+          const localIdx = activeMonInReq ? getLocalPokemonIndex(localTeam, activeMonInReq) : activeIdx;
+          if (localIdx !== -1) {
+            localTeam[localIdx] = {
+              ...localTeam[localIdx],
+              currentHp,
+              maxHp,
+              status
+            };
+          }
           setPlayerTeam([...localTeam]);
           await new Promise(r => setTimeout(r, 450));
           setPlayerAnim('');
@@ -501,13 +510,16 @@ export function BattleArenaScreen() {
         const { currentHp, maxHp, status } = parseCondition(hpStatus);
 
         if (target.startsWith('p1a:')) {
-          const activeIdxInReq = nextRequest?.side?.pokemon?.findIndex(p => p.active) ?? 0;
-          localTeam[activeIdxInReq] = {
-            ...localTeam[activeIdxInReq],
-            currentHp,
-            maxHp,
-            status
-          };
+          const activeMonInReq = nextRequest?.side?.pokemon?.find(p => p.active);
+          const localIdx = activeMonInReq ? getLocalPokemonIndex(localTeam, activeMonInReq) : activeIdx;
+          if (localIdx !== -1) {
+            localTeam[localIdx] = {
+              ...localTeam[localIdx],
+              currentHp,
+              maxHp,
+              status
+            };
+          }
           setPlayerTeam([...localTeam]);
         } else if (target.startsWith('p2a:')) {
           if (localEnemy) {
@@ -523,8 +535,11 @@ export function BattleArenaScreen() {
         const target = parts[2];
         if (target.startsWith('p1a:')) {
           setPlayerAnim('faint');
-          const activeIdxInReq = nextRequest?.side?.pokemon?.findIndex(Mon => Mon.active) ?? 0;
-          localTeam[activeIdxInReq].currentHp = 0;
+          const activeMonInReq = nextRequest?.side?.pokemon?.find(Mon => Mon.active);
+          const localIdx = activeMonInReq ? getLocalPokemonIndex(localTeam, activeMonInReq) : activeIdx;
+          if (localIdx !== -1) {
+            localTeam[localIdx].currentHp = 0;
+          }
           setPlayerTeam([...localTeam]);
           await new Promise(r => setTimeout(r, 600));
           setPlayerAnim('');
@@ -561,19 +576,26 @@ export function BattleArenaScreen() {
     setActiveRequest(nextRequest);
 
     if (nextRequest && nextRequest.side && nextRequest.side.pokemon) {
-      nextRequest.side.pokemon.forEach((mon, idx) => {
+      nextRequest.side.pokemon.forEach((mon) => {
         const { currentHp, maxHp, status } = parseCondition(mon.condition);
-        if (localTeam[idx]) {
-          localTeam[idx].currentHp = currentHp;
-          localTeam[idx].maxHp = maxHp;
-          localTeam[idx].status = status;
+        const localIdx = getLocalPokemonIndex(localTeam, mon);
+        if (localIdx !== -1) {
+          localTeam[localIdx] = {
+            ...localTeam[localIdx],
+            currentHp,
+            maxHp,
+            status
+          };
         }
       });
       setPlayerTeam([...localTeam]);
 
-      const activeIdxInReq = nextRequest.side.pokemon.findIndex(p => p.active);
-      if (activeIdxInReq !== -1) {
-        setActiveIdx(activeIdxInReq);
+      const activeMonInReq = nextRequest.side.pokemon.find(p => p.active);
+      if (activeMonInReq) {
+        const activeLocalIdx = getLocalPokemonIndex(localTeam, activeMonInReq);
+        if (activeLocalIdx !== -1) {
+          setActiveIdx(activeLocalIdx);
+        }
       }
     }
 
@@ -610,7 +632,21 @@ export function BattleArenaScreen() {
     if (!playerTurn || isActing || winner !== null || idx === activeIdx) return;
     setShowSwitch(false);
 
-    const choice = `switch ${idx + 1}`;
+    const targetPoke = playerTeam[idx];
+    if (!targetPoke) return;
+
+    // Find its index in the current activeRequest.side.pokemon list
+    const reqIdx = activeRequest?.side?.pokemon?.findIndex(mon => {
+      const monName = cleanName(mon.ident).toLowerCase();
+      return monName === targetPoke.displayName.toLowerCase() || monName === targetPoke.name.toLowerCase();
+    });
+
+    if (reqIdx === undefined || reqIdx === -1) {
+      alert("Error: Pokémon not found in active request");
+      return;
+    }
+
+    const choice = `switch ${reqIdx + 1}`;
 
     try {
       const result = await api.submitBattleChoice({ battleId, choice });
@@ -673,20 +709,11 @@ export function BattleArenaScreen() {
 
   return (
     <div className="minigames-screen" id="battle-arena-screen">
-      <header className="minigames-header">
-        <div className="minigames-title-group">
-          <p className="minigames-eyebrow">Battle Ground</p>
-          <h1 className="minigames-title">Pokémon Battle Arena</h1>
-        </div>
-        <div className="minigames-header-stats">
+      {loading ? (
+        <div className="minigame-inner-header" style={{ border: 'none', justifyContent: 'center', minHeight: '300px', flexDirection: 'column', gap: '16px' }}>
           <button className="btn-back" id="back-to-hub-btn" onClick={() => goTo(SCREENS.minigameHub)}>
             <ArrowLeft size={14} /> Back to Hub
           </button>
-        </div>
-      </header>
-
-      {loading ? (
-        <div className="minigame-inner-header" style={{ border: 'none', justifyContent: 'center', minHeight: '300px' }}>
           <p className="minigames-eyebrow animate-pulse">Summoning battle matrices & loading assets...</p>
         </div>
       ) : stage === 'draft' ? (
@@ -752,7 +779,10 @@ export function BattleArenaScreen() {
               })}
             </div>
 
-            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+              <button className="btn-back" id="back-to-hub-btn" onClick={() => goTo(SCREENS.minigameHub)}>
+                <ArrowLeft size={14} /> Back to Hub
+              </button>
               <button
                 className="btn-back"
                 id="start-battle-btn"
@@ -931,7 +961,10 @@ export function BattleArenaScreen() {
             <div className="minigame-inner-header" id="switch-panel" style={{ marginTop: '12px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--px-border)', borderRadius: '16px', justifyContent: 'flex-start', gap: '12px' }}>
               <span className="config-section-title" style={{ margin: 0 }}>Swap Pokémon:</span>
               {playerTeam.map((p, i) => {
-                const reqMon = activeRequest?.side?.pokemon?.[i];
+                const reqMon = activeRequest?.side?.pokemon?.find(mon => {
+                  const monName = cleanName(mon.ident).toLowerCase();
+                  return monName === p.displayName.toLowerCase() || monName === p.name.toLowerCase();
+                });
                 const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
                 const isActive = reqMon ? reqMon.active : false;
                 return (

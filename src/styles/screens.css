@@ -399,9 +399,50 @@
   text-overflow: ellipsis;
 }
 
+/* Pokédex screen layout */
+.screen.px-frame.pokedex-screen {
+  max-width: none;
+  width: 100%;
+}
+
+.pokedex-screen .px-frame-header {
+  position: static;
+}
+
+.pokedex-screen .px-frame-header>div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: static;
+}
+
+.pokedex-screen .screen-title,
+.pokedex-screen .screen-subtitle {
+  position: static;
+}
+
+.pokedex-screen .dex-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.pokedex-screen .dex-grid-cell {
+  flex-direction: row;
+}
+
+.pokedex-screen .dex-grid-name {
+  width: 100%;
+}
+
 @media (max-width: 700px) {
   .dex-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pokedex-screen .dex-grid {
+    display: flex;
+    flex-direction: column;
   }
 }
 

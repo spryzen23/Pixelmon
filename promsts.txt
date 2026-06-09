@@ -211,6 +211,6 @@ Identify all errors and warnings, then resolve them one by one. Learn, understan
 
 read this image and properly modify this design and ui and ux and pages, tabs, buttons, input boxes, text, components, utilities, services, hooks, contexts ,progess bar , checkbox , radio button, flow and graph and css , Learn, understand, and analyze deeply, breaking tasks into smaller steps
 
-also all screen not need scrollbar , so all screens design in one screen frame , Learn, understand, and analyze deeply, breaking tasks into smaller steps
+so all screens design in one screen frame so all design and ui and ux and pages, tabs, buttons, input boxes, text, components, utilities, services, hooks, contexts ,progess bar , checkbox , radio button, flow and graph and css in every screens placed properly in each screen , Learn, understand, and analyze deeply, breaking tasks into smaller steps
 
 

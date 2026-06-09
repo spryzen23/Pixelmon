@@ -17,6 +17,8 @@ export const SCREENS = {
   dailyGrid: 'dailyGrid',
   clueGuesser: 'clueGuesser',
   triviaTraining: 'triviaTraining',
+  gridPractice: 'gridPractice',
+  clueGuesserPractice: 'clueGuesserPractice',
 };
 
 export const GAME_MODES = {

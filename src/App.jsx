@@ -40,8 +40,10 @@ function ScreenRouter() {
     case SCREENS.battleArena:
       return <BattleArenaScreen />;
     case SCREENS.dailyGrid:
+    case SCREENS.gridPractice:
       return <DailyGridScreen />;
     case SCREENS.clueGuesser:
+    case SCREENS.clueGuesserPractice:
       return <ClueGuesserScreen />;
     case SCREENS.triviaTraining:
       return <TriviaTrainingScreen />;

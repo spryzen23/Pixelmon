@@ -17,13 +17,13 @@
 
 .minigames-header {
   width: 100%;
-  max-width: 1000px;
+  box-sizing: content-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-b: 1px solid var(--px-border);
-  padding-bottom: 16px;
-  margin-bottom: 24px;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .minigames-title-group {
@@ -85,12 +85,14 @@
 .minigames-dashboard {
   width: 100%;
   max-width: 1000px;
+  box-sizing: content-box;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 15px;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
   animation: fadeIn 0.4s ease-out;
 }
 
@@ -120,8 +122,9 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--px-text-muted);
-  text-align: left;
-  margin: 8px 0 0 0;
+  box-sizing: content-box;
+  text-align: center;
+  margin: 0;
 }
 
 .minigames-bento-grid {
@@ -332,6 +335,134 @@
 }
 
 /* Daily Grid */
+.minigames-screen.daily-grid-screen {
+  padding: 0;
+  overflow: visible;
+  box-sizing: content-box;
+}
+
+.daily-grid-screen .minigame-container {
+  width: 100%;
+  max-width: none;
+  background: unset;
+  border: none;
+  border-image: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  overflow: visible;
+  box-sizing: content-box;
+}
+
+.daily-grid-screen .minigame-content {
+  width: 100%;
+  padding: 0;
+}
+
+.daily-grid-screen .grid-status-alert {
+  border-radius: 0;
+  gap: 10px;
+}
+
+/* Clue Guesser */
+.minigames-screen.clue-guesser-screen {
+  width: 100%;
+  padding: 0;
+  overflow: visible;
+  box-sizing: content-box;
+}
+
+.clue-guesser-screen .minigame-container {
+  width: 100%;
+  max-width: none;
+  background: unset;
+  border: none;
+  border-image: none;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  overflow: visible;
+  box-sizing: content-box;
+}
+
+.clue-guesser-screen .minigame-content {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.clue-guesser-screen .grid-status-alert {
+  width: 100%;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
+/* Battle Arena */
+#battle-arena-screen {
+  padding: 0;
+  overflow: visible;
+  box-sizing: content-box;
+}
+
+#battle-arena-screen .minigame-container {
+  width: 100%;
+  max-width: none;
+  background: unset;
+  border: none;
+  border-image: none;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+#battle-arena-screen .minigame-content {
+  width: 100%;
+}
+
+/* Trivia Training */
+.minigames-screen.trivia-training-screen {
+  padding: 0;
+}
+
+.trivia-training-screen .minigames-dashboard {
+  width: 100%;
+  max-width: none;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.trivia-training-screen .minigames-header {
+  padding-left: 15px;
+  padding-right: 15px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.trivia-training-screen .minigames-bento-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 0;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.trivia-training-screen .bento-card {
+  flex-direction: row;
+  min-height: unset;
+  border-radius: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 10px;
+  gap: 10px;
+}
+
+.trivia-training-screen .bento-card>div:not(.bento-icon-wrapper) {
+  width: 100%;
+}
+
 .daily-grid-wrapper {
   display: flex;
   flex-direction: column;
@@ -366,6 +497,17 @@
   font-size: 11px;
   color: var(--px-text-muted);
   margin: 2px 0 0 0;
+}
+
+.grid-status-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.grid-status-alert .btn-back {
+  flex-shrink: 0;
 }
 
 .btn-surrender {

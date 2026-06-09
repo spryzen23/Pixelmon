@@ -22,6 +22,7 @@ export const api = {
   getAnimationTypes: () => request('/api/config/animation-types'),
   getSpawnLadder: () => request('/api/config/spawn-ladder'),
   getStarters: () => request('/api/starters'),
+  generateGridPractice: () => request('/api/grid/generate-practice'),
   getPokedex: (region, page, limit) =>
     request(`/api/pokedex?region=${region}&page=${page}&limit=${limit}`),
   listPlayers: () => request('/api/players'),

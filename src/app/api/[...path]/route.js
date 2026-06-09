@@ -78,6 +78,188 @@ export async function GET(request, { params }) {
       return NextResponse.json({ starters: slim.entries });
     }
 
+    // 7.1 GET /api/grid/generate-practice
+    if (routeParts[0] === 'grid' && routeParts[1] === 'generate-practice') {
+      const db = await getDB();
+      const slim = await getPokemonsSlim();
+      const entries = slim.entries;
+      
+      const movesRows = await db.all(`
+        SELECT DISTINCT rpm.pokemon_id, rm.identifier AS move_name
+        FROM raw_pokemon_moves rpm
+        JOIN raw_moves rm ON rpm.move_id = rm.id
+      `);
+      const movesMap = new Map();
+      const movesCount = new Map();
+      movesRows.forEach(row => {
+        if (!movesMap.has(row.pokemon_id)) {
+          movesMap.set(row.pokemon_id, new Set());
+        }
+        movesMap.get(row.pokemon_id).add(row.move_name);
+        movesCount.set(row.move_name, (movesCount.get(row.move_name) || 0) + 1);
+      });
+
+      const commonMoves = Array.from(movesCount.entries())
+        .filter(([, count]) => count >= 12)
+        .map(([name]) => name);
+
+      const shuffle = arr => arr.sort(() => 0.5 - Math.random());
+      
+      const regions = ['kanto', 'johto', 'hoenn', 'sinnoh', 'unova', 'kalos', 'alola', 'galar', 'paldea'];
+      const types = ['normal', 'fire', 'water', 'grass', 'electric', 'ice', 'fighting', 'poison', 'ground', 'flying', 'psychic', 'bug', 'rock', 'ghost', 'dragon', 'steel', 'fairy', 'dark'];
+      const eggGroups = ['monster', 'plant', 'dragon', 'water1', 'bug', 'flying', 'ground', 'fairy', 'no-eggs', 'humanshape', 'water3', 'mineral', 'indeterminate', 'water2'];
+
+      const generateCategory = (type, index) => {
+        const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
+        if (type === 'region') {
+          const r = regions[Math.floor(Math.random() * regions.length)];
+          return { id: `region_${r}_${index}`, type, label: capitalize(r), value: r };
+        }
+        if (type === 'type') {
+          const t = types[Math.floor(Math.random() * types.length)];
+          return { id: `type_${t}_${index}`, type, label: capitalize(t), value: t };
+        }
+        if (type === 'spawnLevel') {
+          const val = ['low', 'mid', 'high'][Math.floor(Math.random() * 3)];
+          const label = val === 'low' ? 'Lvl 1-15' : val === 'mid' ? 'Lvl 16-34' : 'Lvl 35+';
+          return { id: `lvl_${val}_${index}`, type, label, value: val };
+        }
+        if (type === 'formTier') {
+          const val = [1, 2, 3][Math.floor(Math.random() * 3)];
+          return { id: `form_${val}_${index}`, type, label: `Form Tier ${val}`, value: val };
+        }
+        if (type === 'evolutionStage') {
+          const val = [1, 2, 3][Math.floor(Math.random() * 3)];
+          const label = val === 1 ? 'Basic Stage' : val === 2 ? 'Stage 1 Evo' : 'Stage 2 Evo';
+          return { id: `evo_${val}_${index}`, type, label, value: val };
+        }
+        if (type === 'eggGroups') {
+          const val = eggGroups[Math.floor(Math.random() * eggGroups.length)];
+          const label = `${capitalize(val)} Group`;
+          return { id: `egg_${val}_${index}`, type, label, value: val };
+        }
+        if (type === 'isLegendary') {
+          const val = Math.random() < 0.5;
+          const label = val ? 'Legendary' : 'Non-Legend';
+          return { id: `legend_${val}_${index}`, type, label, value: val };
+        }
+        if (type === 'hasEggs') {
+          const val = Math.random() < 0.5;
+          const label = val ? 'Can Breed' : 'No Eggs';
+          return { id: `eggs_${val}_${index}`, type, label, value: val };
+        }
+        if (type === 'move') {
+          const val = commonMoves[Math.floor(Math.random() * commonMoves.length)];
+          return { id: `move_${val}_${index}`, type, label: `Learn ${capitalize(val)}`, value: val };
+        }
+        if (type === 'type_type') {
+          const t1Idx = Math.floor(Math.random() * types.length);
+          let t2Idx = Math.floor(Math.random() * types.length);
+          if (t1Idx === t2Idx) t2Idx = (t2Idx + 1) % types.length;
+          const t1 = types[t1Idx];
+          const t2 = types[t2Idx];
+          return { id: `types_${t1}_${t2}_${index}`, type, label: `${capitalize(t1)} & ${capitalize(t2)}`, value: [t1, t2] };
+        }
+        if (type === 'region_type') {
+          const r = regions[Math.floor(Math.random() * regions.length)];
+          const t = types[Math.floor(Math.random() * types.length)];
+          return { id: `regtype_${r}_${t}_${index}`, type, label: `${capitalize(r)} & ${capitalize(t)}`, value: [r, t] };
+        }
+      };
+
+      const matchesCategory = (entry, category) => {
+        const { type, value } = category;
+        if (type === 'region') return entry.region === value;
+        if (type === 'type') return entry.types.includes(value);
+        if (type === 'spawnLevel') {
+          if (value === 'low') return entry.spawnLevel <= 15;
+          if (value === 'mid') return entry.spawnLevel > 15 && entry.spawnLevel < 35;
+          if (value === 'high') return entry.spawnLevel >= 35;
+        }
+        if (type === 'formTier') return entry.formTier === value;
+        if (type === 'evolutionStage') return entry.evolutionStage === value;
+        if (type === 'eggGroups') return entry.eggGroups.includes(value);
+        if (type === 'isLegendary') return entry.isLegendary === value;
+        if (type === 'hasEggs') return entry.hasEggs === value;
+        if (type === 'move') return movesMap.get(entry.speciesId)?.has(value) ?? false;
+        if (type === 'type_type') return entry.types.includes(value[0]) && entry.types.includes(value[1]);
+        if (type === 'region_type') return entry.region === value[0] && entry.types.includes(value[1]);
+        return false;
+      };
+
+      const validateGrid = (rows, cols) => {
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            const rowCat = rows[r];
+            const colCat = cols[c];
+            let matchCount = 0;
+            for (const entry of entries) {
+              if (matchesCategory(entry, rowCat) && matchesCategory(entry, colCat)) {
+                matchCount++;
+              }
+            }
+            if (matchCount < 2) return false;
+          }
+        }
+        return true;
+      };
+
+      const rowsPool = ['region', 'eggGroups', 'evolutionStage', 'formTier', 'isLegendary', 'hasEggs', 'spawnLevel'];
+      const colsPool = ['type', 'move', 'type_type', 'region_type'];
+
+      let puzzleGrid = null;
+      let attempts = 0;
+      while (attempts < 150) {
+        const rowsTypes = shuffle([...rowsPool]).slice(0, 3);
+        const colsTypes = shuffle([...colsPool]).slice(0, 3);
+        const rows = rowsTypes.map((t, idx) => generateCategory(t, idx));
+        const cols = colsTypes.map((t, idx) => generateCategory(t, idx));
+        if (validateGrid(rows, cols)) {
+          // Compile solutions
+          const solutions = [];
+          for (let r = 0; r < 3; r++) {
+            for (let c = 0; c < 3; c++) {
+              const rowCat = rows[r];
+              const colCat = cols[c];
+              const cellMatches = [];
+              for (const entry of entries) {
+                if (matchesCategory(entry, rowCat) && matchesCategory(entry, colCat)) {
+                  cellMatches.push(entry.displayName);
+                }
+              }
+              solutions.push(cellMatches.slice(0, 3).join(', '));
+            }
+          }
+          puzzleGrid = { id: `practice_${Date.now()}`, rows, cols, solutions };
+          break;
+        }
+        attempts++;
+      }
+
+      if (!puzzleGrid) {
+        puzzleGrid = {
+          id: 'practice_fallback',
+          rows: [
+            { id: 'kanto_0', type: 'region', label: 'Kanto', value: 'kanto' },
+            { id: 'johto_1', type: 'region', label: 'Johto', value: 'johto' },
+            { id: 'hoenn_2', type: 'region', label: 'Hoenn', value: 'hoenn' }
+          ],
+          cols: [
+            { id: 'fire_0', type: 'type', label: 'Fire', value: 'fire' },
+            { id: 'water_1', type: 'type', label: 'Water', value: 'water' },
+            { id: 'grass_2', type: 'type', label: 'Grass', value: 'grass' }
+          ],
+          solutions: [
+            'Bulbasaur, Charmander, Squirtle', 'Squirtle, Psyduck, Poliwag', 'Bulbasaur, Oddish, Bellsprout',
+            'Chikorita, Cyndaquil, Totodile', 'Totodile, Wooper, Marill', 'Chikorita, Hoppip, Sunkern',
+            'Treecko, Torchic, Mudkip', 'Mudkip, Wingull, Carvanha', 'Treecko, Lotad, Seedot'
+          ]
+        };
+      }
+
+      return NextResponse.json({ puzzle: puzzleGrid });
+    }
+
     // 8. GET /api/pokedex
     if (routeParts[0] === 'pokedex') {
       const region = url.searchParams.get('region') || 'kanto';

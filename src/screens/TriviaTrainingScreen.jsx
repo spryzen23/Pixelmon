@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useGame, SCREENS } from '../context/GameContext';
 import { api } from '../api';
-import { 
-  ArrowLeft, 
-  Timer, 
+import {
+  ArrowLeft,
+  Timer,
   TrendingUp,
   Brain,
   Zap,
@@ -41,7 +41,7 @@ function getDmgMultiplier(atkType, defType) {
 
 export function TriviaTrainingScreen() {
   const { goTo, addCoins } = useGame();
-  
+
   // Setup state
   const [mode, setMode] = useState('menu'); // 'menu' | 'speedrun' | 'typeexpert' | 'silhouette' | 'typefocus'
   const [speciesList, setSpeciesList] = useState([]);
@@ -60,6 +60,14 @@ export function TriviaTrainingScreen() {
   const [silhouetteSprite, setSilhouetteSprite] = useState('');
 
   const timerRef = useRef(null);
+
+  const endQuiz = useCallback(() => {
+    setQuizOver(true);
+    clearTimeout(timerRef.current);
+    const coinsReward = Math.floor(score * 2);
+    if (coinsReward > 0) addCoins(coinsReward);
+    confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+  }, [score, addCoins]);
 
   // Load database list
   useEffect(() => {
@@ -87,15 +95,6 @@ export function TriviaTrainingScreen() {
     return () => clearTimeout(timerRef.current);
   }, [timeLeft, mode, quizOver, endQuiz]);
 
-  const endQuiz = useCallback(() => {
-    setQuizOver(true);
-    clearTimeout(timerRef.current);
-    // Reward coins
-    const coinsReward = Math.floor(score * 2);
-    if (coinsReward > 0) addCoins(coinsReward);
-    confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
-  }, [score, addCoins]);
-
   const startSpeedRun = () => {
     setScore(0);
     setQuestionIdx(0);
@@ -109,10 +108,10 @@ export function TriviaTrainingScreen() {
     if (speciesList.length === 0) return;
     const poke = speciesList[Math.floor(Math.random() * speciesList.length)];
     const randType = TYPE_LIST[Math.floor(Math.random() * TYPE_LIST.length)];
-    
+
     // Check if yes
     const isYes = poke.types.includes(randType);
-    
+
     setActiveQuestion({
       text: `Is **${poke.displayName}** a **${randType.toUpperCase()}**-type Pokémon?`,
       answer: isYes,
@@ -212,7 +211,7 @@ export function TriviaTrainingScreen() {
     setShowSilhouetteName(false);
     setSilhouetteGuess('');
     setSilhouetteSprite(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${poke.speciesId}.png`);
-    
+
     setActiveQuestion({
       name: poke.name,
       displayName: poke.displayName
@@ -245,11 +244,11 @@ export function TriviaTrainingScreen() {
 
   const generateTypeFocusQuestion = () => {
     if (speciesList.length === 0) return;
-    
+
     // Choose a target dual-type pokemon
     const duals = speciesList.filter(p => p.types.length === 2);
     const target = duals[Math.floor(Math.random() * duals.length)] || speciesList[0];
-    
+
     // Pick 3 wrong options
     const wrongs = speciesList.filter(p => p.entryId !== target.entryId).slice(0, 3);
     const options = [target, ...wrongs].sort(() => 0.5 - Math.random());
@@ -279,7 +278,7 @@ export function TriviaTrainingScreen() {
   };
 
   return (
-    <div className="minigames-screen">
+    <div className="minigames-screen trivia-training-screen">
       <header className="minigames-header">
         <div className="minigames-title-group">
           <p className="minigames-eyebrow">Training Labs</p>
@@ -316,10 +315,10 @@ export function TriviaTrainingScreen() {
         </div>
       ) : mode === 'menu' ? (
         <div className="minigames-dashboard">
-          <div className="minigames-bento-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
-            
+          <div className="minigames-bento-grid">
+
             {/* Speed Run */}
-            <div className="bento-card featured" onClick={startSpeedRun} style={{ minHeight: '160px' }}>
+            <div className="bento-card featured" onClick={startSpeedRun}>
               <div className="bento-icon-wrapper"><Zap size={20} /></div>
               <div>
                 <h3 className="bento-title">Speed Run</h3>
@@ -328,7 +327,7 @@ export function TriviaTrainingScreen() {
             </div>
 
             {/* Type Expert */}
-            <div className="bento-card featured" onClick={startTypeExpert} style={{ minHeight: '160px' }}>
+            <div className="bento-card featured" onClick={startTypeExpert}>
               <div className="bento-icon-wrapper"><Swords size={20} /></div>
               <div>
                 <h3 className="bento-title">Type Expert Matchups</h3>
@@ -337,7 +336,7 @@ export function TriviaTrainingScreen() {
             </div>
 
             {/* Timed Recall (Silhouette) */}
-            <div className="bento-card" onClick={startSilhouette} style={{ minHeight: '160px' }}>
+            <div className="bento-card" onClick={startSilhouette}>
               <div className="bento-icon-wrapper"><Brain size={20} /></div>
               <div>
                 <h3 className="bento-title">Timed Recall (Silhouette)</h3>
@@ -346,7 +345,7 @@ export function TriviaTrainingScreen() {
             </div>
 
             {/* Type Focus */}
-            <div className="bento-card" onClick={startTypeFocus} style={{ minHeight: '160px' }}>
+            <div className="bento-card" onClick={startTypeFocus}>
               <div className="bento-icon-wrapper"><TrendingUp size={20} /></div>
               <div>
                 <h3 className="bento-title">Type Focus MCQs</h3>
@@ -362,7 +361,7 @@ export function TriviaTrainingScreen() {
             <span style={{ fontSize: '48px' }}>🏆</span>
             <h2 className="minigame-inner-title" style={{ marginTop: '16px' }}>Lab Session Concluded</h2>
             <p className="minigame-inner-subtitle">You scored **{score}** points!</p>
-            
+
             <div style={{ margin: '24px 0', padding: '14px', background: 'rgba(255, 212, 63, 0.04)', borderRadius: '12px', border: '1px solid var(--px-accent)' }}>
               <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--px-accent)' }}>
                 Earned PokéCoins: **+{Math.floor(score * 2)}** Coins payout synced!
@@ -371,8 +370,8 @@ export function TriviaTrainingScreen() {
 
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
               <button className="btn-back" onClick={() => setMode('menu')}>Choose Lab</button>
-              <button 
-                className="btn-back" 
+              <button
+                className="btn-back"
                 style={{ background: 'var(--px-sky)', borderColor: 'var(--px-sky)' }}
                 onClick={() => {
                   if (mode === 'speedrun') startSpeedRun();
@@ -401,13 +400,13 @@ export function TriviaTrainingScreen() {
           </div>
 
           <div className="minigame-content" style={{ padding: '30px 24px' }}>
-            
+
             {/* Speed Run Active */}
             {mode === 'speedrun' && activeQuestion && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
                 <img src={activeQuestion.sprite} alt="" style={{ height: '96px', objectFit: 'contain' }} />
                 <p style={{ fontSize: '16px', fontWeight: 600, margin: 0 }} dangerouslySetInnerHTML={{ __html: activeQuestion.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
-                
+
                 <div style={{ display: 'flex', gap: '12px', width: '100%', maxWidth: '280px', marginTop: '10px' }}>
                   <button className="btn-menu-action w-full" style={{ background: 'var(--px-success)', borderColor: 'var(--px-success)' }} onClick={() => handleSpeedRunAnswer(true)}>YES</button>
                   <button className="btn-menu-action w-full" style={{ background: 'var(--px-danger)', borderColor: 'var(--px-danger)' }} onClick={() => handleSpeedRunAnswer(false)}>NO</button>
@@ -419,7 +418,7 @@ export function TriviaTrainingScreen() {
             {mode === 'typeexpert' && activeQuestion && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
                 <p style={{ fontSize: '15px', fontWeight: 650, margin: 0, textAlign: 'center', lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: activeQuestion.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
-                
+
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', width: '100%', maxWidth: '320px', marginTop: '10px' }}>
                   {activeQuestion.options.map(o => (
                     <button key={o} className="btn-menu-action" onClick={() => handleTypeExpertAnswer(o)}>
@@ -434,14 +433,14 @@ export function TriviaTrainingScreen() {
             {mode === 'silhouette' && activeQuestion && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
                 <div style={{ height: '140px', aspectRatio: 1, display: 'flex', alignItems: 'center', justifyItems: 'center', overflow: 'hidden' }}>
-                  <img 
-                    src={silhouetteSprite} 
-                    alt="" 
+                  <img
+                    src={silhouetteSprite}
+                    alt=""
                     className="sprite-img"
-                    style={{ 
+                    style={{
                       filter: showSilhouetteName ? 'none' : 'brightness(0) contrast(1.5)',
                       transition: 'all 0.4s'
-                    }} 
+                    }}
                   />
                 </div>
 
@@ -451,9 +450,9 @@ export function TriviaTrainingScreen() {
                   </p>
                 ) : (
                   <form onSubmit={handleSilhouetteSubmit} style={{ display: 'flex', gap: '8px', width: '100%', maxWidth: '340px' }}>
-                    <input 
-                      type="text" 
-                      className="dmg-calc-input" 
+                    <input
+                      type="text"
+                      className="dmg-calc-input"
                       placeholder="Guess Pokémon name..."
                       value={silhouetteGuess}
                       onChange={e => setSilhouetteGuess(e.target.value)}
@@ -469,7 +468,7 @@ export function TriviaTrainingScreen() {
             {mode === 'typefocus' && activeQuestion && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
                 <p style={{ fontSize: '15px', fontWeight: 650, margin: 0, textAlign: 'center', lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: activeQuestion.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
-                
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%', maxWidth: '320px', marginTop: '10px' }}>
                   {activeQuestion.options.map(o => (
                     <button key={o} className="btn-menu-action" onClick={() => handleTypeFocusAnswer(o)}>

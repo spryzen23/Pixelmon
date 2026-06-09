@@ -19,7 +19,8 @@ function getDailyTargetIndex(listLength) {
 }
 
 export function ClueGuesserScreen() {
-  const { goTo, addCoins } = useGame();
+  const { goTo, addCoins, screen } = useGame();
+  const isPractice = screen === SCREENS.clueGuesserPractice;
   const { toast } = useToast();
 
   // Game states
@@ -41,15 +42,46 @@ export function ClueGuesserScreen() {
         const starters = data.starters || [];
         setSpeciesList(starters);
 
-        if (starters.length > 0) {
-          const tIdx = getDailyTargetIndex(starters.length);
-          const tSlim = starters[tIdx];
+        let activeTarget = null;
+        let activeGuesses = [];
+        let activeGameOver = false;
+        let activeWon = false;
+
+        let saved;
+        if (isPractice) {
+          saved = localStorage.getItem('pixelmon-clues-practice');
+        } else {
+          const utcDateStr = new Date().toISOString().split('T')[0];
+          saved = localStorage.getItem(`pixelmon-clues:${utcDateStr}`);
+        }
+
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          activeGuesses = parsed.guesses || [];
+          activeGameOver = parsed.gameOver || false;
+          activeWon = parsed.won || false;
+          if (isPractice && parsed.target) {
+            activeTarget = parsed.target;
+          }
+        }
+
+        // If practice mode and target isn't restored, choose a random one
+        // If daily mode, target is always based on the daily index
+        if (!activeTarget && starters.length > 0) {
+          let tSlim;
+          if (isPractice) {
+            const tIdx = Math.floor(Math.random() * starters.length);
+            tSlim = starters[tIdx];
+          } else {
+            const tIdx = getDailyTargetIndex(starters.length);
+            tSlim = starters[tIdx];
+          }
 
           // Fetch target details from PokéAPI
           const tRes = await fetch(`/api/pokemon/${tSlim.name}`);
           const tData = await tRes.json();
 
-          setTarget({
+          activeTarget = {
             speciesId: tSlim.speciesId,
             name: tSlim.name,
             displayName: tSlim.displayName,
@@ -61,18 +93,13 @@ export function ClueGuesserScreen() {
             attack: tData.stats[1].base_stat,
             defense: tData.stats[2].base_stat,
             sprite: tData.sprites.other?.['official-artwork']?.front_default || tData.sprites.front_default
-          });
+          };
         }
 
-        // Restore clues state from localStorage
-        const utcDateStr = new Date().toISOString().split('T')[0];
-        const saved = localStorage.getItem(`pixelmon-clues:${utcDateStr}`);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          setGuesses(parsed.guesses || []);
-          setGameOver(parsed.gameOver || false);
-          setWon(parsed.won || false);
-        }
+        setTarget(activeTarget);
+        setGuesses(activeGuesses);
+        setGameOver(activeGameOver);
+        setWon(activeWon);
       } catch (err) {
         console.error("Failed to load Clue Guesser session", err);
       } finally {
@@ -80,15 +107,69 @@ export function ClueGuesserScreen() {
       }
     }
     loadSession();
-  }, []);
+  }, [isPractice]);
 
-  const saveLocalGuesses = (updatedGuesses, isOver, isWon) => {
-    const utcDateStr = new Date().toISOString().split('T')[0];
-    localStorage.setItem(`pixelmon-clues:${utcDateStr}`, JSON.stringify({
-      guesses: updatedGuesses,
-      gameOver: isOver,
-      won: isWon
-    }));
+  const saveLocalGuesses = (updatedGuesses, isOver, isWon, currentTarget = target) => {
+    if (isPractice) {
+      localStorage.setItem('pixelmon-clues-practice', JSON.stringify({
+        target: currentTarget,
+        guesses: updatedGuesses,
+        gameOver: isOver,
+        won: isWon
+      }));
+    } else {
+      const utcDateStr = new Date().toISOString().split('T')[0];
+      localStorage.setItem(`pixelmon-clues:${utcDateStr}`, JSON.stringify({
+        guesses: updatedGuesses,
+        gameOver: isOver,
+        won: isWon
+      }));
+    }
+  };
+
+  const handlePlayAgain = async () => {
+    if (!isPractice || speciesList.length === 0) return;
+
+    setLoading(true);
+    try {
+      // Pick a new random target
+      let tSlim;
+      do {
+        const tIdx = Math.floor(Math.random() * speciesList.length);
+        tSlim = speciesList[tIdx];
+      } while (target && tSlim.name === target.name && speciesList.length > 1);
+
+      const tRes = await fetch(`/api/pokemon/${tSlim.name}`);
+      const tData = await tRes.json();
+
+      const newTarget = {
+        speciesId: tSlim.speciesId,
+        name: tSlim.name,
+        displayName: tSlim.displayName,
+        region: tSlim.region,
+        types: tSlim.types,
+        height: tData.height,
+        weight: tData.weight,
+        hp: tData.stats[0].base_stat,
+        attack: tData.stats[1].base_stat,
+        defense: tData.stats[2].base_stat,
+        sprite: tData.sprites.other?.['official-artwork']?.front_default || tData.sprites.front_default
+      };
+
+      setTarget(newTarget);
+      setGuesses([]);
+      setGameOver(false);
+      setWon(false);
+      setSearchQuery('');
+
+      // Clear practice local storage
+      localStorage.removeItem('pixelmon-clues-practice');
+    } catch (err) {
+      console.error("Failed to start new clue guesser practice session", err);
+      toast('Failed to start new session. Retry.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Autocomplete filtering
@@ -142,7 +223,8 @@ export function ClueGuesserScreen() {
       if (guessSlim.name === target.name) {
         setWon(true);
         setGameOver(true);
-        addCoins(50); // Win payout 50 coins
+        const winReward = isPractice ? 10 : 50;
+        addCoins(winReward); // Win payout coins
         confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
         saveLocalGuesses(updatedGuesses, true, true);
       } else if (updatedGuesses.length >= 6) {
@@ -187,35 +269,29 @@ export function ClueGuesserScreen() {
   };
 
   return (
-    <div className="minigames-screen">
-      <header className="minigames-header">
-        <div className="minigames-title-group">
-          <p className="minigames-eyebrow">Wordle guesser</p>
-          <h1 className="minigames-title">Daily Clue Guesser</h1>
-        </div>
-        <div className="minigames-header-stats">
+    <div className="minigames-screen clue-guesser-screen">
+      {loading && guesses.length === 0 ? (
+        <div className="minigame-inner-header" style={{ border: 'none', justifyContent: 'center', minHeight: '300px', flexDirection: 'column', gap: '16px' }}>
           <button className="btn-back" onClick={() => goTo(SCREENS.minigameHub)}>
             <ArrowLeft size={14} /> Back
           </button>
-        </div>
-      </header>
-
-      {loading && guesses.length === 0 ? (
-        <div className="minigame-inner-header" style={{ border: 'none', justifyContent: 'center', minHeight: '300px' }}>
           <p className="minigames-eyebrow animate-pulse">Scanning database and loading clues...</p>
         </div>
       ) : (
         <div className="minigame-container">
           <div className="minigame-content">
 
-            <div className="grid-status-alert" style={{ marginBottom: '24px' }}>
+            <div className="grid-status-alert">
               <div className="grid-status-info">
                 <span>🧠</span>
                 <div>
                   <h3>Guesses: {guesses.length} / 6</h3>
-                  <p>Identify the daily mystery Pokémon! Feedback shows if region, types, size, or stats match.</p>
+                  <p>{isPractice ? 'Identify the practice mystery Pokémon! Feedback shows if region, types, size, or stats match.' : 'Identify the daily mystery Pokémon! Feedback shows if region, types, size, or stats match.'}</p>
                 </div>
               </div>
+              <button className="btn-back" onClick={() => goTo(SCREENS.minigameHub)}>
+                <ArrowLeft size={14} /> Back
+              </button>
             </div>
 
             {/* Guess input */}
@@ -319,7 +395,7 @@ export function ClueGuesserScreen() {
 
             {gameOver && target && (
               <div className="grid-status-alert" style={{ marginTop: '24px', background: won ? 'rgba(28,212,93,0.08)' : 'rgba(248,79,79,0.08)', borderColor: won ? 'rgba(28,212,93,0.2)' : 'rgba(248,79,79,0.2)' }}>
-                <div style={{ textAlign: 'left', display: 'flex', gap: '16px', alignItems: 'center' }}>
+                <div style={{ textAlign: 'left', display: 'flex', gap: '16px', alignItems: 'center', flexGrow: 1 }}>
                   <img src={target.sprite} alt="" style={{ width: '60px', height: '60px', objectFit: 'contain' }} />
                   <div>
                     <h3 style={{ color: won ? 'var(--px-success)' : 'var(--px-danger)', margin: 0 }}>
@@ -328,8 +404,18 @@ export function ClueGuesserScreen() {
                     <p style={{ margin: '4px 0 0 0' }}>
                       {won ? `Great job! You guessed ${target.displayName} correctly!` : `The target Pokémon was ${target.displayName} (${target.types.join('/')}, ${target.region.toUpperCase()}).`}
                     </p>
+                    {isPractice && won && (
+                      <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: 'var(--px-accent)' }}>
+                        Earned PokéCoins: <strong>+10</strong> (Practice Reward)
+                      </p>
+                    )}
                   </div>
                 </div>
+                {isPractice && (
+                  <button className="btn-surrender" style={{ background: 'var(--px-sky)', borderColor: 'var(--px-sky)', color: '#fff' }} onClick={handlePlayAgain}>
+                    🔄 Try Another Pokémon
+                  </button>
+                )}
               </div>
             )}
 

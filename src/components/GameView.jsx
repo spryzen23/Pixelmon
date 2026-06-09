@@ -63,6 +63,7 @@ export function GameView() {
   const [spawnProgress, setSpawnProgress] = useState({ level: 1, peak: 0, active: 0, maxLevel: 1 });
   const [pathPage, setPathPage] = useState(0);
   const [stylePage, setStylePage] = useState(0);
+  const [glRecoveryKey, setGlRecoveryKey] = useState(0);
   const PATHS_PER_PAGE = 4;
   const STYLES_PER_PAGE = 6;
 
@@ -445,6 +446,7 @@ export function GameView() {
   return (
     <main className="game-shell">
       <Canvas
+        key={glRecoveryKey}
         shadows
         camera={{ position: [0, 8, 10], fov: 55 }}
         gl={{ antialias: true, alpha: false }}
@@ -453,6 +455,14 @@ export function GameView() {
           gl.shadowMap.type = PCFSoftShadowMap;
           gl.toneMapping = ACESFilmicToneMapping;
           gl.toneMappingExposure = 1;
+          gl.domElement.addEventListener(
+            'webglcontextlost',
+            (event) => {
+              event.preventDefault();
+              setGlRecoveryKey((key) => key + 1);
+            },
+            { once: true }
+          );
         }}
       >
         <SceneTheme theme={sceneTheme}>
