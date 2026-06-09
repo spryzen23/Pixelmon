@@ -10,6 +10,7 @@ import { PokedexScreen } from './screens/PokedexScreen';
 import { GameView } from './components/GameView';
 import { MinigameHubScreen } from './screens/MinigameHubScreen';
 import { BattleArenaScreen } from './screens/BattleArenaScreen';
+import { BattleArenaV2Screen } from './screens/BattleArenaV2Screen';
 import { DailyGridScreen } from './screens/DailyGridScreen';
 import { ClueGuesserScreen } from './screens/ClueGuesserScreen';
 import { TriviaTrainingScreen } from './screens/TriviaTrainingScreen';
@@ -39,6 +40,8 @@ function ScreenRouter() {
       return <MinigameHubScreen />;
     case SCREENS.battleArena:
       return <BattleArenaScreen />;
+    case SCREENS.battleArenaV2:
+      return <BattleArenaV2Screen />;
     case SCREENS.dailyGrid:
       return <DailyGridScreen />;
     case SCREENS.clueGuesser:

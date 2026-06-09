@@ -10,7 +10,8 @@ import {
   Grid,
   Compass,
   GraduationCap,
-  BookOpen
+  BookOpen,
+  ShieldCheck
 } from 'lucide-react';
 import '../styles/minigames.css';
 
@@ -28,8 +29,9 @@ export function MinigameHubScreen() {
     '1': () => goTo(SCREENS.dailyGrid),
     '2': () => goTo(SCREENS.clueGuesser),
     '3': () => goTo(SCREENS.battleArena),
-    '4': () => goTo(SCREENS.triviaTraining),
-    '5': () => goTo(SCREENS.pokedex),
+    '4': () => goTo(SCREENS.battleArenaV2),
+    '5': () => goTo(SCREENS.triviaTraining),
+    '6': () => goTo(SCREENS.pokedex),
     Escape: () => goTo(SCREENS.dashboard),
     '?': () => setShortcutsOpen(true),
   }, [goTo]);
@@ -115,6 +117,21 @@ export function MinigameHubScreen() {
             </div>
           </button>
 
+          {/* Battle Arena V2 */}
+          <button type="button" className="bento-card battle-arena-v2" onClick={() => goTo(SCREENS.battleArenaV2)}>
+            <span className="bento-keybind">Press 4</span>
+            <div className="bento-icon-wrapper">
+              <ShieldCheck size={22} />
+            </div>
+            <div className="bento-details">
+              <h3 className="bento-title">Pokemon Battle Arena V2</h3>
+              <p className="bento-desc">Draft a team and test the reusable battle engine with explicit teams, weather, AI, items, and catalog-backed moves.</p>
+            </div>
+            <div className="bento-footer">
+              <span className="bento-reward-label">Battle Engine</span>
+            </div>
+          </button>
+
         </div>
 
         <div className="minigames-section-label">⚡ Training & Utilities</div>
@@ -122,7 +139,7 @@ export function MinigameHubScreen() {
 
           {/* Training Labs */}
           <button type="button" className="bento-card" onClick={() => goTo(SCREENS.triviaTraining)}>
-            <span className="bento-keybind">Press 4</span>
+            <span className="bento-keybind">Press 5</span>
             <div className="bento-icon-wrapper">
               <GraduationCap size={20} />
             </div>
@@ -134,7 +151,7 @@ export function MinigameHubScreen() {
 
           {/* View My Pokédex */}
           <button type="button" className="bento-card" onClick={() => goTo(SCREENS.pokedex)}>
-            <span className="bento-keybind">Press 5</span>
+            <span className="bento-keybind">Press 6</span>
             <div className="bento-icon-wrapper">
               <BookOpen size={20} />
             </div>
@@ -151,8 +168,9 @@ export function MinigameHubScreen() {
         <p>Press 1 — Daily PokéGrid</p>
         <p>Press 2 — Clue Guesser</p>
         <p>Press 3 — Battle Arena</p>
-        <p>Press 4 — Training Labs</p>
-        <p>Press 5 — Pokédex</p>
+        <p>Press 4 — Battle Arena V2</p>
+        <p>Press 5 — Training Labs</p>
+        <p>Press 6 — Pokédex</p>
         <p>Escape — Back to Dashboard</p>
       </Modal>
     </div>

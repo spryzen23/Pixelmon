@@ -1,4 +1,4 @@
-// File: E:\maha\Pixelmon\src\app\layout.jsx
+// File: D:\WebApplications\PokemonBattleEngine\src\app\layout.jsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

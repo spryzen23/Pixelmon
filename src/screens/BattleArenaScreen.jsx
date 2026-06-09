@@ -210,6 +210,74 @@ function parseCondition(condStr) {
   };
 }
 
+function normalizePokemonKey(value) {
+  return String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function speciesFromDetails(details) {
+  return String(details || '').split(',')[0].trim();
+}
+
+function findTeamIndexForRequestPokemon(requestPokemon, team, fallbackIndex = 0) {
+  const requestKeys = [cleanName(requestPokemon?.ident), speciesFromDetails(requestPokemon?.details)]
+    .map(normalizePokemonKey)
+    .filter(Boolean);
+
+  const teamIndex = team.findIndex((pokemon) => {
+    const teamKeys = [pokemon.displayName, pokemon.name, pokemon.species, pokemon.id]
+      .map(normalizePokemonKey)
+      .filter(Boolean);
+    return teamKeys.some((key) => requestKeys.includes(key));
+  });
+  return teamIndex >= 0 ? teamIndex : fallbackIndex;
+}
+
+function findRequestPokemonForTeamIndex(request, team, teamIndex) {
+  const requestPokemon = request?.side?.pokemon || [];
+  return requestPokemon.find((pokemon, requestIndex) => (
+    findTeamIndexForRequestPokemon(pokemon, team, requestIndex) === teamIndex
+  ));
+}
+
+function findTeamIndexForBattleIdent(ident, team, request, fallbackIndex = 0) {
+  const identKey = normalizePokemonKey(cleanName(ident));
+  const directIndex = team.findIndex((pokemon) => (
+    [pokemon.displayName, pokemon.name, pokemon.species, pokemon.id].map(normalizePokemonKey).includes(identKey)
+  ));
+  if (directIndex >= 0) return directIndex;
+
+  const requestPokemon = (request?.side?.pokemon || []).find((pokemon) => (
+    normalizePokemonKey(cleanName(pokemon.ident)) === identKey
+  ));
+  return requestPokemon ? findTeamIndexForRequestPokemon(requestPokemon, team, fallbackIndex) : fallbackIndex;
+}
+
+function getActiveTeamIndexFromRequest(request, team, fallbackIndex = 0) {
+  const requestPokemon = request?.side?.pokemon || [];
+  const requestIndex = requestPokemon.findIndex((pokemon) => pokemon.active);
+  if (requestIndex === -1) return fallbackIndex;
+  return findTeamIndexForRequestPokemon(requestPokemon[requestIndex], team, requestIndex);
+}
+
+function getRequestSlotForTeamIndex(request, team, teamIndex) {
+  const requestPokemon = request?.side?.pokemon || [];
+  const requestIndex = requestPokemon.findIndex((pokemon, index) => (
+    findTeamIndexForRequestPokemon(pokemon, team, index) === teamIndex
+  ));
+  return requestIndex >= 0 ? requestIndex : teamIndex;
+}
+
+function syncTeamFromRequest(team, request) {
+  const nextTeam = [...team];
+  request?.side?.pokemon?.forEach((requestPokemon, requestIndex) => {
+    const teamIndex = findTeamIndexForRequestPokemon(requestPokemon, nextTeam, requestIndex);
+    if (nextTeam[teamIndex]) {
+      nextTeam[teamIndex] = { ...nextTeam[teamIndex], ...parseCondition(requestPokemon.condition) };
+    }
+  });
+  return nextTeam;
+}
+
 export function BattleArenaScreen() {
   const { goTo, addCoins } = useGame();
 
@@ -263,7 +331,7 @@ export function BattleArenaScreen() {
       setLoading(true);
       try {
         const data = await api.getStarters();
-        const entries = data.starters || [];
+        const entries = (data.starters || []).filter((entry) => entry.formTier === 1);
         const shuffled = [...entries].sort(() => 0.5 - Math.random());
         setDraftPool(shuffled.slice(0, 15));
       } catch (err) {
@@ -473,9 +541,9 @@ export function BattleArenaScreen() {
 
         if (target.startsWith('p1a:')) {
           setPlayerAnim('hit');
-          const activeIdxInReq = nextRequest?.side?.pokemon?.findIndex(p => p.active) ?? 0;
-          localTeam[activeIdxInReq] = {
-            ...localTeam[activeIdxInReq],
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, activeIdx);
+          localTeam[targetTeamIndex] = {
+            ...localTeam[targetTeamIndex],
             currentHp,
             maxHp,
             status
@@ -501,9 +569,9 @@ export function BattleArenaScreen() {
         const { currentHp, maxHp, status } = parseCondition(hpStatus);
 
         if (target.startsWith('p1a:')) {
-          const activeIdxInReq = nextRequest?.side?.pokemon?.findIndex(p => p.active) ?? 0;
-          localTeam[activeIdxInReq] = {
-            ...localTeam[activeIdxInReq],
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, activeIdx);
+          localTeam[targetTeamIndex] = {
+            ...localTeam[targetTeamIndex],
             currentHp,
             maxHp,
             status
@@ -523,8 +591,8 @@ export function BattleArenaScreen() {
         const target = parts[2];
         if (target.startsWith('p1a:')) {
           setPlayerAnim('faint');
-          const activeIdxInReq = nextRequest?.side?.pokemon?.findIndex(Mon => Mon.active) ?? 0;
-          localTeam[activeIdxInReq].currentHp = 0;
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, activeIdx);
+          if (localTeam[targetTeamIndex]) localTeam[targetTeamIndex].currentHp = 0;
           setPlayerTeam([...localTeam]);
           await new Promise(r => setTimeout(r, 600));
           setPlayerAnim('');
@@ -561,20 +629,10 @@ export function BattleArenaScreen() {
     setActiveRequest(nextRequest);
 
     if (nextRequest && nextRequest.side && nextRequest.side.pokemon) {
-      nextRequest.side.pokemon.forEach((mon, idx) => {
-        const { currentHp, maxHp, status } = parseCondition(mon.condition);
-        if (localTeam[idx]) {
-          localTeam[idx].currentHp = currentHp;
-          localTeam[idx].maxHp = maxHp;
-          localTeam[idx].status = status;
-        }
-      });
+      localTeam = syncTeamFromRequest(localTeam, nextRequest);
       setPlayerTeam([...localTeam]);
 
-      const activeIdxInReq = nextRequest.side.pokemon.findIndex(p => p.active);
-      if (activeIdxInReq !== -1) {
-        setActiveIdx(activeIdxInReq);
-      }
+      setActiveIdx(getActiveTeamIndexFromRequest(nextRequest, localTeam, activeIdx));
     }
 
     if (nextWinner) {
@@ -610,7 +668,8 @@ export function BattleArenaScreen() {
     if (!playerTurn || isActing || winner !== null || idx === activeIdx) return;
     setShowSwitch(false);
 
-    const choice = `switch ${idx + 1}`;
+    const requestSlotIndex = getRequestSlotForTeamIndex(activeRequest, playerTeam, idx);
+    const choice = `switch ${requestSlotIndex + 1}`;
 
     try {
       const result = await api.submitBattleChoice({ battleId, choice });
@@ -692,8 +751,36 @@ export function BattleArenaScreen() {
       ) : stage === 'draft' ? (
         <div className="minigame-container">
           <div className="minigame-content" style={{ textAlign: 'left' }}>
-            <h2 className="minigame-inner-title">Draft Your Squad (Choose 3)</h2>
-            <p className="minigame-inner-subtitle" style={{ marginBottom: '20px' }}>Select 3 Pokémon to fight the opponent team.</p>
+            <div
+              className="battle-arena-draft-topbar"
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+                gap: '16px',
+                marginBottom: '20px',
+                flexWrap: 'wrap'
+              }}
+            >
+              <div>
+                <h2 className="minigame-inner-title">Draft Your Squad (Choose 3)</h2>
+                <p className="minigame-inner-subtitle" style={{ marginBottom: 0 }}>Select 3 Pokémon to fight the opponent team.</p>
+              </div>
+              <button
+                className="btn-back"
+                id="start-battle-btn"
+                disabled={selectedTeam.length !== 3 || loading}
+                onClick={startBattle}
+                style={{
+                  background: selectedTeam.length === 3 ? 'var(--px-sky)' : 'rgba(255,255,255,0.02)',
+                  borderColor: selectedTeam.length === 3 ? 'var(--px-sky)' : 'var(--px-border)',
+                  minWidth: '170px',
+                  justifyContent: 'center'
+                }}
+              >
+                <Swords size={16} /> {selectedTeam.length}/3 Start Battle
+              </button>
+            </div>
 
             <div className="battle-arena-header" style={{ marginBottom: '24px' }}>
               <div className="battle-arena-config">
@@ -755,8 +842,8 @@ export function BattleArenaScreen() {
             <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
               <button
                 className="btn-back"
-                id="start-battle-btn"
-                disabled={selectedTeam.length !== 3}
+                id="start-battle-footer-btn"
+                disabled={selectedTeam.length !== 3 || loading}
                 onClick={startBattle}
                 style={{ background: selectedTeam.length === 3 ? 'var(--px-sky)' : 'rgba(255,255,255,0.02)', borderColor: selectedTeam.length === 3 ? 'var(--px-sky)' : 'var(--px-border)' }}
               >
@@ -931,7 +1018,7 @@ export function BattleArenaScreen() {
             <div className="minigame-inner-header" id="switch-panel" style={{ marginTop: '12px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--px-border)', borderRadius: '16px', justifyContent: 'flex-start', gap: '12px' }}>
               <span className="config-section-title" style={{ margin: 0 }}>Swap Pokémon:</span>
               {playerTeam.map((p, i) => {
-                const reqMon = activeRequest?.side?.pokemon?.[i];
+                const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
                 const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
                 const isActive = reqMon ? reqMon.active : false;
                 return (

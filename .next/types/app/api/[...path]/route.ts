@@ -1,4 +1,4 @@
-// File: E:\maha\Pixelmon\src\app\api\[...path]\route.js
+// File: D:\WebApplications\PokemonBattleEngine\src\app\api\[...path]\route.js
 import * as entry from '../../../../../src/app/api/[...path]/route.js'
 import type { NextRequest } from 'next/server.js'
 

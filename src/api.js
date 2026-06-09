@@ -43,6 +43,17 @@ export const api = {
     request('/api/battle/start', { method: 'POST', body: JSON.stringify(body) }),
   submitBattleChoice: (body) =>
     request('/api/battle/choice', { method: 'POST', body: JSON.stringify(body) }),
+  createBattleEngineSession: (body) =>
+    request('/api/battle-engine/sessions', { method: 'POST', body: JSON.stringify(body) }),
+  getBattleEngineSession: (battleId) => request(`/api/battle-engine/sessions/${battleId}`),
+  submitBattleEngineChoice: (battleId, body) =>
+    request(`/api/battle-engine/sessions/${battleId}/choices`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  getBattleEngineMove: (id) => request(`/api/battle-engine/catalog/moves/${id}`),
+  getBattleEngineAbility: (id) => request(`/api/battle-engine/catalog/abilities/${id}`),
+  getBattleEngineItem: (id) => request(`/api/battle-engine/catalog/items/${id}`),
   login: (body) => request('/api/auth/login', { method: 'POST', body: JSON.stringify(body) }),
   register: (body) => request('/api/auth/register', { method: 'POST', body: JSON.stringify(body) }),
   verify: (token) => request(`/api/auth/verify?token=${token}`),

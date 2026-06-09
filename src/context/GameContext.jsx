@@ -14,6 +14,7 @@ export const SCREENS = {
   battleRoyale: 'battleRoyale',
   minigameHub: 'minigameHub',
   battleArena: 'battleArena',
+  battleArenaV2: 'battleArenaV2',
   dailyGrid: 'dailyGrid',
   clueGuesser: 'clueGuesser',
   triviaTraining: 'triviaTraining',

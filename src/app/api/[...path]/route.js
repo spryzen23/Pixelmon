@@ -25,6 +25,12 @@ import {
   startNewBattle,
   makeChoice
 } from '../../../server/services/battleService.js';
+import {
+  battleEngineCatalog,
+  createBattleEngineSession,
+  getBattleEngineSession,
+  submitBattleEngineChoice
+} from '../../../server/services/battleEngineService.js';
 
 
 
@@ -146,6 +152,23 @@ export async function GET(request, { params }) {
       } catch {
         return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
       }
+    }
+
+    // 14. GET /api/battle-engine/sessions/:battleId
+    if (routeParts[0] === 'battle-engine' && routeParts[1] === 'sessions' && routeParts.length === 3) {
+      return NextResponse.json(getBattleEngineSession(routeParts[2]));
+    }
+
+    // 15. GET /api/battle-engine/catalog/:kind/:id
+    if (routeParts[0] === 'battle-engine' && routeParts[1] === 'catalog' && routeParts.length === 4) {
+      const [, , kind, id] = routeParts;
+      const record =
+        kind === 'moves' ? battleEngineCatalog.getMove(id) :
+        kind === 'abilities' ? battleEngineCatalog.getAbility(id) :
+        kind === 'items' ? battleEngineCatalog.getItem(id) :
+        null;
+      if (!record) return NextResponse.json({ error: 'Catalog record not found' }, { status: 404 });
+      return NextResponse.json(record);
     }
 
     return NextResponse.json({ error: 'Not Found' }, { status: 404 });
@@ -387,6 +410,22 @@ export async function POST(request, { params }) {
       }
       const result = makeChoice(battleId, choice);
       return NextResponse.json(result);
+    }
+
+    // 7. POST /api/battle-engine/sessions
+    if (routeParts[0] === 'battle-engine' && routeParts[1] === 'sessions' && routeParts.length === 2) {
+      return NextResponse.json(createBattleEngineSession(body), { status: 201 });
+    }
+
+    // 8. POST /api/battle-engine/sessions/:battleId/choices
+    if (
+      routeParts[0] === 'battle-engine' &&
+      routeParts[1] === 'sessions' &&
+      routeParts[3] === 'choices' &&
+      routeParts.length === 4
+    ) {
+      const { side = 'p1', choice } = body;
+      return NextResponse.json(submitBattleEngineChoice(routeParts[2], side, choice));
     }
 
     return NextResponse.json({ error: 'Not Found' }, { status: 404 });
