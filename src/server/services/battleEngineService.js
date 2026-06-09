@@ -368,10 +368,21 @@ export function submitBattleEngineChoice(battleId, sideId, choice) {
   const handledAppAction = applyAppAction(battle, sideId, normalizedChoice);
   if (!handledAppAction) battle.choose(sideId, choice);
 
-  for (const aiParticipant of session.participants.filter((entry) => entry.control === 'ai')) {
-    const request = battle.getSide(aiParticipant.side)?.activeRequest;
-    const aiChoice = getAiChoice(request);
-    if (aiChoice) battle.choose(aiParticipant.side, aiChoice);
+  let lastRequests = new Map();
+  let stateChanged = true;
+  while (stateChanged) {
+    stateChanged = false;
+    for (const aiParticipant of session.participants.filter((entry) => entry.control === 'ai')) {
+      const request = battle.getSide(aiParticipant.side)?.activeRequest;
+      if (!request || request.wait || lastRequests.get(aiParticipant.side) === request) continue;
+      
+      const aiChoice = getAiChoice(request);
+      if (aiChoice) {
+        battle.choose(aiParticipant.side, aiChoice);
+        lastRequests.set(aiParticipant.side, request);
+        stateChanged = true;
+      }
+    }
   }
 
   battle.sendUpdates();

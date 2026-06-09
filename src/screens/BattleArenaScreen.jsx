@@ -127,8 +127,21 @@ function formatShowdownLog(line) {
     case '-damage': {
       const target = cleanName(parts[2]);
       const hpStatus = parts[3];
+      const reason = parts[4] || '';
       if (hpStatus === '0 fnt' || hpStatus.startsWith('0')) {
         return null; // Handled by faint event
+      }
+      if (reason.includes('[from] psn')) {
+        return `☠️ <strong>${target}</strong> was hurt by poison!`;
+      }
+      if (reason.includes('[from] brn')) {
+        return `🔥 <strong>${target}</strong> was hurt by its burn!`;
+      }
+      if (reason.includes('[from] item:')) {
+        return `💥 <strong>${target}</strong> was hurt by its ${reason.replace('[from] item: ', '')}!`;
+      }
+      if (reason.includes('[from] sandstorm')) {
+        return `🌪️ <strong>${target}</strong> is buffeted by the sandstorm!`;
       }
       return `💥 <strong>${target}</strong> took damage!`;
     }
@@ -145,7 +158,14 @@ function formatShowdownLog(line) {
     }
     case '-curestatus': {
       const target = cleanName(parts[2]);
-      return `✨ <strong>${target}</strong> recovered from status conditions!`;
+      const statusMap = { brn: 'burn', psn: 'poison', par: 'paralysis', slp: 'sleep', frz: 'freeze' };
+      const status = statusMap[parts[3]] || parts[3];
+      return `✨ <strong>${target}</strong> was cured of its <strong>${status}</strong>!`;
+    }
+    case '-transform': {
+      const actor = cleanName(parts[2]);
+      const target = cleanName(parts[3]);
+      return `🧬 <strong>${actor}</strong> transformed into <strong>${target}</strong>!`;
     }
     case 'faint': {
       const target = cleanName(parts[2]);
@@ -309,6 +329,7 @@ export function BattleArenaScreen() {
   const [items, setItems] = useState({ potions: 3, fullRestores: 1 });
   const [showItems, setShowItems] = useState(false);
   const [showSwitch, setShowSwitch] = useState(false);
+  const [switchTimer, setSwitchTimer] = useState(null);
 
   // Damage Calculator Drawer State
   const [showCalc, setShowCalc] = useState(false);
@@ -324,7 +345,7 @@ export function BattleArenaScreen() {
     crit: 1.0
   });
 
-  const logsEndRef = useRef(null);
+  const logsContainerRef = useRef(null);
 
   // 1. Initial Load: Fetch Draft Pool
   useEffect(() => {
@@ -346,10 +367,41 @@ export function BattleArenaScreen() {
 
   // Auto scroll logs
   useEffect(() => {
-    if (logsEndRef.current) {
-      logsEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (logsContainerRef.current) {
+      logsContainerRef.current.scrollTop = logsContainerRef.current.scrollHeight;
     }
   }, [battleLogs]);
+
+  // Auto-switch timer
+  useEffect(() => {
+    let interval;
+    if (activeRequest?.forceSwitch && !isActing && winner === null) {
+      setSwitchTimer(5);
+      interval = setInterval(() => {
+        setSwitchTimer(prev => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            const firstAvailableIdx = playerTeam.findIndex((p, i) => {
+              const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
+              const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
+              const isActive = reqMon ? reqMon.active : false;
+              return !isFainted && !isActive;
+            });
+            if (firstAvailableIdx !== -1) {
+              handleSwapActive(firstAvailableIdx);
+            }
+            return null;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      setSwitchTimer(null);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [activeRequest, isActing, winner, playerTeam]);
 
   const getRequestMoves = useCallback(() => {
     if (!activeRequest || !activeRequest.active || !activeRequest.active[0]) return [];
@@ -513,6 +565,7 @@ export function BattleArenaScreen() {
 
     let localTeam = [...pTeam];
     let localEnemy = eMon ? { ...eMon } : null;
+    let localActiveIdx = activeIdx;
 
     for (let i = 0; i < logs.length; i++) {
       const line = logs[i];
@@ -549,7 +602,7 @@ export function BattleArenaScreen() {
 
         if (target.startsWith('p1a:')) {
           setPlayerAnim('hit');
-          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, activeIdx);
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, localActiveIdx);
           localTeam[targetTeamIndex] = {
             ...localTeam[targetTeamIndex],
             currentHp,
@@ -577,7 +630,7 @@ export function BattleArenaScreen() {
         const { currentHp, maxHp, status } = parseCondition(hpStatus);
 
         if (target.startsWith('p1a:')) {
-          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, activeIdx);
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, localActiveIdx);
           localTeam[targetTeamIndex] = {
             ...localTeam[targetTeamIndex],
             currentHp,
@@ -599,7 +652,7 @@ export function BattleArenaScreen() {
         const target = parts[2];
         if (target.startsWith('p1a:')) {
           setPlayerAnim('faint');
-          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, activeIdx);
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, localActiveIdx);
           if (localTeam[targetTeamIndex]) localTeam[targetTeamIndex].currentHp = 0;
           setPlayerTeam([...localTeam]);
           await new Promise(r => setTimeout(r, 600));
@@ -614,7 +667,7 @@ export function BattleArenaScreen() {
           setEnemyAnim('');
         }
       }
-      else if (type === 'switch') {
+      else if (type === 'switch' || type === 'drag') {
         const target = parts[2];
         const details = parts[3];
         const hpStatus = parts[4];
@@ -629,6 +682,44 @@ export function BattleArenaScreen() {
           localEnemy = enemyDetail;
           setEnemy(enemyDetail);
           await new Promise(r => setTimeout(r, 450));
+        } else if (target.startsWith('p1a:')) {
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, localActiveIdx);
+          if (localTeam[targetTeamIndex]) {
+            localTeam[targetTeamIndex] = { ...localTeam[targetTeamIndex], transformData: null };
+            setPlayerTeam([...localTeam]);
+          }
+          localActiveIdx = targetTeamIndex;
+          setActiveIdx(localActiveIdx);
+          setPlayerAnim('');
+        }
+      }
+      else if (type === '-transform') {
+        const source = parts[2];
+        const target = parts[3];
+
+        if (source.startsWith('p1a:') && target.startsWith('p2a:')) {
+          const targetTeamIndex = findTeamIndexForBattleIdent(source, localTeam, nextRequest, localActiveIdx);
+          if (localTeam[targetTeamIndex]) {
+            localTeam[targetTeamIndex] = {
+              ...localTeam[targetTeamIndex],
+              transformData: {
+                sprite: localEnemy?.sprite || '',
+                displayName: localEnemy?.displayName || ''
+              }
+            };
+            setPlayerTeam([...localTeam]);
+          }
+          await new Promise(r => setTimeout(r, 600));
+        } else if (source.startsWith('p2a:') && target.startsWith('p1a:')) {
+          if (localEnemy) {
+            const playerTarget = localTeam[findTeamIndexForBattleIdent(target, localTeam, nextRequest, localActiveIdx)];
+            localEnemy.transformData = {
+              sprite: playerTarget?.sprite || '',
+              displayName: playerTarget?.displayName || ''
+            };
+            setEnemy({ ...localEnemy });
+          }
+          await new Promise(r => setTimeout(r, 600));
         }
       }
     }
@@ -636,7 +727,7 @@ export function BattleArenaScreen() {
     // Set final synced states
     setActiveRequest(nextRequest);
 
-    if (nextRequest && nextRequest.side && nextRequest.side.pokemon) {
+    if (nextRequest && nextRequest.side && nextRequest.side.pokemon && nextWinner === null) {
       localTeam = syncTeamFromRequest(localTeam, nextRequest);
       setPlayerTeam([...localTeam]);
 
@@ -652,6 +743,9 @@ export function BattleArenaScreen() {
       }
     } else {
       setPlayerTurn(true);
+      if (nextRequest?.forceSwitch) {
+        setShowSwitch(true);
+      }
     }
 
     setIsActing(false);
@@ -774,20 +868,6 @@ export function BattleArenaScreen() {
                 <h2 className="minigame-inner-title">Draft Your Squad (Choose 3)</h2>
                 <p className="minigame-inner-subtitle" style={{ marginBottom: 0 }}>Select 3 Pokémon to fight the opponent team.</p>
               </div>
-              <button
-                className="btn-back"
-                id="start-battle-btn"
-                disabled={selectedTeam.length !== 3 || loading}
-                onClick={() => startBattle()}
-                style={{
-                  background: selectedTeam.length === 3 ? 'var(--px-sky)' : 'rgba(255,255,255,0.02)',
-                  borderColor: selectedTeam.length === 3 ? 'var(--px-sky)' : 'var(--px-border)',
-                  minWidth: '170px',
-                  justifyContent: 'center'
-                }}
-              >
-                <Swords size={16} /> {selectedTeam.length}/3 Start Battle
-              </button>
             </div>
 
             <div className="battle-arena-header" style={{ marginBottom: '24px' }}>
@@ -879,7 +959,7 @@ export function BattleArenaScreen() {
                     <>
                       <div className="pokemon-hp-panel" id="enemy-hp-panel">
                         <div className="hp-panel-header">
-                          <span className="hp-pokemon-name">{enemy.displayName}</span>
+                          <span className="hp-pokemon-name">{enemy.transformData?.displayName || enemy.displayName}</span>
                           <span className="hp-pokemon-level">Lvl {enemy.level || 50}</span>
                         </div>
                         <div className="hp-bar-outer">
@@ -899,7 +979,7 @@ export function BattleArenaScreen() {
                         id="enemy-avatar-wrapper"
                         data-status={enemy.status !== 'none' ? enemy.status : undefined}
                       >
-                        <img src={enemy.sprite} alt={enemy.displayName} />
+                        <img src={enemy.transformData?.sprite || enemy.sprite} alt={enemy.transformData?.displayName || enemy.displayName} />
                       </div>
                     </>
                   )}
@@ -913,7 +993,7 @@ export function BattleArenaScreen() {
                     <>
                       <div className="pokemon-hp-panel" id="player-hp-panel">
                         <div className="hp-panel-header">
-                          <span className="hp-pokemon-name">{playerTeam[activeIdx].displayName}</span>
+                          <span className="hp-pokemon-name">{playerTeam[activeIdx].transformData?.displayName || playerTeam[activeIdx].displayName}</span>
                           <span className="hp-pokemon-level">Lvl {playerTeam[activeIdx].level || 50}</span>
                         </div>
                         <div className="hp-bar-outer">
@@ -934,7 +1014,7 @@ export function BattleArenaScreen() {
                         style={{ transform: 'scaleX(-1)' }}
                         data-status={playerTeam[activeIdx].status !== 'none' ? playerTeam[activeIdx].status : undefined}
                       >
-                        <img src={playerTeam[activeIdx].sprite} alt={playerTeam[activeIdx].displayName} />
+                        <img src={playerTeam[activeIdx].transformData?.sprite || playerTeam[activeIdx].sprite} alt={playerTeam[activeIdx].transformData?.displayName || playerTeam[activeIdx].displayName} />
                       </div>
                     </>
                   )}
@@ -943,18 +1023,49 @@ export function BattleArenaScreen() {
 
             </div>
 
-            {/* Combat Logs */}
-            <div className="battle-logs-card" id="battle-logs-card">
-              <span className="battle-logs-title">Battle Combat Logs</span>
-              <div className="battle-logs-stream">
-                {battleLogs.slice(-4).map((log, i) => (
-                  <div key={i} className="battle-log-line" dangerouslySetInnerHTML={{ __html: log }} />
-                ))}
-                <div ref={logsEndRef} />
-              </div>
+            {/* Right Panel (Actions or Winner) */}
+            <div className="battle-actions-card" id="battle-actions-card">
+              {winner === null ? (
+                <>
+                  <button className="dmg-calc-toggle-btn" id="dmg-calc-toggle" onClick={() => setShowCalc(true)}>
+                    📊 Damage Calculator
+                  </button>
+                  
+                  {/* Always open Swap Options */}
+                  <div className="swap-options-container" style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: 'auto' }}>
+                    <span className="config-section-title" style={{ margin: 0 }}>
+                      Swap Pokémon {switchTimer !== null && <span style={{ color: 'var(--px-accent)' }}>(Auto in {switchTimer}s)</span>}:
+                    </span>
+                    {playerTeam.map((p, i) => {
+                      const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
+                      const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
+                      const isActive = reqMon ? reqMon.active : false;
+                      return (
+                        <button
+                          key={p.name}
+                          id={`switch-poke-btn-${i}`}
+                          className={`config-btn ${activeIdx === i ? 'active' : ''}`}
+                          disabled={isFainted || isActive}
+                          onClick={() => handleSwapActive(i)}
+                          style={{ padding: '8px', fontSize: '11px', textAlign: 'left' }}
+                        >
+                          {p.displayName} ({p.currentHp} HP)
+                        </button>
+                      );
+                    })}
+                  </div>
 
-              {winner && (
-                <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '8px' }}>
+                    <button className="btn-menu-action" id="items-action-btn" onClick={() => { setShowItems(prev => !prev); setShowSwitch(false); }}>
+                      🧪 Items (I)
+                    </button>
+                    <button className="btn-menu-action danger" id="flee-arena-btn" onClick={() => setStage('draft')}>
+                      🏳️ Flee
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', height: '100%', justifyContent: 'center' }}>
                   {winner === 'player' ? (
                     <div className="battle-winner-banner" id="winner-banner">
                       🏆 Victory! You defeated the opponent!
@@ -1000,49 +1111,12 @@ export function BattleArenaScreen() {
                 ))}
               </div>
 
-              {/* Actions Menu */}
-              <div className="battle-menu-actions">
-                <button className="dmg-calc-toggle-btn" id="dmg-calc-toggle" onClick={() => setShowCalc(true)}>
-                  📊 Damage Calculator
-                </button>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                  <button className="btn-menu-action" id="swap-action-btn" onClick={() => { setShowSwitch(prev => !prev); setShowItems(false); }}>
-                    🔄 Swap (S)
-                  </button>
-                  <button className="btn-menu-action" id="items-action-btn" onClick={() => { setShowItems(prev => !prev); setShowSwitch(false); }}>
-                    🧪 Items (I)
-                  </button>
-                </div>
-                <button className="btn-menu-action danger" id="flee-arena-btn" onClick={() => setStage('draft')}>
-                  🏳️ Flee Arena
-                </button>
-              </div>
+              {/* Actions Menu moved to right panel */}
 
             </div>
           )}
 
-          {/* Swap layout picker */}
-          {showSwitch && (
-            <div className="minigame-inner-header" id="switch-panel" style={{ marginTop: '12px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--px-border)', borderRadius: '16px', justifyContent: 'flex-start', gap: '12px' }}>
-              <span className="config-section-title" style={{ margin: 0 }}>Swap Pokémon:</span>
-              {playerTeam.map((p, i) => {
-                const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
-                const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
-                const isActive = reqMon ? reqMon.active : false;
-                return (
-                  <button
-                    key={p.name}
-                    id={`switch-poke-btn-${i}`}
-                    className={`config-btn ${activeIdx === i ? 'active' : ''}`}
-                    disabled={isFainted || isActive}
-                    onClick={() => handleSwapActive(i)}
-                  >
-                    {p.displayName} ({p.currentHp} HP)
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          {/* Swap layout picker moved to Actions Card */}
 
           {/* Items layout picker */}
           {showItems && (
@@ -1056,6 +1130,16 @@ export function BattleArenaScreen() {
               </button>
             </div>
           )}
+
+          {/* Combat Logs at bottom */}
+          <div className="battle-logs-card horizontal" id="battle-logs-card">
+            <span className="battle-logs-title">Battle Combat Logs</span>
+            <div className="battle-logs-stream" ref={logsContainerRef}>
+              {battleLogs.map((log, i) => (
+                <div key={i} className="battle-log-line" dangerouslySetInnerHTML={{ __html: log }} />
+              ))}
+            </div>
+          </div>
 
         </div>
       )}
