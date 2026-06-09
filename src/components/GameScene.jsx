@@ -1,4 +1,5 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { useThree } from '@react-three/fiber';
 import AimIndicator from './AimIndicator';
 import Atmosphere, { SUN_POSITION } from './Atmosphere';
@@ -99,7 +100,6 @@ export function GameScene({
   const projectileRefs = useRef(new Map());
   const projectileId = useRef(0);
   const burstId = useRef(0);
-  const effectId = useRef(0);
   const { camera } = useThree();
 
   const playerSpawnPosition = useMemo(
@@ -120,21 +120,32 @@ export function GameScene({
 
   const prevCompanionIdRef = useRef(player?.companion?.entryId);
 
+  const addCompanionEffect = useCallback((position) => {
+    const id = `companion-effect-${uuidv4()}`;
+    setCompanionEffects((current) => [...current, { id, position }]);
+  }, []);
+
+  const removeCompanionEffect = useCallback((id) => {
+    setCompanionEffects((current) => current.filter((e) => e.id !== id));
+  }, []);
+
   useEffect(() => {
     const currentId = player?.companion?.entryId;
     if (currentId && prevCompanionIdRef.current && currentId !== prevCompanionIdRef.current) {
       const oldPosition = companionRef.current
         ? [companionRef.current.position.x, companionRef.current.position.y, companionRef.current.position.z]
         : playerSpawnPosition;
-      
-      addCompanionEffect(oldPosition); // Recall effect at old position
 
       const newSpawnPos = playerRef.current
         ? [playerRef.current.position.x, playerRef.current.position.y, playerRef.current.position.z]
         : playerSpawnPosition;
 
       setCompanionSpawnPosition(newSpawnPos);
-      addCompanionEffect(newSpawnPos); // Summon effect at new position
+      setCompanionEffects((current) => [
+        ...current,
+        { id: `companion-effect-${uuidv4()}`, position: oldPosition },
+        { id: `companion-effect-${uuidv4()}`, position: newSpawnPos },
+      ]);
       setIsCompanionOut(true);
     }
     prevCompanionIdRef.current = currentId;
@@ -205,18 +216,6 @@ export function GameScene({
   const removeProjectile = useCallback((id) => {
     projectileRefs.current.delete(id);
     setProjectiles((current) => current.filter((p) => p.id !== id));
-  }, []);
-
-  const addCompanionEffect = useCallback((position) => {
-    effectId.current += 1;
-    setCompanionEffects((current) => [
-      ...current,
-      { id: `companion-effect-${effectId.current}`, position },
-    ]);
-  }, []);
-
-  const removeCompanionEffect = useCallback((id) => {
-    setCompanionEffects((current) => current.filter((e) => e.id !== id));
   }, []);
 
   const addCaptureBurst = useCallback((position) => {

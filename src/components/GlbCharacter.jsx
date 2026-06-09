@@ -16,6 +16,7 @@ export default function GlbCharacter({
   fallbackColor = '#888888',
   fallbackHeight = 1,
   fallbackWidth = 0.75,
+  fitToHeight = null,
 }) {
   const fallback = (
     <VoxelFallback
@@ -42,6 +43,7 @@ export default function GlbCharacter({
           inputRef={inputRef}
           animProfile={animProfile}
           primaryType={primaryType}
+          fitToHeight={fitToHeight}
         />
       </Suspense>
     </ModelErrorBoundary>

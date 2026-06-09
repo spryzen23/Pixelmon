@@ -13,6 +13,7 @@ import AnimatedModel from './AnimatedModel';
 import ModelErrorBoundary from './ModelErrorBoundary';
 import VoxelFallback from './VoxelFallback';
 import { lerpAngle } from '../game/animationUtils';
+import { getPlayerActionFallbacks, resolvePlayerAction } from '../game/playerAnimation';
 import { normalizePlayerStyle } from '../game/playerStyles';
 import useKeyboardControls from '../hooks/useKeyboardControls';
 import {
@@ -54,8 +55,9 @@ const Player = forwardRef(function Player(
   const movingRef = useRef(false);
   const previousY = useRef(PLAYER_START[1]);
   const previousXZ = useRef({ x: PLAYER_START[0], z: PLAYER_START[2] });
-  const [isMoving, setIsMoving] = useState(false);
   const [isSprinting, setIsSprinting] = useState(false);
+  const [actionName, setActionName] = useState('Idle');
+  const actionNameRef = useRef('Idle');
   const selectedStyle = normalizePlayerStyle(characterStyle);
   const modelUrl = selectedStyle.modelUrl;
   const modelScale = selectedStyle.modelScale ?? MODEL_SCALE;
@@ -65,13 +67,19 @@ const Player = forwardRef(function Player(
   const vy = useRef(0);
   const [isJumping, setIsJumping] = useState(false);
   const [isCrouching, setIsCrouching] = useState(false);
+  const isCrouchingRef = useRef(false);
   const animInputRef = useRef({
     forwardInput: 0,
     strafeInput: 0,
     isJumping: false,
     isCrouching: false,
     moveSpeedFactor: 1,
+    lookAngle: 0,
+    lookPitch: 0,
+    vy: 0,
+    actionName: 'Idle',
   });
+  const debugAnimLogAt = useRef(0);
   useImperativeHandle(ref, () => playerRef.current, []);
 
   useEffect(() => {
@@ -103,7 +111,10 @@ const Player = forwardRef(function Player(
       !!pressed.sprint &&
       !crouchActive &&
       (pressed.forward || pressed.backward || pressed.left || pressed.right);
-    setIsCrouching(crouchActive);
+    if (crouchActive !== isCrouchingRef.current) {
+      isCrouchingRef.current = crouchActive;
+      setIsCrouching(crouchActive);
+    }
     animInputRef.current.isCrouching = crouchActive;
     animInputRef.current.moveSpeedFactor = crouchActive
       ? 0.45
@@ -207,13 +218,13 @@ const Player = forwardRef(function Player(
 
     cameraForward.normalize();
     const cameraYaw = Math.atan2(cameraForward.x, cameraForward.z);
-    
+
     // Relative look yaw and pitch for head tracking
     const camDir = new Vector3();
     camera.getWorldDirection(camDir);
     const cameraPitch = Math.asin(camDir.y);
     const lookAngle = MathUtils.euclideanModulo(cameraYaw - player.rotation.y + Math.PI, Math.PI * 2) - Math.PI;
-    
+
     animInputRef.current.lookAngle = lookAngle;
     animInputRef.current.lookPitch = cameraPitch;
     animInputRef.current.vy = vy.current;
@@ -235,11 +246,43 @@ const Player = forwardRef(function Player(
 
       if (movingRef.current) {
         movingRef.current = false;
-        setIsMoving(false);
       }
 
       if (isSprinting) {
         setIsSprinting(false);
+      }
+
+      const idleAction = resolvePlayerAction({
+        jumping: isJumping,
+        crouching: crouchActive,
+        moving: false,
+        hasMoveInput: false,
+        sprinting: false,
+      });
+      animInputRef.current.actionName = idleAction;
+      if (idleAction !== actionNameRef.current) {
+        actionNameRef.current = idleAction;
+        setActionName(idleAction);
+        // #region agent log
+        fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '4125de' },
+          body: JSON.stringify({
+            sessionId: '4125de',
+            runId: 'anim-verify',
+            hypothesisId: 'H1',
+            location: 'Player.jsx:idleActionChange',
+            message: 'player action resolved (idle branch)',
+            data: {
+              nextAction: idleAction,
+              crouchActive,
+              jumping: isJumping,
+              styleId: selectedStyle.id,
+            },
+            timestamp: Date.now(),
+          }),
+        }).catch(() => { });
+        // #endregion
       }
 
       previousXZ.current.x = player.position.x;
@@ -367,24 +410,80 @@ const Player = forwardRef(function Player(
 
     if (actuallyMoved !== movingRef.current) {
       movingRef.current = actuallyMoved;
-      setIsMoving(actuallyMoved);
     }
 
     if (sprintActive !== isSprinting) {
       setIsSprinting(sprintActive);
     }
+
+    const hasMoveInput =
+      animInputRef.current.forwardInput !== 0 ||
+      animInputRef.current.strafeInput !== 0;
+    const nextAction = resolvePlayerAction({
+      jumping: isJumping || vy.current > 0.15,
+      crouching: crouchActive,
+      moving: actuallyMoved,
+      hasMoveInput,
+      sprinting: sprintActive && hasMoveInput,
+    });
+    animInputRef.current.actionName = nextAction;
+    if (nextAction !== actionNameRef.current) {
+      actionNameRef.current = nextAction;
+      setActionName(nextAction);
+      // #region agent log
+      fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '4125de' },
+        body: JSON.stringify({
+          sessionId: '4125de',
+          runId: 'anim-verify',
+          hypothesisId: 'H1',
+          location: 'Player.jsx:actionChange',
+          message: 'player action resolved',
+          data: {
+            nextAction,
+            hasMoveInput,
+            actuallyMoved,
+            crouchActive,
+            jumping: isJumping || vy.current > 0.15,
+            sprinting: sprintActive && hasMoveInput,
+            styleId: selectedStyle.id,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => { });
+      // #endregion
+    }
+
+    const now = performance.now();
+    if (now - debugAnimLogAt.current > 900) {
+      debugAnimLogAt.current = now;
+      // #region agent log
+      fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '4125de' },
+        body: JSON.stringify({
+          sessionId: '4125de',
+          runId: 'anim-verify',
+          hypothesisId: 'H3',
+          location: 'Player.jsx:frameSample',
+          message: 'locomotion sample',
+          data: {
+            action: nextAction,
+            forward: animInputRef.current.forwardInput,
+            strafe: animInputRef.current.strafeInput,
+            hasMoveInput,
+            actuallyMoved,
+            vy: vy.current,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => { });
+      // #endregion
+    }
   });
 
   const modelYOffset = -PLAYER_HEIGHT / 2 + (isCrouching ? -0.22 : 0);
-  const actionName = isJumping
-    ? 'Jump'
-    : isCrouching
-      ? 'Crouch'
-      : isMoving
-        ? isSprinting
-          ? 'Run'
-          : 'Walk'
-        : 'Idle';
   const fallbackProps = {
     color: '#2364ff',
     height: PLAYER_HEIGHT,
@@ -407,11 +506,7 @@ const Player = forwardRef(function Player(
             key={modelUrl}
             url={modelUrl}
             actionName={actionName}
-            fallbackActionName={
-              isMoving || isSprinting
-                ? ['Run', 'Walk', 'Idle']
-                : ['Idle', 'Walk']
-            }
+            fallbackActionName={getPlayerActionFallbacks(actionName)}
             fitToHeight={modelFitHeight}
             position={[0, modelYOffset, 0]}
             rotation={modelRotation}

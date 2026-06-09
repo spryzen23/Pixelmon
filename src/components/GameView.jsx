@@ -5,6 +5,8 @@ import { api } from '../api';
 import { useGame, SCREENS, GAME_MODES } from '../context/GameContext';
 import { GameScene } from './GameScene';
 import Hotbar from './Hotbar';
+import { GameHudPanel } from './GameHudPanel';
+import { CompanionHotbar } from './CompanionHotbar';
 import LoadingOverlay from './LoadingOverlay';
 import { SceneTheme } from './SceneTheme';
 import { BALL_TYPES, DEFAULT_BALL } from '../game/balls';
@@ -31,7 +33,7 @@ import {
   WORLD_PATHS,
   clearAllBiomeCaches,
   getBiomeCacheSummary,
-  preloadBiome,
+  preloadSpawnChunk,
   setActivePathId,
 } from '../game/world';
 import { Button } from './ui/Button';
@@ -261,6 +263,11 @@ export function GameView() {
 
   const handleBiomeReady = useCallback(
     (loadSummary = {}) => {
+      if (loadSummary.phase === 'spawn') {
+        setIsMapLoading(false);
+        return;
+      }
+
       const pending = pendingBiomeLoadRef.current;
       if (pending && pending.biomeId === activePathId) {
         const cacheAfter = getBiomeCacheSummary(activePathId, caveZone);
@@ -271,12 +278,12 @@ export function GameView() {
           biomeName: display.label,
           biomeType: display.fantasyBiome,
           cacheHit: pending.cacheBefore.chunkCount > 0,
-          durationMs: performance.now() - pending.startMs,
+          durationMs: loadSummary.durationMs ?? performance.now() - pending.startMs,
           trigger: pending.trigger,
         });
         pendingBiomeLoadRef.current = null;
       }
-      window.setTimeout(() => setIsMapLoading(false), 220);
+      setIsMapLoading(false);
     },
     [activePathId, caveZone, display.fantasyBiome, display.label]
   );
@@ -294,7 +301,7 @@ export function GameView() {
     };
     setSandboxPathId(pathId);
     setActivePathId(pathId);
-    preloadBiome(pathId);
+    preloadSpawnChunk(pathId);
   }, [sandboxPathId]);
 
   const handleEnterCave = useCallback(() => {
@@ -489,13 +496,12 @@ export function GameView() {
 
       <canvas ref={uiCanvasRef} id="ui-canvas" className="ui-canvas" layoutsubtree="">
         <div ref={uiContainerRef} id="ui-container">
-          <div className="hud">
-            <strong>{display.label}</strong>
-            <span>Trainer: {player.displayName}</span>
-            <span>Click game window · WASD move · F/Space throw · E companion · X exit zones</span>
-            <span>Ball: {equippedBall.name}</span>
-            <span>
-              {formatSpawnProgressLine({
+          <div className="hud-left-stack">
+            <GameHudPanel
+              locationLabel={display.label}
+              trainerName={player.displayName}
+              equippedBallName={equippedBall.name}
+              spawnProgressLine={formatSpawnProgressLine({
                 level: spawnProgress.level,
                 maxLevel: spawnProgress.maxLevel,
                 active: spawnProgress.active,
@@ -503,12 +509,17 @@ export function GameView() {
                 eggGroups: spawnProgress.eggGroups || spawnState?.activeEggGroups,
                 regionName: spawnProgress.regionName || display.regionName,
               })}
-            </span>
-            <span>Creatures caught: {gameRuntime.caughtCount}</span>
-            {isAlphaEligible(spawnState) && !spawnState.alphaCaught && (
-              <span>Alpha eligible!</span>
-            )}
-            {isSandbox && <span>Field spawns: {ordinaryLeft}</span>}
+              caughtCount={gameRuntime.caughtCount}
+              showAlphaEligible={isAlphaEligible(spawnState) && !spawnState.alphaCaught}
+              isSandbox={isSandbox}
+              ordinaryLeft={ordinaryLeft}
+            />
+
+            <CompanionHotbar
+              companions={player?.companions}
+              activeEntryId={player?.companion?.entryId}
+              onSelect={switchCompanion}
+            />
           </div>
 
           <div className="crosshair" aria-hidden="true">
@@ -517,34 +528,11 @@ export function GameView() {
             <span className="crosshair-dot" />
           </div>
 
-          <Hotbar equippedBallId={equippedBallId} throwPower={throwPower} />
-
-          {/* Companion Hotbar Selector */}
-          {player?.companions && player.companions.length > 0 && (
-            <div className="companion-hotbar-hud">
-              <div className="companion-hud-title">Companions</div>
-              {player.companions.slice(0, 5).map((comp, idx) => {
-                const isActive = player.companion?.entryId === comp.entryId;
-                const type = comp.types?.[0] || 'normal';
-                const hotkeyLabel = idx === 4 ? '0' : String(idx + 6);
-                return (
-                  <button
-                    key={comp.entryId}
-                    type="button"
-                    className={`companion-hud-btn${isActive ? ' active' : ''}`}
-                    onClick={() => switchCompanion(idx)}
-                  >
-                    <div className="companion-hud-key">{hotkeyLabel}</div>
-                    <div className="companion-hud-details">
-                      <span className="companion-hud-name">{comp.displayName}</span>
-                      <span className="companion-hud-types">{comp.types?.join(' / ')}</span>
-                    </div>
-                    <div className={`type-badge-mini ${type}`} />
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          <Hotbar
+            equippedBallId={equippedBallId}
+            throwPower={throwPower}
+            onSelectBall={setEquippedBallId}
+          />
 
           <div className="hud-actions">
             {!isSandbox && <Button onClick={() => goTo(SCREENS.pokedex)}>Pokédex</Button>}

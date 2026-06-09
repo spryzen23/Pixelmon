@@ -33,7 +33,7 @@ REM
 REM Mirrors contact360.io\app\codebase.bat + api\codebase.bat structure for a Node monorepo:
 REM   0 Game asset inventory (+ reports\asset-inventory.txt)
 REM   1 Clean + npm install (root, server, client)
-REM   2 Data preflight (build-slim / pokemons.slim.json — warn-only like app codegen)
+REM   2 Data preflight (SQLite pokemon catalog — warn-only like app codegen)
 REM   3 Typecheck (skipped — JavaScript, no tsc)
 REM   4 Prettier (npx --check / --write on client + server sources)
 REM   5 ESLint (npm run lint / lint:fix)
@@ -49,8 +49,8 @@ REM Optional environment variables:
 REM SKIP_ASSET_INVENTORY=1     Skip step 0
 REM SKIP_CLEAN=1               Keep node_modules; remove client\dist, coverage, build only
 REM SKIP_NPM_INSTALL=1         Skip step 1 install (parity with api SKIP_PIP_INSTALL)
-REM SKIP_DATA_SETUP=1          Skip step 2 build-slim preflight
-REM DATA_SETUP_NO_FAIL=1       build-slim failure -> warning only (default: warning)
+REM SKIP_DATA_SETUP=1          Skip step 2 SQLite data preflight
+REM DATA_SETUP_NO_FAIL=1       data preflight failure -> warning only (default: warning)
 REM SKIP_PRETTIER=1            Skip step 4
 REM RUN_PRETTIER=1             Run Prettier even without .prettierrc in repo root
 REM SKIP_ESLINT=1              Skip step 5
@@ -139,8 +139,7 @@ if /i "%SKIP_ASSET_INVENTORY%"=="1" (
         if exist "public\assets\wild_creature.glb" (echo   OK wild_creature.glb) else (echo   MISSING wild_creature.glb)
         echo.
         echo Data:
-        if exist "data\game\pokemons.slim.json" (echo   OK data\game\pokemons.slim.json) else (echo   MISSING pokemons.slim.json)
-        if exist "public\assets\dataSet\pokemons.json" (echo   OK public\assets\dataSet\pokemons.json) else (echo   MISSING pokemons.json)
+        if exist "data\pixelmon.db" (echo   OK data\pixelmon.db) else (echo   MISSING data\pixelmon.db)
     ) > "reports\asset-inventory.txt"
     call :color_echo "%BLUE%" "  public\assets GLB files (recursive): !ASSET_GLB_COUNT!"
     set "SECTION0_STATUS=PASSED"
@@ -216,37 +215,22 @@ if /i "%SKIP_NPM_INSTALL%"=="1" (
 echo.
 
 REM --- [2] Data preflight ---
-call :color_echo "%CYAN%" "[2/9] Data preflight (pokemons.slim.json)..."
+call :color_echo "%CYAN%" "[2/9] Data preflight (SQLite pokemon catalog)..."
 echo ----------------------------------------
 if /i "%SKIP_DATA_SETUP%"=="1" (
     call :color_echo "%YELLOW%" "  Skipped (SKIP_DATA_SETUP=1)"
     set "SECTION2_STATUS=SKIPPED"
 ) else (
-    call :color_echo "%BLUE%" "  Same role as Contact360 codegen: ensures slim catalog exists before build."
-    if exist "data\game\pokemons.slim.json" (
-        set "SECTION2_STATUS=PASSED"
-        call :color_echo "%GREEN%" "  OK data\game\pokemons.slim.json already present"
+    call :color_echo "%BLUE%" "  Same role as Contact360 codegen: ensures pokemon catalog exists before build."
+    call :color_echo "%YELLOW%" "  Running: node scripts\data-preflight.cjs"
+    call node scripts\data-preflight.cjs
+    if errorlevel 1 (
+        set /a WARNING_COUNT+=1
+        set "SECTION2_STATUS=WARNING"
+        call :color_echo "%YELLOW%" "  ! data preflight failed — run npm run setup-data"
     ) else (
-        call :color_echo "%YELLOW%" "  Running: node scripts\build-slim.cjs"
-        call node scripts\build-slim.cjs
-        if errorlevel 1 (
-            if /i "%DATA_SETUP_NO_FAIL%"=="1" (
-                set /a WARNING_COUNT+=1
-                set "SECTION2_STATUS=WARNING"
-                call :color_echo "%YELLOW%" "  ! build-slim failed (DATA_SETUP_NO_FAIL=1)"
-            ) else (
-                set /a WARNING_COUNT+=1
-                set "SECTION2_STATUS=WARNING"
-                call :color_echo "%YELLOW%" "  ! build-slim failed — ensure public\assets\dataSet\pokemons.json exists"
-            )
-        ) else if exist "data\game\pokemons.slim.json" (
-            set "SECTION2_STATUS=PASSED"
-            call :color_echo "%GREEN%" "  OK pokemons.slim.json generated"
-        ) else (
-            set /a WARNING_COUNT+=1
-            set "SECTION2_STATUS=WARNING"
-            call :color_echo "%YELLOW%" "  ! build-slim exited 0 but output file missing"
-        )
+        set "SECTION2_STATUS=PASSED"
+        call :color_echo "%GREEN%" "  OK SQLite pokemon catalog ready"
     )
 )
 echo.
@@ -368,8 +352,6 @@ if /i "%SKIP_BUILD%"=="1" (
     call :color_echo "%YELLOW%" "  Skipped (SKIP_BUILD=1)"
     set "SECTION7_STATUS=SKIPPED"
 ) else (
-    call :color_echo "%YELLOW%" "  Running: node scripts\build-slim.cjs"
-    call node scripts\build-slim.cjs
     call :color_echo "%YELLOW%" "  Running: npm.cmd run build"
     call npm.cmd run build
     if errorlevel 1 (

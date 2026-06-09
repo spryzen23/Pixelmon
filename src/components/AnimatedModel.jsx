@@ -5,6 +5,7 @@ import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { useFrame } from '@react-three/fiber';
 import {
   isLeftSide,
+  isPrimaryCrouching,
   isPrimaryIdle,
   isPrimaryJumping,
   isPrimaryWalking,
@@ -62,8 +63,12 @@ export default function AnimatedModel({
   const swingTime = useRef(0);
   const resolvedClipName = resolveAnimationClip(names, actionName, fallbackActionName);
   const isNativeJumpAction = isPrimaryJumping(actionName);
+  const isNativeCrouchAction = isPrimaryCrouching(actionName);
   const wantsNativeAction =
-    isPrimaryWalking(actionName) || isPrimaryIdle(actionName) || isNativeJumpAction;
+    isPrimaryWalking(actionName) ||
+    isPrimaryIdle(actionName) ||
+    isNativeJumpAction ||
+    isNativeCrouchAction;
   const locomotionClipReady = Boolean(
     resolvedClipName &&
     actions[resolvedClipName] &&
@@ -119,7 +124,10 @@ export default function AnimatedModel({
         : Math.max(0.25, Math.min(2.5, liveSpeed));
       activeAction.current.setEffectiveTimeScale(timeScale);
 
-      if ((liveJumping && !isNativeJumpAction) || liveCrouching) {
+      if (
+        (liveJumping && !isNativeJumpAction) ||
+        (liveCrouching && !isNativeCrouchAction)
+      ) {
         activeAction.current.paused = true;
       } else {
         activeAction.current.paused = false;
@@ -130,7 +138,9 @@ export default function AnimatedModel({
     }
 
     const skipFullProcedural =
-      useNativeMixer && !liveCrouching && (!liveJumping || isNativeJumpAction);
+      useNativeMixer &&
+      (!liveCrouching || isNativeCrouchAction) &&
+      (!liveJumping || isNativeJumpAction);
 
     const hasLocomotionInput =
       Math.abs(liveForward) > 0.01 || Math.abs(liveStrafe) > 0.01;
@@ -451,7 +461,8 @@ export default function AnimatedModel({
         !shouldUseNativeAnimationClip(clipName) ||
         (!isPrimaryWalking(actionName) &&
           !isPrimaryIdle(actionName) &&
-          !isPrimaryJumping(actionName))
+          !isPrimaryJumping(actionName) &&
+          !isPrimaryCrouching(actionName))
       ) {
         if (activeAction.current) {
           activeAction.current.stop();
@@ -473,6 +484,22 @@ export default function AnimatedModel({
       }
 
       activeAction.current = nextAction;
+
+      // #region agent log
+      fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '4125de' },
+        body: JSON.stringify({
+          sessionId: '4125de',
+          runId: 'anim-verify',
+          hypothesisId: 'H2',
+          location: 'AnimatedModel.jsx:clipSwitch',
+          message: 'native clip activated',
+          data: { actionName, clipName, availableClips: names.slice(0, 8) },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => { });
+      // #endregion
 
       return undefined;
     } catch {

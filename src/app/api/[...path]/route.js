@@ -28,10 +28,15 @@ import {
 
 
 
+async function resolveRouteParts(params) {
+  const { path } = await params;
+  return path;
+}
+
 // GET Handlers
 export async function GET(request, { params }) {
   try {
-    const { path: routeParts } = params;
+    const routeParts = await resolveRouteParts(params);
     const url = new URL(request.url);
 
     // 1. GET /api/health
@@ -83,7 +88,7 @@ export async function GET(request, { params }) {
       const db = await getDB();
       const slim = await getPokemonsSlim();
       const entries = slim.entries;
-      
+
       const movesRows = await db.all(`
         SELECT DISTINCT rpm.pokemon_id, rm.identifier AS move_name
         FROM raw_pokemon_moves rpm
@@ -104,7 +109,7 @@ export async function GET(request, { params }) {
         .map(([name]) => name);
 
       const shuffle = arr => arr.sort(() => 0.5 - Math.random());
-      
+
       const regions = ['kanto', 'johto', 'hoenn', 'sinnoh', 'unova', 'kalos', 'alola', 'galar', 'paldea'];
       const types = ['normal', 'fire', 'water', 'grass', 'electric', 'ice', 'fighting', 'poison', 'ground', 'flying', 'psychic', 'bug', 'rock', 'ghost', 'dragon', 'steel', 'fairy', 'dark'];
       const eggGroups = ['monster', 'plant', 'dragon', 'water1', 'bug', 'flying', 'ground', 'fairy', 'no-eggs', 'humanshape', 'water3', 'mineral', 'indeterminate', 'water2'];
@@ -340,7 +345,7 @@ export async function GET(request, { params }) {
 // POST Handlers
 export async function POST(request, { params }) {
   try {
-    const { path: routeParts } = params;
+    const routeParts = await resolveRouteParts(params);
     const body = await request.json().catch(() => ({}));
 
     // POST /api/auth/register
@@ -456,7 +461,7 @@ export async function POST(request, { params }) {
       const id = routeParts[1];
       const { entryId, regionId, ballId, isAlpha } = body;
       const player = await getPlayer(id);
-      
+
       // Initialize inventory if not present
       if (!player.inventory) {
         player.inventory = {
@@ -581,7 +586,7 @@ export async function POST(request, { params }) {
 // PATCH Handlers
 export async function PATCH(request, { params }) {
   try {
-    const { path: routeParts } = params;
+    const routeParts = await resolveRouteParts(params);
     const body = await request.json().catch(() => ({}));
 
     // 1. PATCH /api/players/:id/save

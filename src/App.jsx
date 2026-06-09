@@ -1,19 +1,37 @@
+'use client';
+
+import dynamic from 'next/dynamic';
 import { GameProvider, useGame, SCREENS } from './context/GameContext';
 import { ToastProvider } from './hooks/useToast';
 import { WelcomeScreen } from './screens/WelcomeScreen';
-import { DashboardScreen } from './screens/DashboardScreen';
-import BattleRoyaleShell from './modes/battleRoyale/BattleRoyaleShell';
-import { ProfileSetupScreen } from './screens/ProfileSetupScreen';
 import { LoadingScreen } from './screens/LoadingScreen';
 import { GameCompleteScreen } from './screens/GameCompleteScreen';
 import { PokedexScreen } from './screens/PokedexScreen';
-import { GameView } from './components/GameView';
 import { MinigameHubScreen } from './screens/MinigameHubScreen';
 import { BattleArenaScreen } from './screens/BattleArenaScreen';
 import { DailyGridScreen } from './screens/DailyGridScreen';
 import { ClueGuesserScreen } from './screens/ClueGuesserScreen';
 import { TriviaTrainingScreen } from './screens/TriviaTrainingScreen';
+import { ScreenLoadingFallback } from './components/ScreenLoadingFallback';
 import './App.css';
+
+// Defer Three.js / R3F screens so @react-three/fiber is not evaluated at App import time.
+const DashboardScreen = dynamic(
+  () => import('./screens/DashboardScreen').then((mod) => mod.DashboardScreen),
+  { ssr: false, loading: ScreenLoadingFallback }
+);
+const ProfileSetupScreen = dynamic(
+  () => import('./screens/ProfileSetupScreen').then((mod) => mod.ProfileSetupScreen),
+  { ssr: false, loading: ScreenLoadingFallback }
+);
+const GameView = dynamic(
+  () => import('./components/GameView').then((mod) => mod.GameView),
+  { ssr: false, loading: ScreenLoadingFallback }
+);
+const BattleRoyaleShell = dynamic(
+  () => import('./modes/battleRoyale/BattleRoyaleShell'),
+  { ssr: false, loading: ScreenLoadingFallback }
+);
 
 function ScreenRouter() {
   const { screen, goTo } = useGame();

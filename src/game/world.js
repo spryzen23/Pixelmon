@@ -76,6 +76,8 @@ export const PATH_HALF_BLOCKS = MAP_HALF_BLOCKS;
 export const PATH_WORLD_SIZE = MAP_SIZE * VOXEL_SIZE;
 export const PATH_HALF_WORLD_SIZE = PATH_WORLD_SIZE / 2;
 export const RENDER_DISTANCE = 2;
+/** Radius 0 = spawn chunk only (fast first paint). */
+export const SPAWN_RENDER_DISTANCE = 0;
 
 export const CAVE_ZONES = {
   EXTERIOR: 'exterior',
@@ -675,6 +677,24 @@ export function getBiomeCacheSummary(
   };
 }
 
+export function preloadSpawnChunk(
+  currentBiome = activeBiome,
+  centerCx = 0,
+  centerCz = 0,
+  caveZone = CAVE_ZONES.EXTERIOR
+) {
+  generateBiomeMap(currentBiome, caveZone);
+  getBiomeChunksAround(
+    currentBiome,
+    centerCx,
+    centerCz,
+    SPAWN_RENDER_DISTANCE,
+    caveZone
+  );
+  return getBiomeMap(currentBiome, caveZone);
+}
+
+/** Preload full render radius synchronously (sandbox switch, tests). */
 export function preloadBiome(
   currentBiome = activeBiome,
   caveZone = CAVE_ZONES.EXTERIOR
@@ -689,6 +709,47 @@ export function preloadBiome(
   );
 
   return generateBiomeMap(currentBiome, caveZone);
+}
+
+/**
+ * Expand chunk rings in idle time so spawn area is ready immediately
+ * while outer terrain fills in without blocking the main thread.
+ */
+export function scheduleBiomeRingPreload(
+  currentBiome = activeBiome,
+  centerCx = 0,
+  centerCz = 0,
+  caveZone = CAVE_ZONES.EXTERIOR,
+  onRing = () => { }
+) {
+  const maxRadius = getBiomeRenderDistance(currentBiome);
+  let radius = SPAWN_RENDER_DISTANCE + 1;
+  let cancelled = false;
+
+  const schedule =
+    typeof requestIdleCallback !== 'undefined'
+      ? (fn) => requestIdleCallback(fn, { timeout: 48 })
+      : (fn) => setTimeout(fn, 0);
+
+  const step = () => {
+    if (cancelled || radius > maxRadius) {
+      return;
+    }
+    getBiomeChunksAround(currentBiome, centerCx, centerCz, radius, caveZone);
+    onRing(radius, maxRadius);
+    radius += 1;
+    schedule(step);
+  };
+
+  schedule(step);
+
+  return () => {
+    cancelled = true;
+  };
+}
+
+export function countChunksInRadius(radius = RENDER_DISTANCE) {
+  return getSurroundingChunks(0, 0, radius).length;
 }
 
 export function getBiomeMap(

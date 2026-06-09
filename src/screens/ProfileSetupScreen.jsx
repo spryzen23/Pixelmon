@@ -12,6 +12,7 @@ import { WizardStepper } from '../components/ui/WizardStepper';
 import { Pagination } from '../components/ui/Pagination';
 import { ScreenFrame, ScreenFooter } from '../components/ui/layout/ScreenFrame';
 import CompanionPreview from '../components/CompanionPreview';
+import PlayerStylePreview from '../components/PlayerStylePreview';
 import { getFitToHeightForPokemon, isPokemonFloating, getRotationForPokemon } from '../game/pokemonData';
 
 const WIZARD_LABELS = ['Name', 'Companions', 'Style', 'Review'];
@@ -256,7 +257,7 @@ export function ProfileSetupScreen() {
             />
             <Pagination page={stylePager.page} totalPages={stylePager.totalPages} onPageChange={stylePager.setPage} />
             <div className="preview-canvas-container compact normal">
-              <CompanionPreview modelUrl={selectedStyle.modelUrl} primaryType="normal" fitToHeight={1.25} isFloating={false} />
+              <PlayerStylePreview characterStyle={selectedStyle} fitToHeight={1.1} />
             </div>
           </div>
         )}

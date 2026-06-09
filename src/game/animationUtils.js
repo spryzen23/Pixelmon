@@ -194,6 +194,10 @@ export function isPrimaryJumping(actionName) {
   return /jump|leap/i.test(String(actionName || ''));
 }
 
+export function isPrimaryCrouching(actionName) {
+  return /crouch|duck|sneak/i.test(String(actionName || ''));
+}
+
 /** Resolve attack/flee/special action clips when present in GLB. */
 export function resolveActionClip(names, hints = []) {
   if (!names?.length || !hints?.length) {
@@ -229,7 +233,7 @@ export function shouldUseNativeAnimationClip(clipName) {
     return true;
   }
 
-  if (/idle|idling|walk|walking|run|running|jog|jogging|jump|jumping|stand|standing|wait|slither/i.test(lower)) {
+  if (/idle|idling|walk|walking|run|running|jog|jogging|jump|jumping|crouch|crouching|duck|sneak|stand|standing|wait|slither/i.test(lower)) {
     return true;
   }
 

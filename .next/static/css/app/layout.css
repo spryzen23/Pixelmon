@@ -1,5 +1,5 @@
 /*!********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./src/styles/screens.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/screens.css ***!
   \********************************************************************************************************************************************************************************************************************************************************************/
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
 
@@ -1458,7 +1458,7 @@
   }
 }
 /*!*******************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./src/styles/tokens.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/tokens.css ***!
   \*******************************************************************************************************************************************************************************************************************************************************************/
 :root {
   /* Vibrant & Harmonious Color Palette */
@@ -1519,7 +1519,7 @@
   }
 }
 /*!***********************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./src/index.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/index.css ***!
   \***********************************************************************************************************************************************************************************************************************************************************/
 * {
   box-sizing: border-box;
@@ -1532,7 +1532,7 @@ body,
   height: 100%;
   min-height: 100%;
   overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--px-font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #0f1824;
@@ -1548,7 +1548,7 @@ input {
   font: inherit;
 }
 /*!******************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./src/styles/frame.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/frame.css ***!
   \******************************************************************************************************************************************************************************************************************************************************************/
 /* Single-viewport screen shell — no document scroll */
 .px-frame {
@@ -1607,7 +1607,7 @@ input {
   }
 }
 /*!***********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./src/styles/components.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/components.css ***!
   \***********************************************************************************************************************************************************************************************************************************************************************/
 /* Screen header / footer */
 .px-screen-header {
@@ -2034,7 +2034,7 @@ input {
   color: var(--px-accent);
 }
 /*!***********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./src/styles/tokens.css (1) ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/tokens.css (1) ***!
   \***********************************************************************************************************************************************************************************************************************************************************************/
 :root {
   /* Vibrant & Harmonious Color Palette */
@@ -2095,7 +2095,7 @@ input {
   }
 }
 /*!***********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./src/styles/tokens.css (2) ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/tokens.css (2) ***!
   \***********************************************************************************************************************************************************************************************************************************************************************/
 :root {
   /* Vibrant & Harmonious Color Palette */
@@ -2156,7 +2156,7 @@ input {
   }
 }
 /*!*********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./src/styles/game-hud.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/game-hud.css ***!
   \*********************************************************************************************************************************************************************************************************************************************************************/
 .game-shell {
   position: relative;
@@ -2166,26 +2166,118 @@ input {
   background-color: var(--px-sky);
 }
 
-.hud {
+/* Left column: status panel + companion list */
+.hud-left-stack {
   position: absolute;
   left: 24px;
   top: 20px;
-  display: grid;
-  grid-gap: 4px;
-  gap: 4px;
-  padding: 12px 14px;
-  color: var(--px-text);
-  font-size: 14px;
-  line-height: 1.3;
-  text-align: left;
-  background: var(--px-panel);
-  border: 1px solid var(--px-border);
-  border-radius: var(--px-radius);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(220px, calc(100vw - 48px));
   pointer-events: none;
 }
 
-.hud strong {
-  font-size: 15px;
+.hud-left-stack>* {
+  pointer-events: auto;
+}
+
+.hud {
+  display: grid;
+  grid-gap: 8px;
+  gap: 8px;
+  padding: 12px 14px;
+  color: var(--px-text);
+  font-family: var(--px-font-sans);
+  font-size: var(--px-text-sm);
+  line-height: 1.35;
+  text-align: left;
+  background: var(--px-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--px-border);
+  border-radius: var(--px-radius);
+  box-shadow: var(--px-shadow);
+}
+
+.hud-header {
+  margin: 0;
+}
+
+.hud-location {
+  display: block;
+  font-family: var(--px-font-display);
+  font-size: var(--px-text-md);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.hud-trainer-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.hud-controls-hint {
+  margin: 0;
+  padding: 6px 8px;
+  font-size: var(--px-text-xs);
+  line-height: 1.45;
+  color: var(--px-text-muted);
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: var(--px-radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.hud-stats {
+  display: grid;
+  grid-gap: 4px;
+  gap: 4px;
+  margin: 0;
+}
+
+.hud-stat-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+}
+
+.hud-stat-row-wide {
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hud-stat-row-wide .hud-value {
+  font-size: var(--px-text-xs);
+  color: var(--px-text-muted);
+  line-height: 1.4;
+}
+
+.hud-label {
+  margin: 0;
+  font-size: var(--px-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--px-text-muted);
+  flex-shrink: 0;
+}
+
+.hud-value {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+.hud-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .path-menu {
@@ -2327,9 +2419,29 @@ input {
   display: grid;
   grid-gap: 8px;
   gap: 8px;
-  width: min(430px, calc(100vw - 32px));
+  width: min(440px, calc(100vw - 32px));
   transform: translateX(-50%);
   pointer-events: none;
+}
+
+.hotbar-power-meter {
+  padding: 8px 12px;
+  background: var(--px-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--px-border);
+  border-radius: var(--px-radius);
+  box-shadow: var(--px-shadow);
+  pointer-events: none;
+}
+
+.hotbar-power-meter .px-progress-track {
+  height: 7px;
+  border-radius: 999px;
+}
+
+.hotbar-power-meter .px-progress-fill {
+  border-radius: 999px;
 }
 
 .hotbar {
@@ -2337,6 +2449,7 @@ input {
   grid-template-columns: repeat(3, minmax(104px, 1fr));
   grid-gap: 10px;
   gap: 10px;
+  pointer-events: auto;
 }
 
 .hotbar-slot {
@@ -2349,15 +2462,40 @@ input {
   min-width: 118px;
   padding: 9px 10px;
   color: var(--px-text);
-  font-size: 12px;
+  font-size: var(--px-text-sm);
+  font-family: inherit;
+  text-align: left;
   background: var(--px-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--px-border);
   border-radius: var(--px-radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.hotbar-slot:hover:not(:disabled) {
+  background: var(--px-panel-hover);
+  border-color: rgba(255, 243, 168, 0.35);
+  transform: translateY(-1px);
 }
 
 .hotbar-slot.equipped {
   border-color: var(--px-accent);
-  box-shadow: 0 0 0 2px rgba(255, 243, 168, 0.24);
+  box-shadow: 0 0 0 2px rgba(255, 243, 168, 0.24), 0 4px 12px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 243, 168, 0.08);
+}
+
+.hotbar-slot.disabled,
+.hotbar-slot:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .hotbar-key {
@@ -2382,6 +2520,25 @@ input {
 
 .hotbar-name {
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hotbar-count {
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--px-accent-neon);
+  line-height: 1.3;
+}
+
+.hotbar-count.empty {
+  color: var(--px-danger);
 }
 
 .power-meter {
@@ -2390,7 +2547,7 @@ input {
   gap: 5px;
   padding: 8px 10px;
   color: var(--px-text);
-  font-size: 12px;
+  font-size: var(--px-text-sm);
   background: var(--px-panel);
   border: 1px solid var(--px-border);
   border-radius: var(--px-radius);
@@ -2514,12 +2671,24 @@ input {
 }
 
 @media (max-width: 768px) {
-  .hud {
+  .hud-left-stack {
     left: 12px;
-    right: 12px;
     top: 12px;
-    max-width: calc(100vw - 24px);
-    font-size: 12px;
+    width: min(200px, calc(100vw - 24px));
+  }
+
+  .hud {
+    font-size: var(--px-text-xs);
+    padding: 10px 12px;
+  }
+
+  .companion-hud-btn {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .hotbar-wrap {
+    width: min(100%, calc(100vw - 24px));
   }
 }
 
@@ -2612,14 +2781,9 @@ input {
 
 /* Companion Hotbar HUD styles */
 .companion-hotbar-hud {
-  position: absolute;
-  left: 24px;
-  top: 175px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  pointer-events: auto;
-  z-index: 60;
   animation: slide-in-left 0.3s ease-out;
 }
 
@@ -2650,14 +2814,17 @@ input {
   align-items: center;
   gap: 10px;
   padding: 8px 12px;
+  font-family: inherit;
   background: var(--px-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--px-border);
   border-radius: var(--px-radius);
   color: var(--px-text);
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  width: 170px;
+  width: 100%;
   text-align: left;
   position: relative;
   overflow: hidden;
@@ -2696,7 +2863,7 @@ input {
   color: #dfefff;
   display: flex;
   align-items: center;
-  justifyContent: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
@@ -2809,7 +2976,7 @@ input {
   background: #565656;
 }
 /*!**********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./src/styles/dashboard.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/dashboard.css ***!
   \**********************************************************************************************************************************************************************************************************************************************************************/
 /* =========================================================
    Pixelmon Dashboard — Premium UI (Single Viewport)
@@ -3696,7 +3863,7 @@ input {
   gap: 14px;
   flex: 1 1;
   min-height: 0;
-  align-content: start;
+  align-content: flex-start;
   overflow: hidden;
 }
 
@@ -4150,7 +4317,7 @@ input {
   font-weight: 600;
 }
 /*!********************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./src/styles/battle-royale-lobby.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/battle-royale-lobby.css ***!
   \********************************************************************************************************************************************************************************************************************************************************************************/
 /* Battle Royale Lobby Stylesheet */
 
@@ -4588,6 +4755,6 @@ input {
 }
 
 /*!*********************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./src/App.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/App.css ***!
   \*********************************************************************************************************************************************************************************************************************************************************/
 

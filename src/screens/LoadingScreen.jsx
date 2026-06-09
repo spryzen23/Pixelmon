@@ -5,7 +5,11 @@ import { ProgressBar } from '../components/ui/ProgressBar';
 import { ScreenFrame } from '../components/ui/layout/ScreenFrame';
 import { getBiomeDisplayInfo } from '../game/biomeDisplay';
 import { initBiomeSpawnState } from '../game/spawnController';
-import { preloadBiome, setActivePathId } from '../game/world';
+import {
+  preloadSpawnChunk,
+  scheduleBiomeRingPreload,
+  setActivePathId,
+} from '../game/world';
 import { useGame, SCREENS } from '../context/GameContext';
 
 export function LoadingScreen() {
@@ -35,7 +39,8 @@ export function LoadingScreen() {
     setActivePathId(sessionPathId);
     setPhase('biome');
     setProgress(35);
-    preloadBiome(sessionPathId);
+    preloadSpawnChunk(sessionPathId);
+    const cancelRingPreload = scheduleBiomeRingPreload(sessionPathId);
 
     (async () => {
       try {
@@ -94,6 +99,7 @@ export function LoadingScreen() {
     return () => {
       cancelled = true;
       controller.abort();
+      cancelRingPreload();
     };
   }, [playerId, sessionPathId, sessionRegionId, setGameRuntime, setSpawnLadder, goTo, setPlayer, setSession]);
 

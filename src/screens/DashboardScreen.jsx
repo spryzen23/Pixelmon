@@ -8,7 +8,9 @@ import { purchaseBall } from '../services/shopService';
 import { loadBiomeMap } from '../services/campaignService';
 import { getBiomeDisplayInfo } from '../game/biomeDisplay';
 import CompanionPreview from '../components/CompanionPreview';
+import PlayerStylePreview from '../components/PlayerStylePreview';
 import { getFitToHeightForPokemon, isPokemonFloating, getRotationForPokemon } from '../game/pokemonData';
+import { PLAYER_STYLES, getPlayerStyle } from '../game/playerStyles';
 
 import { typeIconUrl } from '../game/assets';
 
@@ -33,6 +35,10 @@ export function DashboardScreen() {
   const [purchaseSuccess, setPurchaseSuccess] = useState(null);
   const [allPokemons, setAllPokemons] = useState([]);
   const [selectedDexPokemon, setSelectedDexPokemon] = useState(null);
+  const [stylePage, setStylePage] = useState(0);
+  const [styleSaving, setStyleSaving] = useState(false);
+
+  const STYLES_PER_PAGE = 6;
 
   // Load all pokemons for matching caught entries
   useEffect(() => {
@@ -42,6 +48,25 @@ export function DashboardScreen() {
       })
       .catch(console.error);
   }, []);
+
+  const changeCharacterStyle = async (styleId) => {
+    if (!player?.id) {
+      return;
+    }
+
+    const selectedStyle = getPlayerStyle(styleId);
+    setStyleSaving(true);
+
+    try {
+      const patched = await api.patchPlayer(player.id, { characterStyle: selectedStyle });
+      setPlayer(patched);
+    } catch (error) {
+      console.error('Failed to update character style:', error);
+      setPlayer((prev) => ({ ...prev, characterStyle: selectedStyle }));
+    } finally {
+      setStyleSaving(false);
+    }
+  };
 
   const caughtPokemons = useMemo(() => {
     const caughtIds = new Set();
@@ -279,11 +304,9 @@ export function DashboardScreen() {
                         rotation={getRotationForPokemon(player.companion)}
                       />
                     ) : (
-                      <CompanionPreview
-                        modelUrl={player.characterStyle?.modelUrl || '/assets/players/player%20(21).glb'}
-                        primaryType="normal"
-                        fitToHeight={1.25}
-                        isFloating={false}
+                      <PlayerStylePreview
+                        characterStyle={player.characterStyle}
+                        fitToHeight={1.1}
                       />
                     )}
 
@@ -292,6 +315,50 @@ export function DashboardScreen() {
                         ? (player.companion?.displayName || 'Companion')
                         : 'Trainer Model'}
                     </span>
+                  </div>
+
+                  <div className="db-style-picker">
+                    <h4 className="db-embedded-team-title">Character Style</h4>
+                    <div className="style-pager-header">
+                      <button
+                        type="button"
+                        disabled={stylePage <= 0 || styleSaving}
+                        onClick={() => setStylePage((page) => page - 1)}
+                      >
+                        ‹
+                      </button>
+                      <span>
+                        {stylePage + 1}/{Math.ceil(PLAYER_STYLES.length / STYLES_PER_PAGE)}
+                      </span>
+                      <button
+                        type="button"
+                        disabled={
+                          stylePage >= Math.ceil(PLAYER_STYLES.length / STYLES_PER_PAGE) - 1 ||
+                          styleSaving
+                        }
+                        onClick={() => setStylePage((page) => page + 1)}
+                      >
+                        ›
+                      </button>
+                    </div>
+                    <div className="style-grid">
+                      {PLAYER_STYLES.slice(
+                        stylePage * STYLES_PER_PAGE,
+                        (stylePage + 1) * STYLES_PER_PAGE
+                      ).map((style) => (
+                        <button
+                          key={style.id}
+                          type="button"
+                          className={`style-btn ${(player.characterStyle?.id || 'player-21') === style.id ? 'active' : ''
+                            }`}
+                          disabled={styleSaving}
+                          onClick={() => changeCharacterStyle(style.id)}
+                        >
+                          <span className="style-id-num">{style.id.replace('player-', '')}</span>
+                          <span className="style-label-text">{style.label}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Companion Team roster embedded */}
