@@ -1,0 +1,422 @@
+/* PokéWiki 3D Styles */
+
+.pokewiki-controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+}
+
+.pokewiki-select {
+  background: #0f172a;
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  min-width: 150px;
+  transition: all 0.2s ease;
+}
+
+.pokewiki-select:hover {
+  border-color: var(--px-accent, #ffd43f);
+}
+
+.pokewiki-input {
+  background: #0f172a;
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  max-width: 280px;
+  transition: all 0.2s ease;
+}
+
+.pokewiki-input:focus {
+  border-color: var(--px-accent, #ffd43f);
+  box-shadow: 0 0 0 2px rgba(255, 212, 63, 0.2);
+}
+
+.pokewiki-btn-search {
+  background: linear-gradient(135deg, var(--px-accent, #ffd43f), #ffb700);
+  color: #0f172a;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pokewiki-btn-search:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 212, 63, 0.3);
+}
+
+.pokewiki-btn-search:active {
+  transform: translateY(1px);
+}
+
+/* Grid & Cards */
+.pokewiki-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+.pokewiki-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  margin-bottom: 40px;
+  padding: 12px;
+  background: rgba(30, 41, 59, 0.35);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pokewiki-page-indicator {
+  font-size: 14px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.pokewiki-card {
+  background: rgba(30, 41, 59, 0.35);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.pokewiki-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 212, 63, 0.4);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  background: rgba(30, 41, 59, 0.5);
+}
+
+.pokewiki-card-model-container {
+  width: 100%;
+  height: 160px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none; /* Let clicks pass to the card itself */
+}
+
+.pokewiki-card-model {
+  width: 100%;
+  height: 100%;
+}
+
+.pokewiki-card-id {
+  font-size: 12px;
+  color: #94a3b8;
+  font-family: monospace;
+  margin-bottom: 4px;
+}
+
+.pokewiki-card-name {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: #f8fafc;
+  margin: 0;
+}
+
+/* Details Screen */
+.pokewiki-details-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  padding-bottom: 40px;
+}
+
+@media (min-width: 768px) {
+  .pokewiki-details-layout {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.pokewiki-details-panel {
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pokewiki-model-display {
+  width: 100%;
+  height: 380px;
+  background: radial-gradient(circle, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.pokewiki-details-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pokewiki-selector-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pokewiki-selector-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+/* Stats and Types */
+.pokewiki-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-top: 0;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
+}
+
+.pokewiki-types-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.pokewiki-type-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+.pokewiki-stats-table {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pokewiki-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pokewiki-stat-name {
+  width: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: capitalize;
+}
+
+.pokewiki-stat-val {
+  width: 36px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #f8fafc;
+  text-align: right;
+}
+
+.pokewiki-stat-bar-container {
+  flex-grow: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.pokewiki-stat-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s ease-out;
+}
+
+/* Nav Actions */
+.pokewiki-details-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  gap: 12px;
+}
+
+.pokewiki-btn-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pokewiki-btn-nav:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: var(--px-accent, #ffd43f);
+}
+
+.pokewiki-btn-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pokewiki-btn-action {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pokewiki-btn-action:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* Evolution Cards */
+.pokewiki-evolution-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Base properties */
+.pokewiki-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.pokewiki-meta-box {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.pokewiki-meta-label {
+  font-size: 11px;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.pokewiki-meta-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-top: 4px;
+}
+
+/* Type tag background colors */
+.tag-normal   { background: #A8A878; }
+.tag-fire     { background: #F08030; }
+.tag-water    { background: #6890F0; }
+.tag-grass    { background: #78C850; }
+.tag-electric { background: #F8D030; }
+.tag-ice      { background: #98D8D8; }
+.tag-fighting { background: #C03028; }
+.tag-poison   { background: #A040A0; }
+.tag-ground   { background: #E0C068; }
+.tag-flying   { background: #A890F0; }
+.tag-psychic  { background: #F85888; }
+.tag-bug      { background: #A8B820; }
+.tag-rock     { background: #B8A038; }
+.tag-ghost    { background: #705898; }
+.tag-dragon   { background: #7038F8; }
+.tag-dark     { background: #705746; }
+.tag-steel    { background: #B8B8D0; }
+.tag-fairy    { background: #EE99AC; }
+
+.pokewiki-scroll-container {
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.pokewiki-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pokewiki-scroll-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 3px;
+}
+
+.pokewiki-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.pokewiki-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

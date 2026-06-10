@@ -32,6 +32,7 @@ export function MinigameHubScreen() {
     '5': () => goTo(SCREENS.pokedex),
     '6': () => goTo(SCREENS.gridPractice),
     '7': () => goTo(SCREENS.clueGuesserPractice),
+    '8': () => goTo(SCREENS.pokewiki),
     Escape: () => goTo(SCREENS.dashboard),
     '?': () => setShortcutsOpen(true),
   }, [goTo]);
@@ -170,6 +171,18 @@ export function MinigameHubScreen() {
             </div>
           </button>
 
+          {/* PokéWiki 3D */}
+          <button type="button" className="bento-card" onClick={() => goTo(SCREENS.pokewiki)}>
+            <span className="bento-keybind">Press 8</span>
+            <div className="bento-icon-wrapper">
+              <BookOpen size={20} />
+            </div>
+            <div className="bento-details">
+              <h3 className="bento-title">PokéWiki 3D</h3>
+              <p className="bento-desc">Explore detailed 3D models, base stats, forms, and evolution chains for all Pokémon.</p>
+            </div>
+          </button>
+
         </div>
       </main>
 
@@ -181,6 +194,7 @@ export function MinigameHubScreen() {
         <p>Press 5 — Pokédex</p>
         <p>Press 6 — PokéGrid Practice</p>
         <p>Press 7 — Clue Guesser Practice</p>
+        <p>Press 8 — PokéWiki 3D</p>
         <p>Escape — Back to Dashboard</p>
       </Modal>
     </div>

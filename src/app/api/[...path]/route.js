@@ -1,3 +1,4 @@
+/* global process */
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { getDB } from '../../../server/lib/db.js';
@@ -332,6 +333,21 @@ export async function GET(request, { params }) {
         return NextResponse.json({ success: true, user: player });
       } catch {
         return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+      }
+    }
+
+    // 13.1 GET /api/pokemon-3d
+    if (routeParts[0] === 'pokemon-3d') {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const filePath = path.join(process.cwd(), 'data', 'MergedOpt.json');
+      try {
+        const fileContent = await fs.readFile(filePath, 'utf8');
+        const jsonData = JSON.parse(fileContent);
+        return NextResponse.json(jsonData.pokemon || jsonData);
+      } catch (err) {
+        console.error('Error reading MergedOpt.json locally:', err);
+        return NextResponse.json({ error: 'Failed to read local 3D data: ' + err.message }, { status: 500 });
       }
     }
 

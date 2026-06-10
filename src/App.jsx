@@ -32,6 +32,10 @@ const BattleRoyaleShell = dynamic(
   () => import('./modes/battleRoyale/BattleRoyaleShell'),
   { ssr: false, loading: ScreenLoadingFallback }
 );
+const PokeWikiScreen = dynamic(
+  () => import('./screens/PokeWikiScreen').then((mod) => mod.PokeWikiScreen),
+  { ssr: false, loading: ScreenLoadingFallback }
+);
 
 function ScreenRouter() {
   const { screen, goTo } = useGame();
@@ -65,6 +69,8 @@ function ScreenRouter() {
       return <ClueGuesserScreen />;
     case SCREENS.triviaTraining:
       return <TriviaTrainingScreen />;
+    case SCREENS.pokewiki:
+      return <PokeWikiScreen />;
     default:
       return <WelcomeScreen />;
   }

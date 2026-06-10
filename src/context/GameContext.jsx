@@ -19,6 +19,7 @@ export const SCREENS = {
   triviaTraining: 'triviaTraining',
   gridPractice: 'gridPractice',
   clueGuesserPractice: 'clueGuesserPractice',
+  pokewiki: 'pokewiki',
 };
 
 export const GAME_MODES = {

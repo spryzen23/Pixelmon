@@ -19,6 +19,7 @@
     "test:server": "node --test src/server/test/**/*.test.js"
   },
   "dependencies": {
+    "@google/model-viewer": "^4.3.1",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "canvas-confetti": "^1.9.4",
