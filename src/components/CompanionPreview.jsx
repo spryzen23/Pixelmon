@@ -23,17 +23,13 @@ export default function CompanionPreview({
 
   return (
     <Canvas
-      shadows
+      dpr={[1, 1.25]}
       camera={{ position: [0, 0.8, 2.5], fov: 45 }}
+      gl={{ antialias: false, powerPreference: 'high-performance' }}
       style={{ pointerEvents: 'auto', background: 'transparent' }}
     >
       <ambientLight intensity={1.6} />
-      <directionalLight
-        position={[4, 8, 4]}
-        intensity={2.0}
-        castShadow
-        shadow-mapSize={[1024, 1024]}
-      />
+      <directionalLight position={[4, 8, 4]} intensity={2.0} />
       <pointLight position={[-4, 4, -4]} intensity={0.8} />
 
       <Suspense fallback={<VoxelFallback {...fallbackProps} />}>
@@ -64,7 +60,7 @@ export default function CompanionPreview({
           metalness={0.8}
         />
       </mesh>
-      
+
       <mesh position={[0, -0.445, 0]}>
         <cylinderGeometry args={[0.85, 0.85, 0.01, 32]} />
         <meshStandardMaterial

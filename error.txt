@@ -1,85 +1,67 @@
-content.js:1 common loaded
-15:19:18.019 content.js:1 common loaded
-15:19:18.425 react-server-dom-webpack-client.browser.development.js:2836 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'd')
-    at processFullStringRow (react-server-dom-webpack-client.browser.development.js:2836:41)
-    at processFullBinaryRow (react-server-dom-webpack-client.browser.development.js:2825:7)
-    at processBinaryChunk (react-server-dom-webpack-client.browser.development.js:3028:15)
-    at progress (react-server-dom-webpack-client.browser.development.js:3294:13)
-15:19:18.433 app-index.js:136 Uncaught TypeError: (0 , _react.use) is not a function
-    at ServerRoot (app-index.js:136:46)
-    at renderWithHooks (react-dom.development.js:15486:18)
-    at mountIndeterminateComponent (react-dom.development.js:20098:13)
-    at beginWork (react-dom.development.js:21621:16)
-    at HTMLUnknownElement.callCallback (react-dom.development.js:4164:14)
-    at Object.invokeGuardedCallbackDev (react-dom.development.js:4213:16)
-    at invokeGuardedCallback (react-dom.development.js:4277:31)
-    at beginWork$1 (react-dom.development.js:27485:7)
-    at performUnitOfWork (react-dom.development.js:26591:12)
-    at workLoopConcurrent (react-dom.development.js:26577:5)
-    at renderRootConcurrent (react-dom.development.js:26539:7)
-    at performConcurrentWorkOnRoot (react-dom.development.js:25772:38)
-    at workLoop (scheduler.development.js:266:34)
-    at flushWork (scheduler.development.js:239:14)
-    at MessagePort.performWorkUntilDeadline (scheduler.development.js:533:21)
-15:19:18.460 installHook.js:1 Warning: An error occurred during hydration. The server HTML was replaced with client content in <#document>.
-overrideMethod @ installHook.js:1
-15:19:18.462 app-index.js:136 Uncaught TypeError: (0 , _react.use) is not a function
-    at ServerRoot (app-index.js:136:46)
-    at renderWithHooks (react-dom.development.js:15486:18)
-    at mountIndeterminateComponent (react-dom.development.js:20098:13)
-    at beginWork (react-dom.development.js:21621:16)
-    at HTMLUnknownElement.callCallback (react-dom.development.js:4164:14)
-    at Object.invokeGuardedCallbackDev (react-dom.development.js:4213:16)
-    at invokeGuardedCallback (react-dom.development.js:4277:31)
-    at beginWork$1 (react-dom.development.js:27485:7)
-    at performUnitOfWork (react-dom.development.js:26591:12)
-    at workLoopSync (react-dom.development.js:26500:5)
-    at renderRootSync (react-dom.development.js:26468:7)
-    at recoverFromConcurrentError (react-dom.development.js:25884:20)
-    at performConcurrentWorkOnRoot (react-dom.development.js:25784:22)
-    at workLoop (scheduler.development.js:266:34)
-    at flushWork (scheduler.development.js:239:14)
-    at MessagePort.performWorkUntilDeadline (scheduler.development.js:533:21)
-15:19:18.466 installHook.js:1 The above error occurred in the <ServerRoot> component:
 
-    at ServerRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:135:11)
-    at Root (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:156:11)
+E:\maha\Pixelmon>codebase.bat
 
-Consider adding an error boundary to your tree to customize error handling behavior.
-Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
-overrideMethod @ installHook.js:1
-15:19:18.469 react-dom.development.js:19873 Uncaught Error: There was an error while hydrating. Because the error happened outside of a Suspense boundary, the entire root will switch to client rendering.
-    at updateHostRoot (react-dom.development.js:19873:57)
-    at beginWork (react-dom.development.js:21649:14)
-    at beginWork$1 (react-dom.development.js:27460:14)
-    at performUnitOfWork (react-dom.development.js:26591:12)
-    at workLoopSync (react-dom.development.js:26500:5)
-    at renderRootSync (react-dom.development.js:26468:7)
-    at recoverFromConcurrentError (react-dom.development.js:25884:20)
-    at performConcurrentWorkOnRoot (react-dom.development.js:25784:22)
-    at workLoop (scheduler.development.js:266:34)
-    at flushWork (scheduler.development.js:239:14)
-    at MessagePort.performWorkUntilDeadline (scheduler.development.js:533:21)
-15:19:18.469 react-dom.development.js:26957 Uncaught TypeError: (0 , _react.use) is not a function
-    at ServerRoot (app-index.js:136:46)
-    at renderWithHooks (react-dom.development.js:15486:18)
-    at mountIndeterminateComponent (react-dom.development.js:20098:13)
-    at beginWork (react-dom.development.js:21621:16)
-    at beginWork$1 (react-dom.development.js:27460:14)
-    at performUnitOfWork (react-dom.development.js:26591:12)
-    at workLoopSync (react-dom.development.js:26500:5)
-    at renderRootSync (react-dom.development.js:26468:7)
-    at recoverFromConcurrentError (react-dom.development.js:25884:20)
-    at performConcurrentWorkOnRoot (react-dom.development.js:25784:22)
-    at workLoop (scheduler.development.js:266:34)
-    at flushWork (scheduler.development.js:239:14)
-    at MessagePort.performWorkUntilDeadline (scheduler.development.js:533:21)
-15:19:18.481 categoryScrapper.js-Awnm83qk.js:1 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'appendChild')
-    at X (categoryScrapper.js-Awnm83qk.js:1:7974)
-    at categoryScrapper.js-Awnm83qk.js:1:8263
-15:19:18.574 sentry-CgSmvLgs.js:5 Uncaught (in promise) TypeError: Cannot read properties of null (reading 'setAttribute')
-    at Array.<anonymous> (sentry-CgSmvLgs.js:5:1737)
-    at Object.n [as set] (autoCoupon-DYevdISb.js:1:13047)
-    at Object.ml [as set] (sentry-CgSmvLgs.js:5:1996)
-    at sentry-CgSmvLgs.js:5:7471
-15:19:18.798 content.js:1 releaseNoteVersionReceived
+========================================
+  PIXELMON CODEBASE STATE CHECK
+========================================
+
+Current directory: E:\maha\Pixelmon
+
+[0/9] Game asset inventory...
+----------------------------------------
+  Core GLBs, biome model count, reports\asset-inventory.txt
+  public\assets GLB files (recursive): 2674
+  OK Core game assets present
+
+[1/9] Cleaning and preparing...
+----------------------------------------
+  Removing node_modules, .next, coverage, build
+  OK Clean completed
+
+  Running: npm.cmd install
+npm error code ERESOLVE
+npm error ERESOLVE unable to resolve dependency tree
+npm error
+npm error While resolving: pixelmon@0.1.0
+npm error Found: three@0.172.0
+npm error node_modules/three
+npm error   three@"^0.172.0" from the root project
+npm error
+npm error Could not resolve dependency:
+npm error peer three@"^0.183.0" from @google/model-viewer@4.3.1
+npm error node_modules/@google/model-viewer
+npm error   @google/model-viewer@"^4.3.1" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry this command with --force or --legacy-peer-deps to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error C:\Users\durga\AppData\Local\npm-cache\_logs\2026-06-10T16_04_47_602Z-eresolve-report.txt
+npm error A complete log of this run can be found in: C:\Users\durga\AppData\Local\npm-cache\_logs\2026-06-10T16_04_47_602Z-debug-0.log
+  X npm install failed
+
+========================================
+  SUMMARY
+========================================
+
+Section Status:
+  [0] Game asset inventory:             PASSED  (glb=2674, reports\asset-inventory.txt)
+  [1] Cleanup and npm install:          FAILED
+  [2] Data preflight (build-slim):      SKIPPED
+  [3] Type checking (JS - skipped):     SKIPPED
+  [4] Prettier:                         SKIPPED
+  [5] ESLint:                           SKIPPED
+  [6] Tests (node:test):                SKIPPED
+  [6b] Vitest coverage:                 SKIPPED
+  [7] Build (Next.js):                  SKIPPED
+
+  X Found 1 error(s)
+
+  Please fix the errors before proceeding.
+
+========================================
+  CHECK COMPLETE
+========================================
+
+
+E:\maha\Pixelmon>

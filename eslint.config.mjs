@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import globals from 'globals';
+import nextPlugin from '@next/eslint-plugin-next';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 
@@ -17,6 +18,7 @@ export default [
     ],
   },
   js.configs.recommended,
+  nextPlugin.flatConfig.coreWebVitals,
   {
     files: ['src/**/*.{js,jsx}'],
     languageOptions: {
@@ -41,6 +43,8 @@ export default [
       'react/prop-types': 'off',
       // @react-three/fiber uses Three.js element props on JSX tags (mesh, group, etc.)
       'react/no-unknown-property': 'off',
+      // Game UI uses many small dynamic sprite URLs (pokeapi, type icons, etc.)
+      '@next/next/no-img-element': 'off',
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     },
   },

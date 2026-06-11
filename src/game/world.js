@@ -351,6 +351,21 @@ export function getSurroundingChunks(centerCx = 0, centerCz = 0, radius = RENDER
   return chunks;
 }
 
+/** Chunks newly added at `radius` (not inner discs) — avoids upgrading spawn chunk during ring preload. */
+export function getChunkRing(centerCx = 0, centerCz = 0, radius = RENDER_DISTANCE) {
+  const outer = getSurroundingChunks(centerCx, centerCz, radius);
+
+  if (radius <= SPAWN_RENDER_DISTANCE) {
+    return outer;
+  }
+
+  const innerKeys = new Set(
+    getSurroundingChunks(centerCx, centerCz, radius - 1).map((chunk) => chunk.key)
+  );
+
+  return outer.filter((chunk) => !innerKeys.has(chunk.key));
+}
+
 function getBiomeSurfaceY(tileIndexX, tileIndexZ, currentBiome) {
   const biome = getBiomeDefinition(currentBiome);
   const rollingHill =
@@ -420,9 +435,9 @@ function getSurfaceBlockType(currentBiome, surfaceY) {
   return 'grass';
 }
 
-export function generateBiomeChunk(currentBiome, cx, cz) {
+export function generateBiomeChunk(currentBiome, cx, cz, options = {}) {
   try {
-    return createBiomeChunk(currentBiome, cx, cz);
+    return createBiomeChunk(currentBiome, cx, cz, options);
   } catch (error) {
     if (currentBiome === 3) {
       return createCoastalFallbackChunk(cx, cz);
@@ -473,10 +488,21 @@ function createCoastalFallbackChunk(cx, cz) {
     cz,
     heightLookup,
     key: getChunkKey(cx, cz),
+    detail: 'full',
   };
 }
 
-function createBiomeChunk(currentBiome, cx, cz) {
+function pushSurfaceBlock(blocks, counts, x, surfaceY, z, type) {
+  blocks.push({
+    x,
+    y: surfaceY - BLOCK_HEIGHT / 2,
+    z,
+    type,
+  });
+  counts[type] += 1;
+}
+
+function createBiomeChunk(currentBiome, cx, cz, { surfaceOnly = false } = {}) {
   const blocks = [];
   const counts = createEmptyCounts();
   const heightLookup = new Map();
@@ -514,24 +540,41 @@ function createBiomeChunk(currentBiome, cx, cz) {
       });
 
       if (isWater) {
-        const waterBottomY = Math.min(rawSurfaceY, WATER_LEVEL);
-
-        for (
-          let topY = WATER_LEVEL;
-          topY >= waterBottomY - GRID_EPSILON;
-          topY -= VOXEL_SIZE
-        ) {
-          const snappedTopY = snapToVoxel(topY);
-
+        if (surfaceOnly) {
           blocks.push({
             x,
-            y: snappedTopY - WATER_BLOCK_HEIGHT / 2,
+            y: WATER_LEVEL - WATER_BLOCK_HEIGHT / 2,
             z,
             type: 'water',
           });
           counts.water += 1;
+        } else {
+          const waterBottomY = Math.min(rawSurfaceY, WATER_LEVEL);
+
+          for (
+            let topY = WATER_LEVEL;
+            topY >= waterBottomY - GRID_EPSILON;
+            topY -= VOXEL_SIZE
+          ) {
+            const snappedTopY = snapToVoxel(topY);
+
+            blocks.push({
+              x,
+              y: snappedTopY - WATER_BLOCK_HEIGHT / 2,
+              z,
+              type: 'water',
+            });
+            counts.water += 1;
+          }
         }
 
+        continue;
+      }
+
+      if (surfaceOnly) {
+        const type =
+          currentBiome === 3 ? 'desert' : getSurfaceBlockType(currentBiome, surfaceY);
+        pushSurfaceBlock(blocks, counts, x, surfaceY, z, type);
         continue;
       }
 
@@ -568,7 +611,26 @@ function createBiomeChunk(currentBiome, cx, cz) {
     cz,
     heightLookup,
     key: getChunkKey(cx, cz),
+    detail: surfaceOnly ? 'surface' : 'full',
   };
+}
+
+function upgradeChunkToFull(biomeMap, currentBiome, cx, cz) {
+  const key = getChunkKey(cx, cz);
+  const existing = biomeMap.chunkMap[key];
+
+  if (!existing || existing.detail === 'full') {
+    return existing;
+  }
+
+  const fullChunk = createBiomeChunk(currentBiome, cx, cz, { surfaceOnly: false });
+  Object.keys(biomeMap.counts).forEach((type) => {
+    biomeMap.counts[type] -= existing.counts[type] || 0;
+    biomeMap.counts[type] += fullChunk.counts[type] || 0;
+  });
+  biomeMap.chunkMap[key] = fullChunk;
+  biomeMap.chunks = Object.values(biomeMap.chunkMap);
+  return fullChunk;
 }
 
 function getBiomeCacheKey(currentBiome, caveZone = CAVE_ZONES.EXTERIOR) {
@@ -609,7 +671,8 @@ export function ensureBiomeChunk(
   currentBiome = activeBiome,
   cx = 0,
   cz = 0,
-  caveZone = CAVE_ZONES.EXTERIOR
+  caveZone = CAVE_ZONES.EXTERIOR,
+  { surfaceOnly = false } = {}
 ) {
   if (!isChunkInsideBiome(cx, cz)) {
     return null;
@@ -622,7 +685,9 @@ export function ensureBiomeChunk(
     return biomeMap.chunkMap[key];
   }
 
-  const chunk = generateBiomeChunk(currentBiome, cx, cz);
+  const chunk = generateBiomeChunk(currentBiome, cx, cz, {
+    surfaceOnly,
+  });
 
   biomeMap.chunkMap[key] = chunk;
   biomeMap.chunks = Object.values(biomeMap.chunkMap);
@@ -645,9 +710,28 @@ export function getBiomeChunksAround(
 ) {
   return getSurroundingChunks(centerCx, centerCz, radius)
     .map((chunkCoord) =>
-      ensureBiomeChunk(currentBiome, chunkCoord.cx, chunkCoord.cz, caveZone)
+      ensureBiomeChunk(currentBiome, chunkCoord.cx, chunkCoord.cz, caveZone, {
+        // Surface voxels only — full columns are cosmetic and blow GPU memory.
+        surfaceOnly: true,
+      })
     )
     .filter(Boolean);
+}
+
+/** Fill underground voxels for spawn chunks after the surface paint. */
+export function upgradeSpawnChunksToFull(
+  currentBiome = activeBiome,
+  centerCx = 0,
+  centerCz = 0,
+  caveZone = CAVE_ZONES.EXTERIOR
+) {
+  const biomeMap = generateBiomeMap(currentBiome, caveZone);
+  getSurroundingChunks(centerCx, centerCz, SPAWN_RENDER_DISTANCE).forEach(
+    ({ cx, cz }) => {
+      upgradeChunkToFull(biomeMap, currentBiome, cx, cz);
+    }
+  );
+  return biomeMap;
 }
 
 export function getBiomeCacheSummary(
@@ -679,18 +763,23 @@ export function getBiomeCacheSummary(
 
 export function preloadSpawnChunk(
   currentBiome = activeBiome,
-  centerCx = 0,
-  centerCz = 0,
+  centerCx = null,
+  centerCz = null,
   caveZone = CAVE_ZONES.EXTERIOR
 ) {
+  const spawn =
+    centerCx == null || centerCz == null
+      ? getChunkCoordsForPosition(0, 0)
+      : { cx: centerCx, cz: centerCz };
   generateBiomeMap(currentBiome, caveZone);
   getBiomeChunksAround(
     currentBiome,
-    centerCx,
-    centerCz,
+    spawn.cx,
+    spawn.cz,
     SPAWN_RENDER_DISTANCE,
     caveZone
   );
+
   return getBiomeMap(currentBiome, caveZone);
 }
 
@@ -699,15 +788,15 @@ export function preloadBiome(
   currentBiome = activeBiome,
   caveZone = CAVE_ZONES.EXTERIOR
 ) {
+  const spawn = getChunkCoordsForPosition(0, 0);
   generateBiomeMap(currentBiome, caveZone);
   getBiomeChunksAround(
     currentBiome,
-    0,
-    0,
+    spawn.cx,
+    spawn.cz,
     getBiomeRenderDistance(currentBiome),
     caveZone
   );
-
   return generateBiomeMap(currentBiome, caveZone);
 }
 
@@ -717,11 +806,15 @@ export function preloadBiome(
  */
 export function scheduleBiomeRingPreload(
   currentBiome = activeBiome,
-  centerCx = 0,
-  centerCz = 0,
+  centerCx = null,
+  centerCz = null,
   caveZone = CAVE_ZONES.EXTERIOR,
   onRing = () => { }
 ) {
+  const spawn =
+    centerCx == null || centerCz == null
+      ? getChunkCoordsForPosition(0, 0)
+      : { cx: centerCx, cz: centerCz };
   const maxRadius = getBiomeRenderDistance(currentBiome);
   let radius = SPAWN_RENDER_DISTANCE + 1;
   let cancelled = false;
@@ -735,7 +828,9 @@ export function scheduleBiomeRingPreload(
     if (cancelled || radius > maxRadius) {
       return;
     }
-    getBiomeChunksAround(currentBiome, centerCx, centerCz, radius, caveZone);
+    getChunkRing(spawn.cx, spawn.cz, radius).forEach(({ cx, cz }) => {
+      ensureBiomeChunk(currentBiome, cx, cz, caveZone, { surfaceOnly: true });
+    });
     onRing(radius, maxRadius);
     radius += 1;
     schedule(step);
@@ -746,6 +841,18 @@ export function scheduleBiomeRingPreload(
   return () => {
     cancelled = true;
   };
+}
+
+export function getDefaultSpawnChunkCoords() {
+  return getChunkCoordsForPosition(0, 0);
+}
+
+export function getSpawnChunkCoords(spawnPosition) {
+  if (Array.isArray(spawnPosition) && spawnPosition.length >= 3) {
+    return getChunkCoordsForPosition(spawnPosition[0], spawnPosition[2]);
+  }
+
+  return getDefaultSpawnChunkCoords();
 }
 
 export function countChunksInRadius(radius = RENDER_DISTANCE) {
@@ -1032,12 +1139,10 @@ function generateBiomeProps(currentBiome = activeBiome) {
     return generateVillageBiomeProps(currentBiome);
   }
 
-  getBiomeChunksAround(
-    currentBiome,
-    0,
-    0,
-    getBiomeRenderDistance(currentBiome)
-  );
+  const spawn = getChunkCoordsForPosition(0, 0);
+  ensureBiomeChunk(currentBiome, spawn.cx, spawn.cz, CAVE_ZONES.EXTERIOR, {
+    surfaceOnly: true,
+  });
   const biomeMap = generateBiomeMap(currentBiome);
   const cacti = [];
   const plantProps = [];
@@ -1210,7 +1315,7 @@ export function getTerrainSurfaceY(
   const tileIndexZ = getVoxelIndex(gridZ);
   const { cx, cz } = getChunkCoordsForPosition(gridX, gridZ);
 
-  ensureBiomeChunk(currentBiome, cx, cz, caveZone);
+  ensureBiomeChunk(currentBiome, cx, cz, caveZone, { surfaceOnly: true });
 
   const biomeMap = generateBiomeMap(currentBiome, caveZone);
   const tile = biomeMap.heightLookup.get(toTileKey(gridX, gridZ));
@@ -1231,7 +1336,7 @@ export function isWaterTile(
   const { gridX, gridZ } = worldToGrid(x, z);
   const { cx, cz } = getChunkCoordsForPosition(gridX, gridZ);
 
-  ensureBiomeChunk(currentBiome, cx, cz, caveZone);
+  ensureBiomeChunk(currentBiome, cx, cz, caveZone, { surfaceOnly: true });
 
   const biomeMap = generateBiomeMap(currentBiome, caveZone);
   const tile = biomeMap.heightLookup.get(toTileKey(gridX, gridZ));

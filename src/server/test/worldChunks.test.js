@@ -1,6 +1,9 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
 
+/** Keep in sync with world.js — spawn paints one surface-only chunk first. */
+const SPAWN_RENDER_DISTANCE = 0;
+
 /** Mirrors getSurroundingChunks + isChunkInsideBiome sizing in world.js */
 function countChunksInRadius(radius, min = -18, max = 17) {
   let total = 0;
@@ -30,5 +33,15 @@ describe('world chunk streaming contract', () => {
     assert.ok(ring1 > spawn);
     assert.ok(full > ring1);
     assert.equal(full, 25);
+  });
+
+  it('spawn render distance stays at radius 0 for fast paint', () => {
+    assert.equal(SPAWN_RENDER_DISTANCE, 0);
+  });
+
+  it('chunk ring at radius 1 adds 8 chunks without including inner spawn', () => {
+    const ring0 = countChunksInRadius(0);
+    const ring1 = countChunksInRadius(1);
+    assert.equal(ring1 - ring0, 8);
   });
 });

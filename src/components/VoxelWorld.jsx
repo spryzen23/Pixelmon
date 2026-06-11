@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { BoxGeometry, Object3D } from 'three';
-import { createProceduralVoxelMaterials } from '../game/proceduralVoxelMaterials';
+import { BoxGeometry } from 'three';
+import { getProceduralVoxelMaterials } from '../game/proceduralVoxelMaterials';
 import {
   VOXEL_SIZE,
   CAVE_ZONES,
@@ -9,15 +9,28 @@ import {
   getBiomeMap,
   getBiomeRenderDistance,
   getChunkCoordsForPosition,
+  getSpawnChunkCoords,
   SPAWN_RENDER_DISTANCE,
   WORLD_PATHS,
 } from '../game/world';
 
-const dummy = new Object3D();
+const MATRIX_BATCH_SIZE = 192;
+const CHUNKS_MOUNT_BATCH = 2;
+const EXPAND_COOLDOWN_MS = 2000;
+/** One ring around the player (~9 surface chunks) — avoids 25-chunk GPU spikes. */
+const STREAMING_RADIUS_CAP = 1;
+
+function chunkDistanceFromCenter(chunk, centerChunk) {
+  const [cx, cz] = chunk.key.split(',').map(Number);
+  return Math.max(
+    Math.abs(cx - centerChunk.cx),
+    Math.abs(cz - centerChunk.cz)
+  );
+}
 
 function scheduleIdleWork(fn) {
   if (typeof requestIdleCallback !== 'undefined') {
-    return requestIdleCallback(fn, { timeout: 32 });
+    return requestIdleCallback(fn, { timeout: 48 });
   }
   return setTimeout(fn, 0);
 }
@@ -34,34 +47,65 @@ function ChunkBucket({ blocks, geometry, material, type }) {
   const meshRef = useRef();
   const isLiquid = type === 'water' || type === 'lava';
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const mesh = meshRef.current;
 
-    if (!mesh) {
+    if (!mesh || blocks.length === 0) {
       return undefined;
     }
 
-    const count = blocks.length;
-    mesh.count = count;
+    let cancelled = false;
+    let cursor = 0;
     const matrixArray = mesh.instanceMatrix.array;
+    mesh.count = blocks.length;
 
-    for (let index = 0; index < count; index += 1) {
-      const block = blocks[index];
-      dummy.position.set(block.x, block.y, block.z);
-      dummy.rotation.set(0, 0, 0);
-      dummy.scale.set(1, 1, 1);
-      dummy.updateMatrix();
-      dummy.matrix.toArray(matrixArray, index * 16);
-    }
-
-    mesh.instanceMatrix.needsUpdate = true;
-    requestAnimationFrame(() => {
-      if (meshRef.current === mesh) {
-        mesh.computeBoundingSphere();
+    const uploadBatch = () => {
+      if (cancelled || !meshRef.current) {
+        return;
       }
-    });
+
+      const end = Math.min(cursor + MATRIX_BATCH_SIZE, blocks.length);
+
+      for (let index = cursor; index < end; index += 1) {
+        const block = blocks[index];
+        const offset = index * 16;
+        matrixArray[offset] = 1;
+        matrixArray[offset + 1] = 0;
+        matrixArray[offset + 2] = 0;
+        matrixArray[offset + 3] = 0;
+        matrixArray[offset + 4] = 0;
+        matrixArray[offset + 5] = 1;
+        matrixArray[offset + 6] = 0;
+        matrixArray[offset + 7] = 0;
+        matrixArray[offset + 8] = 0;
+        matrixArray[offset + 9] = 0;
+        matrixArray[offset + 10] = 1;
+        matrixArray[offset + 11] = 0;
+        matrixArray[offset + 12] = block.x;
+        matrixArray[offset + 13] = block.y;
+        matrixArray[offset + 14] = block.z;
+        matrixArray[offset + 15] = 1;
+      }
+
+      cursor = end;
+      mesh.instanceMatrix.needsUpdate = true;
+
+      if (cursor < blocks.length) {
+        requestAnimationFrame(uploadBatch);
+        return;
+      }
+
+      requestAnimationFrame(() => {
+        if (!cancelled && meshRef.current === mesh) {
+          mesh.computeBoundingSphere();
+        }
+      });
+    };
+
+    requestAnimationFrame(uploadBatch);
 
     return () => {
+      cancelled = true;
       mesh.count = 0;
       mesh.instanceMatrix.needsUpdate = true;
     };
@@ -75,8 +119,9 @@ function ChunkBucket({ blocks, geometry, material, type }) {
     <instancedMesh
       ref={meshRef}
       args={[geometry, material, blocks.length]}
-      castShadow={!isLiquid}
-      receiveShadow={!isLiquid}
+      castShadow={false}
+      receiveShadow={false}
+      frustumCulled
       renderOrder={isLiquid ? 1 : 0}
     />
   );
@@ -114,14 +159,25 @@ export default function VoxelWorld({
   currentBiome = 0,
   onBiomeReady = () => { },
   playerRef,
+  spawnPosition = null,
 }) {
-  const maxRadius = getBiomeRenderDistance(currentBiome);
+  const maxRadius = Math.min(
+    getBiomeRenderDistance(currentBiome),
+    STREAMING_RADIUS_CAP
+  );
   const [centerChunk, setCenterChunk] = useState(() =>
-    getChunkCoordsForPosition(0, 0)
+    getSpawnChunkCoords(spawnPosition)
   );
   const [loadedRadius, setLoadedRadius] = useState(SPAWN_RENDER_DISTANCE);
-  const spawnReadyRef = useRef(false);
+  const [spawnReady, setSpawnReady] = useState(false);
   const completeReadyRef = useRef(false);
+  const radiusExpandIdleRef = useRef(null);
+  const neededRadiusRef = useRef(SPAWN_RENDER_DISTANCE);
+  const spawnAnchorRef = useRef(getSpawnChunkCoords(spawnPosition));
+  const lastExpandMsRef = useRef(0);
+  const mountedChunkKeysRef = useRef(new Set());
+  const chunkMountIdleRef = useRef(null);
+  const [mountedChunkKeys, setMountedChunkKeys] = useState([]);
   const mountMsRef = useRef(
     typeof performance !== 'undefined' ? performance.now() : 0
   );
@@ -140,25 +196,137 @@ export default function VoxelWorld({
     return new BoxGeometry(VOXEL_SIZE, VOXEL_SIZE, VOXEL_SIZE);
   }, []);
 
-  useEffect(() => {
-    spawnReadyRef.current = false;
-    completeReadyRef.current = false;
-    mountMsRef.current = performance.now();
-    setLoadedRadius(SPAWN_RENDER_DISTANCE);
-    setCenterChunk(getChunkCoordsForPosition(0, 0));
-  }, [caveZone, currentBiome]);
+  useEffect(() => () => geometry.dispose(), [geometry]);
 
   useEffect(() => {
-    if (loadedRadius >= maxRadius) {
+    completeReadyRef.current = false;
+    lastExpandMsRef.current = 0;
+    mountedChunkKeysRef.current = new Set();
+    setMountedChunkKeys([]);
+    if (chunkMountIdleRef.current != null) {
+      cancelIdleWork(chunkMountIdleRef.current);
+      chunkMountIdleRef.current = null;
+    }
+    if (radiusExpandIdleRef.current != null) {
+      cancelIdleWork(radiusExpandIdleRef.current);
+      radiusExpandIdleRef.current = null;
+    }
+    mountMsRef.current = performance.now();
+    setLoadedRadius(SPAWN_RENDER_DISTANCE);
+    setSpawnReady(false);
+    const spawn = getSpawnChunkCoords(spawnPosition);
+    spawnAnchorRef.current = spawn;
+    setCenterChunk(spawn);
+  }, [caveZone, currentBiome, spawnPosition]);
+
+  const activeChunkSummary = useMemo(() => {
+    return {
+      activeBlockCount: activeChunks.reduce(
+        (total, chunk) => total + chunk.blocks.length,
+        0
+      ),
+      activeChunkCount: activeChunks.length,
+      loadedRadius,
+      maxRadius,
+    };
+  }, [activeChunks, loadedRadius, maxRadius]);
+
+  const visibleChunks = useMemo(() => {
+    if (mountedChunkKeys.length === 0) {
+      return activeChunks.slice(0, 1);
+    }
+
+    const mounted = new Set(mountedChunkKeys);
+    return activeChunks.filter((chunk) => mounted.has(chunk.key));
+  }, [activeChunks, mountedChunkKeys]);
+
+  useEffect(() => {
+    const activeKeys = new Set(activeChunks.map((chunk) => chunk.key));
+    mountedChunkKeysRef.current = new Set(
+      [...mountedChunkKeysRef.current].filter((key) => activeKeys.has(key))
+    );
+
+    const missing = activeChunks
+      .filter((chunk) => !mountedChunkKeysRef.current.has(chunk.key))
+      .sort(
+        (a, b) =>
+          chunkDistanceFromCenter(a, centerChunk) -
+          chunkDistanceFromCenter(b, centerChunk)
+      );
+
+    if (missing.length === 0) {
+      const pruned = Array.from(mountedChunkKeysRef.current);
+      if (pruned.length !== mountedChunkKeys.length) {
+        setMountedChunkKeys(pruned);
+      }
       return undefined;
     }
 
-    const idleId = scheduleIdleWork(() => {
-      setLoadedRadius((radius) => Math.min(maxRadius, radius + 1));
-    });
+    if (chunkMountIdleRef.current != null) {
+      return undefined;
+    }
 
-    return () => cancelIdleWork(idleId);
-  }, [loadedRadius, maxRadius]);
+    const pumpMounts = () => {
+      const pending = activeChunks
+        .filter((chunk) => !mountedChunkKeysRef.current.has(chunk.key))
+        .sort(
+          (a, b) =>
+            chunkDistanceFromCenter(a, centerChunk) -
+            chunkDistanceFromCenter(b, centerChunk)
+        );
+
+      if (pending.length === 0) {
+        chunkMountIdleRef.current = null;
+        return;
+      }
+
+      pending.slice(0, CHUNKS_MOUNT_BATCH).forEach((chunk) => {
+        mountedChunkKeysRef.current.add(chunk.key);
+      });
+      setMountedChunkKeys(Array.from(mountedChunkKeysRef.current));
+
+      chunkMountIdleRef.current = scheduleIdleWork(() => {
+        chunkMountIdleRef.current = null;
+        pumpMounts();
+      });
+    };
+
+    pumpMounts();
+
+    return () => {
+      if (chunkMountIdleRef.current != null) {
+        cancelIdleWork(chunkMountIdleRef.current);
+        chunkMountIdleRef.current = null;
+      }
+    };
+  }, [activeChunks, centerChunk.cx, centerChunk.cz, loadedRadius, maxRadius]);
+
+  useEffect(() => {
+    if (
+      spawnReady ||
+      loadedRadius !== SPAWN_RENDER_DISTANCE ||
+      activeChunks.length === 0
+    ) {
+      return;
+    }
+
+    const signalMs = performance.now() - mountMsRef.current;
+    setSpawnReady(true);
+    onBiomeReady({
+      ...activeChunkSummary,
+      biomeMap: getBiomeMap(currentBiome, caveZone),
+      durationMs: signalMs,
+      phase: 'spawn',
+    });
+  }, [
+    activeChunkSummary,
+    activeChunks,
+    caveZone,
+    currentBiome,
+    loadedRadius,
+    onBiomeReady,
+    spawnReady,
+  ]);
 
   useFrame(() => {
     const player = playerRef?.current;
@@ -178,10 +346,45 @@ export default function VoxelWorld({
     ) {
       setCenterChunk(nextChunk);
     }
+
+    if (!spawnReady || loadedRadius >= maxRadius) {
+      return;
+    }
+
+    const travel = Math.max(
+      Math.abs(nextChunk.cx - spawnAnchorRef.current.cx),
+      Math.abs(nextChunk.cz - spawnAnchorRef.current.cz)
+    );
+    const neededRadius =
+      travel > loadedRadius
+        ? Math.min(maxRadius, loadedRadius + 1)
+        : loadedRadius;
+
+    if (
+      neededRadius <= loadedRadius ||
+      radiusExpandIdleRef.current != null ||
+      performance.now() - lastExpandMsRef.current < EXPAND_COOLDOWN_MS
+    ) {
+      return;
+    }
+
+    neededRadiusRef.current = neededRadius;
+    radiusExpandIdleRef.current = scheduleIdleWork(() => {
+      radiusExpandIdleRef.current = null;
+      lastExpandMsRef.current = performance.now();
+      setLoadedRadius((radius) => {
+        const next = Math.min(
+          maxRadius,
+          neededRadiusRef.current,
+          radius + 1
+        );
+        return next;
+      });
+    });
   });
 
   const materials = useMemo(() => {
-    const nextMaterials = createProceduralVoxelMaterials();
+    const nextMaterials = getProceduralVoxelMaterials();
     const biome = WORLD_PATHS.find((path) => path.id === currentBiome);
 
     if (biome?.biome === 'volcanic' && nextMaterials.lava) {
@@ -191,18 +394,6 @@ export default function VoxelWorld({
     return nextMaterials;
   }, [currentBiome]);
 
-  const activeChunkSummary = useMemo(() => {
-    return {
-      activeBlockCount: activeChunks.reduce(
-        (total, chunk) => total + chunk.blocks.length,
-        0
-      ),
-      activeChunkCount: activeChunks.length,
-      loadedRadius,
-      maxRadius,
-    };
-  }, [activeChunks, loadedRadius, maxRadius]);
-
   useLayoutEffect(() => {
     const payload = {
       ...activeChunkSummary,
@@ -211,62 +402,11 @@ export default function VoxelWorld({
     };
 
     if (
-      !spawnReadyRef.current &&
-      loadedRadius === SPAWN_RENDER_DISTANCE &&
-      activeChunks.length > 0
-    ) {
-      spawnReadyRef.current = true;
-      // #region agent log
-      fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '4125de' },
-        body: JSON.stringify({
-          sessionId: '4125de',
-          runId: 'chunk-stream',
-          hypothesisId: 'H1',
-          location: 'VoxelWorld.jsx:spawn-ready',
-          message: 'Spawn chunk painted',
-          data: {
-            biome: currentBiome,
-            chunks: activeChunkSummary.activeChunkCount,
-            blocks: activeChunkSummary.activeBlockCount,
-            durationMs: payload.durationMs,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => { });
-      // #endregion
-      onBiomeReady({ ...payload, phase: 'spawn' });
-      return;
-    }
-
-    if (
       loadedRadius >= maxRadius &&
       !completeReadyRef.current &&
-      spawnReadyRef.current
+      spawnReady
     ) {
       completeReadyRef.current = true;
-      // #region agent log
-      fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '4125de' },
-        body: JSON.stringify({
-          sessionId: '4125de',
-          runId: 'chunk-stream',
-          hypothesisId: 'H2',
-          location: 'VoxelWorld.jsx:complete',
-          message: 'Full chunk radius loaded',
-          data: {
-            biome: currentBiome,
-            chunks: activeChunkSummary.activeChunkCount,
-            loadedRadius,
-            maxRadius,
-            durationMs: payload.durationMs,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => { });
-      // #endregion
       onBiomeReady({ ...payload, phase: 'complete' });
     }
   }, [
@@ -277,11 +417,12 @@ export default function VoxelWorld({
     loadedRadius,
     maxRadius,
     onBiomeReady,
+    spawnReady,
   ]);
 
   return (
     <group key={`biome-${currentBiome}-${caveZone}`}>
-      {activeChunks.map((chunk) => (
+      {visibleChunks.map((chunk) => (
         <ChunkMesh
           key={`${currentBiome}-${caveZone}-${chunk.key}`}
           chunk={chunk}

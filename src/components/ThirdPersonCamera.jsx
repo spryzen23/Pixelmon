@@ -2,10 +2,10 @@ import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
 import { Vector3 } from 'three';
 
-const SHOULDER_OFFSET_X = 1.2;
-const CAMERA_HEIGHT = 1.8;
-const CAMERA_DISTANCE = 3.2;
-const LOOK_HEIGHT = 0.6;
+const SHOULDER_OFFSET_X = 1.35;
+const CAMERA_HEIGHT = 2.45;
+const CAMERA_DISTANCE = 4.0;
+const LOOK_HEIGHT = 1.05;
 const POSITION_SMOOTHING = 14;
 const WORLD_UP = new Vector3(0, 1, 0);
 

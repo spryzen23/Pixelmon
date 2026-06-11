@@ -2,6 +2,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import {
   getPlayerActionFallbacks,
+  getPlayerModelYOffset,
   resolvePlayerAction,
 } from '../../game/playerAnimation.js';
 import { getPlayerStyle, normalizePlayerStyle } from '../../game/playerStyles.js';
@@ -70,6 +71,11 @@ describe('playerAnimation', () => {
       }),
       'Idle'
     );
+  });
+
+  it('getPlayerModelYOffset aligns feet below player root', () => {
+    assert.ok(getPlayerModelYOffset(0.92) < -0.4);
+    assert.ok(getPlayerModelYOffset(0.92, true) < getPlayerModelYOffset(0.92));
   });
 
   it('getPlayerActionFallbacks returns sensible chains', () => {

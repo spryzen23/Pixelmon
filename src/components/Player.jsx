@@ -13,7 +13,12 @@ import AnimatedModel from './AnimatedModel';
 import ModelErrorBoundary from './ModelErrorBoundary';
 import VoxelFallback from './VoxelFallback';
 import { lerpAngle } from '../game/animationUtils';
-import { getPlayerActionFallbacks, resolvePlayerAction } from '../game/playerAnimation';
+import {
+  getPlayerActionFallbacks,
+  getPlayerGroundY,
+  getPlayerModelYOffset,
+  resolvePlayerAction,
+} from '../game/playerAnimation';
 import { normalizePlayerStyle } from '../game/playerStyles';
 import useKeyboardControls from '../hooks/useKeyboardControls';
 import {
@@ -33,7 +38,8 @@ const MOVE_SPEED = 4.5;
 const SPRINT_SPEED = 9.0;
 const WATER_MOVE_MULTIPLIER = 0.72;
 const WATER_BUOYANCY_SPEED = 5.5;
-const HEIGHT_LERP_FACTOR = 0.18;
+const HEIGHT_LERP_FACTOR = 0.32;
+const HEIGHT_SNAP_EPSILON = 0.06;
 const STEP_SAFETY_OFFSET = 0.05;
 const ROTATION_SMOOTHING = 14;
 const DISPLACE_EPSILON = 0.0008;
@@ -73,30 +79,33 @@ const Player = forwardRef(function Player(
     strafeInput: 0,
     isJumping: false,
     isCrouching: false,
+    isMoving: false,
     moveSpeedFactor: 1,
     lookAngle: 0,
     lookPitch: 0,
     vy: 0,
     actionName: 'Idle',
   });
-  const debugAnimLogAt = useRef(0);
   useImperativeHandle(ref, () => playerRef.current, []);
+
+  const resolveGroundY = (x, z, previousY = playerRef.current?.position.y) =>
+    getPlayerGroundY(x, z, modelFitHeight, previousY, currentPathId, getEntityY);
 
   useEffect(() => {
     if (!playerRef.current) {
       return;
     }
 
-    playerRef.current.position.set(
-      spawnPosition[0],
-      spawnPosition[1],
-      spawnPosition[2]
-    );
-    previousY.current = spawnPosition[1];
-    previousXZ.current = { x: spawnPosition[0], z: spawnPosition[2] };
+    const spawnX = spawnPosition[0];
+    const spawnZ = spawnPosition[2];
+    const spawnY = resolveGroundY(spawnX, spawnZ);
+
+    playerRef.current.position.set(spawnX, spawnY, spawnZ);
+    previousY.current = spawnY;
+    previousXZ.current = { x: spawnX, z: spawnZ };
     vy.current = 0;
     setIsJumping(false);
-  }, [spawnPosition]);
+  }, [spawnPosition, currentPathId]);
 
   useFrame(({ camera }, delta) => {
     if (!playerRef.current) {
@@ -122,12 +131,10 @@ const Player = forwardRef(function Player(
         ? 2.0
         : 1;
 
-    const groundY = getEntityY(
+    const groundY = resolveGroundY(
       player.position.x,
       player.position.z,
-      PLAYER_HEIGHT,
-      previousY.current,
-      currentPathId
+      previousY.current
     );
 
     const airborne = isJumping || vy.current !== 0;
@@ -167,12 +174,10 @@ const Player = forwardRef(function Player(
         currentPathId
       );
       const isSubmerged = player.position.y < WATER_LEVEL;
-      const targetY = getEntityY(
+      const targetY = resolveGroundY(
         player.position.x,
         player.position.z,
-        PLAYER_HEIGHT,
-        previousY.current,
-        currentPathId
+        previousY.current
       );
 
       if (isInWater || isSubmerged || surfaceY <= WATER_LEVEL) {
@@ -182,6 +187,8 @@ const Player = forwardRef(function Player(
           Math.max(targetY, buoyantY),
           Math.min(1, WATER_BUOYANCY_SPEED * delta)
         );
+      } else if (Math.abs(player.position.y - targetY) <= HEIGHT_SNAP_EPSILON) {
+        player.position.y = targetY;
       } else {
         player.position.y = MathUtils.lerp(
           player.position.y,
@@ -259,30 +266,11 @@ const Player = forwardRef(function Player(
         hasMoveInput: false,
         sprinting: false,
       });
+      animInputRef.current.isMoving = false;
       animInputRef.current.actionName = idleAction;
       if (idleAction !== actionNameRef.current) {
         actionNameRef.current = idleAction;
         setActionName(idleAction);
-        // #region agent log
-        fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '4125de' },
-          body: JSON.stringify({
-            sessionId: '4125de',
-            runId: 'anim-verify',
-            hypothesisId: 'H1',
-            location: 'Player.jsx:idleActionChange',
-            message: 'player action resolved (idle branch)',
-            data: {
-              nextAction: idleAction,
-              crouchActive,
-              jumping: isJumping,
-              styleId: selectedStyle.id,
-            },
-            timestamp: Date.now(),
-          }),
-        }).catch(() => { });
-        // #endregion
       }
 
       previousXZ.current.x = player.position.x;
@@ -378,12 +366,10 @@ const Player = forwardRef(function Player(
     }
 
     if (!airborne && vy.current === 0) {
-      const nextTargetY = getEntityY(
+      const nextTargetY = resolveGroundY(
         player.position.x,
         player.position.z,
-        PLAYER_HEIGHT,
-        previousY.current,
-        currentPathId
+        previousY.current
       );
 
       if (isWaterTile(player.position.x, player.position.z, currentPathId)) {
@@ -392,6 +378,8 @@ const Player = forwardRef(function Player(
           Math.max(nextTargetY, WATER_LEVEL + PLAYER_HEIGHT / 2 + VOXEL_SIZE),
           Math.min(1, WATER_BUOYANCY_SPEED * delta)
         );
+      } else if (Math.abs(player.position.y - nextTargetY) <= HEIGHT_SNAP_EPSILON) {
+        player.position.y = nextTargetY;
       } else {
         player.position.y = MathUtils.lerp(
           player.position.y,
@@ -426,64 +414,16 @@ const Player = forwardRef(function Player(
       hasMoveInput,
       sprinting: sprintActive && hasMoveInput,
     });
+    animInputRef.current.isMoving = actuallyMoved;
     animInputRef.current.actionName = nextAction;
     if (nextAction !== actionNameRef.current) {
       actionNameRef.current = nextAction;
       setActionName(nextAction);
-      // #region agent log
-      fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '4125de' },
-        body: JSON.stringify({
-          sessionId: '4125de',
-          runId: 'anim-verify',
-          hypothesisId: 'H1',
-          location: 'Player.jsx:actionChange',
-          message: 'player action resolved',
-          data: {
-            nextAction,
-            hasMoveInput,
-            actuallyMoved,
-            crouchActive,
-            jumping: isJumping || vy.current > 0.15,
-            sprinting: sprintActive && hasMoveInput,
-            styleId: selectedStyle.id,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => { });
-      // #endregion
     }
 
-    const now = performance.now();
-    if (now - debugAnimLogAt.current > 900) {
-      debugAnimLogAt.current = now;
-      // #region agent log
-      fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '4125de' },
-        body: JSON.stringify({
-          sessionId: '4125de',
-          runId: 'anim-verify',
-          hypothesisId: 'H3',
-          location: 'Player.jsx:frameSample',
-          message: 'locomotion sample',
-          data: {
-            action: nextAction,
-            forward: animInputRef.current.forwardInput,
-            strafe: animInputRef.current.strafeInput,
-            hasMoveInput,
-            actuallyMoved,
-            vy: vy.current,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => { });
-      // #endregion
-    }
   });
 
-  const modelYOffset = -PLAYER_HEIGHT / 2 + (isCrouching ? -0.22 : 0);
+  const modelYOffset = getPlayerModelYOffset(modelFitHeight, isCrouching);
   const fallbackProps = {
     color: '#2364ff',
     height: PLAYER_HEIGHT,

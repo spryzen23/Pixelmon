@@ -11,7 +11,7 @@ import CompanionRecallEffect from './CompanionRecallEffect';
 import FantasyBiomeProps from './FantasyBiomeProps';
 import { FantasyGltfProvider } from './FantasyGltfProvider';
 import OceanHorizon from './OceanHorizon';
-import PlantGltfPreloader from './PlantGltfPreloader';
+import BiomePlantPreloader from './BiomePlantPreloader';
 import Player from './Player';
 import Projectile from './Projectile';
 import Sandstorm from './Sandstorm';
@@ -46,7 +46,7 @@ function displayFantasyBiome(pathId) {
   return getBiomeDisplayInfo(pathId).fantasyBiome;
 }
 const MODEL_ROTATIONS = {
-  player: [0, 0, 0],
+  player: [0, Math.PI, 0],
   wildCreature: [0, Math.PI / 2, 0],
   companion: [0, 0, 0],
 };
@@ -291,6 +291,25 @@ export function GameScene({
   );
 
   const companionModelUrl = player?.companion?.modelUrl || '/assets/companion.glb';
+  const [worldDetailsReady, setWorldDetailsReady] = useState(false);
+
+  useEffect(() => {
+    setWorldDetailsReady(false);
+  }, [currentBiome, caveZone]);
+
+  const handleTerrainReady = useCallback(
+    (summary) => {
+      onBiomeReady(summary);
+      if (summary.phase === 'spawn' && !worldDetailsReady) {
+        const schedule =
+          typeof requestIdleCallback !== 'undefined'
+            ? (fn) => requestIdleCallback(fn, { timeout: 120 })
+            : (fn) => setTimeout(fn, 16);
+        schedule(() => setWorldDetailsReady(true));
+      }
+    },
+    [onBiomeReady, worldDetailsReady]
+  );
 
   const worldContent = (
     <Suspense fallback={null}>
@@ -298,22 +317,28 @@ export function GameScene({
       <VoxelWorld
         caveZone={caveZone}
         currentBiome={currentBiome}
-        onBiomeReady={onBiomeReady}
+        onBiomeReady={handleTerrainReady}
         playerRef={playerRef}
+        spawnPosition={playerSpawnPosition}
       />
-      <BiomeLandmarks
-        caveZone={caveZone}
-        currentBiome={currentBiome}
-        fantasyBiome={fantasyBiome}
-        iceRoomId={iceRoomId}
-        onEnterCave={onEnterCave}
-        onEnterIceRoom={onEnterIceRoom}
-        onExitIceRoom={onExitIceRoom}
-        playerRef={playerRef}
-      />
-      <BiomeProps currentBiome={currentBiome} />
-      {currentBiome === FANTASY_BIOME_ID && <FantasyBiomeProps />}
-      {currentBiome === VILLAGE_BIOME_ID && <VillageBiomeProps />}
+      {worldDetailsReady && (
+        <>
+          <BiomePlantPreloader biomeId={currentBiome} />
+          <BiomeLandmarks
+            caveZone={caveZone}
+            currentBiome={currentBiome}
+            fantasyBiome={fantasyBiome}
+            iceRoomId={iceRoomId}
+            onEnterCave={onEnterCave}
+            onEnterIceRoom={onEnterIceRoom}
+            onExitIceRoom={onExitIceRoom}
+            playerRef={playerRef}
+          />
+          <BiomeProps currentBiome={currentBiome} />
+          {currentBiome === FANTASY_BIOME_ID && <FantasyBiomeProps />}
+          {currentBiome === VILLAGE_BIOME_ID && <VillageBiomeProps />}
+        </>
+      )}
     </Suspense>
   );
 
@@ -327,7 +352,6 @@ export function GameScene({
   return (
     <>
       <Atmosphere biomeType={fantasyBiome} />
-      <PlantGltfPreloader />
       {wrappedWorld}
 
       <Suspense fallback={null}>

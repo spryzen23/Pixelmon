@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
-import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
+import { ACESFilmicToneMapping, PCFShadowMap } from 'three';
 import Ashfall from '../../components/biomes/volcanic/Ashfall';
 import Atmosphere, { SUN_POSITION } from '../../components/Atmosphere';
 import CaveEntrance from '../../components/biomes/cave/CaveEntrance';
@@ -147,7 +147,7 @@ export default function BattleRoyaleDropScene({ currentBiome = 0 }) {
       gl={{ antialias: true, alpha: false }}
       onCreated={({ gl }) => {
         gl.shadowMap.enabled = true;
-        gl.shadowMap.type = PCFSoftShadowMap;
+        gl.shadowMap.type = PCFShadowMap;
         gl.toneMapping = ACESFilmicToneMapping;
         gl.toneMappingExposure = 1;
       }}
@@ -176,12 +176,12 @@ export default function BattleRoyaleDropScene({ currentBiome = 0 }) {
       />
       {activeBiome.biome !== 'moonlit' &&
         activeBiome.biome !== 'distortion' && (
-        <OceanHorizon biomeType={activeBiome.biome} />
-      )}
+          <OceanHorizon biomeType={activeBiome.biome} />
+        )}
       <VoxelWorld
         caveZone={CAVE_ZONES.EXTERIOR}
         currentBiome={currentBiome}
-        onBiomeReady={() => {}}
+        onBiomeReady={() => { }}
       />
       {currentBiome === CAVE_BIOME_ID && <CaveEntrance />}
       {activeBiome.biome === 'volcanic' && (

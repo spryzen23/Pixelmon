@@ -1,6 +1,6 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ACESFilmicToneMapping, PCFSoftShadowMap, MathUtils, Vector3 } from 'three';
+import { ACESFilmicToneMapping, PCFShadowMap, MathUtils, Vector3 } from 'three';
 import AimIndicator from '../../components/AimIndicator';
 import AnimatedModel from '../../components/AnimatedModel';
 import Ashfall from '../../components/biomes/volcanic/Ashfall';
@@ -117,17 +117,17 @@ function BattleRoyaleLocalPlayer({
         return;
       }
 
-        yawRef.current += event.movementX * MOUSE_SENSITIVITY;
-        const minPitch =
-          currentBiome === SKY_BIOME_ID ||
+      yawRef.current += event.movementX * MOUSE_SENSITIVITY;
+      const minPitch =
+        currentBiome === SKY_BIOME_ID ||
           currentBiome === DISTORTION_BIOME_ID
-            ? -1.08
-            : -0.58;
-        pitchRef.current = MathUtils.clamp(
-          pitchRef.current - event.movementY * MOUSE_SENSITIVITY,
-          minPitch,
-          0.38
-        );
+          ? -1.08
+          : -0.58;
+      pitchRef.current = MathUtils.clamp(
+        pitchRef.current - event.movementY * MOUSE_SENSITIVITY,
+        minPitch,
+        0.38
+      );
     };
 
     canvas.addEventListener('click', handleCanvasClick);
@@ -425,7 +425,7 @@ function BattleRoyaleCatchLayer({
               playerRef={playerRef}
               registerRef={registerWildRef}
               status="active"
-              onFleeComplete={() => {}}
+              onFleeComplete={() => { }}
             />
           </Suspense>
         );
@@ -440,8 +440,8 @@ function BattleRoyaleCatchLayer({
           currentBiome={currentBiome}
           direction={projectile.direction}
           initialPosition={projectile.position}
-          onCaptureFail={() => {}}
-          onCaptureStart={() => {}}
+          onCaptureFail={() => { }}
+          onCaptureStart={() => { }}
           onCaptureSuccess={(creatureId) => {
             onCreatureCaught(creatureId);
           }}
@@ -461,8 +461,8 @@ export default function BattleRoyaleArena({
   currentBiome = 0,
   dropPoints = [],
   localPlayerId = '',
-  onCreatureCaught = () => {},
-  onPositionChange = () => {},
+  onCreatureCaught = () => { },
+  onPositionChange = () => { },
   players = [],
 }) {
   const [equippedBallId, setEquippedBallId] = useState(DEFAULT_BALL.id);
@@ -547,7 +547,7 @@ export default function BattleRoyaleArena({
         gl={{ antialias: true, alpha: false }}
         onCreated={({ gl }) => {
           gl.shadowMap.enabled = true;
-          gl.shadowMap.type = PCFSoftShadowMap;
+          gl.shadowMap.type = PCFShadowMap;
           gl.toneMapping = ACESFilmicToneMapping;
           gl.toneMappingExposure = 1;
         }}
@@ -566,8 +566,8 @@ export default function BattleRoyaleArena({
         />
         {caveZone !== CAVE_ZONES.INTERIOR &&
           activeBiome.biome !== 'distortion' && (
-          <Atmosphere biomeType={activeBiome.biome} />
-        )}
+            <Atmosphere biomeType={activeBiome.biome} />
+          )}
         <ambientLight intensity={activeBiome.biome === 'distortion' ? 0.26 : 0.7} />
         <directionalLight
           castShadow
@@ -579,18 +579,18 @@ export default function BattleRoyaleArena({
           activeBiome.biome !== 'sky' &&
           activeBiome.biome !== 'distortion' &&
           activeBiome.biome !== 'moonlit' && (
-          <OceanHorizon biomeType={activeBiome.biome} />
-        )}
+            <OceanHorizon biomeType={activeBiome.biome} />
+          )}
         {caveZone !== CAVE_ZONES.INTERIOR &&
           activeBiome.biome !== 'sky' &&
           activeBiome.biome !== 'distortion' &&
           activeBiome.biome !== 'moonlit' && (
-          <DistantSkyIsland currentBiome={currentBiome} />
-        )}
+            <DistantSkyIsland currentBiome={currentBiome} />
+          )}
         <VoxelWorld
           caveZone={caveZone}
           currentBiome={currentBiome}
-          onBiomeReady={() => {}}
+          onBiomeReady={() => { }}
           playerRef={localPlayerRef}
         />
         {currentBiome === CAVE_BIOME_ID &&
@@ -669,9 +669,8 @@ export default function BattleRoyaleArena({
         throwPower={throwPower}
       />
       <div
-        className={`cave-fade-overlay ${
-          isCaveTransitioning ? 'visible' : ''
-        }`}
+        className={`cave-fade-overlay ${isCaveTransitioning ? 'visible' : ''
+          }`}
       />
     </>
   );

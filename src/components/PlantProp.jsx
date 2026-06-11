@@ -28,7 +28,7 @@ export default function PlantProp({
       position={[x, surfaceY, z]}
       rotation={[0, rotationY, 0]}
       scale={[resolvedScale, resolvedScale, resolvedScale]}
-      castShadow
+      castShadow={false}
     />
   );
 }

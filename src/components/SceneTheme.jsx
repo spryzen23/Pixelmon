@@ -11,7 +11,7 @@ export function SceneTheme({ theme, children }) {
       <fog attach="fog" args={[theme.fog, theme.fogNear, theme.fogFar]} />
       <ambientLight intensity={theme.ambient} />
       <directionalLight
-        castShadow
+        castShadow={false}
         color="#ffffff"
         intensity={theme.sun}
         position={SUN_POSITION}

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
+import { ACESFilmicToneMapping } from 'three';
 import { api } from '../api';
 import { useGame, SCREENS, GAME_MODES } from '../context/GameContext';
 import { GameScene } from './GameScene';
@@ -28,11 +28,14 @@ import {
   THROW_POWER_STEP,
 } from '../game/projectilePhysics';
 import { resolveSceneTheme } from '../game/sceneThemes';
+import { getProceduralVoxelMaterials } from '../game/proceduralVoxelMaterials';
 import {
   CAVE_ZONES,
   WORLD_PATHS,
   clearAllBiomeCaches,
   getBiomeCacheSummary,
+  getPathSpawnPoint,
+  getSpawnChunkCoords,
   preloadSpawnChunk,
   setActivePathId,
 } from '../game/world';
@@ -57,7 +60,7 @@ export function GameView() {
   const [caveZone, setCaveZone] = useState(CAVE_ZONES.EXTERIOR);
   const [iceRoomId, setIceRoomId] = useState(null);
   const [isCaveTransitioning, setIsCaveTransitioning] = useState(false);
-  const [isMapLoading, setIsMapLoading] = useState(false);
+  const [isMapLoading, setIsMapLoading] = useState(() => gameMode !== GAME_MODES.sandbox);
   const [ordinaryLeft, setOrdinaryLeft] = useState(0);
   const [paused, setPaused] = useState(false);
   const [equippedBallId, setEquippedBallId] = useState(DEFAULT_BALL.id);
@@ -301,7 +304,10 @@ export function GameView() {
     };
     setSandboxPathId(pathId);
     setActivePathId(pathId);
-    preloadSpawnChunk(pathId);
+    const spawnPoint = getPathSpawnPoint(pathId);
+    const spawnChunk = getSpawnChunkCoords(spawnPoint);
+    preloadSpawnChunk(pathId, spawnChunk.cx, spawnChunk.cz);
+    getProceduralVoxelMaterials();
   }, [sandboxPathId]);
 
   const handleEnterCave = useCallback(() => {
@@ -454,19 +460,25 @@ export function GameView() {
     <main className="game-shell">
       <Canvas
         key={glRecoveryKey}
-        shadows
+        dpr={[1, 1.25]}
         camera={{ position: [0, 8, 10], fov: 55 }}
-        gl={{ antialias: true, alpha: false }}
+        gl={{
+          alpha: false,
+          antialias: false,
+          powerPreference: 'high-performance',
+          stencil: false,
+        }}
         onCreated={({ gl }) => {
-          gl.shadowMap.enabled = true;
-          gl.shadowMap.type = PCFSoftShadowMap;
+          gl.shadowMap.enabled = false;
           gl.toneMapping = ACESFilmicToneMapping;
           gl.toneMappingExposure = 1;
           gl.domElement.addEventListener(
             'webglcontextlost',
             (event) => {
               event.preventDefault();
-              setGlRecoveryKey((key) => key + 1);
+              window.setTimeout(() => {
+                setGlRecoveryKey((key) => key + 1);
+              }, 250);
             },
             { once: true }
           );

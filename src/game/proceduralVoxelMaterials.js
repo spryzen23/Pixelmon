@@ -171,6 +171,16 @@ function boxMaterials({ bottom, side, top }) {
   return [side, side, top, bottom, side, side];
 }
 
+let cachedVoxelMaterials = null;
+
+/** Cached singleton — avoids rebuilding canvas textures on every biome mount. */
+export function getProceduralVoxelMaterials() {
+  if (!cachedVoxelMaterials) {
+    cachedVoxelMaterials = createProceduralVoxelMaterials();
+  }
+  return cachedVoxelMaterials;
+}
+
 export function createProceduralVoxelMaterials() {
   const palettes = {
     basalt: ['#120d10', '#1b1215', '#25171b', '#311a1c', '#452019'],

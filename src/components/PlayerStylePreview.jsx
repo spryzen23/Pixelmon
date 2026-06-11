@@ -75,12 +75,13 @@ export default function PlayerStylePreview({
 
   return (
     <Canvas
-      shadows
+      dpr={[1, 1.25]}
       camera={{ position: [0, 1.1, 2.4], fov: 42 }}
+      gl={{ antialias: false, powerPreference: 'high-performance' }}
       style={{ width: '100%', height: '100%', background: 'transparent' }}
     >
       <ambientLight intensity={1.4} />
-      <directionalLight position={[3, 6, 2]} intensity={1.8} castShadow />
+      <directionalLight position={[3, 6, 2]} intensity={1.8} />
       <Suspense fallback={null}>
         <GlbCharacter
           key={style.modelUrl}

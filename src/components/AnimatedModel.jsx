@@ -117,11 +117,15 @@ export default function AnimatedModel({
     const liveLookAngle = liveInput?.lookAngle ?? 0;
     const liveLookPitch = liveInput?.lookPitch ?? 0;
     const liveVy = liveInput?.vy ?? 0;
+    const liveMoving = liveInput?.isMoving ?? false;
 
     if (useNativeMixer && activeAction.current) {
       const timeScale = isIdleLocomotion
         ? 0.42
-        : Math.max(0.25, Math.min(2.5, liveSpeed));
+        : Math.max(
+          0.35,
+          Math.min(2.8, liveSpeed * (liveMoving ? 1.05 : 0.72))
+        );
       activeAction.current.setEffectiveTimeScale(timeScale);
 
       if (
@@ -445,8 +449,8 @@ export default function AnimatedModel({
   useEffect(() => {
     scene.traverse((node) => {
       if (node.isMesh) {
-        node.castShadow = true;
-        node.receiveShadow = true;
+        node.castShadow = false;
+        node.receiveShadow = false;
       }
     });
   }, [scene]);
@@ -484,22 +488,6 @@ export default function AnimatedModel({
       }
 
       activeAction.current = nextAction;
-
-      // #region agent log
-      fetch('http://127.0.0.1:7494/ingest/f6ae2fc6-304a-4fe4-bc2e-1432ec00b765', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '4125de' },
-        body: JSON.stringify({
-          sessionId: '4125de',
-          runId: 'anim-verify',
-          hypothesisId: 'H2',
-          location: 'AnimatedModel.jsx:clipSwitch',
-          message: 'native clip activated',
-          data: { actionName, clipName, availableClips: names.slice(0, 8) },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => { });
-      // #endregion
 
       return undefined;
     } catch {
