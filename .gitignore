@@ -14,6 +14,8 @@
 out/
 /public/assets/idea_glbs/
 
+references/
+
 # production
 /build
 /client/dist
@@ -28,7 +30,6 @@ out/
 
 # misc & env files
 .DS_Store
-.env.local
 .env.development.local
 .env.test.local
 .env.production.local
@@ -40,3 +41,15 @@ yarn-error.log*
 error.txt
 *.log
 
+# local scratch/test scripts
+scripts/scratch/
+
+# media and recordings
+*.mp4
+*.mov
+*.mkv
+
+# OS files
+.DS_Store
+Thumbs.db
+config.bat

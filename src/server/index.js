@@ -6,6 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { apiRouter } from './routes/api.js';
 import { battleRouter } from './routes/battle.js';
+import { battleEngineRouter } from './routes/battleEngine.js';
 import { attachBattleRoyale } from './br/battleRoyaleServer.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -22,6 +23,7 @@ app.use(express.json({ limit: '1mb' }));
 
 app.use('/api', apiRouter);
 app.use('/api/battle', battleRouter);
+app.use('/api/battle-engine', battleEngineRouter);
 
 app.use(
   '/assets',
