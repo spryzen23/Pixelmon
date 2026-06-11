@@ -256,49 +256,88 @@ function getFirstValidMove(request) {
 
 function getAiChoice(request) {
   if (!request || request.wait) return null;
+  
   if (request.forceSwitch) {
-    const switchChoices = [];
-    request.side?.pokemon?.forEach((pokemon, index) => {
-      if (!pokemon.active && pokemon.condition && !pokemon.condition.includes('fnt')) {
-        switchChoices.push(`switch ${index + 1}`);
+    const forceSwitchArray = Array.isArray(request.forceSwitch) ? request.forceSwitch : [request.forceSwitch];
+    if (forceSwitchArray.length > 1) {
+      const choices = [];
+      for (let i = 0; i < forceSwitchArray.length; i++) {
+        if (forceSwitchArray[i]) {
+          choices.push('default');
+        } else {
+          choices.push('pass');
+        }
       }
-    });
-    return switchChoices.length ? switchChoices[Math.floor(Math.random() * switchChoices.length)] : 'pass';
+      return choices.join(', ');
+    }
   }
-
-  const moveChoices = [];
-  request.active?.[0]?.moves?.forEach((move, index) => {
-    if (!move.disabled) moveChoices.push(`move ${index + 1}`);
-  });
-  return moveChoices.length ? moveChoices[Math.floor(Math.random() * moveChoices.length)] : 'default';
+  
+  if (request.active && request.active.length > 1) {
+    const choices = [];
+    for (let i = 0; i < request.active.length; i++) {
+      if (request.active[i]) {
+        choices.push('default');
+      } else {
+        choices.push('pass');
+      }
+    }
+    return choices.join(', ');
+  }
+  
+  return 'default';
 }
 
 function applyAppAction(battle, sideId, action) {
-  if (action !== 'potion' && action !== 'fullrestore') return false;
-  const side = battle.getSide(sideId);
-  const activeMon = side?.active?.[0];
-  if (!activeMon || activeMon.hp <= 0) {
-    battle.choose(sideId, 'default');
-    return true;
+  const choiceStrings = action.split(',');
+  let matchedAppAction = false;
+
+  for (let i = 0; i < choiceStrings.length; i++) {
+    const choiceStr = choiceStrings[i].trim();
+    if (choiceStr === 'potion' || choiceStr === 'fullrestore') {
+      const side = battle.getSide(sideId);
+      const activeMon = side?.active?.[i];
+      if (activeMon && activeMon.hp > 0) {
+        const oldHp = activeMon.hp;
+        if (choiceStr === 'potion') {
+          activeMon.sethp(Math.min(activeMon.maxhp, oldHp + 50));
+          if (activeMon.hp > oldHp) battle.add('-heal', activeMon, activeMon.getHealth, '[from] item: Potion');
+        } else {
+          activeMon.sethp(activeMon.maxhp);
+          activeMon.cureStatus();
+          if (activeMon.hp > oldHp) battle.add('-heal', activeMon, activeMon.getHealth, '[from] item: Full Restore');
+        }
+        activeMon.addVolatile('flinch');
+      }
+
+      // Replace the item choice with the first valid move for that slot
+      const moveChoice = getFirstValidMoveForSlot(side?.activeRequest, i);
+      choiceStrings[i] = moveChoice;
+      matchedAppAction = true;
+    }
   }
 
-  const oldHp = activeMon.hp;
-  if (action === 'potion') {
-    activeMon.sethp(Math.min(activeMon.maxhp, oldHp + 50));
-    if (activeMon.hp > oldHp) battle.add('-heal', activeMon, activeMon.getHealth, '[from] item: Potion');
-  } else {
-    activeMon.sethp(activeMon.maxhp);
-    activeMon.cureStatus();
-    if (activeMon.hp > oldHp) battle.add('-heal', activeMon, activeMon.getHealth, '[from] item: Full Restore');
+  if (matchedAppAction) {
+    battle.choose(sideId, choiceStrings.join(', '));
+    return true;
   }
-  activeMon.addVolatile('flinch');
-  battle.choose(sideId, getFirstValidMove(side.activeRequest));
-  return true;
+  return false;
 }
+
+function getFirstValidMoveForSlot(request, i) {
+  const activePoke = request?.active?.[i];
+  const moveIndex = activePoke?.moves?.findIndex((move) => !move.disabled) ?? -1;
+  return moveIndex >= 0 ? `move ${moveIndex + 1}` : 'default';
+}
+
 
 function restoreBattle(session, collector) {
   const battle = Battle.fromJSON(session.serializedBattle);
   battle.send = collector.send;
+  // Critical: sentLogPos must start at the END of the restored log so that
+  // sendUpdates() only captures events generated AFTER this restore (i.e. new turn events).
+  // Without this, sendUpdates sends the entire historical log as a single "update" chunk
+  // and then has nothing left to send for the actual new turn events.
+  battle.sentLogPos = battle.log.length;
   return battle;
 }
 

@@ -278,10 +278,11 @@ function mapClientPokemonToBattleReady(pokemon, index) {
     ability: pokemon.ability || '',
     item: pokemon.item || '',
     status: pokemon.status || 'none',
+    gender: pokemon.gender || (Math.random() > 0.5 ? 'M' : 'F'),
   };
 }
 
-function buildEnemyPokemon(setKey) {
+function buildEnemyPokemon(setKey, index = 0) {
   const template = ENEMY_SETS[setKey] || ENEMY_SETS.rattata;
   const levelScale = template.level >= 70 ? 2.2 : template.level >= 50 ? 1.6 : 1;
   const maxHp = Math.round(95 * levelScale);
@@ -290,7 +291,7 @@ function buildEnemyPokemon(setKey) {
   const speed = Math.round(80 * levelScale);
 
   return {
-    id: `p2-${setKey}`,
+    id: `p2-${index}-${setKey}`,
     species: template.species,
     displayName: template.species,
     level: template.level,
@@ -301,31 +302,72 @@ function buildEnemyPokemon(setKey) {
     ability: '',
     item: '',
     status: 'none',
+    gender: Math.random() > 0.5 ? 'M' : 'F',
   };
 }
 
-function getEnemyTeam(difficulty) {
-  const pool = DIFFICULTY_POOLS[difficulty] || DIFFICULTY_POOLS.boss;
-  const enemyName = pool[Math.floor(Math.random() * pool.length)];
-  return [buildEnemyPokemon(enemyName)];
+/**
+ * Returns the minimum number of Pokémon each team must supply so that every
+ * active slot in the given format can be filled on turn 1.
+ */
+function getMinActiveSlots(formatId) {
+  if (formatId === 'gen7doublescustomgame') return 2;
+  if (formatId === 'gen6triplescustomgame') return 3;
+  return 1;
 }
 
-function getTrainerParticipant() {
+function getEnemyTeam(difficulty, formatId) {
+  const pool = DIFFICULTY_POOLS[difficulty] || DIFFICULTY_POOLS.boss;
+
+  let teamSize = 3;
+  if (formatId === 'gen7doublescustomgame') {
+    teamSize = 6;
+  } else if (formatId === 'gen6triplescustomgame') {
+    teamSize = 6;
+  }
+
+  if (difficulty === 'boss') teamSize = 1;
+
+  const team = [];
+  for (let i = 0; i < teamSize; i++) {
+    const enemyName = pool[Math.floor(Math.random() * pool.length)];
+    team.push(buildEnemyPokemon(enemyName, i));
+  }
+  return team;
+}
+
+function getTrainerParticipant(formatId) {
   const trainer = TRAINER_PARTICIPANTS[Math.floor(Math.random() * TRAINER_PARTICIPANTS.length)];
+  let teamSize = 3;
+  if (formatId === 'gen7doublescustomgame') teamSize = 6;
+  if (formatId === 'gen6triplescustomgame') teamSize = 6;
+
+  let team = trainer.team.map((pokemon) => ({ ...pokemon, stats: { ...pokemon.stats } }));
+
+  // Pad the team if it doesn't have enough Pokémon for the format
+  if (team.length < teamSize) {
+    const pool = DIFFICULTY_POOLS['gym'];
+    const extraNeeded = teamSize - team.length;
+    for (let i = 0; i < extraNeeded; i++) {
+      const enemyName = pool[Math.floor(Math.random() * pool.length)];
+      team.push(buildEnemyPokemon(enemyName, team.length));
+    }
+  }
+
   return {
     ...trainer,
     user: { ...trainer.user },
-    team: trainer.team.map((pokemon) => ({ ...pokemon, stats: { ...pokemon.stats } })),
+    team: team.slice(0, teamSize),
   };
 }
 
-function getEnemyParticipant(difficulty) {
-  if (difficulty === 'trainer3v3') return getTrainerParticipant();
+function getEnemyParticipant(difficulty, formatId) {
+  if (difficulty === 'trainer3v3') return getTrainerParticipant(formatId);
   return {
     side: 'p2',
     user: { id: 'arena-ai', name: 'AI', type: 'npc' },
     control: 'ai',
-    team: getEnemyTeam(difficulty),
+    team: getEnemyTeam(difficulty, formatId),
   };
 }
 
@@ -342,18 +384,25 @@ function normalizeEngineError(error) {
   return error;
 }
 
-export function startNewBattle({ team, difficulty, weather }) {
+export function startNewBattle({ team, difficulty, weather, formatId }) {
+  const resolvedFormatId = formatId || 'gen7customgame';
+  const minSlots = getMinActiveSlots(resolvedFormatId);
+  const difficultyKey = difficulty || 'wild';
+
+  // Map player's team to battle-ready objects
+  let playerTeam = (team || []).map(mapClientPokemonToBattleReady);
+
   const result = createBattleEngineSession({
-    formatId: 'gen7customgame',
+    formatId: resolvedFormatId,
     weather: weather || 'clear',
     participants: [
       {
         side: 'p1',
         user: { id: 'arena-player', name: 'Player' },
         control: 'human',
-        team: (team || []).map(mapClientPokemonToBattleReady),
+        team: playerTeam,
       },
-      getEnemyParticipant(difficulty),
+      getEnemyParticipant(difficultyKey, resolvedFormatId),
     ],
   });
 

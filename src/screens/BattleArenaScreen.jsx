@@ -9,7 +9,9 @@ import {
   CloudSun,
   Compass,
   Wind,
-  RotateCcw
+  RotateCcw,
+  ChevronDown,
+  Check
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import '../styles/minigames.css';
@@ -37,19 +39,152 @@ const TYPE_CHART = {
 };
 
 const WEATHER_OPTIONS = [
-  { id: 'clear', name: 'Clear Sky', icon: CloudSun, color: 'text-zinc-400', desc: 'Standard battle conditions.' },
-  { id: 'sun', name: 'Harsh Sunlight', icon: Flame, color: 'text-orange-500', desc: 'Fire moves x1.5. Water moves x0.5.' },
-  { id: 'rain', name: 'Heavy Rain', icon: Droplet, color: 'text-blue-400', desc: 'Water moves x1.5. Fire moves x0.5.' },
-  { id: 'sandstorm', name: 'Sandstorm', icon: Compass, color: 'text-amber-500', desc: 'Rock-type Sp. Def boosted by 1.5x.' },
-  { id: 'hail', name: 'Snow/Hail', icon: Wind, color: 'text-cyan-300', desc: 'Ice moves x1.5.' }
+  { id: 'random', name: 'Random', icon: '🎲', color: 'text-zinc-400', desc: 'Weather chosen randomly each battle.' },
+  { id: 'clear', name: 'Clear Sky', icon: '☀️', color: 'text-zinc-400', desc: 'Standard battle conditions.' },
+  { id: 'sun', name: 'Harsh Sunlight', icon: '🔥', color: 'text-orange-500', desc: 'Fire moves ×1.5. Water moves ×0.5.' },
+  { id: 'rain', name: 'Heavy Rain', icon: '💧', color: 'text-blue-400', desc: 'Water moves ×1.5. Fire moves ×0.5.' },
+  { id: 'sandstorm', name: 'Sandstorm', icon: '🌪️', color: 'text-amber-500', desc: 'Rock-type Sp. Def boosted by 1.5×.' },
+  { id: 'hail', name: 'Snow / Hail', icon: '❄️', color: 'text-cyan-300', desc: 'Ice moves ×1.5.' }
 ];
 
 const DIFFICULTIES = [
-  { id: 'wild', name: 'Wild Encounter', rating: 'Easy', coins: 30 },
-  { id: 'gym', name: 'Gym Leader Ace', rating: 'Medium', coins: 75 },
-  { id: 'boss', name: 'Legendary Raid Boss', rating: 'Hard', coins: 150 },
-  { id: 'trainer3v3', name: 'Random Trainer Battle', rating: '3v3', coins: 200 }
+  { id: 'wild', name: 'Wild Encounter', icon: '🌿', rating: 'Easy', desc: 'Common Pokémon, low level. Great for practice.', coins: 30 },
+  { id: 'gym', name: 'Gym Leader Ace', icon: '🏅', rating: 'Medium', desc: 'Trainer-level threats with solid movesets.', coins: 75 },
+  { id: 'boss', name: 'Legendary Raid Boss', icon: '💀', rating: 'Hard', desc: 'Elite legendaries at max power.', coins: 150 },
+  { id: 'trainer3v3', name: 'Random Trainer', icon: '🎮', rating: '3v3', desc: 'Face a random NPC trainer team.', coins: 200 }
 ];
+
+const BATTLE_FORMATS = [
+  {
+    id: 'singles',
+    name: 'Single Battle',
+    icon: '⚔️',
+    teamSize: 3,
+    activeCount: 1,
+    showdownFormat: 'gen7customgame',
+    description: 'Classic 1v1 — One Pokémon per side.',
+    guide: null,
+  },
+  {
+    id: 'doubles',
+    name: 'Double Battle',
+    icon: '🤝',
+    teamSize: 4,
+    activeCount: 2,
+    showdownFormat: 'gen7doublescustomgame',
+    description: '2v2 — Spread moves hit all. Target selection matters.',
+    guide: {
+      title: 'Double Battle Strategy',
+      tips: [
+        "💥 Spread moves (Earthquake, Surf, Discharge) hit ALL Pokémon on field — 25% weaker.",
+        "🎯 Single-target moves: choose which foe to attack each turn.",
+        "🤝 Helping Hand boosts your ally's next move by 50%.",
+        "👆 Follow Me / Rage Powder redirects all attacks to the user.",
+        "🔀 Ally Switch swaps your two Pokémon's positions.",
+      ],
+      spreadMoves: ['Earthquake','Surf','Discharge','Dazzling Gleam','Rock Slide','Lava Plume','Bulldoze','Blizzard','Heat Wave','Boomburst','Self-Destruct','Explosion','Magnitude','Eruption','Sludge Wave'],
+    },
+  },
+  {
+    id: 'triples',
+    name: 'Triple Battle',
+    icon: '🔱',
+    teamSize: 6,
+    activeCount: 3,
+    showdownFormat: 'gen6triplescustomgame',
+    description: '3v3 — Positioning & Shifting. Center reaches everyone.',
+    guide: {
+      title: 'Triple Battle Strategy',
+      tips: [
+        '📍 CENTER Pokémon can attack ANY target on the field.',
+        '↔️ SIDE Pokémon can only reach adjacent foes (center + opposite side).',
+        '🔀 SHIFT: Left/Right Pokémon can swap to center — no stat reset!',
+        '🦅 Flying-type & Pulse/Aura moves always reach non-adjacent foes.',
+        '📉 Spread moves only hit ADJACENT Pokémon in triples (not all).',
+      ],
+      spreadMoves: ['Earthquake','Discharge','Blizzard','Rock Slide','Lava Plume','Bulldoze','Boomburst'],
+    },
+  },
+];
+
+// Spread moves that hit all Pokémon on field in doubles/triples
+const SPREAD_MOVE_IDS = new Set([
+  'earthquake','surf','discharge','dazzlinggleam','rockslide','lavaplume',
+  'bulldoze','blizzard','heatwave','boomburst','selfdestruct','explosion',
+  'magnitude','eruption','sludgewave','perishsong','brutalswing',
+]);
+
+/**
+ * Animated dropdown component styled to match the battle arena's dark-glass aesthetic.
+ * Inspired by 21st.dev dropdown-01 — floating panel, icon+label+desc rows,
+ * smooth open/close, click-outside close, keyboard accessible.
+ */
+function BattleDropdown({ label, options, value, onChange, id }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const selected = options.find(o => o.id === value) || options[0];
+
+  useEffect(() => {
+    function onClickOut(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener('mousedown', onClickOut);
+    return () => document.removeEventListener('mousedown', onClickOut);
+  }, []);
+
+  return (
+    <div className="battle-dropdown-root" ref={ref} id={id}>
+      <span className="battle-dropdown-label">{label}</span>
+      <button
+        className={`battle-dropdown-trigger ${open ? 'open' : ''}`}
+        onClick={() => setOpen(o => !o)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        type="button"
+      >
+        <span className="battle-dropdown-trigger-icon">
+          {typeof selected.icon === 'string' ? selected.icon : <selected.icon size={14} />}
+        </span>
+        <span className="battle-dropdown-trigger-text">
+          <span className="battle-dropdown-trigger-name">{selected.name}</span>
+          {selected.rating && <span className="battle-dropdown-trigger-badge">{selected.rating}</span>}
+        </span>
+        <ChevronDown size={14} className={`battle-dropdown-chevron ${open ? 'rotated' : ''}`} />
+      </button>
+
+      {open && (
+        <div className="battle-dropdown-panel" role="listbox">
+          {options.map(opt => {
+            const isActive = opt.id === value;
+            return (
+              <button
+                key={opt.id}
+                className={`battle-dropdown-item ${isActive ? 'active' : ''}`}
+                onClick={() => { onChange(opt.id); setOpen(false); }}
+                role="option"
+                aria-selected={isActive}
+                type="button"
+              >
+                <span className="battle-dropdown-item-icon">
+                  {typeof opt.icon === 'string' ? opt.icon : <opt.icon size={16} />}
+                </span>
+                <span className="battle-dropdown-item-body">
+                  <span className="battle-dropdown-item-name">
+                    {opt.name}
+                    {opt.rating && <span className="battle-dropdown-item-badge">{opt.rating}</span>}
+                  </span>
+                  {opt.desc && <span className="battle-dropdown-item-desc">{opt.desc}</span>}
+                </span>
+                {isActive && <Check size={13} className="battle-dropdown-item-check" />}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 // Official Pokémon type color palette
 const TYPE_COLORS = {
@@ -150,6 +285,20 @@ function formatShowdownLog(line) {
       const item = parts[4] ? parts[4].replace('[from] item: ', '') : '';
       return `🧪 <strong>${target}</strong> was healed ${item ? `by ${item}` : ''}!`;
     }
+    case '-boost': {
+      const target = cleanName(parts[2]);
+      const stat = parts[3];
+      const amount = parts[4];
+      const statMap = { atk: 'Attack', def: 'Defense', spa: 'Sp. Atk', spd: 'Sp. Def', spe: 'Speed', accuracy: 'Accuracy', evasion: 'Evasion' };
+      return `📈 <strong>${target}</strong>'s ${statMap[stat] || stat} rose!`;
+    }
+    case '-unboost': {
+      const target = cleanName(parts[2]);
+      const stat = parts[3];
+      const amount = parts[4];
+      const statMap = { atk: 'Attack', def: 'Defense', spa: 'Sp. Atk', spd: 'Sp. Def', spe: 'Speed', accuracy: 'Accuracy', evasion: 'Evasion' };
+      return `📉 <strong>${target}</strong>'s ${statMap[stat] || stat} fell!`;
+    }
     case '-status': {
       const target = cleanName(parts[2]);
       const statusMap = { brn: 'burned', psn: 'poisoned', par: 'paralyzed', slp: 'put to sleep', frz: 'frozen' };
@@ -191,6 +340,14 @@ function formatShowdownLog(line) {
     case '-immune': {
       const target = cleanName(parts[2]);
       return `🚫 <strong>${target}</strong> is immune!`;
+    }
+    case '-miss': {
+      const actor = cleanName(parts[2]);
+      return `❌ <strong>${actor}</strong>'s attack missed!`;
+    }
+    case '-fail': {
+      const actor = cleanName(parts[2]);
+      return `🚫 <strong>${actor}</strong>'s move failed!`;
     }
     case 'cant': {
       const target = cleanName(parts[2]);
@@ -293,7 +450,16 @@ function syncTeamFromRequest(team, request) {
   request?.side?.pokemon?.forEach((requestPokemon, requestIndex) => {
     const teamIndex = findTeamIndexForRequestPokemon(requestPokemon, nextTeam, requestIndex);
     if (nextTeam[teamIndex]) {
-      nextTeam[teamIndex] = { ...nextTeam[teamIndex], ...parseCondition(requestPokemon.condition) };
+      const details = requestPokemon.details || '';
+      let gender = null;
+      if (details.includes(', M')) gender = '♂';
+      else if (details.includes(', F')) gender = '♀';
+
+      nextTeam[teamIndex] = { 
+        ...nextTeam[teamIndex], 
+        ...parseCondition(requestPokemon.condition),
+        ...(gender ? { gender } : {})
+      };
     }
   });
   return nextTeam;
@@ -307,19 +473,42 @@ export function BattleArenaScreen() {
   const [draftPool, setDraftPool] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState([]);
   const [difficulty, setDifficulty] = useState('wild');
-  const [weather, setWeather] = useState('clear');
+  const [weather, setWeather] = useState('random');
+  const [battleFormat, setBattleFormat] = useState('singles');
   const [loading, setLoading] = useState(false);
+
+  const currentFormat = BATTLE_FORMATS.find(f => f.id === battleFormat) || BATTLE_FORMATS[0];
 
   // Showdown Battle States
   const [battleId, setBattleId] = useState(null);
+  const battleIdRef = useRef(null);
+  const [playerSlots, setPlayerSlots] = useState([null, null, null]);
+  const playerSlotsRef = useRef([null, null, null]);
+  const [enemySlots, setEnemySlots] = useState([null, null, null]);
+  const enemySlotsRef = useRef([null, null, null]);
+  const [choosingSlotIdx, setChoosingSlotIdx] = useState(0);
+  const choosingSlotIdxRef = useRef(0);
+  const [turnChoices, setTurnChoices] = useState([]);
+  const turnChoicesRef = useRef([]);
+  const [targetSelection, setTargetSelection] = useState(null); // { moveSlotIndex, targetType }
   const [activeRequest, setActiveRequest] = useState(null);
+  const activeRequestRef = useRef(null);
   const [playerTeam, setPlayerTeam] = useState([]);
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [enemy, setEnemy] = useState(null);
+  const playerTeamRef = useRef([]);
+  const enemy = enemySlots[0] || enemySlots[1] || enemySlots[2];
   const [playerTurn, setPlayerTurn] = useState(true);
   const [battleLogs, setBattleLogs] = useState([]);
   const [isActing, setIsActing] = useState(false);
   const [winner, setWinner] = useState(null);
+
+  // Keep refs in sync with state so async callbacks always read fresh values
+  const _setBattleId = (v) => { battleIdRef.current = v; setBattleId(v); };
+  const _setPlayerSlots = (v) => { const next = typeof v === 'function' ? v(playerSlotsRef.current) : v; playerSlotsRef.current = next; setPlayerSlots(next); };
+  const _setEnemySlots = (v) => { const next = typeof v === 'function' ? v(enemySlotsRef.current) : v; enemySlotsRef.current = next; setEnemySlots(next); };
+  const _setChoosingSlotIdx = (v) => { const next = typeof v === 'function' ? v(choosingSlotIdxRef.current) : v; choosingSlotIdxRef.current = next; setChoosingSlotIdx(next); };
+  const _setTurnChoices = (v) => { const next = typeof v === 'function' ? v(turnChoicesRef.current) : v; turnChoicesRef.current = next; setTurnChoices(next); };
+  const _setActiveRequest = (v) => { activeRequestRef.current = v; setActiveRequest(v); };
+  const _setPlayerTeam = (v) => { const next = typeof v === 'function' ? v(playerTeamRef.current) : v; playerTeamRef.current = next; setPlayerTeam(next); };
 
   // Animations
   const [playerAnim, setPlayerAnim] = useState('');
@@ -401,34 +590,35 @@ export function BattleArenaScreen() {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [activeRequest, isActing, winner, playerTeam]);
+  }, [activeRequest, isActing, winner, playerTeam, choosingSlotIdx]);
 
   const getRequestMoves = useCallback(() => {
-    if (!activeRequest || !activeRequest.active || !activeRequest.active[0]) return [];
-    return activeRequest.active[0].moves || [];
-  }, [activeRequest]);
+    if (!activeRequest || !activeRequest.active || !activeRequest.active[choosingSlotIdx]) return [];
+    return activeRequest.active[choosingSlotIdx].moves || [];
+  }, [activeRequest, choosingSlotIdx]);
 
   // Sync damage calculator inputs to active pokemon and enemy context
   useEffect(() => {
-    if (stage === 'battle' && playerTeam[activeIdx] && enemy && activeRequest) {
-      const activePoke = playerTeam[activeIdx];
+    const currentActiveIdx = playerSlots[choosingSlotIdx];
+    const currentActivePoke = currentActiveIdx !== null ? playerTeam[currentActiveIdx] : null;
+    if (stage === 'battle' && currentActivePoke && enemy && activeRequest) {
       const reqMoves = getRequestMoves();
       const firstMove = reqMoves[0] || { id: 'tackle' };
-      const defaultMoveDetail = activePoke.moves?.find(
+      const defaultMoveDetail = currentActivePoke.moves?.find(
         m => m.name.toLowerCase().replace(/[^a-z0-9]+/g, '') === firstMove.id
       ) || { power: 40, type: 'normal' };
 
       setCalcInputs(prev => ({
         ...prev,
-        level: activePoke.level || 50,
+        level: currentActivePoke.level || 50,
         power: defaultMoveDetail.power || 40,
-        atk: activePoke.attack || 100,
+        atk: currentActivePoke.attack || 100,
         def: enemy.defense || 100,
-        stab: activePoke.types.includes(defaultMoveDetail.type) ? 1.5 : 1.0,
+        stab: currentActivePoke.types.includes(defaultMoveDetail.type) ? 1.5 : 1.0,
         type: calculateTypeMultiplier(defaultMoveDetail.type, enemy.types)
       }));
     }
-  }, [stage, activeIdx, enemy, playerTeam, activeRequest, getRequestMoves]);
+  }, [stage, playerSlots, choosingSlotIdx, enemy, playerTeam, activeRequest, getRequestMoves]);
 
   const handleDraftToggle = (poke) => {
     setSelectedTeam(prev => {
@@ -436,14 +626,14 @@ export function BattleArenaScreen() {
       if (isSelected) {
         return prev.filter(p => p.entryId !== poke.entryId);
       } else {
-        if (prev.length >= 3) return prev;
+        if (prev.length >= currentFormat.teamSize) return prev;
         return [...prev, poke];
       }
     });
   };
 
   const startBattle = async (difficultyOverride = difficulty) => {
-    if (selectedTeam.length < 3) return;
+    if (selectedTeam.length < currentFormat.activeCount) return;
     setLoading(true);
     try {
       const resolvedTeam = [];
@@ -451,34 +641,70 @@ export function BattleArenaScreen() {
         const pokeDetail = await fetchPokemonDetailsFromAPI(t.name);
         resolvedTeam.push(pokeDetail);
       }
-      setPlayerTeam(resolvedTeam);
-      setActiveIdx(0);
+      _setPlayerTeam(resolvedTeam);
+
+      // Resolve 'random' weather to a real one before sending to engine
+      const REAL_WEATHERS = ['clear', 'sun', 'rain', 'sandstorm', 'hail'];
+      const resolvedWeather = weather === 'random'
+        ? REAL_WEATHERS[Math.floor(Math.random() * REAL_WEATHERS.length)]
+        : weather;
 
       // Start Showdown Battle Simulation on Backend
       const result = await api.startBattle({
         team: resolvedTeam,
         difficulty: difficultyOverride,
-        weather
+        weather: resolvedWeather,
+        formatId: currentFormat.showdownFormat,
+        battleFormat: currentFormat.id,
       });
 
-      setBattleId(result.battleId);
-      setActiveRequest(result.request);
+      _setBattleId(result.battleId);
+      _setActiveRequest(result.request);
       setWinner(null);
       setItems({ potions: 3, fullRestores: 1 });
       setStage('battle');
       setPlayerTurn(true);
 
-      // Extract enemy pokemon details from switch-in logs
-      const switchLine = result.logs.find(l => l.startsWith('|switch|p2a:'));
-      if (switchLine) {
-        const parts = switchLine.split('|');
-        const enemyName = parts[3].split(',')[0].trim().toLowerCase();
-        const enemyDetail = await fetchPokemonDetailsFromAPI(enemyName);
-        const [current, max] = parts[4].split('/').map(Number);
-        enemyDetail.currentHp = current;
-        enemyDetail.maxHp = max;
-        setEnemy(enemyDetail);
+      // Parse and sync initial player and enemy slots from logs
+      const initialPlayerSlots = [null, null, null];
+      const initialEnemySlots = [null, null, null];
+
+      for (const line of result.logs) {
+        if (line.startsWith('|switch|') || line.startsWith('|drag|')) {
+          const parts = line.split('|');
+          const target = parts[2];
+          const details = parts[3];
+          const hpStatus = parts[4];
+          const speciesName = details.split(',')[0].trim();
+          const { currentHp, maxHp, status } = parseCondition(hpStatus);
+
+          let gender = null;
+          if (details.includes(', M')) gender = '♂';
+          else if (details.includes(', F')) gender = '♀';
+
+          if (target.startsWith('p1')) {
+            const slotChar = target.charAt(2);
+            const slotIdx = slotChar === 'a' ? 0 : slotChar === 'b' ? 1 : 2;
+            const targetTeamIdx = findTeamIndexForBattleIdent(target, resolvedTeam, result.request, slotIdx);
+            initialPlayerSlots[slotIdx] = targetTeamIdx;
+          } else if (target.startsWith('p2')) {
+            const slotChar = target.charAt(2);
+            const slotIdx = slotChar === 'a' ? 0 : slotChar === 'b' ? 1 : 2;
+            const enemyDetail = await fetchPokemonDetailsFromAPI(speciesName);
+            enemyDetail.currentHp = currentHp;
+            enemyDetail.maxHp = maxHp;
+            enemyDetail.status = status;
+            if (gender) enemyDetail.gender = gender;
+            initialEnemySlots[slotIdx] = enemyDetail;
+          }
+        }
       }
+
+      _setPlayerSlots(initialPlayerSlots);
+      _setEnemySlots(initialEnemySlots);
+      _setChoosingSlotIdx(0);
+      _setTurnChoices([]);
+      setTargetSelection(null);
 
       // Format and set initial logs
       setBattleLogs([]);
@@ -558,14 +784,52 @@ export function BattleArenaScreen() {
     return mult;
   };
 
+  const isValidTarget = (sourceIdx, targetType, targetIsFoe, targetIdx) => {
+    if (battleFormat === 'singles' || battleFormat === 'doubles') {
+      if (targetType === 'adjacentAlly') return !targetIsFoe && targetIdx !== sourceIdx;
+      if (targetType === 'adjacentAllyOrSelf') return !targetIsFoe;
+      if (targetType === 'adjacentFoe') return targetIsFoe;
+      if (targetType === 'normal' || targetType === 'any') return targetIdx !== sourceIdx || targetIsFoe;
+      
+      // Multi-target logic checking
+      if (targetType === 'allAdjacent') return targetIdx !== sourceIdx;
+      if (targetType === 'allAdjacentFoes' || targetType === 'foeSide') return targetIsFoe;
+      if (targetType === 'allySide') return !targetIsFoe && targetIdx !== sourceIdx;
+      if (targetType === 'all') return true;
+      if (targetType === 'self') return !targetIsFoe && targetIdx === sourceIdx;
+      
+      return true;
+    }
+    const acrossFoeIdx = targetIdx;
+    const isAdjacent = targetIsFoe 
+      ? Math.abs(acrossFoeIdx - sourceIdx) <= 1 
+      : Math.abs(targetIdx - sourceIdx) === 1;
+    if (targetType === 'adjacentAlly') return !targetIsFoe && isAdjacent;
+    if (targetType === 'adjacentAllyOrSelf') return (!targetIsFoe && isAdjacent) || (targetIdx === sourceIdx);
+    if (targetType === 'adjacentFoe') return targetIsFoe && isAdjacent;
+    if (targetType === 'normal') return isAdjacent;
+    if (targetType === 'any') return targetIdx !== sourceIdx || targetIsFoe;
+    
+    // Triples multi-target logic
+    if (targetType === 'allAdjacent') return targetIdx !== sourceIdx && isAdjacent;
+    if (targetType === 'allAdjacentFoes') return targetIsFoe && isAdjacent;
+    if (targetType === 'foeSide') return targetIsFoe;
+    if (targetType === 'allySide') return !targetIsFoe && targetIdx !== sourceIdx;
+    if (targetType === 'all') return true;
+    if (targetType === 'self') return !targetIsFoe && targetIdx === sourceIdx;
+    
+    return true;
+  };
+
   // Playback turn logs line-by-line with 3D animations and audio cues synced
-  const playTurnEvents = async (logs, nextRequest, nextWinner, pTeam, eMon) => {
+  const playTurnEvents = async (logs, nextRequest, nextWinner) => {
     setIsActing(true);
     setPlayerTurn(false);
 
-    let localTeam = [...pTeam];
-    let localEnemy = eMon ? { ...eMon } : null;
-    let localActiveIdx = activeIdx;
+    // Use refs so we always get the latest state even inside an async call
+    let localTeam = [...playerTeamRef.current];
+    let localEnemySlots = [...enemySlotsRef.current];
+    let localPlayerSlots = [...playerSlotsRef.current];
 
     for (let i = 0; i < logs.length; i++) {
       const line = logs[i];
@@ -579,7 +843,7 @@ export function BattleArenaScreen() {
 
       if (type === 'move') {
         const actor = parts[2];
-        if (actor.startsWith('p1a:')) {
+        if (actor.startsWith('p1')) {
           setPlayerAnim('attack');
           const moveId = parts[3].toLowerCase().replace(/[^a-z0-9]+/g, '');
           if (moveId.includes('electric') || moveId.includes('thunder')) playAudioTone('spark');
@@ -588,7 +852,7 @@ export function BattleArenaScreen() {
 
           await new Promise(r => setTimeout(r, 450));
           setPlayerAnim('');
-        } else if (actor.startsWith('p2a:')) {
+        } else if (actor.startsWith('p2')) {
           setEnemyAnim('attack');
           playAudioTone('hit');
           await new Promise(r => setTimeout(r, 450));
@@ -599,26 +863,31 @@ export function BattleArenaScreen() {
         const target = parts[2];
         const hpStatus = parts[3];
         const { currentHp, maxHp, status } = parseCondition(hpStatus);
+        const slotChar = target.charAt(2);
+        const slotIdx = slotChar === 'a' ? 0 : slotChar === 'b' ? 1 : 2;
 
-        if (target.startsWith('p1a:')) {
+        if (target.startsWith('p1')) {
           setPlayerAnim('hit');
-          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, localActiveIdx);
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, slotIdx);
           localTeam[targetTeamIndex] = {
             ...localTeam[targetTeamIndex],
             currentHp,
             maxHp,
             status
           };
-          setPlayerTeam([...localTeam]);
+          _setPlayerTeam([...localTeam]);
           await new Promise(r => setTimeout(r, 450));
           setPlayerAnim('');
-        } else if (target.startsWith('p2a:')) {
+        } else if (target.startsWith('p2')) {
           setEnemyAnim('hit');
-          if (localEnemy) {
-            localEnemy.currentHp = currentHp;
-            localEnemy.maxHp = maxHp;
-            localEnemy.status = status;
-            setEnemy({ ...localEnemy });
+          if (localEnemySlots[slotIdx]) {
+            localEnemySlots[slotIdx] = {
+              ...localEnemySlots[slotIdx],
+              currentHp,
+              maxHp,
+              status
+            };
+            _setEnemySlots([...localEnemySlots]);
           }
           await new Promise(r => setTimeout(r, 450));
           setEnemyAnim('');
@@ -628,40 +897,81 @@ export function BattleArenaScreen() {
         const target = parts[2];
         const hpStatus = parts[3];
         const { currentHp, maxHp, status } = parseCondition(hpStatus);
+        const slotChar = target.charAt(2);
+        const slotIdx = slotChar === 'a' ? 0 : slotChar === 'b' ? 1 : 2;
 
-        if (target.startsWith('p1a:')) {
-          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, localActiveIdx);
+        if (target.startsWith('p1')) {
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, slotIdx);
           localTeam[targetTeamIndex] = {
             ...localTeam[targetTeamIndex],
             currentHp,
             maxHp,
             status
           };
-          setPlayerTeam([...localTeam]);
-        } else if (target.startsWith('p2a:')) {
-          if (localEnemy) {
-            localEnemy.currentHp = currentHp;
-            localEnemy.maxHp = maxHp;
-            localEnemy.status = status;
-            setEnemy({ ...localEnemy });
+          _setPlayerTeam([...localTeam]);
+        } else if (target.startsWith('p2')) {
+          if (localEnemySlots[slotIdx]) {
+            localEnemySlots[slotIdx] = {
+              ...localEnemySlots[slotIdx],
+              currentHp,
+              maxHp,
+              status
+            };
+            _setEnemySlots([...localEnemySlots]);
           }
         }
         await new Promise(r => setTimeout(r, 350));
       }
+      else if (type === '-status') {
+        const target = parts[2];
+        const status = parts[3];
+        const slotChar = target.charAt(2);
+        const slotIdx = slotChar === 'a' ? 0 : slotChar === 'b' ? 1 : 2;
+        
+        if (target.startsWith('p1')) {
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, slotIdx);
+          if (localTeam[targetTeamIndex]) localTeam[targetTeamIndex].status = status;
+          _setPlayerTeam([...localTeam]);
+        } else if (target.startsWith('p2')) {
+          if (localEnemySlots[slotIdx]) localEnemySlots[slotIdx].status = status;
+          _setEnemySlots([...localEnemySlots]);
+        }
+      }
+      else if (type === '-curestatus') {
+        const target = parts[2];
+        const slotChar = target.charAt(2);
+        const slotIdx = slotChar === 'a' ? 0 : slotChar === 'b' ? 1 : 2;
+        
+        if (target.startsWith('p1')) {
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, slotIdx);
+          if (localTeam[targetTeamIndex]) localTeam[targetTeamIndex].status = 'none';
+          _setPlayerTeam([...localTeam]);
+        } else if (target.startsWith('p2')) {
+          if (localEnemySlots[slotIdx]) localEnemySlots[slotIdx].status = 'none';
+          _setEnemySlots([...localEnemySlots]);
+        }
+      }
       else if (type === 'faint') {
         const target = parts[2];
-        if (target.startsWith('p1a:')) {
+        const slotChar = target.charAt(2);
+        const slotIdx = slotChar === 'a' ? 0 : slotChar === 'b' ? 1 : 2;
+
+        if (target.startsWith('p1')) {
           setPlayerAnim('faint');
-          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, localActiveIdx);
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, slotIdx);
           if (localTeam[targetTeamIndex]) localTeam[targetTeamIndex].currentHp = 0;
-          setPlayerTeam([...localTeam]);
+          _setPlayerTeam([...localTeam]);
+          
+          localPlayerSlots[slotIdx] = null;
+          _setPlayerSlots([...localPlayerSlots]);
+
           await new Promise(r => setTimeout(r, 600));
           setPlayerAnim('');
-        } else if (target.startsWith('p2a:')) {
+        } else if (target.startsWith('p2')) {
           setEnemyAnim('faint');
-          if (localEnemy) {
-            localEnemy.currentHp = 0;
-            setEnemy({ ...localEnemy });
+          if (localEnemySlots[slotIdx]) {
+            localEnemySlots[slotIdx] = { ...localEnemySlots[slotIdx], currentHp: 0 };
+            _setEnemySlots([...localEnemySlots]);
           }
           await new Promise(r => setTimeout(r, 600));
           setEnemyAnim('');
@@ -673,51 +983,66 @@ export function BattleArenaScreen() {
         const hpStatus = parts[4];
         const speciesName = details.split(',')[0].trim();
         const { currentHp, maxHp, status } = parseCondition(hpStatus);
+        
+        let gender = null;
+        if (details.includes(', M')) gender = '♂';
+        else if (details.includes(', F')) gender = '♀';
 
-        if (target.startsWith('p2a:')) {
+        const slotChar = target.charAt(2);
+        const slotIdx = slotChar === 'a' ? 0 : slotChar === 'b' ? 1 : 2;
+
+        if (target.startsWith('p2')) {
           const enemyDetail = await fetchPokemonDetailsFromAPI(speciesName);
           enemyDetail.currentHp = currentHp;
           enemyDetail.maxHp = maxHp;
           enemyDetail.status = status;
-          localEnemy = enemyDetail;
-          setEnemy(enemyDetail);
+          if (gender) enemyDetail.gender = gender;
+          localEnemySlots[slotIdx] = enemyDetail;
+          _setEnemySlots([...localEnemySlots]);
           await new Promise(r => setTimeout(r, 450));
-        } else if (target.startsWith('p1a:')) {
-          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, localActiveIdx);
+        } else if (target.startsWith('p1')) {
+          const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, slotIdx);
           if (localTeam[targetTeamIndex]) {
             localTeam[targetTeamIndex] = { ...localTeam[targetTeamIndex], transformData: null };
-            setPlayerTeam([...localTeam]);
+            _setPlayerTeam([...localTeam]);
           }
-          localActiveIdx = targetTeamIndex;
-          setActiveIdx(localActiveIdx);
+          localPlayerSlots[slotIdx] = targetTeamIndex;
+          _setPlayerSlots([...localPlayerSlots]);
           setPlayerAnim('');
+          await new Promise(r => setTimeout(r, 450));
         }
       }
       else if (type === '-transform') {
         const source = parts[2];
         const target = parts[3];
+        const sourceSlotChar = source.charAt(2);
+        const sourceSlotIdx = sourceSlotChar === 'a' ? 0 : sourceSlotChar === 'b' ? 1 : 2;
+        const targetSlotChar = target.charAt(2);
+        const targetSlotIdx = targetSlotChar === 'a' ? 0 : targetSlotChar === 'b' ? 1 : 2;
 
-        if (source.startsWith('p1a:') && target.startsWith('p2a:')) {
-          const targetTeamIndex = findTeamIndexForBattleIdent(source, localTeam, nextRequest, localActiveIdx);
+        if (source.startsWith('p1') && target.startsWith('p2')) {
+          const targetTeamIndex = findTeamIndexForBattleIdent(source, localTeam, nextRequest, sourceSlotIdx);
+          const targetEnemy = localEnemySlots[targetSlotIdx];
           if (localTeam[targetTeamIndex]) {
             localTeam[targetTeamIndex] = {
               ...localTeam[targetTeamIndex],
               transformData: {
-                sprite: localEnemy?.sprite || '',
-                displayName: localEnemy?.displayName || ''
+                sprite: targetEnemy?.sprite || '',
+                displayName: targetEnemy?.displayName || ''
               }
             };
-            setPlayerTeam([...localTeam]);
+            _setPlayerTeam([...localTeam]);
           }
           await new Promise(r => setTimeout(r, 600));
-        } else if (source.startsWith('p2a:') && target.startsWith('p1a:')) {
-          if (localEnemy) {
-            const playerTarget = localTeam[findTeamIndexForBattleIdent(target, localTeam, nextRequest, localActiveIdx)];
-            localEnemy.transformData = {
+        } else if (source.startsWith('p2') && target.startsWith('p1')) {
+          if (localEnemySlots[sourceSlotIdx]) {
+            const playerTargetIdx = localPlayerSlots[targetSlotIdx];
+            const playerTarget = playerTargetIdx !== null ? localTeam[playerTargetIdx] : null;
+            localEnemySlots[sourceSlotIdx].transformData = {
               sprite: playerTarget?.sprite || '',
               displayName: playerTarget?.displayName || ''
             };
-            setEnemy({ ...localEnemy });
+            _setEnemySlots([...localEnemySlots]);
           }
           await new Promise(r => setTimeout(r, 600));
         }
@@ -725,14 +1050,15 @@ export function BattleArenaScreen() {
     }
 
     // Set final synced states
-    setActiveRequest(nextRequest);
+    _setActiveRequest(nextRequest);
 
     if (nextRequest && nextRequest.side && nextRequest.side.pokemon && nextWinner === null) {
       localTeam = syncTeamFromRequest(localTeam, nextRequest);
-      setPlayerTeam([...localTeam]);
-
-      setActiveIdx(getActiveTeamIndexFromRequest(nextRequest, localTeam, activeIdx));
+      _setPlayerTeam([...localTeam]);
     }
+
+    _setPlayerSlots(localPlayerSlots);
+    _setEnemySlots(localEnemySlots);
 
     if (nextWinner) {
       setWinner(nextWinner);
@@ -744,11 +1070,94 @@ export function BattleArenaScreen() {
     } else {
       setPlayerTurn(true);
       if (nextRequest?.forceSwitch) {
+        const forceSwitchArray = Array.isArray(nextRequest.forceSwitch)
+          ? nextRequest.forceSwitch
+          : [!!nextRequest.forceSwitch];
+        const firstSwitchIdx = forceSwitchArray.indexOf(true);
+        _setChoosingSlotIdx(firstSwitchIdx !== -1 ? firstSwitchIdx : 0);
         setShowSwitch(true);
+      } else {
+        let firstSlotIdx = 0;
+        while (firstSlotIdx < currentFormat.activeCount && (!nextRequest?.active?.[firstSlotIdx] || (localPlayerSlots[firstSlotIdx] !== null && localTeam[localPlayerSlots[firstSlotIdx]]?.currentHp === 0))) {
+          firstSlotIdx++;
+        }
+        _setChoosingSlotIdx(firstSlotIdx < currentFormat.activeCount ? firstSlotIdx : 0);
       }
     }
 
     setIsActing(false);
+  };
+
+  const proceedToNextSlot = async (choice, forceSwitchArray = null) => {
+    const isForcedSwitch = !!forceSwitchArray;
+    const activeCount = currentFormat.activeCount;
+
+    if (isForcedSwitch) {
+      // Always read from refs to avoid stale closure
+      const nextChoices = [...turnChoicesRef.current];
+      nextChoices[choosingSlotIdxRef.current] = choice;
+
+      // Find next slot that needs a switch
+      let nextSlotIdx = choosingSlotIdxRef.current + 1;
+      while (nextSlotIdx < forceSwitchArray.length && !forceSwitchArray[nextSlotIdx]) {
+        nextChoices[nextSlotIdx] = 'pass';
+        nextSlotIdx++;
+      }
+
+      if (nextSlotIdx < forceSwitchArray.length) {
+        _setChoosingSlotIdx(nextSlotIdx);
+        _setTurnChoices(nextChoices);
+      } else {
+        // Complete the switch choices array with passes if any empty
+        for (let k = 0; k < forceSwitchArray.length; k++) {
+          if (nextChoices[k] === undefined) nextChoices[k] = 'pass';
+        }
+        const combinedChoice = nextChoices.join(', ');
+        setLoading(true);
+        try {
+          const result = await api.submitBattleChoice({ battleId: battleIdRef.current, choice: combinedChoice });
+          playTurnEvents(result.logs, result.request, result.winner);
+        } catch (e) {
+          alert("Error submitting choice: " + e.message);
+        } finally {
+          setLoading(false);
+          _setTurnChoices([]);
+          _setChoosingSlotIdx(0);
+        }
+      }
+    } else {
+      // Always read from refs to avoid stale closure
+      const nextChoices = [...turnChoicesRef.current, choice];
+      _setTurnChoices(nextChoices);
+
+      const currentActiveRequest = activeRequestRef.current;
+      const currentPlayerSlots = playerSlotsRef.current;
+      const currentPlayerTeam = playerTeamRef.current;
+
+      // Find the next slot that needs a choice
+      let nextSlotIdx = choosingSlotIdxRef.current + 1;
+      while (nextSlotIdx < activeCount && (!currentActiveRequest?.active?.[nextSlotIdx] || (currentPlayerSlots[nextSlotIdx] !== null && currentPlayerTeam[currentPlayerSlots[nextSlotIdx]]?.currentHp === 0))) {
+        nextChoices.push('pass');
+        nextSlotIdx++;
+      }
+
+      if (nextSlotIdx < activeCount) {
+        _setChoosingSlotIdx(nextSlotIdx);
+      } else {
+        const combinedChoice = nextChoices.join(', ');
+        setLoading(true);
+        try {
+          const result = await api.submitBattleChoice({ battleId: battleIdRef.current, choice: combinedChoice });
+          playTurnEvents(result.logs, result.request, result.winner);
+        } catch (e) {
+          alert("Error submitting choice: " + e.message);
+        } finally {
+          setLoading(false);
+          _setTurnChoices([]);
+          _setChoosingSlotIdx(0);
+        }
+      }
+    }
   };
 
   const handlePlayerAttack = async (moveSlotIndex) => {
@@ -756,28 +1165,53 @@ export function BattleArenaScreen() {
     setShowItems(false);
     setShowSwitch(false);
 
-    const choice = `move ${moveSlotIndex + 1}`;
+    const activePokeReq = activeRequest?.active?.[choosingSlotIdx];
+    const reqMove = activePokeReq?.moves?.[moveSlotIndex];
+    if (!reqMove) return;
 
-    try {
-      const result = await api.submitBattleChoice({ battleId, choice });
-      playTurnEvents(result.logs, result.request, result.winner, playerTeam, enemy);
-    } catch (e) {
-      alert("Error submitting choice: " + e.message);
+    const targetType = reqMove.target;
+    const needsTarget = currentFormat.activeCount >= 2 && ['normal', 'adjacentFoe', 'adjacentAlly', 'adjacentAllyOrSelf', 'any'].includes(targetType);
+    
+    // Check if it's a multi-target or default-target move
+    const multiTargetTypes = ['allAdjacent', 'allAdjacentFoes', 'all', 'foeSide', 'allySide', 'self', 'randomNormal'];
+    const isMultiTarget = currentFormat.activeCount >= 2 && multiTargetTypes.includes(targetType);
+
+    if (needsTarget || isMultiTarget) {
+      setTargetSelection({ moveSlotIndex, targetType, isMultiTarget });
+    } else {
+      proceedToNextSlot(`move ${moveSlotIndex + 1}`);
     }
   };
 
+  const handleSelectTarget = (targetIsFoe, targetIdx) => {
+    if (!targetSelection) return;
+    const { moveSlotIndex, targetType } = targetSelection;
+
+    // Compute absolute targetLoc relative to side
+    // Showdown maps foe locations in reverse: targetLoc 1 is across from the last player slot.
+    const targetLoc = targetIsFoe 
+      ? (currentFormat.activeCount - targetIdx) 
+      : -(targetIdx + 1);
+
+    setTargetSelection(null);
+    proceedToNextSlot(`move ${moveSlotIndex + 1} ${targetLoc}`);
+  };
+
   const handleSwapActive = async (idx) => {
-    if (!playerTurn || isActing || winner !== null || idx === activeIdx) return;
+    if (!playerTurn || isActing || winner !== null || playerSlots.includes(idx)) return;
     setShowSwitch(false);
+
+    const forceSwitchArray = activeRequest?.forceSwitch 
+      ? (Array.isArray(activeRequest.forceSwitch) ? activeRequest.forceSwitch : [!!activeRequest.forceSwitch])
+      : null;
 
     const requestSlotIndex = getRequestSlotForTeamIndex(activeRequest, playerTeam, idx);
     const choice = `switch ${requestSlotIndex + 1}`;
 
-    try {
-      const result = await api.submitBattleChoice({ battleId, choice });
-      playTurnEvents(result.logs, result.request, result.winner, playerTeam, enemy);
-    } catch (e) {
-      alert("Error submitting choice: " + e.message);
+    if (forceSwitchArray) {
+      proceedToNextSlot(choice, forceSwitchArray);
+    } else {
+      proceedToNextSlot(choice);
     }
   };
 
@@ -792,18 +1226,14 @@ export function BattleArenaScreen() {
     }));
     setShowItems(false);
 
-    try {
-      const result = await api.submitBattleChoice({ battleId, choice });
-      playTurnEvents(result.logs, result.request, result.winner, playerTeam, enemy);
-    } catch (e) {
-      alert("Error submitting choice: " + e.message);
-    }
+    proceedToNextSlot(choice);
   };
 
 
   const getMappedMoves = () => {
+    const currentActivePoke = playerSlots[choosingSlotIdx] !== null ? playerTeam[playerSlots[choosingSlotIdx]] : null;
     return getRequestMoves().map((reqMove) => {
-      const detail = playerTeam[activeIdx]?.moves?.find(
+      const detail = currentActivePoke?.moves?.find(
         m => m.name.toLowerCase().replace(/[^a-z0-9]+/g, '') === reqMove.id
       ) || { type: 'normal', power: 40 };
       return {
@@ -860,80 +1290,72 @@ export function BattleArenaScreen() {
                 alignItems: 'flex-start',
                 justifyContent: 'space-between',
                 gap: '16px',
-                marginBottom: '20px',
+                marginBottom: '12px',
                 flexWrap: 'wrap'
               }}
             >
               <div>
-                <h2 className="minigame-inner-title">Draft Your Squad (Choose 3)</h2>
-                <p className="minigame-inner-subtitle" style={{ marginBottom: 0 }}>Select 3 Pokémon to fight the opponent team.</p>
+                <h2 className="minigame-inner-title">Draft Your Squad (Choose {currentFormat.teamSize})</h2>
+                <p className="minigame-inner-subtitle" style={{ marginBottom: 0 }}>Select {currentFormat.teamSize} Pokémon for a <strong>{currentFormat.name}</strong>.</p>
               </div>
             </div>
 
-            <div className="battle-arena-header" style={{ marginBottom: '24px' }}>
-              <div className="battle-arena-config">
-                <span className="config-section-title">Difficulty Mode</span>
-                <div className="config-btn-group">
-                  {DIFFICULTIES.map(d => (
-                    <button
-                      key={d.id}
-                      id={`diff-btn-${d.id}`}
-                      className={`config-btn ${difficulty === d.id ? 'active' : ''}`}
-                      onClick={() => handleDifficultySelect(d.id)}
+            <div className="battle-arena-config-dropdowns">
+              <BattleDropdown
+                id="difficulty-dropdown"
+                label="Difficulty"
+                options={DIFFICULTIES}
+                value={difficulty}
+                onChange={handleDifficultySelect}
+              />
+              <BattleDropdown
+                id="weather-dropdown"
+                label="Weather"
+                options={WEATHER_OPTIONS}
+                value={weather}
+                onChange={setWeather}
+              />
+              <BattleDropdown
+                id="format-dropdown"
+                label="Battle Format"
+                options={BATTLE_FORMATS.map(f => ({ ...f, desc: f.description }))}
+                value={battleFormat}
+                onChange={(id) => { setBattleFormat(id); setSelectedTeam([]); }}
+              />
+            </div>
+
+            <div className="draft-pool-scroll-container">
+              <div className="minigames-bento-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '12px' }}>
+                {draftPool.map(p => {
+                  const isSelected = selectedTeam.some(s => s.entryId === p.entryId);
+                  return (
+                    <div
+                      key={p.entryId}
+                      id={`draft-card-${p.entryId}`}
+                      className={`bento-card ${isSelected ? 'featured' : ''}`}
+                      onClick={() => handleDraftToggle(p)}
+                      style={{ minHeight: '110px', padding: '14px', alignItems: 'center' }}
                     >
-                      {d.name} ({d.rating})
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="battle-arena-config">
-                <span className="config-section-title">Field Weather Conditions</span>
-                <div className="config-btn-group">
-                  {WEATHER_OPTIONS.map(w => (
-                    <button
-                      key={w.id}
-                      id={`weather-btn-${w.id}`}
-                      className={`config-btn ${weather === w.id ? 'active' : ''}`}
-                      onClick={() => setWeather(w.id)}
-                    >
-                      {w.name}
-                    </button>
-                  ))}
-                </div>
+                      <span style={{ fontSize: '24px', marginBottom: '8px' }}>
+                        {p.types[0] === 'grass' ? '🌿' : p.types[0] === 'fire' ? '🔥' : p.types[0] === 'water' ? '💧' : '⭐'}
+                      </span>
+                      <span className="species-label" style={{ textAlign: 'center' }}>{p.displayName}</span>
+                      <span style={{ fontSize: '9px', opacity: 0.6, marginTop: '4px', textTransform: 'uppercase', fontWeight: 800 }}>
+                        {p.types.join(' / ')}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
-            <div className="minigames-bento-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '12px' }}>
-              {draftPool.map(p => {
-                const isSelected = selectedTeam.some(s => s.entryId === p.entryId);
-                return (
-                  <div
-                    key={p.entryId}
-                    id={`draft-card-${p.entryId}`}
-                    className={`bento-card ${isSelected ? 'featured' : ''}`}
-                    onClick={() => handleDraftToggle(p)}
-                    style={{ minHeight: '110px', padding: '14px', alignItems: 'center' }}
-                  >
-                    <span style={{ fontSize: '24px', marginBottom: '8px' }}>
-                      {p.types[0] === 'grass' ? '🌿' : p.types[0] === 'fire' ? '🔥' : p.types[0] === 'water' ? '💧' : '⭐'}
-                    </span>
-                    <span className="species-label" style={{ textAlign: 'center' }}>{p.displayName}</span>
-                    <span style={{ fontSize: '9px', opacity: 0.6, marginTop: '4px', textTransform: 'uppercase', fontWeight: 800 }}>
-                      {p.types.join(' / ')}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
               <button
                 className="btn-back"
                 id="start-battle-footer-btn"
-                disabled={selectedTeam.length !== 3 || loading}
+                disabled={selectedTeam.length < currentFormat.activeCount || loading}
                 onClick={() => startBattle()}
-                style={{ background: selectedTeam.length === 3 ? 'var(--px-sky)' : 'rgba(255,255,255,0.02)', borderColor: selectedTeam.length === 3 ? 'var(--px-sky)' : 'var(--px-border)' }}
+                style={{ background: selectedTeam.length >= currentFormat.activeCount ? 'var(--px-sky)' : 'rgba(255,255,255,0.02)', borderColor: selectedTeam.length >= currentFormat.activeCount ? 'var(--px-sky)' : 'var(--px-border)' }}
               >
                 <Swords size={16} /> Start Battle
               </button>
@@ -941,204 +1363,434 @@ export function BattleArenaScreen() {
           </div>
         </div>
       ) : (
-        <div className="battle-arena-layout">
-          {/* Battle board */}
-          <div className="battle-arena-board">
+        <div className="battle-layout-v2">
 
-            {/* Stage */}
+          {/* ── Column 1: Battle Logs ── */}
+          <div className="bl-logs-col" id="battle-logs-col">
+            <div className="bl-col-header">
+              <span className="bl-col-label">⚡ Combat Log</span>
+            </div>
+            <div className="bl-logs-stream" ref={logsContainerRef}>
+              {battleLogs.length === 0 ? (
+                <div className="bl-log-empty">Battle events will appear here...</div>
+              ) : (
+                battleLogs.map((log, i) => (
+                  <div key={i} className="bl-log-line" dangerouslySetInnerHTML={{ __html: log }} />
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* ── Column 2: Battle Stage (center) ── */}
+          <div className="bl-stage-col">
             <div className="battle-stage" id="battle-stage-arena">
               <div className="battle-stage-backdrop-effect" />
-
-              {/* Floor */}
               <div className="stage-floor" />
 
               {/* Enemy Side */}
-              <div className="stage-pokemon-row" style={{ justifyContent: 'flex-end' }}>
-                <div className="stage-pokemon-container">
-                  {enemy && (
-                    <>
-                      <div className="pokemon-hp-panel" id="enemy-hp-panel">
-                        <div className="hp-panel-header">
-                          <span className="hp-pokemon-name">{enemy.transformData?.displayName || enemy.displayName}</span>
-                          <span className="hp-pokemon-level">Lvl {enemy.level || 50}</span>
+              <div className="stage-pokemon-row" style={{ justifyContent: 'flex-end', gap: '20px' }}>
+                {Array.from({ length: currentFormat.activeCount }).map((_, slotIdx) => {
+                  const activeEnemy = enemySlots[slotIdx];
+                  if (!activeEnemy) return <div key={slotIdx} className="stage-pokemon-container empty" style={{ width: `${90 / currentFormat.activeCount}%` }} />;
+                  
+                  const isFainted = activeEnemy.currentHp <= 0;
+                  if (isFainted) return <div key={slotIdx} className="stage-pokemon-container empty" style={{ width: `${90 / currentFormat.activeCount}%` }} />;
+
+                  const isTargetable = targetSelection && isValidTarget(choosingSlotIdx, targetSelection.targetType, true, slotIdx);
+                  return (
+                    <div
+                      key={slotIdx}
+                      className={`stage-pokemon-container ${isTargetable ? 'targetable' : ''}`}
+                      onClick={() => isTargetable && handleSelectTarget(true, slotIdx)}
+                      style={{
+                        width: `${90 / currentFormat.activeCount}%`,
+                        cursor: isTargetable ? 'pointer' : 'default',
+                        transition: 'all 0.3s ease'
+                      }}
+                    >
+                      <div
+                        className="pokemon-hp-panel"
+                        id={`enemy-hp-panel-${slotIdx}`}
+                        style={{
+                          border: isTargetable ? '2px solid var(--px-accent)' : '1px solid var(--px-border)',
+                          transition: 'border-color 0.3s ease'
+                        }}
+                      >
+                        <div className="hp-panel-header" style={{ justifyContent: 'flex-start' }}>
+                          <span className="hp-pokemon-level" style={{ marginRight: '8px' }}>Lvl {activeEnemy.level || 50}</span>
+                          <span className="hp-pokemon-name">
+                            {activeEnemy.gender && <span style={{ opacity: 0.7, marginRight: '4px' }}>{activeEnemy.gender}</span>} {activeEnemy.transformData?.displayName || activeEnemy.displayName}
+                          </span>
                         </div>
                         <div className="hp-bar-outer">
                           <div
-                            className={`hp-bar-inner ${enemy.currentHp / enemy.maxHp > 0.5 ? 'high' : enemy.currentHp / enemy.maxHp > 0.2 ? 'medium' : 'low'}`}
-                            style={{ width: `${(enemy.currentHp / enemy.maxHp) * 100}%` }}
+                            className={`hp-bar-inner ${activeEnemy.currentHp / activeEnemy.maxHp > 0.5 ? 'high' : activeEnemy.currentHp / activeEnemy.maxHp > 0.2 ? 'medium' : 'low'}`}
+                            style={{ width: `${(activeEnemy.currentHp / activeEnemy.maxHp) * 100}%` }}
                           />
                         </div>
                         <div className="hp-numeric">
-                          {enemy.currentHp} / {enemy.maxHp} HP
-                          {enemy.status !== 'none' && <span className="status-tag" style={{ marginLeft: '6px', background: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', padding: '2px 6px', borderRadius: '4px', fontSize: '9px', textTransform: 'uppercase' }}>{enemy.status}</span>}
+                          {activeEnemy.status !== 'none' && <span className="status-tag" style={{ marginRight: '6px', background: 'rgba(239,68,68,0.2)', color: '#ef4444', padding: '2px 6px', borderRadius: '4px', fontSize: '9px', textTransform: 'uppercase' }}>{activeEnemy.status}</span>}
+                          HP {activeEnemy.currentHp} / {activeEnemy.maxHp}
                         </div>
                       </div>
-
                       <div
                         className={`pokemon-avatar-wrapper ${enemyAnim || 'idle'}`}
-                        id="enemy-avatar-wrapper"
-                        data-status={enemy.status !== 'none' ? enemy.status : undefined}
+                        id={`enemy-avatar-wrapper-${slotIdx}`}
+                        data-status={activeEnemy.status !== 'none' ? activeEnemy.status : undefined}
                       >
-                        <img src={enemy.transformData?.sprite || enemy.sprite} alt={enemy.transformData?.displayName || enemy.displayName} />
+                        <img src={activeEnemy.transformData?.sprite || activeEnemy.sprite} alt={activeEnemy.transformData?.displayName || activeEnemy.displayName} />
                       </div>
-                    </>
-                  )}
-                </div>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Player Side */}
-              <div className="stage-pokemon-row" style={{ justifyContent: 'flex-start' }}>
-                <div className="stage-pokemon-container">
-                  {playerTeam[activeIdx] && (
-                    <>
-                      <div className="pokemon-hp-panel" id="player-hp-panel">
+              <div className="stage-pokemon-row" style={{ marginTop: 'auto', gap: '20px' }}>
+                {Array.from({ length: currentFormat.activeCount }).map((_, slotIdx) => {
+                  const teamIdx = playerSlots[slotIdx];
+                  if (teamIdx === null || teamIdx === undefined) return <div key={`p-${slotIdx}`} className="stage-pokemon-container empty" style={{ width: `${90 / currentFormat.activeCount}%` }} />;
+                  const activePoke = playerTeam[teamIdx];
+                  if (!activePoke) return <div key={`p-${slotIdx}`} className="stage-pokemon-container empty" style={{ width: `${90 / currentFormat.activeCount}%` }} />;
+                  
+                  const isFainted = activePoke.currentHp <= 0;
+                  if (isFainted) return <div key={`p-${slotIdx}`} className="stage-pokemon-container empty" style={{ width: `${90 / currentFormat.activeCount}%` }} />;
+
+                  const isChoosing = choosingSlotIdx === slotIdx && playerTurn && !targetSelection;
+                  const isTargetable = targetSelection && isValidTarget(choosingSlotIdx, targetSelection.targetType, false, slotIdx);
+                  return (
+                    <div
+                      key={`p-${slotIdx}`}
+                      className={`stage-pokemon-container ${isChoosing ? 'choosing' : ''} ${isTargetable ? 'targetable' : ''}`}
+                      onClick={() => isTargetable && handleSelectTarget(false, slotIdx)}
+                      style={{
+                        width: `${90 / currentFormat.activeCount}%`,
+                        cursor: isTargetable ? 'pointer' : 'default',
+                        transition: 'all 0.3s ease'
+                      }}
+                    >
+                      <div
+                        className={`pokemon-hp-panel ${isChoosing ? 'active-choosing' : ''}`}
+                        id={`player-hp-panel-${slotIdx}`}
+                        style={{
+                          border: isChoosing ? '2px solid var(--px-sky)' : isTargetable ? '2px solid var(--px-accent)' : '1px solid var(--px-border)',
+                          boxShadow: isChoosing ? '0 0 12px rgba(56, 189, 248, 0.4)' : 'none',
+                          transition: 'all 0.3s ease'
+                        }}
+                      >
                         <div className="hp-panel-header">
-                          <span className="hp-pokemon-name">{playerTeam[activeIdx].transformData?.displayName || playerTeam[activeIdx].displayName}</span>
-                          <span className="hp-pokemon-level">Lvl {playerTeam[activeIdx].level || 50}</span>
+                          <span className="hp-pokemon-name">
+                            {activePoke.transformData?.displayName || activePoke.displayName} {activePoke.gender && <span style={{ opacity: 0.7 }}>{activePoke.gender}</span>}
+                          </span>
+                          <span className="hp-pokemon-level">Lvl {activePoke.level || 50}</span>
                         </div>
                         <div className="hp-bar-outer">
                           <div
-                            className={`hp-bar-inner ${playerTeam[activeIdx].currentHp / playerTeam[activeIdx].maxHp > 0.5 ? 'high' : playerTeam[activeIdx].currentHp / playerTeam[activeIdx].maxHp > 0.2 ? 'medium' : 'low'}`}
-                            style={{ width: `${(playerTeam[activeIdx].currentHp / playerTeam[activeIdx].maxHp) * 100}%` }}
+                            className={`hp-bar-inner ${activePoke.currentHp / activePoke.maxHp > 0.5 ? 'high' : activePoke.currentHp / activePoke.maxHp > 0.2 ? 'medium' : 'low'}`}
+                            style={{ width: `${(activePoke.currentHp / activePoke.maxHp) * 100}%` }}
                           />
                         </div>
                         <div className="hp-numeric">
-                          {playerTeam[activeIdx].currentHp} / {playerTeam[activeIdx].maxHp} HP
-                          {playerTeam[activeIdx].status !== 'none' && <span className="status-tag" style={{ marginLeft: '6px', background: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', padding: '2px 6px', borderRadius: '4px', fontSize: '9px', textTransform: 'uppercase' }}>{playerTeam[activeIdx].status}</span>}
+                          {activePoke.currentHp} / {activePoke.maxHp} HP
+                          {activePoke.status !== 'none' && <span className="status-tag" style={{ marginLeft: '6px', background: 'rgba(239,68,68,0.2)', color: '#ef4444', padding: '2px 6px', borderRadius: '4px', fontSize: '9px', textTransform: 'uppercase' }}>{activePoke.status}</span>}
                         </div>
                       </div>
-
                       <div
-                        className={`pokemon-avatar-wrapper ${playerAnim || 'idle'}`}
-                        id="player-avatar-wrapper"
-                        style={{ transform: 'scaleX(-1)' }}
-                        data-status={playerTeam[activeIdx].status !== 'none' ? playerTeam[activeIdx].status : undefined}
+                        className={`pokemon-avatar-wrapper ${playerAnim || 'idle'} ${isChoosing ? 'animate-pulse' : ''}`}
+                        id={`player-avatar-wrapper-${slotIdx}`}
+                        data-status={activePoke.status !== 'none' ? activePoke.status : undefined}
+                        style={isChoosing ? { filter: 'drop-shadow(0 0 10px var(--px-sky))', transform: 'scaleX(-1)' } : { transform: 'scaleX(-1)' }}
                       >
-                        <img src={playerTeam[activeIdx].transformData?.sprite || playerTeam[activeIdx].sprite} alt={playerTeam[activeIdx].transformData?.displayName || playerTeam[activeIdx].displayName} />
+                        <img src={activePoke.transformData?.sprite || activePoke.sprite} alt={activePoke.transformData?.displayName || activePoke.displayName} />
                       </div>
-                    </>
-                  )}
-                </div>
+                    </div>
+                  );
+                })}
               </div>
-
             </div>
 
-            {/* Right Panel (Actions or Winner) */}
-            <div className="battle-actions-card" id="battle-actions-card">
-              {winner === null ? (
-                <>
-                  <button className="dmg-calc-toggle-btn" id="dmg-calc-toggle" onClick={() => setShowCalc(true)}>
-                    📊 Damage Calculator
+            {/* Target selection panel — appears below the arena when picking a target */}
+            {targetSelection && (
+              <div className="bl-target-select-panel" id="target-select-panel">
+                <div className="bl-target-select-header">
+                  <span className="bl-target-select-title">
+                    {targetSelection.isMultiTarget ? '☄️ Multiple Targets Selected' : '🎯 Choose a Target'}
+                  </span>
+                  <button
+                    className="bl-target-cancel-btn"
+                    onClick={() => setTargetSelection(null)}
+                    title="Cancel target selection"
+                  >
+                    ✕ Cancel
                   </button>
-                  
-                  {/* Always open Swap Options */}
-                  <div className="swap-options-container" style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: 'auto' }}>
-                    <span className="config-section-title" style={{ margin: 0 }}>
-                      Swap Pokémon {switchTimer !== null && <span style={{ color: 'var(--px-accent)' }}>(Auto in {switchTimer}s)</span>}:
+                </div>
+                <div className="bl-target-select-grid">
+                  {/* Foe Pokémon */}
+                  {Array.from({ length: currentFormat.activeCount }).map((_, slotIdx) => {
+                    const foe = enemySlots[slotIdx];
+                    if (!foe) return null;
+                    const canTarget = isValidTarget(choosingSlotIdx, targetSelection.targetType, true, slotIdx);
+                    const isFainted = foe.currentHp <= 0;
+                    if (isFainted || !canTarget) return null;
+                    const hpPct = foe.currentHp / foe.maxHp;
+                    return (
+                      <button
+                        key={`foe-${slotIdx}`}
+                        id={`target-foe-btn-${slotIdx}`}
+                        className={`bl-target-card foe ${targetSelection.isMultiTarget ? 'multi-targeted' : ''}`}
+                        onClick={() => !targetSelection.isMultiTarget && handleSelectTarget(true, slotIdx)}
+                        style={targetSelection.isMultiTarget ? { cursor: 'default', borderColor: '#ef4444', boxShadow: '0 0 10px rgba(239, 68, 68, 0.4)' } : {}}
+                      >
+                        <div className="bl-target-card-badge foe">FOE</div>
+                        <img
+                          src={foe.transformData?.sprite || foe.sprite}
+                          alt={foe.displayName}
+                          className="bl-target-card-sprite"
+                        />
+                        <div className="bl-target-card-info">
+                          <span className="bl-target-card-name">{foe.transformData?.displayName || foe.displayName}</span>
+                          <div className="bl-target-card-hpbar-outer">
+                            <div
+                              className={`bl-target-card-hpbar-inner ${hpPct > 0.5 ? 'high' : hpPct > 0.2 ? 'medium' : 'low'}`}
+                              style={{ width: `${hpPct * 100}%` }}
+                            />
+                          </div>
+                          <span className="bl-target-card-hp">{foe.currentHp} / {foe.maxHp} HP</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+
+                  {/* Ally Pokémon (only for moves that can target allies) */}
+                  {Array.from({ length: currentFormat.activeCount }).map((_, slotIdx) => {
+                    const teamIdx = playerSlots[slotIdx];
+                    if (teamIdx === null || teamIdx === undefined) return null;
+                    const ally = playerTeam[teamIdx];
+                    if (!ally) return null;
+                    const canTarget = isValidTarget(choosingSlotIdx, targetSelection.targetType, false, slotIdx);
+                    const isFainted = ally.currentHp <= 0;
+                    const isSelf = slotIdx === choosingSlotIdx;
+                    if (isFainted || !canTarget) return null;
+                    const hpPct = ally.currentHp / ally.maxHp;
+                    return (
+                      <button
+                        key={`ally-${slotIdx}`}
+                        id={`target-ally-btn-${slotIdx}`}
+                        className={`bl-target-card ally ${isSelf ? 'self' : ''} ${targetSelection.isMultiTarget ? 'multi-targeted' : ''}`}
+                        onClick={() => !targetSelection.isMultiTarget && handleSelectTarget(false, slotIdx)}
+                        style={targetSelection.isMultiTarget && !isSelf ? { cursor: 'default', borderColor: 'var(--px-sky)', boxShadow: '0 0 10px rgba(56, 189, 248, 0.4)' } : (targetSelection.isMultiTarget && isSelf ? { cursor: 'default' } : {})}
+                      >
+                        <div className="bl-target-card-badge ally">{isSelf ? 'SELF' : 'ALLY'}</div>
+                        <img
+                          src={ally.transformData?.sprite || ally.sprite}
+                          alt={ally.displayName}
+                          className="bl-target-card-sprite"
+                          style={{ transform: 'scaleX(-1)' }}
+                        />
+                        <div className="bl-target-card-info">
+                          <span className="bl-target-card-name">{ally.transformData?.displayName || ally.displayName}</span>
+                          <div className="bl-target-card-hpbar-outer">
+                            <div
+                              className={`bl-target-card-hpbar-inner ${hpPct > 0.5 ? 'high' : hpPct > 0.2 ? 'medium' : 'low'}`}
+                              style={{ width: `${hpPct * 100}%` }}
+                            />
+                          </div>
+                          <span className="bl-target-card-hp">{ally.currentHp} / {ally.maxHp} HP</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                {targetSelection.isMultiTarget && (
+                  <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}>
+                    <button
+                      className="btn-action-move"
+                      style={{ background: 'var(--px-accent)', color: '#fff', width: '100%', padding: '12px', fontSize: '14px', border: 'none' }}
+                      onClick={() => {
+                        proceedToNextSlot(`move ${targetSelection.moveSlotIndex + 1}`);
+                        setTargetSelection(null);
+                      }}
+                    >
+                      ⚔️ Confirm Attack Area
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {winner !== null && (
+              <div className="bl-winner-panel">
+                {winner === 'player' ? (
+                  <div className="battle-winner-banner" id="winner-banner">🏆 Victory! You defeated the opponent!</div>
+                ) : (
+                  <div className="battle-loser-banner" id="loser-banner">💀 Defeated... Your Pokémon all fainted.</div>
+                )}
+                <button className="btn-menu-action danger" id="rematch-btn" onClick={() => setStage('draft')} style={{ marginTop: '10px' }}>
+                  <RotateCcw size={14} /> Leave Arena / Rematch
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* ── Column 3: Swap Pokémon ── */}
+          <div className="bl-swap-col" id="swap-col">
+            <div className="bl-moves-panel" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+              <div className="bl-moves-header" style={{ marginBottom: '12px' }}>
+                <span className="bl-moves-label">🔄 SWAP POKÉMON</span>
+                {switchTimer !== null && <span className="bl-timer-badge">Auto {switchTimer}s</span>}
+              </div>
+              <div className="bl-swap-list" style={{ overflowY: 'auto' }}>
+              {playerTeam.map((p, i) => {
+                const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
+                const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
+                const isActive = reqMon ? reqMon.active : false;
+                const hpPct = p.currentHp / p.maxHp;
+                return (
+                  <button
+                    key={p.name}
+                    id={`switch-poke-btn-${i}`}
+                    className={`bl-swap-btn ${playerSlots.includes(i) ? 'active' : ''} ${isFainted ? 'fainted' : ''}`}
+                    disabled={isFainted || isActive}
+                    onClick={() => handleSwapActive(i)}
+                  >
+                    <div className={`bl-swap-orb ${isFainted ? 'fainted' : playerSlots.includes(i) ? 'active' : ''}`} />
+                    <span className="bl-swap-info">
+                      <span className="bl-swap-name">{p.displayName}</span>
+                      <span className="bl-swap-bar-row">
+                        <span className="bl-swap-bar-outer">
+                          <span
+                            className={`bl-swap-bar-inner ${hpPct > 0.5 ? 'high' : hpPct > 0.2 ? 'medium' : 'low'}`}
+                            style={{ width: `${hpPct * 100}%` }}
+                          />
+                        </span>
+                        <span className="bl-swap-hp">{p.currentHp} HP</span>
+                      </span>
                     </span>
+                  </button>
+                );
+              })}
+              </div>
+            </div>
+
+            {/* Move selection panel — moved from stage */}
+            {winner === null && (
+              <div className="bl-moves-panel" id="battle-controls-hub">
+                <div className="bl-moves-header">
+                  {targetSelection ? (
+                    <span className="bl-target-prompt animate-pulse">🎯 Select a target on the field!</span>
+                  ) : (
+                    <span className="bl-moves-label">
+                      Choose move for <strong style={{ color: 'var(--px-sky)' }}>{playerTeam[playerSlots[choosingSlotIdx]]?.displayName}</strong>
+                      <span style={{ opacity: 0.5, fontWeight: 400 }}> · Slot {choosingSlotIdx + 1}</span>
+                    </span>
+                  )}
+                </div>
+                {!targetSelection && (
+                  <div className="action-grid">
+                    {getMappedMoves().map((m, i) => (
+                      <button
+                        key={m.id}
+                        id={`move-btn-${m.id}`}
+                        className="btn-action-move"
+                        data-type={m.type}
+                        disabled={!playerTurn || isActing || m.disabled}
+                        onClick={() => handlePlayerAttack(i)}
+                      >
+                        <span className="move-btn-keybind">Slot {i + 1}</span>
+                        <span className="move-btn-name">{m.move.replace(/-/g, ' ')}</span>
+                        <span className="move-btn-type" style={{ background: TYPE_COLORS[m.type] || '#888', color: '#fff' }}>
+                          {m.type.toUpperCase()} · PWR {m.power}
+                        </span>
+                      </button>
+                    ))}
+                    {battleFormat === 'triples' && (choosingSlotIdx === 0 || choosingSlotIdx === 2) && (
+                      <button
+                        id="move-btn-shift"
+                        className="btn-action-move"
+                        style={{ background: 'linear-gradient(135deg, var(--px-sky) 0%, #0d1626 100%)', borderColor: 'var(--px-sky)' }}
+                        disabled={!playerTurn || isActing}
+                        onClick={() => proceedToNextSlot('shift')}
+                      >
+                        <span className="move-btn-keybind">Action</span>
+                        <span className="move-btn-name">🔀 Shift Position</span>
+                        <span className="move-btn-type" style={{ background: 'var(--px-sky)', color: '#fff' }}>CENTER SWAP</span>
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* ── Column 4: Trainer + Actions ── */}
+          <div className="bl-trainer-col" id="trainer-col">
+            {winner === null ? (
+              <>
+                {/* Trainer image */}
+                <div className="bl-trainer-card">
+                  <img src="/assets/battleassets/red.png" alt="Trainer Red" className="bl-trainer-img" />
+
+                  {/* Pokéball row — one per team member */}
+                  <div className="bl-pokeball-row">
                     {playerTeam.map((p, i) => {
                       const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
                       const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
-                      const isActive = reqMon ? reqMon.active : false;
+                      const isActive = playerSlots.includes(i);
                       return (
-                        <button
-                          key={p.name}
-                          id={`switch-poke-btn-${i}`}
-                          className={`config-btn ${activeIdx === i ? 'active' : ''}`}
-                          disabled={isFainted || isActive}
-                          onClick={() => handleSwapActive(i)}
-                          style={{ padding: '8px', fontSize: '11px', textAlign: 'left' }}
-                        >
-                          {p.displayName} ({p.currentHp} HP)
-                        </button>
+                        <div
+                          key={i}
+                          className={`bl-pokeball-icon ${isFainted ? 'fainted' : isActive ? 'active' : 'benched'}`}
+                          title={`${p.displayName}${isFainted ? ' (Fainted)' : isActive ? ' (Active)' : ''}`}
+                        />
                       );
                     })}
                   </div>
+                </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '8px' }}>
-                    <button className="btn-menu-action" id="items-action-btn" onClick={() => { setShowItems(prev => !prev); setShowSwitch(false); }}>
-                      🧪 Items (I)
-                    </button>
-                    <button className="btn-menu-action danger" id="flee-arena-btn" onClick={() => setStage('draft')}>
-                      🏳️ Flee
-                    </button>
+                {/* Format guide for doubles/triples */}
+                {currentFormat?.guide && (
+                  <div className="bl-format-guide">
+                    <span className="bl-format-guide-title">{currentFormat.icon} {currentFormat.guide.title}</span>
+                    <ul className="bl-format-guide-tips">
+                      {currentFormat.guide.tips.slice(0, 3).map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
                   </div>
-                </>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', height: '100%', justifyContent: 'center' }}>
-                  {winner === 'player' ? (
-                    <div className="battle-winner-banner" id="winner-banner">
-                      🏆 Victory! You defeated the opponent!
-                    </div>
-                  ) : (
-                    <div className="battle-loser-banner" id="loser-banner">
-                      💀 Defeated... Your Pokémon all fainted.
+                )}
+
+                {/* Action buttons */}
+                <div className="bl-action-buttons">
+                  <button className="bl-action-btn calc" id="dmg-calc-toggle" onClick={() => setShowCalc(true)}>
+                    📊 Damage Calculator
+                  </button>
+                  <button className="bl-action-btn items" id="items-action-btn" onClick={() => setShowItems(p => !p)}>
+                    🧪 Items ({items.potions + items.fullRestores} left)
+                  </button>
+                  {showItems && (
+                    <div className="bl-items-panel" id="items-panel">
+                      <button className="bl-item-btn" id="potion-item-btn" disabled={items.potions <= 0} onClick={() => handleUseItem('potion')}>
+                        🧪 Potion ×{items.potions} <span className="bl-item-hint">+50 HP</span>
+                      </button>
+                      <button className="bl-item-btn" id="fullrestore-item-btn" disabled={items.fullRestores <= 0} onClick={() => handleUseItem('fullRestore')}>
+                        ✨ Full Restore ×{items.fullRestores} <span className="bl-item-hint">Full HP</span>
+                      </button>
                     </div>
                   )}
-                  <button className="btn-menu-action danger w-full" id="rematch-btn" onClick={() => setStage('draft')}>
-                    <RotateCcw size={14} /> Leave Arena / Rematch
+                  <button className="bl-action-btn flee" id="flee-arena-btn" onClick={() => setStage('draft')}>
+                    🏳️ Flee Battle
                   </button>
                 </div>
-              )}
-            </div>
-
-          </div>
-
-          {/* Action panels */}
-          {winner === null && (
-            <div className="battle-controls-hub" id="battle-controls-hub">
-
-              {/* Move selections */}
-              <div className="action-grid">
-                {getMappedMoves().map((m, i) => (
-                  <button
-                    key={m.id}
-                    id={`move-btn-${m.id}`}
-                    className="btn-action-move"
-                    data-type={m.type}
-                    disabled={!playerTurn || isActing || m.disabled}
-                    onClick={() => handlePlayerAttack(i)}
-                  >
-                    <span className="move-btn-keybind">Slot {i + 1}</span>
-                    <span className="move-btn-name">{m.move.replace(/-/g, ' ')}</span>
-                    <span className="move-btn-type" style={{
-                      background: TYPE_COLORS[m.type] || '#888',
-                      color: '#fff'
-                    }}>
-                      {m.type.toUpperCase()} · PWR {m.power}
-                    </span>
-                  </button>
-                ))}
+              </>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '16px', alignItems: 'center' }}>
+                <img src="/assets/battleassets/red.png" alt="Trainer Red" className="bl-trainer-img" style={{ opacity: winner === 'player' ? 1 : 0.35 }} />
+                <p style={{ fontSize: '11px', color: 'var(--px-text-muted)', textAlign: 'center' }}>
+                  {winner === 'player' ? '🏆 You won!' : '💀 You lost...'}
+                </p>
               </div>
-
-              {/* Actions Menu moved to right panel */}
-
-            </div>
-          )}
-
-          {/* Swap layout picker moved to Actions Card */}
-
-          {/* Items layout picker */}
-          {showItems && (
-            <div className="minigame-inner-header" id="items-panel" style={{ marginTop: '12px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--px-border)', borderRadius: '16px', justifyContent: 'flex-start', gap: '12px' }}>
-              <span className="config-section-title" style={{ margin: 0 }}>Use Healing Item:</span>
-              <button className="config-btn" id="potion-item-btn" disabled={items.potions <= 0} onClick={() => handleUseItem('potion')}>
-                🧪 Potion ({items.potions} Left) - Heals 50 HP
-              </button>
-              <button className="config-btn" id="fullrestore-item-btn" disabled={items.fullRestores <= 0} onClick={() => handleUseItem('fullRestore')}>
-                ✨ Full Restore ({items.fullRestores} Left) - Full HP + Cure
-              </button>
-            </div>
-          )}
-
-          {/* Combat Logs at bottom */}
-          <div className="battle-logs-card horizontal" id="battle-logs-card">
-            <span className="battle-logs-title">Battle Combat Logs</span>
-            <div className="battle-logs-stream" ref={logsContainerRef}>
-              {battleLogs.map((log, i) => (
-                <div key={i} className="battle-log-line" dangerouslySetInnerHTML={{ __html: log }} />
-              ))}
-            </div>
+            )}
           </div>
 
         </div>

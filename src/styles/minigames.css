@@ -632,13 +632,13 @@ html, body {
   background: var(--px-panel);
   border: 1px solid var(--px-border);
   border-radius: 16px;
-  padding: 16px 20px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   text-align: left;
   flex: 1;
-  min-width: 280px;
+  min-width: 260px;
 }
 
 .config-section-title {
@@ -678,6 +678,233 @@ html, body {
   color: #fff;
   box-shadow: 0 0 10px rgba(79, 128, 225, 0.3);
 }
+
+/* ───────────────────────────────────────────────────────────
+   Battle Config Dropdowns  (Difficulty / Weather / Format)
+   ─────────────────────────────────────────────────────────── */
+
+.battle-arena-config-dropdowns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+/* Root wrapper – establishes stacking context for floating panel */
+.battle-dropdown-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 180px;
+  max-width: 280px;
+}
+
+.battle-dropdown-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--px-accent);
+  padding-left: 2px;
+}
+
+/* ── Trigger button ── */
+.battle-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--px-border);
+  border-radius: 10px;
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+  text-align: left;
+}
+
+.battle-dropdown-trigger:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.battle-dropdown-trigger.open {
+  border-color: var(--px-sky);
+  background: rgba(79, 128, 225, 0.08);
+  box-shadow: 0 0 0 2px rgba(79, 128, 225, 0.18);
+}
+
+.battle-dropdown-trigger-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0.9;
+}
+
+.battle-dropdown-trigger-text {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.battle-dropdown-trigger-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.battle-dropdown-trigger-badge {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: rgba(79, 128, 225, 0.18);
+  color: var(--px-sky);
+  border: 1px solid rgba(79, 128, 225, 0.25);
+  flex-shrink: 0;
+}
+
+.battle-dropdown-chevron {
+  color: var(--px-text-muted);
+  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.battle-dropdown-chevron.rotated {
+  transform: rotate(180deg);
+  color: var(--px-sky);
+}
+
+/* ── Floating panel ── */
+.battle-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: #0f1a2b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.4),
+    0 10px 40px -4px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+  animation: dropdownFadeIn 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 200px;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Individual option rows ── */
+.battle-dropdown-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+
+.battle-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.battle-dropdown-item.active {
+  background: rgba(79, 128, 225, 0.12);
+  border-color: rgba(79, 128, 225, 0.25);
+  color: #fff;
+}
+
+.battle-dropdown-item-icon {
+  font-size: 17px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-top: 1px;
+  opacity: 0.85;
+}
+
+.battle-dropdown-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.battle-dropdown-item-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: inherit;
+}
+
+.battle-dropdown-item-badge {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(79, 128, 225, 0.18);
+  color: var(--px-sky);
+  border: 1px solid rgba(79, 128, 225, 0.22);
+}
+
+.battle-dropdown-item.active .battle-dropdown-item-badge {
+  background: rgba(79, 128, 225, 0.3);
+  border-color: rgba(79, 128, 225, 0.5);
+}
+
+.battle-dropdown-item-desc {
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--px-text-muted);
+  opacity: 0.75;
+  line-height: 1.35;
+}
+
+.battle-dropdown-item-check {
+  color: var(--px-sky);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
 
 .battle-arena-board {
   display: grid;
@@ -752,6 +979,7 @@ html, body {
   border-radius: 12px;
   padding: 8px 12px;
   width: 100%;
+  max-width: 200px;
   box-sizing: border-box;
   text-align: left;
 }
@@ -1060,14 +1288,17 @@ html, body {
 
 .dmg-calc-drawer {
   position: fixed;
-  top: 0;
-  right: 0;
-  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
   max-width: 440px;
-  height: 100%;
+  height: 80vh;
+  max-height: 600px;
   background: #0b111a;
-  border-left: 1px solid var(--px-border);
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--px-border);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
   z-index: 950;
   display: flex;
   flex-direction: column;
@@ -1076,7 +1307,7 @@ html, body {
 
 .dmg-calc-header {
   padding: 16px 20px;
-  border-b: 1px solid var(--px-border);
+  border-bottom: 1px solid var(--px-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1085,8 +1316,9 @@ html, body {
 .dmg-calc-body,
 .dmg-calc-scrollable {
   flex-grow: 1;
-  overflow: hidden;
+  overflow-y: auto;
   padding: 16px;
+  padding-bottom: 32px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -1918,4 +2150,806 @@ html, body {
     justify-content: center;
     flex-wrap: wrap;
   }
+}
+
+/* =============================================
+   BATTLE FORMAT PICKER
+   ============================================= */
+.config-btn.format-btn {
+  min-width: 110px;
+  gap: 4px;
+}
+
+/* =============================================
+   FORMAT GUIDE CARD (Doubles / Triples)
+   ============================================= */
+.format-guide-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 215, 0, 0.18);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn 0.3s ease;
+  flex-shrink: 0;
+}
+
+.format-guide-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.format-guide-title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #f4d03f;
+  opacity: 0.9;
+}
+
+.format-guide-tips {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.format-guide-tips li {
+  font-size: 10px;
+  color: var(--px-text);
+  opacity: 0.75;
+  line-height: 1.4;
+  padding-left: 2px;
+}
+
+/* Spread move badges */
+.format-spread-moves {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.spread-move-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #f87171;
+  white-space: nowrap;
+}
+
+/* =============================================
+   TRIPLE BATTLE POSITION VISUALIZER
+   ============================================= */
+.triple-position-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.triple-slot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 4px;
+  border-radius: 10px;
+  border: 1px solid var(--px-border);
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.2s ease;
+  min-width: 0;
+}
+
+.triple-slot.active {
+  border-color: var(--px-sky);
+  background: rgba(76, 139, 245, 0.08);
+}
+
+.triple-slot.center {
+  border-color: rgba(250, 204, 21, 0.3);
+  background: rgba(250, 204, 21, 0.04);
+}
+
+.triple-slot.center.active {
+  border-color: #facc15;
+  background: rgba(250, 204, 21, 0.12);
+}
+
+.triple-slot-label {
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.45;
+}
+
+.triple-slot-name {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--px-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
+}
+
+/* =============================================
+   SHIFT BUTTON (Triple Battle)
+   ============================================= */
+.shift-btn {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(167, 139, 250, 0.5);
+  background: rgba(167, 139, 250, 0.1);
+  color: #c4b5fd;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.shift-btn:hover {
+  background: rgba(167, 139, 250, 0.25);
+  border-color: #a78bfa;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.shift-btn:active {
+  transform: scale(0.97);
+}
+
+/* =============================================
+   DRAFT POOL SCROLL CONTAINER
+   ============================================= */
+.draft-pool-scroll-container {
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-bottom: 16px;
+}
+
+/* =============================================
+   BATTLE V2 LAYOUT (4 Columns)
+   ============================================= */
+
+.battle-layout-v2 {
+  display: grid;
+  grid-template-columns: 320px 1fr 320px 280px;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  align-items: stretch;
+}
+
+@media (max-width: 1400px) {
+  .battle-layout-v2 {
+    grid-template-columns: 1fr 240px 180px;
+  }
+  .bl-logs-col {
+    display: none !important; /* Hide logs on smaller screens to save space */
+  }
+}
+
+@media (max-width: 1100px) {
+  .battle-layout-v2 {
+    grid-template-columns: 1fr 240px;
+    grid-template-rows: auto auto;
+  }
+  .bl-trainer-col {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: row;
+    height: 120px;
+  }
+}
+
+/* Common Column Styles */
+.bl-logs-col, .bl-stage-col, .bl-swap-col, .bl-trainer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+.bl-col-header {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--px-border);
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bl-col-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--px-accent);
+}
+
+/* Column 1: Logs */
+.bl-logs-col {
+  background: rgba(13, 22, 38, 0.4);
+  border-radius: 16px;
+  border: 1px solid var(--px-border);
+  padding: 12px;
+  overflow: hidden; /* Constrain height */
+  max-height: 100%;
+}
+
+.bl-logs-stream {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 4px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.bl-logs-stream::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.bl-log-empty {
+  color: var(--px-text-muted);
+  font-size: 11px;
+  font-style: italic;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.bl-log-line {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 6px 10px;
+  border-radius: 6px;
+  border-left: 2px solid var(--px-border);
+}
+
+.bl-log-line:last-child {
+  border-left-color: var(--px-sky);
+  background: rgba(76, 139, 245, 0.08);
+}
+
+/* Column 2: Stage & Moves */
+.bl-stage-col {
+  flex: 1;
+}
+
+.bl-moves-panel {
+  background: rgba(13, 22, 38, 0.7);
+  border: 1px solid var(--px-border);
+  border-radius: 16px;
+  padding: 16px;
+  /* Removed margin-top: auto so it sits below the swap list */
+}
+
+.bl-moves-header {
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bl-moves-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.bl-moves-panel .action-grid {
+  grid-template-columns: 1fr;
+}
+
+.bl-target-prompt {
+  font-size: 12px;
+  color: var(--px-accent);
+  font-weight: 700;
+}
+
+/* Column 3: Swap */
+.bl-timer-badge {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: rgba(255, 212, 63, 0.2);
+  color: var(--px-accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.bl-swap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.bl-swap-btn {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--px-border);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.bl-swap-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.bl-swap-btn.active {
+  background: rgba(76, 139, 245, 0.1);
+  border-color: var(--px-sky);
+  box-shadow: 0 0 10px rgba(76, 139, 245, 0.2);
+}
+
+.bl-swap-btn.fainted {
+  opacity: 0.5;
+  filter: grayscale(100%);
+  cursor: not-allowed;
+}
+
+.bl-swap-orb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #60a5fa, #3b82f6);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(0,0,0,0.3);
+}
+
+.bl-swap-orb.active {
+  background: radial-gradient(circle at 30% 30%, #fbbf24, #d97706);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5), inset 0 -2px 4px rgba(0,0,0,0.3);
+}
+
+.bl-swap-orb.fainted {
+  background: radial-gradient(circle at 30% 30%, #9ca3af, #4b5563);
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.3);
+  opacity: 0.5;
+}
+
+.bl-swap-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bl-swap-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.bl-swap-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bl-swap-bar-outer {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  display: block;
+}
+
+.bl-swap-bar-inner {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s;
+  display: block;
+}
+
+.bl-swap-bar-inner.high { background: var(--px-success); }
+.bl-swap-bar-inner.medium { background: var(--px-accent); }
+.bl-swap-bar-inner.low { background: var(--px-danger); }
+
+.bl-swap-hp {
+  font-size: 9px;
+  font-weight: 700;
+  color: #4ade80;
+  min-width: 35px;
+  text-align: right;
+}
+
+/* Format guide inside swap col */
+.bl-format-guide {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--px-border);
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: auto;
+}
+
+.bl-format-guide-title {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--px-accent);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.bl-format-guide-tips {
+  margin: 0;
+  padding-left: 14px;
+  font-size: 10px;
+  color: var(--px-text-muted);
+  line-height: 1.4;
+}
+
+/* Column 4: Trainer */
+.bl-trainer-col {
+  background: rgba(13, 22, 38, 0.5);
+  border: 1px solid var(--px-border);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.bl-trainer-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.bl-trainer-img {
+  width: 100%;
+  max-width: 140px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+  position: relative;
+  z-index: 1;
+}
+
+.bl-pokeball-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 30px;
+  background: transparent;
+  padding: 0;
+  border: none;
+  position: relative;
+  z-index: 2;
+}
+
+.bl-pokeball-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  background: linear-gradient(
+    to bottom,
+    #ef4444 0%,
+    #ef4444 45%,
+    #222 45%,
+    #222 55%,
+    #fff 55%,
+    #fff 100%
+  );
+  position: relative;
+  transition: all 0.2s;
+  opacity: 1;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.bl-pokeball-icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border: 1px solid #222;
+  border-radius: 50%;
+}
+
+.bl-pokeball-icon.active {
+  opacity: 1;
+}
+
+.bl-pokeball-icon.benched {
+  opacity: 0.6;
+}
+
+.bl-pokeball-icon.fainted {
+  opacity: 0.3;
+  filter: grayscale(100%);
+}
+
+.bl-action-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.bl-action-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.bl-action-btn.calc {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+.bl-action-btn.calc:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.bl-action-btn.items {
+  background: rgba(167, 139, 250, 0.1);
+  border-color: rgba(167, 139, 250, 0.3);
+  color: #c4b5fd;
+}
+.bl-action-btn.items:hover {
+  background: rgba(167, 139, 250, 0.2);
+  border-color: #a78bfa;
+}
+
+.bl-action-btn.flee {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  margin-top: 8px;
+}
+.bl-action-btn.flee:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+}
+
+.bl-items-panel {
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: -4px;
+}
+
+.bl-item-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  transition: all 0.2s;
+}
+
+.bl-item-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.bl-item-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.bl-item-hint {
+  font-size: 9px;
+  color: var(--px-accent);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+/* ==========================================================================
+   TARGET SELECTION PANEL
+   ========================================================================== */
+
+.bl-target-select-panel {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--px-border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: slideUpFade 0.3s ease-out forwards;
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.bl-target-select-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.bl-target-select-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--px-sky);
+  letter-spacing: 0.5px;
+}
+
+.bl-target-cancel-btn {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bl-target-cancel-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.bl-target-select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.bl-target-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--px-border);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.bl-target-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.bl-target-card.foe {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.bl-target-card.foe:hover {
+  border-color: #ef4444;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.bl-target-card.ally {
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.bl-target-card.ally:hover {
+  border-color: var(--px-sky);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+}
+
+.bl-target-card.self {
+  opacity: 0.6;
+  pointer-events: none;
+  border-style: dashed;
+}
+
+.bl-target-card-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-bottom-right-radius: 6px;
+  color: white;
+}
+
+.bl-target-card-badge.foe {
+  background: #ef4444;
+}
+
+.bl-target-card-badge.ally {
+  background: var(--px-sky);
+}
+
+.bl-target-card-sprite {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin: 8px 0;
+  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3));
+}
+
+.bl-target-card-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.bl-target-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.bl-target-card-hpbar-outer {
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.bl-target-card-hpbar-inner {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.bl-target-card-hpbar-inner.high { background: #10b981; }
+.bl-target-card-hpbar-inner.medium { background: #f59e0b; }
+.bl-target-card-hpbar-inner.low { background: #ef4444; }
+
+.bl-target-card-hp {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
 }

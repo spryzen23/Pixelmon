@@ -397,8 +397,8 @@ export async function POST(request, { params }) {
 
     // 5. POST /api/battle/start
     if (routeParts[0] === 'battle' && routeParts[1] === 'start') {
-      const { team, difficulty, weather } = body;
-      const result = startNewBattle({ team, difficulty, weather });
+      const { team, difficulty, weather, formatId, battleFormat } = body;
+      const result = startNewBattle({ team, difficulty, weather, formatId, battleFormat });
       return NextResponse.json(result, { status: 201 });
     }
 

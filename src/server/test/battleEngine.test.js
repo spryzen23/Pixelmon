@@ -133,4 +133,45 @@ describe('battle engine sessions', () => {
       /not found or expired/
     );
   });
+
+  it('supports doubles battle formatting and choices', () => {
+    const payload = createPayload();
+    payload.formatId = 'gen7doublescustomgame';
+    payload.participants[0].team.push({
+      id: 'p1-charmander',
+      species: 'Charmander',
+      displayName: 'Flame',
+      level: 50,
+      currentHp: 100,
+      maxHp: 100,
+      stats: { hp: 100, atk: 60, def: 50, spa: 60, spd: 50, spe: 70 },
+      moves: ['Ember'],
+      ability: 'Blaze',
+      item: '',
+      status: 'none',
+    });
+    payload.participants[1].team.push({
+      id: 'p2-bulbasaur',
+      species: 'Bulbasaur',
+      displayName: 'Bulba',
+      level: 50,
+      currentHp: 110,
+      maxHp: 110,
+      stats: { hp: 110, atk: 55, def: 55, spa: 65, spd: 65, spe: 45 },
+      moves: ['Vine Whip'],
+      ability: 'Overgrow',
+      item: '',
+      status: 'none',
+    });
+
+    const created = createBattleEngineSession(payload);
+    assert.ok(created.battleId);
+    assert.equal(created.formatId, 'gen7doublescustomgame');
+    
+    // Choose sequentially for two active Pokemon
+    const step1 = submitBattleEngineChoice(created.battleId, 'p1', 'move 1');
+    assert.ok(step1);
+    const step2 = submitBattleEngineChoice(created.battleId, 'p1', 'move 1');
+    assert.ok(step2);
+  });
 });
