@@ -2078,6 +2078,7 @@ class Battle {
   checkFainted() {
     for (const side of this.sides) {
       for (const pokemon of side.active) {
+        if (!pokemon) continue;
         if (pokemon.fainted) {
           pokemon.status = "fnt";
           pokemon.switchFlag = true;
@@ -2347,6 +2348,7 @@ class Battle {
     }
     for (const side of this.sides) {
       for (const pokemon of side.active) {
+        if (!pokemon) continue;
         if (pokemon.forceSwitchFlag) {
           if (pokemon.hp) this.actions.dragIn(pokemon.side, pokemon.position);
           pokemon.forceSwitchFlag = false;
@@ -2394,6 +2396,7 @@ class Battle {
       let reviveSwitch = false;
       if (switches[i] && !this.canSwitch(this.sides[i])) {
         for (const pokemon of this.sides[i].active) {
+          if (!pokemon) continue;
           if (this.sides[i].slotConditions[pokemon.position]["revivalblessing"]) {
             reviveSwitch = true;
             continue;
@@ -2403,6 +2406,7 @@ class Battle {
         if (!reviveSwitch) switches[i] = false;
       } else if (switches[i]) {
         for (const pokemon of this.sides[i].active) {
+          if (!pokemon) continue;
           if (pokemon.hp && pokemon.switchFlag && pokemon.switchFlag !== "revivalblessing" && !pokemon.skipBeforeSwitchOutEventFlag) {
             this.runEvent("BeforeSwitchOut", pokemon);
             pokemon.skipBeforeSwitchOutEventFlag = true;

@@ -6,8 +6,8 @@ export const battleRouter = Router();
 // Endpoint to start a new Showdown-simulated battle
 battleRouter.post('/start', (req, res, next) => {
   try {
-    const { team, difficulty, weather } = req.body;
-    const result = startNewBattle({ team, difficulty, weather });
+    const { team, difficulty, weather, formatId } = req.body;
+    const result = startNewBattle({ team, difficulty, weather, formatId });
     res.status(201).json(result);
   } catch (e) {
     next(e);

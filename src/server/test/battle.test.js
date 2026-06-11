@@ -62,6 +62,13 @@ describe('battleService — startNewBattle()', () => {
     assert.ok(result.battleId, 'boss battle should start correctly');
     assert.ok(result.request.active, 'should have active pokemon in boss difficulty');
   });
+
+  it('works with random trainer 3v3 difficulty', () => {
+    const result = startNewBattle({ team: sampleTeam, difficulty: 'trainer3v3', weather: 'clear' });
+    assert.ok(result.battleId, 'trainer battle should start correctly');
+    assert.ok(result.request.active, 'should have active pokemon in trainer difficulty');
+    assert.ok(result.logs.some((line) => line === '|teamsize|p2|3'), 'opponent should bring a 3 Pokemon team');
+  });
 });
 
 describe('battleService — makeChoice()', () => {
