@@ -15,7 +15,9 @@
     "generate:assets": "node scripts/generate-asset-manifest.cjs",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "test:server": "node --test src/server/test/**/*.test.js"
+    "test:server": "node --test src/server/test/**/*.test.js",
+    "test:ui": "vitest run",
+    "test:ui:watch": "vitest"
   },
   "dependencies": {
     "@react-three/drei": "^9.121.4",
@@ -42,9 +44,14 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@vitejs/plugin-react": "^6.0.2",
     "eslint": "^9.39.1",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "globals": "^16.5.0"
+    "globals": "^16.5.0",
+    "jsdom": "^29.1.1",
+    "vitest": "^4.1.8"
   }
 }

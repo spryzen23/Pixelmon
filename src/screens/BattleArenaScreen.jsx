@@ -14,8 +14,22 @@ import {
   Check
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import '../styles/minigames.css';
 import { BATTLE_RULES } from '../data/battleRules';
+import { TrainerColumn } from './battle/TrainerColumn';
+import { SwitchUI } from './battle/SwitchUI';
+import { ActionGrid } from './battle/ActionGrid';
+import { DamageCalculator } from './battle/DamageCalculator';
+import { 
+  parseCondition, 
+  findTeamIndexForBattleIdent, 
+  getActiveTeamIndexFromRequest, 
+  syncTeamFromRequest,
+  findRequestPokemonForTeamIndex,
+  getRequestSlotForTeamIndex,
+  cleanName,
+  normalizePokemonKey,
+  speciesFromDetails
+} from './battle/BattleUtils';
 
 // Type effectiveness chart
 const TYPE_CHART = {
@@ -375,100 +389,6 @@ function formatShowdownLog(line) {
     default:
       return null;
   }
-}
-
-function cleanName(ident) {
-  if (!ident) return '';
-  const colonIdx = ident.indexOf(':');
-  if (colonIdx !== -1) {
-    return ident.slice(colonIdx + 1).trim();
-  }
-  return ident;
-}
-
-function parseCondition(condStr) {
-  if (!condStr || condStr.includes('fnt') || condStr.startsWith('0')) {
-    return { currentHp: 0, maxHp: 100, status: 'fnt' };
-  }
-  const [hpPart, statusPart] = condStr.split(' ');
-  const [current, max] = hpPart.split('/').map(Number);
-  return {
-    currentHp: current || 0,
-    maxHp: max || 100,
-    status: statusPart || 'none'
-  };
-}
-
-function normalizePokemonKey(value) {
-  return String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-}
-
-function speciesFromDetails(details) {
-  return String(details || '').split(',')[0].trim();
-}
-
-function findTeamIndexForRequestPokemon(requestPokemon, team, fallbackIndex = 0) {
-  if (!requestPokemon) return fallbackIndex;
-  const identKey = normalizePokemonKey(cleanName(requestPokemon.ident));
-  const teamIndex = team.findIndex(pokemon => (
-    pokemon && [pokemon.displayName, pokemon.name, pokemon.species, pokemon.id].map(normalizePokemonKey).includes(identKey)
-  ));
-  return teamIndex >= 0 ? teamIndex : fallbackIndex;
-}
-
-function findRequestPokemonForTeamIndex(request, team, teamIndex) {
-  const requestPokemon = request?.side?.pokemon || [];
-  return requestPokemon.find((pokemon, requestIndex) => (
-    findTeamIndexForRequestPokemon(pokemon, team, requestIndex) === teamIndex
-  ));
-}
-
-function findTeamIndexForBattleIdent(ident, team, request, fallbackIndex = 0) {
-  const identKey = normalizePokemonKey(cleanName(ident));
-  const directIndex = team.findIndex((pokemon) => (
-    [pokemon.displayName, pokemon.name, pokemon.species, pokemon.id].map(normalizePokemonKey).includes(identKey)
-  ));
-  if (directIndex >= 0) return directIndex;
-
-  const requestPokemon = (request?.side?.pokemon || []).find((pokemon) => (
-    normalizePokemonKey(cleanName(pokemon.ident)) === identKey
-  ));
-  return requestPokemon ? findTeamIndexForRequestPokemon(requestPokemon, team, fallbackIndex) : fallbackIndex;
-}
-
-function getActiveTeamIndexFromRequest(request, team, fallbackIndex = 0) {
-  const requestPokemon = request?.side?.pokemon || [];
-  const requestIndex = requestPokemon.findIndex((pokemon) => pokemon.active);
-  if (requestIndex === -1) return fallbackIndex;
-  return findTeamIndexForRequestPokemon(requestPokemon[requestIndex], team, requestIndex);
-}
-
-function getRequestSlotForTeamIndex(request, team, teamIndex) {
-  const requestPokemon = request?.side?.pokemon || [];
-  const requestIndex = requestPokemon.findIndex((pokemon, index) => (
-    findTeamIndexForRequestPokemon(pokemon, team, index) === teamIndex
-  ));
-  return requestIndex >= 0 ? requestIndex : teamIndex;
-}
-
-function syncTeamFromRequest(team, request) {
-  const nextTeam = [...team];
-  request?.side?.pokemon?.forEach((requestPokemon, requestIndex) => {
-    const teamIndex = findTeamIndexForRequestPokemon(requestPokemon, nextTeam, requestIndex);
-    if (nextTeam[teamIndex]) {
-      const details = requestPokemon.details || '';
-      let gender = null;
-      if (details.includes(', M')) gender = '♂';
-      else if (details.includes(', F')) gender = '♀';
-
-      nextTeam[teamIndex] = {
-        ...nextTeam[teamIndex],
-        ...parseCondition(requestPokemon.condition),
-        ...(gender ? { gender } : {})
-      };
-    }
-  });
-  return nextTeam;
 }
 
 export function BattleArenaScreen() {
@@ -1729,344 +1649,60 @@ export function BattleArenaScreen() {
             )}
           </div>
 
-          {/* ── Column 3: Swap Pokémon ── */}
+          {/* ── Column 3: Swap Pokémon & Actions ── */}
           <div className="bl-swap-col" id="swap-col">
-            <div className="bl-moves-panel" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-              <div className="bl-moves-header" style={{ marginBottom: '12px' }}>
-                <span className="bl-moves-label">🔄 SWAP POKÉMON</span>
-                {switchTimer !== null && <span className="bl-timer-badge">Auto {switchTimer}s</span>}
-              </div>
-              <div className="bl-swap-list" style={{ overflowY: 'auto' }}>
-                {playerTeam.map((p, i) => {
-                  const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
-                  const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
-                  const isActive = reqMon ? reqMon.active : false;
-                  const hpPct = p.currentHp / p.maxHp;
+            <SwitchUI 
+              activeRequest={activeRequest}
+              playerTeam={playerTeam}
+              playerSlots={playerSlots}
+              turnChoicesRef={turnChoicesRef}
+              setShowSwitch={setShowSwitch}
+              proceedToNextSlot={proceedToNextSlot}
+              handleSwapActive={handleSwapActive}
+            />
 
-                  const requestSlotIndex = getRequestSlotForTeamIndex(activeRequest, playerTeam, i);
-                  const choiceStr = `switch ${requestSlotIndex + 1}`;
-                  const isAlreadyChosen = turnChoices.includes(choiceStr);
-
-                  return (
-                    <button
-                      key={p.name}
-                      id={`switch-poke-btn-${i}`}
-                      className={`bl-swap-btn ${playerSlots.includes(i) ? 'active' : ''} ${isFainted ? 'fainted' : ''}`}
-                      disabled={isFainted || isActive || isAlreadyChosen}
-                      onClick={() => handleSwapActive(i)}
-                    >
-                      <div className={`bl-swap-orb ${isFainted ? 'fainted' : playerSlots.includes(i) ? 'active' : ''}`} />
-                      <span className="bl-swap-info">
-                        <span className="bl-swap-name">{p.displayName}</span>
-                        <span className="bl-swap-bar-row">
-                          <span className="bl-swap-bar-outer">
-                            <span
-                              className={`bl-swap-bar-inner ${hpPct > 0.5 ? 'high' : hpPct > 0.2 ? 'medium' : 'low'}`}
-                              style={{ width: `${hpPct * 100}%` }}
-                            />
-                          </span>
-                          <span className="bl-swap-hp">{p.currentHp} HP</span>
-                        </span>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Move selection panel — moved from stage */}
             {winner === null && (
-              <div className="bl-moves-panel" id="battle-controls-hub">
-                <div className="bl-moves-header">
-                  {targetSelection ? (
-                    targetSelection.itemType ? (
-                      <span className="bl-target-prompt animate-pulse">🎒 Select an ally to use {targetSelection.itemType === 'potion' ? 'Potion' : 'Full Restore'} on!</span>
-                    ) : targetSelection.isMultiTarget ? (
-                      <span className="bl-target-prompt animate-pulse">🎯 Target confirmed. Waiting for dispatch...</span>
-                    ) : (
-                      <span className="bl-target-prompt animate-pulse">🎯 Select a target on the field!</span>
-                    )
-                  ) : (
-                    <span className="bl-moves-label">
-                      {showSwitch ? 'Choose replacement for ' : 'Choose move for '}
-                      <strong style={{ color: 'var(--px-sky)' }}>{playerTeam[playerSlots[choosingSlotIdx]]?.displayName || `Slot ${choosingSlotIdx + 1}`}</strong>
-                      <span style={{ opacity: 0.5, fontWeight: 400 }}> · Slot {choosingSlotIdx + 1}</span>
-                    </span>
-                  )}
-                </div>
-                {!targetSelection && (
-                  <div className="action-grid">
-                    {getMappedMoves().map((m, i) => (
-                      <button
-                        key={m.id}
-                        id={`move-btn-${m.id}`}
-                        className="btn-action-move"
-                        data-type={m.type}
-                        disabled={!playerTurn || isActing || m.disabled}
-                        onClick={() => handlePlayerAttack(i)}
-                      >
-                        <span className="move-btn-keybind">Slot {i + 1}</span>
-                        <span className="move-btn-name">{m.move.replace(/-/g, ' ')}</span>
-                        <span className="move-btn-type" style={{ background: TYPE_COLORS[m.type?.toLowerCase()] || '#888', color: '#fff' }}>
-                          {m.type.toUpperCase()} · PWR {m.power}
-                        </span>
-                      </button>
-                    ))}
-                    {battleFormat === 'triples' && !showSwitch && (choosingSlotIdx === 0 || choosingSlotIdx === 2) && (
-                      <button
-                        id="move-btn-shift"
-                        className="btn-action-move"
-                        style={{ background: 'linear-gradient(135deg, var(--px-sky) 0%, #0d1626 100%)', borderColor: 'var(--px-sky)' }}
-                        disabled={!playerTurn || isActing}
-                        onClick={() => proceedToNextSlot('shift')}
-                      >
-                        <span className="move-btn-keybind">Action</span>
-                        <span className="move-btn-name">🔀 Shift Position</span>
-                        <span className="move-btn-type" style={{ background: 'var(--px-sky)', color: '#fff' }}>CENTER SWAP</span>
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
+              <ActionGrid
+                targetSelection={targetSelection}
+                showSwitch={showSwitch}
+                playerTeam={playerTeam}
+                playerSlots={playerSlots}
+                choosingSlotIdx={choosingSlotIdx}
+                getMappedMoves={getMappedMoves}
+                playerTurn={playerTurn}
+                isActing={isActing}
+                handlePlayerAttack={handlePlayerAttack}
+                battleFormat={battleFormat}
+                proceedToNextSlot={proceedToNextSlot}
+              />
             )}
           </div>
 
-          {/* ── Column 4: Trainer + Actions / Bag ── */}
-          <div className="bl-trainer-col" id="trainer-col">
-            {winner === null ? (
-              bagOpen ? (
-                <div className="bl-bag-ui" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-                    <span style={{ fontSize: '48px', display: 'block', margin: '10px 0' }}>🎒</span>
-                    <h3 style={{ margin: 0, color: 'var(--px-text)', fontSize: '18px' }}>Items Bag</h3>
-                    <p style={{ margin: '4px 0 0 0', color: 'var(--px-text-muted)', fontSize: '12px' }}>Select an item to use.</p>
-                  </div>
-                  <div className="bl-items-panel" id="items-panel" style={{ background: 'transparent', border: 'none', padding: 0 }}>
-                    <button className="bl-item-btn" id="potion-item-btn" disabled={items.potions <= 0} onClick={() => handleUseItem('potion')} style={{ marginBottom: '8px' }}>
-                      🧪 Potion ×{items.potions} <span className="bl-item-hint">+50 HP</span>
-                    </button>
-                    <button className="bl-item-btn" id="fullrestore-item-btn" disabled={items.fullRestores <= 0} onClick={() => handleUseItem('fullRestore')} style={{ marginBottom: '16px' }}>
-                      ✨ Full Restore ×{items.fullRestores} <span className="bl-item-hint">Full HP</span>
-                    </button>
-                  </div>
-                  <div style={{ flex: 1 }} />
-                  <button className="btn-back" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setBagOpen(false); setTargetSelection(null); }}>
-                    Cancel
-                  </button>
-                </div>
-              ) : (
-                <>
-                  {/* Trainer image */}
-                  <div className="bl-trainer-card">
-                    <img src="/assets/battleassets/red.png" alt="Trainer Red" className="bl-trainer-img" />
-
-                    {/* Pokéball row — one per team member */}
-                    <div className="bl-pokeball-row">
-                      {playerTeam.map((p, i) => {
-                        const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
-                        const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
-                        const isActive = playerSlots.includes(i);
-                        return (
-                          <div
-                            key={i}
-                            className={`bl-pokeball-icon ${isFainted ? 'fainted' : isActive ? 'active' : 'benched'}`}
-                            title={`${p.displayName}${isFainted ? ' (Fainted)' : isActive ? ' (Active)' : ''}`}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Format guide for doubles/triples */}
-                  {currentFormat?.guide && (
-                    <div className="bl-format-guide">
-                      <span className="bl-format-guide-title">{currentFormat.icon} {currentFormat.guide.title}</span>
-                      <ul className="bl-format-guide-tips">
-                        {currentFormat.guide.tips.slice(0, 3).map((tip, i) => (
-                          <li key={i}>{tip}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Action buttons */}
-                  <div className="bl-action-buttons">
-                    <button className="bl-action-btn calc" id="dmg-calc-toggle" onClick={() => setShowCalc(true)}>
-                      📊 Damage Calculator
-                    </button>
-                    <button className="bl-action-btn items" id="items-action-btn" onClick={() => setBagOpen(true)}>
-                      🎒 Items ({items.potions + items.fullRestores} left)
-                    </button>
-                  </div>
-                </>
-              )
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '16px', alignItems: 'center' }}>
-                <img src="/assets/battleassets/red.png" alt="Trainer Red" className="bl-trainer-img" style={{ opacity: winner === 'player' ? 1 : 0.35 }} />
-                <p style={{ fontSize: '11px', color: 'var(--px-text-muted)', textAlign: 'center' }}>
-                  {winner === 'player' ? '🏆 You won!' : '💀 You lost...'}
-                </p>
-              </div>
-            )}
-          </div>
-
+          <TrainerColumn 
+            winner={winner}
+            bagOpen={bagOpen}
+            setBagOpen={setBagOpen}
+            items={items}
+            handleUseItem={handleUseItem}
+            playerTeam={playerTeam}
+            activeRequest={activeRequest}
+            playerSlots={playerSlots}
+            currentFormat={currentFormat}
+            setShowCalc={setShowCalc}
+            setStage={setStage}
+          />
         </div>
       )}
 
       {/* Interactive Damage Calculator Drawer Overlay */}
-      {showCalc && (
-        <>
-          <div className="dmg-calc-drawer-backdrop" onClick={() => setShowCalc(false)} />
-          <div className="dmg-calc-drawer" id="damage-analyzer-drawer">
-            <div className="dmg-calc-header">
-              <h3 className="minigame-inner-title">Damage Lab Analyzer</h3>
-              <button className="btn-back" onClick={() => setShowCalc(false)}>Close</button>
-            </div>
-
-            <div className="dmg-calc-body">
-
-              <div className="dmg-calc-panel">
-                <span className="config-section-title">Core Engine Variables</span>
-                <div className="dmg-calc-grid-2">
-                  <div>
-                    <label className="dmg-calc-label">Attacker Lvl</label>
-                    <input
-                      type="number"
-                      className="dmg-calc-input"
-                      value={calcInputs.level}
-                      onChange={e => setCalcInputs({ ...calcInputs, level: Math.max(1, Number(e.target.value)) })}
-                    />
-                  </div>
-                  <div>
-                    <label className="dmg-calc-label">Move Power</label>
-                    <input
-                      type="number"
-                      className="dmg-calc-input"
-                      value={calcInputs.power}
-                      onChange={e => setCalcInputs({ ...calcInputs, power: Math.max(1, Number(e.target.value)) })}
-                    />
-                  </div>
-                  <div>
-                    <label className="dmg-calc-label">Attack Stat (A)</label>
-                    <input
-                      type="number"
-                      className="dmg-calc-input"
-                      value={calcInputs.atk}
-                      onChange={e => setCalcInputs({ ...calcInputs, atk: Math.max(1, Number(e.target.value)) })}
-                    />
-                  </div>
-                  <div>
-                    <label className="dmg-calc-label">Defense Stat (D)</label>
-                    <input
-                      type="number"
-                      className="dmg-calc-input"
-                      value={calcInputs.def}
-                      onChange={e => setCalcInputs({ ...calcInputs, def: Math.max(1, Number(e.target.value)) })}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="dmg-calc-panel">
-                <span className="config-section-title">Modifier Sliders</span>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '6px' }}>
-
-                  <div>
-                    <label className="dmg-calc-label">Type Advantage Effectiveness</label>
-                    <select
-                      className="dmg-calc-input"
-                      value={calcInputs.type}
-                      onChange={e => setCalcInputs({ ...calcInputs, type: Number(e.target.value) })}
-                    >
-                      <option value="0.0">0x (Immune)</option>
-                      <option value="0.25">0.25x (Double Resisted)</option>
-                      <option value="0.5">0.5x (Resisted)</option>
-                      <option value="1.0">1x (Neutral)</option>
-                      <option value="2.0">2x (Super Effective)</option>
-                      <option value="4.0">4x (Ultra Effective)</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="dmg-calc-label">STAB Modifier</label>
-                    <select
-                      className="dmg-calc-input"
-                      value={calcInputs.stab}
-                      onChange={e => setCalcInputs({ ...calcInputs, stab: Number(e.target.value) })}
-                    >
-                      <option value="1.0">1x (None)</option>
-                      <option value="1.5">1.5x (STAB Bonus)</option>
-                      <option value="2.0">2x (Adaptability)</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="dmg-calc-label">Field Weather Modifier</label>
-                    <select
-                      className="dmg-calc-input"
-                      value={calcInputs.weather}
-                      onChange={e => setCalcInputs({ ...calcInputs, weather: Number(e.target.value) })}
-                    >
-                      <option value="1.0">1x (Neutral)</option>
-                      <option value="1.5">1.5x (Boosted)</option>
-                      <option value="0.5">0.5x (Reduced)</option>
-                    </select>
-                  </div>
-
-                  <div style={{ display: 'flex', gap: '10px' }}>
-                    <button
-                      className={`config-btn w-full ${calcInputs.burn === 0.5 ? 'active' : ''}`}
-                      onClick={() => setCalcInputs(p => ({ ...p, burn: p.burn === 0.5 ? 1.0 : 0.5 }))}
-                    >
-                      Burned (0.5x)
-                    </button>
-                    <button
-                      className={`config-btn w-full ${calcInputs.crit === 1.5 ? 'active' : ''}`}
-                      onClick={() => setCalcInputs(p => ({ ...p, crit: p.crit === 1.5 ? 1.0 : 1.5 }))}
-                    >
-                      Critical (1.5x)
-                    </button>
-                  </div>
-
-                </div>
-              </div>
-
-              {/* Damage roll outputs */}
-              <div className="dmg-calc-panel" style={{ background: 'rgba(255, 212, 63, 0.03)', borderColor: 'rgba(255, 212, 63, 0.2)' }}>
-                <span className="config-section-title" style={{ color: 'var(--px-accent)' }}>Roll Outputs (Chaos Variance)</span>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-                  <div>
-                    <span className="dmg-calc-label">Min Damage (85%)</span>
-                    <strong style={{ fontSize: '18px', color: 'var(--px-accent-warm)' }}>{calculatedRolls[0]}</strong>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <span className="dmg-calc-label">Max Damage (100%)</span>
-                    <strong style={{ fontSize: '18px', color: 'var(--px-accent)' }}>{calculatedBase}</strong>
-                  </div>
-                </div>
-
-                <div className="chart-rolls-container" style={{ marginTop: '16px' }}>
-                  {calculatedRolls.map((roll, idx) => (
-                    <div key={idx} className="chart-roll-row">
-                      <span className="chart-roll-percentage">{85 + idx}%</span>
-                      <div className="chart-roll-bar-outer">
-                        <div
-                          className="chart-roll-bar-inner"
-                          style={{ width: `${((roll) / calculatedBase) * 100}%` }}
-                        />
-                      </div>
-                      <span className="chart-roll-value">{roll}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </>
-      )}
-
+      <DamageCalculator 
+        showCalc={showCalc}
+        setShowCalc={setShowCalc}
+        calcInputs={calcInputs}
+        setCalcInputs={setCalcInputs}
+        getDmgRolls={getDmgRolls}
+        calcOutput={calcOutput}
+      />
     </div>
   );
 }
