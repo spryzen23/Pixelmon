@@ -86,25 +86,8 @@ function cleanName(ident) {
   return colonIndex >= 0 ? ident.slice(colonIndex + 1).trim() : ident;
 }
 
-function normalizePokemonKey(value) {
-  return String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-}
-
-function speciesFromDetails(details) {
-  return String(details || '').split(',')[0].trim();
-}
-
 function findTeamFixture(requestPokemon, team, fallbackIndex = 0) {
-  const requestKeys = [cleanName(requestPokemon?.ident), speciesFromDetails(requestPokemon?.details)]
-    .map(normalizePokemonKey)
-    .filter(Boolean);
-
-  return team.find((pokemon) => {
-    const teamKeys = [pokemon.displayName, pokemon.species, pokemon.name, pokemon.id]
-      .map(normalizePokemonKey)
-      .filter(Boolean);
-    return teamKeys.some((key) => requestKeys.includes(key));
-  }) || team[fallbackIndex] || team[0];
+  return team[fallbackIndex] || team[0];
 }
 
 function getRequestTeamSlots(request, team) {
@@ -490,7 +473,7 @@ export function BattleArenaV2Screen() {
                 <div className="pokemon-hp-panel">
                   <div className="hp-panel-header">
                     <span className="hp-pokemon-name">{rival?.displayName}</span>
-                    <span className="hp-pokemon-level">Lvl {rival?.level}</span>
+                    <span className="hp-pokemon-level">Lvl {rival?.level || 50}</span>
                   </div>
                   <div className="hp-bar-outer"><div className="hp-bar-inner high" style={{ width: `${hpPercent(rival)}%` }} /></div>
                   <div className="hp-numeric">{rival?.currentHp} / {rival?.maxHp} HP</div>
@@ -503,7 +486,7 @@ export function BattleArenaV2Screen() {
                 <div className="pokemon-hp-panel">
                   <div className="hp-panel-header">
                     <span className="hp-pokemon-name">{player?.displayName}</span>
-                    <span className="hp-pokemon-level">Lvl {player?.level}</span>
+                    <span className="hp-pokemon-level">Lvl {player?.level || 50}</span>
                   </div>
                   <div className="hp-bar-outer"><div className="hp-bar-inner high" style={{ width: `${hpPercent(player)}%` }} /></div>
                   <div className="hp-numeric">{player?.currentHp} / {player?.maxHp} HP</div>
@@ -529,7 +512,7 @@ export function BattleArenaV2Screen() {
                     >
                       <span className="move-btn-keybind">Slot {index + 1}</span>
                       <span className="move-btn-name">{(move.move || catalog?.name || move.id).replace(/-/g, ' ')}</span>
-                      <span className="move-btn-type" style={{ background: TYPE_COLORS[type] || '#778', color: '#fff' }}>
+                      <span className="move-btn-type" style={{ background: TYPE_COLORS[type?.toLowerCase()] || '#778', color: '#fff' }}>
                         {type.toUpperCase()} / PWR {catalog?.basePower ?? '--'}
                       </span>
                     </button>

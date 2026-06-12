@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import '../styles/minigames.css';
+import { BATTLE_RULES } from '../data/battleRules';
 
 // Type effectiveness chart
 const TYPE_CHART = {
@@ -56,34 +57,34 @@ const DIFFICULTIES = [
 
 const BATTLE_FORMATS = [
   {
-    id: 'singles',
-    name: 'Single Battle',
+    id: 'singles3v3',
+    name: 'Single Battle 3v3',
     icon: '⚔️',
     teamSize: 3,
     activeCount: 1,
     showdownFormat: 'gen7customgame',
-    description: 'Classic 1v1 — One Pokémon per side.',
-    guide: null,
+    description: 'Classic 1v1 — 3 Pokémon per side.',
+    guide: BATTLE_RULES.singles,
+  },
+  {
+    id: 'singles6v6',
+    name: 'Single Battle 6v6',
+    icon: '⚔️',
+    teamSize: 6,
+    activeCount: 1,
+    showdownFormat: 'gen7customgame',
+    description: 'Classic 1v1 — 6 Pokémon per side.',
+    guide: BATTLE_RULES.singles,
   },
   {
     id: 'doubles',
     name: 'Double Battle',
     icon: '🤝',
-    teamSize: 4,
+    teamSize: 6,
     activeCount: 2,
     showdownFormat: 'gen7doublescustomgame',
     description: '2v2 — Spread moves hit all. Target selection matters.',
-    guide: {
-      title: 'Double Battle Strategy',
-      tips: [
-        "💥 Spread moves (Earthquake, Surf, Discharge) hit ALL Pokémon on field — 25% weaker.",
-        "🎯 Single-target moves: choose which foe to attack each turn.",
-        "🤝 Helping Hand boosts your ally's next move by 50%.",
-        "👆 Follow Me / Rage Powder redirects all attacks to the user.",
-        "🔀 Ally Switch swaps your two Pokémon's positions.",
-      ],
-      spreadMoves: ['Earthquake','Surf','Discharge','Dazzling Gleam','Rock Slide','Lava Plume','Bulldoze','Blizzard','Heat Wave','Boomburst','Self-Destruct','Explosion','Magnitude','Eruption','Sludge Wave'],
-    },
+    guide: BATTLE_RULES.doubles,
   },
   {
     id: 'triples',
@@ -93,25 +94,15 @@ const BATTLE_FORMATS = [
     activeCount: 3,
     showdownFormat: 'gen6triplescustomgame',
     description: '3v3 — Positioning & Shifting. Center reaches everyone.',
-    guide: {
-      title: 'Triple Battle Strategy',
-      tips: [
-        '📍 CENTER Pokémon can attack ANY target on the field.',
-        '↔️ SIDE Pokémon can only reach adjacent foes (center + opposite side).',
-        '🔀 SHIFT: Left/Right Pokémon can swap to center — no stat reset!',
-        '🦅 Flying-type & Pulse/Aura moves always reach non-adjacent foes.',
-        '📉 Spread moves only hit ADJACENT Pokémon in triples (not all).',
-      ],
-      spreadMoves: ['Earthquake','Discharge','Blizzard','Rock Slide','Lava Plume','Bulldoze','Boomburst'],
-    },
+    guide: BATTLE_RULES.triples,
   },
 ];
 
 // Spread moves that hit all Pokémon on field in doubles/triples
 const SPREAD_MOVE_IDS = new Set([
-  'earthquake','surf','discharge','dazzlinggleam','rockslide','lavaplume',
-  'bulldoze','blizzard','heatwave','boomburst','selfdestruct','explosion',
-  'magnitude','eruption','sludgewave','perishsong','brutalswing',
+  'earthquake', 'surf', 'discharge', 'dazzlinggleam', 'rockslide', 'lavaplume',
+  'bulldoze', 'blizzard', 'heatwave', 'boomburst', 'selfdestruct', 'explosion',
+  'magnitude', 'eruption', 'sludgewave', 'perishsong', 'brutalswing',
 ]);
 
 /**
@@ -266,6 +257,7 @@ function formatShowdownLog(line) {
       if (hpStatus === '0 fnt' || hpStatus.startsWith('0')) {
         return null; // Handled by faint event
       }
+      if (reason.includes('[silent]')) return null;
       if (reason.includes('[from] psn')) {
         return `☠️ <strong>${target}</strong> was hurt by poison!`;
       }
@@ -278,12 +270,31 @@ function formatShowdownLog(line) {
       if (reason.includes('[from] sandstorm')) {
         return `🌪️ <strong>${target}</strong> is buffeted by the sandstorm!`;
       }
-      return `💥 <strong>${target}</strong> took damage!`;
+      if (reason.includes('[from] hail') || reason.includes('[from] Hail')) {
+        return `❄️ <strong>${target}</strong> is buffeted by the hail!`;
+      }
+      if (reason.includes('[from] Leech Seed')) {
+        return `🌱 <strong>${target}</strong>'s health is sapped by Leech Seed!`;
+      }
+      // Return null for normal attack damage to prevent log spam for multi-hit moves.
+      // HP bar animations handle the visual feedback.
+      return null;
     }
     case '-heal': {
       const target = cleanName(parts[2]);
-      const item = parts[4] ? parts[4].replace('[from] item: ', '') : '';
-      return `🧪 <strong>${target}</strong> was healed ${item ? `by ${item}` : ''}!`;
+      const reason = parts[4] || '';
+      if (reason.includes('[silent]')) return null;
+      if (reason.includes('[from] drain')) return `🧛 <strong>${target}</strong> drained some energy!`;
+
+      const item = reason.includes('[from] item:') ? reason.replace('[from] item: ', '') : '';
+      if (item) {
+        return `🧪 <strong>${target}</strong> restored health using its ${item}!`;
+      }
+      return `✨ <strong>${target}</strong> restored some health!`;
+    }
+    case '-hitcount': {
+      const hits = parts[3];
+      return `🎯 Hit ${hits} times!`;
     }
     case '-boost': {
       const target = cleanName(parts[2]);
@@ -397,16 +408,11 @@ function speciesFromDetails(details) {
 }
 
 function findTeamIndexForRequestPokemon(requestPokemon, team, fallbackIndex = 0) {
-  const requestKeys = [cleanName(requestPokemon?.ident), speciesFromDetails(requestPokemon?.details)]
-    .map(normalizePokemonKey)
-    .filter(Boolean);
-
-  const teamIndex = team.findIndex((pokemon) => {
-    const teamKeys = [pokemon.displayName, pokemon.name, pokemon.species, pokemon.id]
-      .map(normalizePokemonKey)
-      .filter(Boolean);
-    return teamKeys.some((key) => requestKeys.includes(key));
-  });
+  if (!requestPokemon) return fallbackIndex;
+  const identKey = normalizePokemonKey(cleanName(requestPokemon.ident));
+  const teamIndex = team.findIndex(pokemon => (
+    pokemon && [pokemon.displayName, pokemon.name, pokemon.species, pokemon.id].map(normalizePokemonKey).includes(identKey)
+  ));
   return teamIndex >= 0 ? teamIndex : fallbackIndex;
 }
 
@@ -455,8 +461,8 @@ function syncTeamFromRequest(team, request) {
       if (details.includes(', M')) gender = '♂';
       else if (details.includes(', F')) gender = '♀';
 
-      nextTeam[teamIndex] = { 
-        ...nextTeam[teamIndex], 
+      nextTeam[teamIndex] = {
+        ...nextTeam[teamIndex],
         ...parseCondition(requestPokemon.condition),
         ...(gender ? { gender } : {})
       };
@@ -474,7 +480,7 @@ export function BattleArenaScreen() {
   const [selectedTeam, setSelectedTeam] = useState([]);
   const [difficulty, setDifficulty] = useState('wild');
   const [weather, setWeather] = useState('random');
-  const [battleFormat, setBattleFormat] = useState('singles');
+  const [battleFormat, setBattleFormat] = useState('singles3v3');
   const [loading, setLoading] = useState(false);
 
   const currentFormat = BATTLE_FORMATS.find(f => f.id === battleFormat) || BATTLE_FORMATS[0];
@@ -516,7 +522,7 @@ export function BattleArenaScreen() {
 
   // Mid-battle Inventory Items
   const [items, setItems] = useState({ potions: 3, fullRestores: 1 });
-  const [showItems, setShowItems] = useState(false);
+  const [bagOpen, setBagOpen] = useState(false);
   const [showSwitch, setShowSwitch] = useState(false);
   const [switchTimer, setSwitchTimer] = useState(null);
 
@@ -574,10 +580,18 @@ export function BattleArenaScreen() {
               const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
               const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
               const isActive = reqMon ? reqMon.active : false;
-              return !isFainted && !isActive;
+
+              const requestSlotIndex = getRequestSlotForTeamIndex(activeRequest, playerTeam, i);
+              const choiceStr = `switch ${requestSlotIndex + 1}`;
+              const isAlreadyChosen = turnChoicesRef.current.includes(choiceStr);
+
+              return !isFainted && !isActive && !isAlreadyChosen;
             });
             if (firstAvailableIdx !== -1) {
               handleSwapActive(firstAvailableIdx);
+            } else {
+              const forceSwitchArray = Array.isArray(activeRequest.forceSwitch) ? activeRequest.forceSwitch : [!!activeRequest.forceSwitch];
+              proceedToNextSlot('pass', forceSwitchArray);
             }
             return null;
           }
@@ -721,6 +735,10 @@ export function BattleArenaScreen() {
 
   const handleDifficultySelect = (nextDifficulty) => {
     setDifficulty(nextDifficulty);
+    if (nextDifficulty === 'boss' && (battleFormat === 'doubles' || battleFormat === 'triples')) {
+      setBattleFormat('singles3v3');
+      setSelectedTeam([]);
+    }
     if (nextDifficulty === 'trainer3v3' && selectedTeam.length === 3 && !loading) {
       startBattle(nextDifficulty);
     }
@@ -766,6 +784,7 @@ export function BattleArenaScreen() {
       spAttack: (stats['special-attack'] || 50) + 20,
       spDefense: (stats['special-defense'] || 50) + 20,
       speed: (stats.speed || 50) + 20,
+      level: 50,
       moves: moves.length > 0 ? moves : [{ name: 'tackle', power: 40, type: 'normal', accuracy: 100, damage_class: 'physical' }],
       status: 'none'
     };
@@ -790,26 +809,27 @@ export function BattleArenaScreen() {
       if (targetType === 'adjacentAllyOrSelf') return !targetIsFoe;
       if (targetType === 'adjacentFoe') return targetIsFoe;
       if (targetType === 'normal' || targetType === 'any') return targetIdx !== sourceIdx || targetIsFoe;
-      
+
       // Multi-target logic checking
       if (targetType === 'allAdjacent') return targetIdx !== sourceIdx;
       if (targetType === 'allAdjacentFoes' || targetType === 'foeSide') return targetIsFoe;
       if (targetType === 'allySide') return !targetIsFoe && targetIdx !== sourceIdx;
       if (targetType === 'all') return true;
       if (targetType === 'self') return !targetIsFoe && targetIdx === sourceIdx;
-      
+
       return true;
     }
-    const acrossFoeIdx = targetIdx;
-    const isAdjacent = targetIsFoe 
-      ? Math.abs(acrossFoeIdx - sourceIdx) <= 1 
+    // Showdown's adjacency aligns p1a (0) across from p2c (activeCount - 1).
+    const acrossFoeIdx = currentFormat.activeCount - 1 - targetIdx;
+    const isAdjacent = targetIsFoe
+      ? Math.abs(acrossFoeIdx - sourceIdx) <= 1
       : Math.abs(targetIdx - sourceIdx) === 1;
     if (targetType === 'adjacentAlly') return !targetIsFoe && isAdjacent;
     if (targetType === 'adjacentAllyOrSelf') return (!targetIsFoe && isAdjacent) || (targetIdx === sourceIdx);
     if (targetType === 'adjacentFoe') return targetIsFoe && isAdjacent;
     if (targetType === 'normal') return isAdjacent;
     if (targetType === 'any') return targetIdx !== sourceIdx || targetIsFoe;
-    
+
     // Triples multi-target logic
     if (targetType === 'allAdjacent') return targetIdx !== sourceIdx && isAdjacent;
     if (targetType === 'allAdjacentFoes') return targetIsFoe && isAdjacent;
@@ -817,7 +837,7 @@ export function BattleArenaScreen() {
     if (targetType === 'allySide') return !targetIsFoe && targetIdx !== sourceIdx;
     if (targetType === 'all') return true;
     if (targetType === 'self') return !targetIsFoe && targetIdx === sourceIdx;
-    
+
     return true;
   };
 
@@ -927,7 +947,7 @@ export function BattleArenaScreen() {
         const status = parts[3];
         const slotChar = target.charAt(2);
         const slotIdx = slotChar === 'a' ? 0 : slotChar === 'b' ? 1 : 2;
-        
+
         if (target.startsWith('p1')) {
           const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, slotIdx);
           if (localTeam[targetTeamIndex]) localTeam[targetTeamIndex].status = status;
@@ -941,7 +961,7 @@ export function BattleArenaScreen() {
         const target = parts[2];
         const slotChar = target.charAt(2);
         const slotIdx = slotChar === 'a' ? 0 : slotChar === 'b' ? 1 : 2;
-        
+
         if (target.startsWith('p1')) {
           const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, slotIdx);
           if (localTeam[targetTeamIndex]) localTeam[targetTeamIndex].status = 'none';
@@ -961,7 +981,7 @@ export function BattleArenaScreen() {
           const targetTeamIndex = findTeamIndexForBattleIdent(target, localTeam, nextRequest, slotIdx);
           if (localTeam[targetTeamIndex]) localTeam[targetTeamIndex].currentHp = 0;
           _setPlayerTeam([...localTeam]);
-          
+
           localPlayerSlots[slotIdx] = null;
           _setPlayerSlots([...localPlayerSlots]);
 
@@ -983,7 +1003,7 @@ export function BattleArenaScreen() {
         const hpStatus = parts[4];
         const speciesName = details.split(',')[0].trim();
         const { currentHp, maxHp, status } = parseCondition(hpStatus);
-        
+
         let gender = null;
         if (details.includes(', M')) gender = '♂';
         else if (details.includes(', F')) gender = '♀';
@@ -1010,6 +1030,26 @@ export function BattleArenaScreen() {
           _setPlayerSlots([...localPlayerSlots]);
           setPlayerAnim('');
           await new Promise(r => setTimeout(r, 450));
+        }
+      }
+      else if (type === 'swap') {
+        const source = parts[2];
+        const targetPos = parseInt(parts[3], 10);
+        const slotChar = source.charAt(2);
+        const sourceSlotIdx = slotChar === 'a' ? 0 : slotChar === 'b' ? 1 : 2;
+
+        if (source.startsWith('p1')) {
+          const temp = localPlayerSlots[sourceSlotIdx];
+          localPlayerSlots[sourceSlotIdx] = localPlayerSlots[targetPos];
+          localPlayerSlots[targetPos] = temp;
+          _setPlayerSlots([...localPlayerSlots]);
+          await new Promise(r => setTimeout(r, 400));
+        } else if (source.startsWith('p2')) {
+          const temp = localEnemySlots[sourceSlotIdx];
+          localEnemySlots[sourceSlotIdx] = localEnemySlots[targetPos];
+          localEnemySlots[targetPos] = temp;
+          _setEnemySlots([...localEnemySlots]);
+          await new Promise(r => setTimeout(r, 400));
         }
       }
       else if (type === '-transform') {
@@ -1077,10 +1117,13 @@ export function BattleArenaScreen() {
         _setChoosingSlotIdx(firstSwitchIdx !== -1 ? firstSwitchIdx : 0);
         setShowSwitch(true);
       } else {
+        const initialChoices = [];
         let firstSlotIdx = 0;
-        while (firstSlotIdx < currentFormat.activeCount && (!nextRequest?.active?.[firstSlotIdx] || (localPlayerSlots[firstSlotIdx] !== null && localTeam[localPlayerSlots[firstSlotIdx]]?.currentHp === 0))) {
+        while (firstSlotIdx < currentFormat.activeCount && (!nextRequest?.active?.[firstSlotIdx] || localPlayerSlots[firstSlotIdx] === null || localTeam[localPlayerSlots[firstSlotIdx]]?.currentHp === 0)) {
+          initialChoices.push('pass');
           firstSlotIdx++;
         }
+        _setTurnChoices(initialChoices);
         _setChoosingSlotIdx(firstSlotIdx < currentFormat.activeCount ? firstSlotIdx : 0);
       }
     }
@@ -1097,6 +1140,25 @@ export function BattleArenaScreen() {
       const nextChoices = [...turnChoicesRef.current];
       nextChoices[choosingSlotIdxRef.current] = choice;
 
+      const getAvailableSwitchCount = (currentChoices) => {
+        let count = 0;
+        for (let i = 0; i < playerTeamRef.current.length; i++) {
+          const p = playerTeamRef.current[i];
+          const reqMon = findRequestPokemonForTeamIndex(activeRequestRef.current, playerTeamRef.current, i);
+          const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
+          const isActive = reqMon ? reqMon.active : false;
+
+          const requestSlotIndex = getRequestSlotForTeamIndex(activeRequestRef.current, playerTeamRef.current, i);
+          const choiceStr = `switch ${requestSlotIndex + 1}`;
+          const isAlreadyChosen = currentChoices.includes(choiceStr);
+
+          if (!isFainted && !isActive && !isAlreadyChosen) {
+            count++;
+          }
+        }
+        return count;
+      };
+
       // Find next slot that needs a switch
       let nextSlotIdx = choosingSlotIdxRef.current + 1;
       while (nextSlotIdx < forceSwitchArray.length && !forceSwitchArray[nextSlotIdx]) {
@@ -1104,11 +1166,11 @@ export function BattleArenaScreen() {
         nextSlotIdx++;
       }
 
-      if (nextSlotIdx < forceSwitchArray.length) {
+      if (nextSlotIdx < forceSwitchArray.length && getAvailableSwitchCount(nextChoices) > 0) {
         _setChoosingSlotIdx(nextSlotIdx);
         _setTurnChoices(nextChoices);
       } else {
-        // Complete the switch choices array with passes if any empty
+        // Complete the switch choices array with passes if any empty or no switches left
         for (let k = 0; k < forceSwitchArray.length; k++) {
           if (nextChoices[k] === undefined) nextChoices[k] = 'pass';
         }
@@ -1122,7 +1184,6 @@ export function BattleArenaScreen() {
         } finally {
           setLoading(false);
           _setTurnChoices([]);
-          _setChoosingSlotIdx(0);
         }
       }
     } else {
@@ -1136,7 +1197,7 @@ export function BattleArenaScreen() {
 
       // Find the next slot that needs a choice
       let nextSlotIdx = choosingSlotIdxRef.current + 1;
-      while (nextSlotIdx < activeCount && (!currentActiveRequest?.active?.[nextSlotIdx] || (currentPlayerSlots[nextSlotIdx] !== null && currentPlayerTeam[currentPlayerSlots[nextSlotIdx]]?.currentHp === 0))) {
+      while (nextSlotIdx < activeCount && (!currentActiveRequest?.active?.[nextSlotIdx] || currentPlayerSlots[nextSlotIdx] === null || currentPlayerTeam[currentPlayerSlots[nextSlotIdx]]?.currentHp === 0)) {
         nextChoices.push('pass');
         nextSlotIdx++;
       }
@@ -1154,7 +1215,6 @@ export function BattleArenaScreen() {
         } finally {
           setLoading(false);
           _setTurnChoices([]);
-          _setChoosingSlotIdx(0);
         }
       }
     }
@@ -1162,7 +1222,7 @@ export function BattleArenaScreen() {
 
   const handlePlayerAttack = async (moveSlotIndex) => {
     if (!playerTurn || isActing || winner !== null) return;
-    setShowItems(false);
+    setBagOpen(false);
     setShowSwitch(false);
 
     const activePokeReq = activeRequest?.active?.[choosingSlotIdx];
@@ -1171,7 +1231,7 @@ export function BattleArenaScreen() {
 
     const targetType = reqMove.target;
     const needsTarget = currentFormat.activeCount >= 2 && ['normal', 'adjacentFoe', 'adjacentAlly', 'adjacentAllyOrSelf', 'any'].includes(targetType);
-    
+
     // Check if it's a multi-target or default-target move
     const multiTargetTypes = ['allAdjacent', 'allAdjacentFoes', 'all', 'foeSide', 'allySide', 'self', 'randomNormal'];
     const isMultiTarget = currentFormat.activeCount >= 2 && multiTargetTypes.includes(targetType);
@@ -1185,12 +1245,19 @@ export function BattleArenaScreen() {
 
   const handleSelectTarget = (targetIsFoe, targetIdx) => {
     if (!targetSelection) return;
+
+    if (targetSelection.itemType) {
+      if (targetIsFoe) return;
+      handleConfirmUseItem(targetSelection.itemType, targetIdx);
+      return;
+    }
+
     const { moveSlotIndex, targetType } = targetSelection;
 
     // Compute absolute targetLoc relative to side
-    // Showdown maps foe locations in reverse: targetLoc 1 is across from the last player slot.
-    const targetLoc = targetIsFoe 
-      ? (currentFormat.activeCount - targetIdx) 
+    // Showdown targetLoc maps directly to targetIdx + 1 for foes
+    const targetLoc = targetIsFoe
+      ? (targetIdx + 1)
       : -(targetIdx + 1);
 
     setTargetSelection(null);
@@ -1201,7 +1268,7 @@ export function BattleArenaScreen() {
     if (!playerTurn || isActing || winner !== null || playerSlots.includes(idx)) return;
     setShowSwitch(false);
 
-    const forceSwitchArray = activeRequest?.forceSwitch 
+    const forceSwitchArray = activeRequest?.forceSwitch
       ? (Array.isArray(activeRequest.forceSwitch) ? activeRequest.forceSwitch : [!!activeRequest.forceSwitch])
       : null;
 
@@ -1217,6 +1284,12 @@ export function BattleArenaScreen() {
 
   const handleUseItem = async (type) => {
     if (!playerTurn || isActing || winner !== null) return;
+
+    if (currentFormat.activeCount > 1) {
+      setTargetSelection({ itemType: type, isMultiTarget: false });
+      return;
+    }
+
     const choice = type === 'potion' ? 'potion' : 'fullrestore';
 
     setItems(prev => ({
@@ -1224,7 +1297,21 @@ export function BattleArenaScreen() {
       potions: type === 'potion' ? prev.potions - 1 : prev.potions,
       fullRestores: type === 'fullRestore' ? prev.fullRestores - 1 : prev.fullRestores
     }));
-    setShowItems(false);
+    setBagOpen(false);
+
+    proceedToNextSlot(choice);
+  };
+
+  const handleConfirmUseItem = (type, targetIdx) => {
+    const choice = type === 'potion' ? `potion ${targetIdx}` : `fullrestore ${targetIdx}`;
+
+    setItems(prev => ({
+      ...prev,
+      potions: type === 'potion' ? prev.potions - 1 : prev.potions,
+      fullRestores: type === 'fullRestore' ? prev.fullRestores - 1 : prev.fullRestores
+    }));
+    setBagOpen(false);
+    setTargetSelection(null);
 
     proceedToNextSlot(choice);
   };
@@ -1269,7 +1356,12 @@ export function BattleArenaScreen() {
           <p className="minigames-eyebrow">Battle Ground</p>
           <h1 className="minigames-title">Pokémon Battle Arena</h1>
         </div>
-        <div className="minigames-header-stats">
+        <div className="minigames-header-stats" style={{ display: 'flex', gap: '12px' }}>
+          {stage !== 'draft' && (
+            <button className="btn-back" style={{ color: 'var(--px-red)', borderColor: 'var(--px-red)' }} id="flee-arena-btn" onClick={() => setStage('draft')}>
+              🏳️ Flee Battle
+            </button>
+          )}
           <button className="btn-back" id="back-to-hub-btn" onClick={() => goTo(SCREENS.minigameHub)}>
             <ArrowLeft size={14} /> Back to Hub
           </button>
@@ -1318,7 +1410,10 @@ export function BattleArenaScreen() {
               <BattleDropdown
                 id="format-dropdown"
                 label="Battle Format"
-                options={BATTLE_FORMATS.map(f => ({ ...f, desc: f.description }))}
+                options={BATTLE_FORMATS.filter(f => {
+                  if (difficulty === 'boss' && (f.id === 'doubles' || f.id === 'triples')) return false;
+                  return true;
+                }).map(f => ({ ...f, desc: f.description }))}
                 value={battleFormat}
                 onChange={(id) => { setBattleFormat(id); setSelectedTeam([]); }}
               />
@@ -1389,10 +1484,11 @@ export function BattleArenaScreen() {
 
               {/* Enemy Side */}
               <div className="stage-pokemon-row" style={{ justifyContent: 'flex-end', gap: '20px' }}>
-                {Array.from({ length: currentFormat.activeCount }).map((_, slotIdx) => {
+                {Array.from({ length: currentFormat.activeCount }).map((_, i) => {
+                  const slotIdx = currentFormat.activeCount - 1 - i;
                   const activeEnemy = enemySlots[slotIdx];
                   if (!activeEnemy) return <div key={slotIdx} className="stage-pokemon-container empty" style={{ width: `${90 / currentFormat.activeCount}%` }} />;
-                  
+
                   const isFainted = activeEnemy.currentHp <= 0;
                   if (isFainted) return <div key={slotIdx} className="stage-pokemon-container empty" style={{ width: `${90 / currentFormat.activeCount}%` }} />;
 
@@ -1452,7 +1548,7 @@ export function BattleArenaScreen() {
                   if (teamIdx === null || teamIdx === undefined) return <div key={`p-${slotIdx}`} className="stage-pokemon-container empty" style={{ width: `${90 / currentFormat.activeCount}%` }} />;
                   const activePoke = playerTeam[teamIdx];
                   if (!activePoke) return <div key={`p-${slotIdx}`} className="stage-pokemon-container empty" style={{ width: `${90 / currentFormat.activeCount}%` }} />;
-                  
+
                   const isFainted = activePoke.currentHp <= 0;
                   if (isFainted) return <div key={`p-${slotIdx}`} className="stage-pokemon-container empty" style={{ width: `${90 / currentFormat.activeCount}%` }} />;
 
@@ -1548,7 +1644,7 @@ export function BattleArenaScreen() {
                           className="bl-target-card-sprite"
                         />
                         <div className="bl-target-card-info">
-                          <span className="bl-target-card-name">{foe.transformData?.displayName || foe.displayName}</span>
+                          <span className="bl-target-card-name">{foe.transformData?.displayName || foe.displayName} <small style={{ opacity: 0.8, fontSize: '0.8em' }}>Lv. {foe.level || 50}</small></span>
                           <div className="bl-target-card-hpbar-outer">
                             <div
                               className={`bl-target-card-hpbar-inner ${hpPct > 0.5 ? 'high' : hpPct > 0.2 ? 'medium' : 'low'}`}
@@ -1567,7 +1663,7 @@ export function BattleArenaScreen() {
                     if (teamIdx === null || teamIdx === undefined) return null;
                     const ally = playerTeam[teamIdx];
                     if (!ally) return null;
-                    const canTarget = isValidTarget(choosingSlotIdx, targetSelection.targetType, false, slotIdx);
+                    const canTarget = targetSelection.itemType ? true : isValidTarget(choosingSlotIdx, targetSelection.targetType, false, slotIdx);
                     const isFainted = ally.currentHp <= 0;
                     const isSelf = slotIdx === choosingSlotIdx;
                     if (isFainted || !canTarget) return null;
@@ -1588,7 +1684,7 @@ export function BattleArenaScreen() {
                           style={{ transform: 'scaleX(-1)' }}
                         />
                         <div className="bl-target-card-info">
-                          <span className="bl-target-card-name">{ally.transformData?.displayName || ally.displayName}</span>
+                          <span className="bl-target-card-name">{ally.transformData?.displayName || ally.displayName} <small style={{ opacity: 0.8, fontSize: '0.8em' }}>Lv. {ally.level || 50}</small></span>
                           <div className="bl-target-card-hpbar-outer">
                             <div
                               className={`bl-target-card-hpbar-inner ${hpPct > 0.5 ? 'high' : hpPct > 0.2 ? 'medium' : 'low'}`}
@@ -1601,7 +1697,7 @@ export function BattleArenaScreen() {
                     );
                   })}
                 </div>
-                
+
                 {targetSelection.isMultiTarget && (
                   <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}>
                     <button
@@ -1641,35 +1737,40 @@ export function BattleArenaScreen() {
                 {switchTimer !== null && <span className="bl-timer-badge">Auto {switchTimer}s</span>}
               </div>
               <div className="bl-swap-list" style={{ overflowY: 'auto' }}>
-              {playerTeam.map((p, i) => {
-                const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
-                const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
-                const isActive = reqMon ? reqMon.active : false;
-                const hpPct = p.currentHp / p.maxHp;
-                return (
-                  <button
-                    key={p.name}
-                    id={`switch-poke-btn-${i}`}
-                    className={`bl-swap-btn ${playerSlots.includes(i) ? 'active' : ''} ${isFainted ? 'fainted' : ''}`}
-                    disabled={isFainted || isActive}
-                    onClick={() => handleSwapActive(i)}
-                  >
-                    <div className={`bl-swap-orb ${isFainted ? 'fainted' : playerSlots.includes(i) ? 'active' : ''}`} />
-                    <span className="bl-swap-info">
-                      <span className="bl-swap-name">{p.displayName}</span>
-                      <span className="bl-swap-bar-row">
-                        <span className="bl-swap-bar-outer">
-                          <span
-                            className={`bl-swap-bar-inner ${hpPct > 0.5 ? 'high' : hpPct > 0.2 ? 'medium' : 'low'}`}
-                            style={{ width: `${hpPct * 100}%` }}
-                          />
+                {playerTeam.map((p, i) => {
+                  const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
+                  const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
+                  const isActive = reqMon ? reqMon.active : false;
+                  const hpPct = p.currentHp / p.maxHp;
+
+                  const requestSlotIndex = getRequestSlotForTeamIndex(activeRequest, playerTeam, i);
+                  const choiceStr = `switch ${requestSlotIndex + 1}`;
+                  const isAlreadyChosen = turnChoices.includes(choiceStr);
+
+                  return (
+                    <button
+                      key={p.name}
+                      id={`switch-poke-btn-${i}`}
+                      className={`bl-swap-btn ${playerSlots.includes(i) ? 'active' : ''} ${isFainted ? 'fainted' : ''}`}
+                      disabled={isFainted || isActive || isAlreadyChosen}
+                      onClick={() => handleSwapActive(i)}
+                    >
+                      <div className={`bl-swap-orb ${isFainted ? 'fainted' : playerSlots.includes(i) ? 'active' : ''}`} />
+                      <span className="bl-swap-info">
+                        <span className="bl-swap-name">{p.displayName}</span>
+                        <span className="bl-swap-bar-row">
+                          <span className="bl-swap-bar-outer">
+                            <span
+                              className={`bl-swap-bar-inner ${hpPct > 0.5 ? 'high' : hpPct > 0.2 ? 'medium' : 'low'}`}
+                              style={{ width: `${hpPct * 100}%` }}
+                            />
+                          </span>
+                          <span className="bl-swap-hp">{p.currentHp} HP</span>
                         </span>
-                        <span className="bl-swap-hp">{p.currentHp} HP</span>
                       </span>
-                    </span>
-                  </button>
-                );
-              })}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -1678,10 +1779,17 @@ export function BattleArenaScreen() {
               <div className="bl-moves-panel" id="battle-controls-hub">
                 <div className="bl-moves-header">
                   {targetSelection ? (
-                    <span className="bl-target-prompt animate-pulse">🎯 Select a target on the field!</span>
+                    targetSelection.itemType ? (
+                      <span className="bl-target-prompt animate-pulse">🎒 Select an ally to use {targetSelection.itemType === 'potion' ? 'Potion' : 'Full Restore'} on!</span>
+                    ) : targetSelection.isMultiTarget ? (
+                      <span className="bl-target-prompt animate-pulse">🎯 Target confirmed. Waiting for dispatch...</span>
+                    ) : (
+                      <span className="bl-target-prompt animate-pulse">🎯 Select a target on the field!</span>
+                    )
                   ) : (
                     <span className="bl-moves-label">
-                      Choose move for <strong style={{ color: 'var(--px-sky)' }}>{playerTeam[playerSlots[choosingSlotIdx]]?.displayName}</strong>
+                      {showSwitch ? 'Choose replacement for ' : 'Choose move for '}
+                      <strong style={{ color: 'var(--px-sky)' }}>{playerTeam[playerSlots[choosingSlotIdx]]?.displayName || `Slot ${choosingSlotIdx + 1}`}</strong>
                       <span style={{ opacity: 0.5, fontWeight: 400 }}> · Slot {choosingSlotIdx + 1}</span>
                     </span>
                   )}
@@ -1699,12 +1807,12 @@ export function BattleArenaScreen() {
                       >
                         <span className="move-btn-keybind">Slot {i + 1}</span>
                         <span className="move-btn-name">{m.move.replace(/-/g, ' ')}</span>
-                        <span className="move-btn-type" style={{ background: TYPE_COLORS[m.type] || '#888', color: '#fff' }}>
+                        <span className="move-btn-type" style={{ background: TYPE_COLORS[m.type?.toLowerCase()] || '#888', color: '#fff' }}>
                           {m.type.toUpperCase()} · PWR {m.power}
                         </span>
                       </button>
                     ))}
-                    {battleFormat === 'triples' && (choosingSlotIdx === 0 || choosingSlotIdx === 2) && (
+                    {battleFormat === 'triples' && !showSwitch && (choosingSlotIdx === 0 || choosingSlotIdx === 2) && (
                       <button
                         id="move-btn-shift"
                         className="btn-action-move"
@@ -1723,66 +1831,75 @@ export function BattleArenaScreen() {
             )}
           </div>
 
-          {/* ── Column 4: Trainer + Actions ── */}
+          {/* ── Column 4: Trainer + Actions / Bag ── */}
           <div className="bl-trainer-col" id="trainer-col">
             {winner === null ? (
-              <>
-                {/* Trainer image */}
-                <div className="bl-trainer-card">
-                  <img src="/assets/battleassets/red.png" alt="Trainer Red" className="bl-trainer-img" />
-
-                  {/* Pokéball row — one per team member */}
-                  <div className="bl-pokeball-row">
-                    {playerTeam.map((p, i) => {
-                      const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
-                      const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
-                      const isActive = playerSlots.includes(i);
-                      return (
-                        <div
-                          key={i}
-                          className={`bl-pokeball-icon ${isFainted ? 'fainted' : isActive ? 'active' : 'benched'}`}
-                          title={`${p.displayName}${isFainted ? ' (Fainted)' : isActive ? ' (Active)' : ''}`}
-                        />
-                      );
-                    })}
+              bagOpen ? (
+                <div className="bl-bag-ui" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                    <span style={{ fontSize: '48px', display: 'block', margin: '10px 0' }}>🎒</span>
+                    <h3 style={{ margin: 0, color: 'var(--px-text)', fontSize: '18px' }}>Items Bag</h3>
+                    <p style={{ margin: '4px 0 0 0', color: 'var(--px-text-muted)', fontSize: '12px' }}>Select an item to use.</p>
                   </div>
+                  <div className="bl-items-panel" id="items-panel" style={{ background: 'transparent', border: 'none', padding: 0 }}>
+                    <button className="bl-item-btn" id="potion-item-btn" disabled={items.potions <= 0} onClick={() => handleUseItem('potion')} style={{ marginBottom: '8px' }}>
+                      🧪 Potion ×{items.potions} <span className="bl-item-hint">+50 HP</span>
+                    </button>
+                    <button className="bl-item-btn" id="fullrestore-item-btn" disabled={items.fullRestores <= 0} onClick={() => handleUseItem('fullRestore')} style={{ marginBottom: '16px' }}>
+                      ✨ Full Restore ×{items.fullRestores} <span className="bl-item-hint">Full HP</span>
+                    </button>
+                  </div>
+                  <div style={{ flex: 1 }} />
+                  <button className="btn-back" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setBagOpen(false); setTargetSelection(null); }}>
+                    Cancel
+                  </button>
                 </div>
+              ) : (
+                <>
+                  {/* Trainer image */}
+                  <div className="bl-trainer-card">
+                    <img src="/assets/battleassets/red.png" alt="Trainer Red" className="bl-trainer-img" />
 
-                {/* Format guide for doubles/triples */}
-                {currentFormat?.guide && (
-                  <div className="bl-format-guide">
-                    <span className="bl-format-guide-title">{currentFormat.icon} {currentFormat.guide.title}</span>
-                    <ul className="bl-format-guide-tips">
-                      {currentFormat.guide.tips.slice(0, 3).map((tip, i) => (
-                        <li key={i}>{tip}</li>
-                      ))}
-                    </ul>
+                    {/* Pokéball row — one per team member */}
+                    <div className="bl-pokeball-row">
+                      {playerTeam.map((p, i) => {
+                        const reqMon = findRequestPokemonForTeamIndex(activeRequest, playerTeam, i);
+                        const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
+                        const isActive = playerSlots.includes(i);
+                        return (
+                          <div
+                            key={i}
+                            className={`bl-pokeball-icon ${isFainted ? 'fainted' : isActive ? 'active' : 'benched'}`}
+                            title={`${p.displayName}${isFainted ? ' (Fainted)' : isActive ? ' (Active)' : ''}`}
+                          />
+                        );
+                      })}
+                    </div>
                   </div>
-                )}
 
-                {/* Action buttons */}
-                <div className="bl-action-buttons">
-                  <button className="bl-action-btn calc" id="dmg-calc-toggle" onClick={() => setShowCalc(true)}>
-                    📊 Damage Calculator
-                  </button>
-                  <button className="bl-action-btn items" id="items-action-btn" onClick={() => setShowItems(p => !p)}>
-                    🧪 Items ({items.potions + items.fullRestores} left)
-                  </button>
-                  {showItems && (
-                    <div className="bl-items-panel" id="items-panel">
-                      <button className="bl-item-btn" id="potion-item-btn" disabled={items.potions <= 0} onClick={() => handleUseItem('potion')}>
-                        🧪 Potion ×{items.potions} <span className="bl-item-hint">+50 HP</span>
-                      </button>
-                      <button className="bl-item-btn" id="fullrestore-item-btn" disabled={items.fullRestores <= 0} onClick={() => handleUseItem('fullRestore')}>
-                        ✨ Full Restore ×{items.fullRestores} <span className="bl-item-hint">Full HP</span>
-                      </button>
+                  {/* Format guide for doubles/triples */}
+                  {currentFormat?.guide && (
+                    <div className="bl-format-guide">
+                      <span className="bl-format-guide-title">{currentFormat.icon} {currentFormat.guide.title}</span>
+                      <ul className="bl-format-guide-tips">
+                        {currentFormat.guide.tips.slice(0, 3).map((tip, i) => (
+                          <li key={i}>{tip}</li>
+                        ))}
+                      </ul>
                     </div>
                   )}
-                  <button className="bl-action-btn flee" id="flee-arena-btn" onClick={() => setStage('draft')}>
-                    🏳️ Flee Battle
-                  </button>
-                </div>
-              </>
+
+                  {/* Action buttons */}
+                  <div className="bl-action-buttons">
+                    <button className="bl-action-btn calc" id="dmg-calc-toggle" onClick={() => setShowCalc(true)}>
+                      📊 Damage Calculator
+                    </button>
+                    <button className="bl-action-btn items" id="items-action-btn" onClick={() => setBagOpen(true)}>
+                      🎒 Items ({items.potions + items.fullRestores} left)
+                    </button>
+                  </div>
+                </>
+              )
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '16px', alignItems: 'center' }}>
                 <img src="/assets/battleassets/red.png" alt="Trainer Red" className="bl-trainer-img" style={{ opacity: winner === 'player' ? 1 : 0.35 }} />

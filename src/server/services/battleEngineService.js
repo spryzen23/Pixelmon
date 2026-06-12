@@ -34,10 +34,9 @@ const WEATHER_IDS = {
 const sessionCache = new NodeCache({ stdTTL: 3600, checkperiod: 600 });
 
 function cleanLogs(logsArray) {
-  const raw = logsArray.join(',');
-  return raw
-    .split(/,(?=\|)/)
-    .map((line) => line.trim())
+  return logsArray
+    .flat(Infinity)
+    .map((line) => typeof line === 'string' ? line.trim() : String(line).trim())
     .filter((line) => line.startsWith('|'));
 }
 
@@ -248,12 +247,6 @@ function buildSessionResponse(session, battle, collector) {
   return response;
 }
 
-function getFirstValidMove(request) {
-  const activePoke = request?.active?.[0];
-  const moveIndex = activePoke?.moves?.findIndex((move) => !move.disabled) ?? -1;
-  return moveIndex >= 0 ? `move ${moveIndex + 1}` : 'default';
-}
-
 function getAiChoice(request) {
   if (!request || request.wait) return null;
   
@@ -293,19 +286,28 @@ function applyAppAction(battle, sideId, action) {
 
   for (let i = 0; i < choiceStrings.length; i++) {
     const choiceStr = choiceStrings[i].trim();
-    if (choiceStr === 'potion' || choiceStr === 'fullrestore') {
+    if (choiceStr.startsWith('potion') || choiceStr.startsWith('fullrestore')) {
+      const parts = choiceStr.split(' ');
+      const baseItem = parts[0];
+      const targetIdx = parts.length > 1 ? parseInt(parts[1], 10) : i;
+
       const side = battle.getSide(sideId);
+      const targetMon = side?.active?.[targetIdx];
       const activeMon = side?.active?.[i];
-      if (activeMon && activeMon.hp > 0) {
-        const oldHp = activeMon.hp;
-        if (choiceStr === 'potion') {
-          activeMon.sethp(Math.min(activeMon.maxhp, oldHp + 50));
-          if (activeMon.hp > oldHp) battle.add('-heal', activeMon, activeMon.getHealth, '[from] item: Potion');
+
+      if (targetMon && targetMon.hp > 0) {
+        const oldHp = targetMon.hp;
+        if (baseItem === 'potion') {
+          targetMon.sethp(Math.min(targetMon.maxhp, oldHp + 50));
+          if (targetMon.hp > oldHp) battle.add('-heal', targetMon, targetMon.getHealth, '[from] item: Potion');
         } else {
-          activeMon.sethp(activeMon.maxhp);
-          activeMon.cureStatus();
-          if (activeMon.hp > oldHp) battle.add('-heal', activeMon, activeMon.getHealth, '[from] item: Full Restore');
+          targetMon.sethp(targetMon.maxhp);
+          targetMon.cureStatus();
+          if (targetMon.hp > oldHp) battle.add('-heal', targetMon, targetMon.getHealth, '[from] item: Full Restore');
         }
+      }
+
+      if (activeMon && activeMon.hp > 0) {
         activeMon.addVolatile('flinch');
       }
 

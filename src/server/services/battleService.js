@@ -2,12 +2,12 @@ import { createBattleEngineSession, submitBattleEngineChoice } from './battleEng
 import { Dex } from './battleEngineCatalog.js';
 
 const ENEMY_SETS = {
-  rattata: { species: 'Rattata', level: 30, moves: ['Tackle', 'Quick Attack', 'Bite', 'Tail Whip'] },
-  pidgey: { species: 'Pidgey', level: 30, moves: ['Tackle', 'Gust', 'Quick Attack', 'Sand Attack'] },
-  zubat: { species: 'Zubat', level: 30, moves: ['Bite', 'Wing Attack', 'Confuse Ray', 'Supersonic'] },
-  geodude: { species: 'Geodude', level: 30, moves: ['Tackle', 'Rock Throw', 'Mud Slap', 'Defense Curl'] },
-  ekans: { species: 'Ekans', level: 30, moves: ['Bite', 'Poison Sting', 'Wrap', 'Glare'] },
-  sandshrew: { species: 'Sandshrew', level: 30, moves: ['Scratch', 'Sand Tomb', 'Poison Sting', 'Defense Curl'] },
+  rattata: { species: 'Rattata', level: 50, moves: ['Tackle', 'Quick Attack', 'Bite', 'Tail Whip'] },
+  pidgey: { species: 'Pidgey', level: 50, moves: ['Tackle', 'Gust', 'Quick Attack', 'Sand Attack'] },
+  zubat: { species: 'Zubat', level: 50, moves: ['Bite', 'Wing Attack', 'Confuse Ray', 'Supersonic'] },
+  geodude: { species: 'Geodude', level: 50, moves: ['Tackle', 'Rock Throw', 'Mud Slap', 'Defense Curl'] },
+  ekans: { species: 'Ekans', level: 50, moves: ['Bite', 'Poison Sting', 'Wrap', 'Glare'] },
+  sandshrew: { species: 'Sandshrew', level: 50, moves: ['Scratch', 'Sand Tomb', 'Poison Sting', 'Defense Curl'] },
   charizard: { species: 'Charizard', level: 50, moves: ['Flamethrower', 'Air Slash', 'Dragon Pulse', 'Slash'] },
   gengar: { species: 'Gengar', level: 50, moves: ['Shadow Ball', 'Sludge Bomb', 'Dazzling Gleam', 'Hypnosis'] },
   garchomp: { species: 'Garchomp', level: 50, moves: ['Earthquake', 'Dragon Claw', 'Rock Slide', 'Swords Dance'] },
@@ -38,7 +38,7 @@ const TRAINER_PARTICIPANTS = [
         id: 'red-pikachu',
         species: 'Pikachu',
         displayName: 'Pikachu',
-        level: 81,
+        level: 50,
         currentHp: 180,
         maxHp: 180,
         stats: { hp: 180, atk: 120, def: 95, spa: 115, spd: 110, spe: 185 },
@@ -51,7 +51,7 @@ const TRAINER_PARTICIPANTS = [
         id: 'red-snorlax',
         species: 'Snorlax',
         displayName: 'Snorlax',
-        level: 75,
+        level: 50,
         currentHp: 350,
         maxHp: 350,
         stats: { hp: 350, atk: 195, def: 125, spa: 125, spd: 195, spe: 70 },
@@ -64,7 +64,7 @@ const TRAINER_PARTICIPANTS = [
         id: 'red-charizard',
         species: 'Charizard',
         displayName: 'Charizard',
-        level: 77,
+        level: 50,
         currentHp: 235,
         maxHp: 235,
         stats: { hp: 235, atk: 160, def: 150, spa: 195, spd: 160, spe: 185 },
@@ -84,7 +84,7 @@ const TRAINER_PARTICIPANTS = [
         id: 'cynthia-spiritomb',
         species: 'Spiritomb',
         displayName: 'Spiritomb',
-        level: 61,
+        level: 50,
         currentHp: 155,
         maxHp: 155,
         stats: { hp: 155, atk: 135, def: 155, spa: 135, spd: 155, spe: 65 },
@@ -97,7 +97,7 @@ const TRAINER_PARTICIPANTS = [
         id: 'cynthia-lucario',
         species: 'Lucario',
         displayName: 'Lucario',
-        level: 63,
+        level: 50,
         currentHp: 180,
         maxHp: 180,
         stats: { hp: 180, atk: 165, def: 115, spa: 170, spd: 115, spe: 140 },
@@ -110,7 +110,7 @@ const TRAINER_PARTICIPANTS = [
         id: 'cynthia-garchomp',
         species: 'Garchomp',
         displayName: 'Garchomp',
-        level: 66,
+        level: 50,
         currentHp: 240,
         maxHp: 240,
         stats: { hp: 240, atk: 200, def: 155, spa: 135, spd: 140, spe: 165 },
@@ -130,7 +130,7 @@ const TRAINER_PARTICIPANTS = [
         id: 'blue-pidgeot',
         species: 'Pidgeot',
         displayName: 'Pidgeot',
-        level: 61,
+        level: 50,
         currentHp: 195,
         maxHp: 195,
         stats: { hp: 195, atk: 125, def: 115, spa: 110, spd: 110, spe: 150 },
@@ -143,7 +143,7 @@ const TRAINER_PARTICIPANTS = [
         id: 'blue-alakazam',
         species: 'Alakazam',
         displayName: 'Alakazam',
-        level: 59,
+        level: 50,
         currentHp: 150,
         maxHp: 150,
         stats: { hp: 150, atk: 80, def: 75, spa: 185, spd: 135, spe: 165 },
@@ -156,7 +156,7 @@ const TRAINER_PARTICIPANTS = [
         id: 'blue-blastoise',
         species: 'Blastoise',
         displayName: 'Blastoise',
-        level: 65,
+        level: 50,
         currentHp: 205,
         maxHp: 205,
         stats: { hp: 205, atk: 135, def: 155, spa: 135, spd: 160, spe: 125 },
@@ -176,7 +176,7 @@ const TRAINER_PARTICIPANTS = [
         id: 'ash-pikachu',
         species: 'Pikachu',
         displayName: 'Pikachu',
-        level: 80,
+        level: 50,
         currentHp: 175,
         maxHp: 175,
         stats: { hp: 175, atk: 115, def: 90, spa: 110, spd: 105, spe: 180 },
@@ -189,7 +189,7 @@ const TRAINER_PARTICIPANTS = [
         id: 'ash-greninja',
         species: 'Greninja',
         displayName: 'Greninja',
-        level: 75,
+        level: 50,
         currentHp: 220,
         maxHp: 220,
         stats: { hp: 220, atk: 165, def: 125, spa: 180, spd: 130, spe: 210 },
@@ -202,13 +202,13 @@ const TRAINER_PARTICIPANTS = [
         id: 'ash-lucario',
         species: 'Lucario',
         displayName: 'Lucario',
-        level: 75,
-        currentHp: 215,
-        maxHp: 215,
-        stats: { hp: 215, atk: 195, def: 135, spa: 200, spd: 135, spe: 165 },
-        moves: ['Aura Sphere', 'Bullet Punch', 'Reversal', 'Double Team'],
+        level: 50,
+        currentHp: 190,
+        maxHp: 190,
+        stats: { hp: 190, atk: 180, def: 120, spa: 160, spd: 110, spe: 155 },
+        moves: ['Aura Sphere', 'Bullet Punch', 'Double Team', 'Steel Beam'],
         ability: 'Inner Focus',
-        item: 'Lucarionite',
+        item: '',
         status: 'none',
       },
     ],
@@ -316,13 +316,15 @@ function getMinActiveSlots(formatId) {
   return 1;
 }
 
-function getEnemyTeam(difficulty, formatId) {
+function getEnemyTeam(difficulty, formatId, battleFormat) {
   const pool = DIFFICULTY_POOLS[difficulty] || DIFFICULTY_POOLS.boss;
 
   let teamSize = 3;
-  if (formatId === 'gen7doublescustomgame') {
+  if (battleFormat === 'singles6v6') {
     teamSize = 6;
-  } else if (formatId === 'gen6triplescustomgame') {
+  } else if (formatId === 'gen7doublescustomgame' || battleFormat === 'doubles') {
+    teamSize = 6;
+  } else if (formatId === 'gen6triplescustomgame' || battleFormat === 'triples') {
     teamSize = 6;
   }
 
@@ -336,11 +338,12 @@ function getEnemyTeam(difficulty, formatId) {
   return team;
 }
 
-function getTrainerParticipant(formatId) {
+function getTrainerParticipant(formatId, battleFormat) {
   const trainer = TRAINER_PARTICIPANTS[Math.floor(Math.random() * TRAINER_PARTICIPANTS.length)];
   let teamSize = 3;
-  if (formatId === 'gen7doublescustomgame') teamSize = 6;
-  if (formatId === 'gen6triplescustomgame') teamSize = 6;
+  if (battleFormat === 'singles6v6') teamSize = 6;
+  if (formatId === 'gen7doublescustomgame' || battleFormat === 'doubles') teamSize = 6;
+  if (formatId === 'gen6triplescustomgame' || battleFormat === 'triples') teamSize = 6;
 
   let team = trainer.team.map((pokemon) => ({ ...pokemon, stats: { ...pokemon.stats } }));
 
@@ -361,13 +364,13 @@ function getTrainerParticipant(formatId) {
   };
 }
 
-function getEnemyParticipant(difficulty, formatId) {
-  if (difficulty === 'trainer3v3') return getTrainerParticipant(formatId);
+function getEnemyParticipant(difficulty, formatId, battleFormat) {
+  if (difficulty === 'trainer3v3') return getTrainerParticipant(formatId, battleFormat);
   return {
     side: 'p2',
     user: { id: 'arena-ai', name: 'AI', type: 'npc' },
     control: 'ai',
-    team: getEnemyTeam(difficulty, formatId),
+    team: getEnemyTeam(difficulty, formatId, battleFormat),
   };
 }
 
@@ -384,9 +387,8 @@ function normalizeEngineError(error) {
   return error;
 }
 
-export function startNewBattle({ team, difficulty, weather, formatId }) {
+export function startNewBattle({ team, difficulty, weather, formatId, battleFormat }) {
   const resolvedFormatId = formatId || 'gen7customgame';
-  const minSlots = getMinActiveSlots(resolvedFormatId);
   const difficultyKey = difficulty || 'wild';
 
   // Map player's team to battle-ready objects
@@ -402,7 +404,7 @@ export function startNewBattle({ team, difficulty, weather, formatId }) {
         control: 'human',
         team: playerTeam,
       },
-      getEnemyParticipant(difficultyKey, resolvedFormatId),
+      getEnemyParticipant(difficultyKey, resolvedFormatId, battleFormat),
     ],
   });
 
