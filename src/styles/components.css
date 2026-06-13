@@ -1,0 +1,422 @@
+/* Screen header / footer */
+.px-screen-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.px-screen-header-text {
+  min-width: 0;
+}
+
+.px-screen-eyebrow {
+  margin: 0 0 4px;
+  font-family: var(--px-font-display);
+  font-size: var(--px-text-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--px-accent);
+}
+
+.px-screen-title {
+  margin: 0;
+  font-family: var(--px-font-display);
+  font-size: var(--px-title);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--px-text);
+}
+
+.px-screen-subtitle {
+  margin: 4px 0 0;
+  font-size: var(--px-text-sm);
+  color: var(--px-text-muted);
+}
+
+.px-screen-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.px-screen-footer {
+  justify-content: center;
+  margin-top: 0;
+}
+
+/* TabBar */
+.px-tab-bar {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--px-border);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.px-tab-btn {
+  flex: 1;
+  padding: 8px 16px;
+  font-size: var(--px-text-sm);
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--px-border);
+  border-radius: var(--px-radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.px-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--px-text);
+}
+
+.px-tab-btn.active {
+  background: var(--px-accent);
+  color: #0d1626;
+  border-color: var(--px-accent);
+  box-shadow: var(--px-glow);
+}
+
+.px-tab-btn-underline {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 700;
+  font-size: var(--px-text-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.px-tab-btn-underline.active {
+  border-bottom-color: var(--px-accent);
+  color: var(--px-text);
+}
+
+/* Badge */
+.px-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--px-text-xs);
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--px-border);
+  color: var(--px-text-muted);
+}
+
+.px-badge.accent {
+  border-color: rgba(255, 212, 63, 0.35);
+  color: var(--px-accent);
+  background: rgba(255, 212, 63, 0.08);
+}
+
+.px-badge.success {
+  border-color: rgba(28, 212, 93, 0.35);
+  color: var(--px-success);
+  background: rgba(28, 212, 93, 0.1);
+}
+
+.px-badge.danger {
+  border-color: rgba(248, 79, 79, 0.35);
+  color: var(--px-danger);
+}
+
+.px-coin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px 5px 10px;
+  border-radius: 24px;
+  font-weight: 800;
+  font-size: var(--px-text-md);
+  color: var(--px-accent);
+  background: rgba(255, 212, 63, 0.06);
+  border: 1px solid rgba(255, 212, 63, 0.18);
+}
+
+/* Pagination */
+.px-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.px-pagination-label {
+  font-size: var(--px-text-sm);
+  color: var(--px-text-muted);
+  font-weight: 600;
+}
+
+/* Wizard */
+.px-wizard-stepper {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.px-wizard-step {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 0.3s ease;
+}
+
+.px-wizard-step.done {
+  background: var(--px-accent-neon);
+}
+
+.px-wizard-step.active {
+  background: var(--px-accent);
+  box-shadow: var(--px-glow);
+}
+
+.px-wizard-label {
+  font-size: var(--px-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--px-text-muted);
+  margin-bottom: 8px;
+}
+
+/* Modal */
+.px-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.px-modal-panel {
+  background: var(--px-panel-solid);
+  border: 1px solid var(--px-border);
+  border-radius: var(--px-radius);
+  padding: 20px 24px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: var(--px-shadow);
+}
+
+.px-modal-title {
+  margin: 0 0 12px;
+  font-family: var(--px-font-display);
+  font-size: var(--px-text-lg);
+  font-weight: 800;
+}
+
+.px-modal-body {
+  font-size: var(--px-text-sm);
+  color: var(--px-text-muted);
+  line-height: 1.5;
+}
+
+.px-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* Empty state */
+.px-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px 16px;
+  border: 2px dashed rgba(255, 212, 63, 0.15);
+  border-radius: var(--px-radius);
+  background: rgba(255, 212, 63, 0.02);
+}
+
+.px-empty-state-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.px-empty-state p {
+  margin: 0 0 12px;
+  font-size: var(--px-text-sm);
+  opacity: 0.7;
+  max-width: 260px;
+}
+
+/* Button variants */
+.btn.ghost {
+  background: transparent;
+  border-color: var(--px-border);
+}
+
+.btn.ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.btn.danger {
+  background: rgba(248, 79, 79, 0.12);
+  border-color: rgba(248, 79, 79, 0.35);
+  color: var(--px-danger);
+}
+
+.btn.danger:hover:not(:disabled) {
+  background: rgba(248, 79, 79, 0.22);
+}
+
+.btn.sm {
+  padding: 0.45rem 0.9rem;
+  font-size: var(--px-text-sm);
+}
+
+/* Checkbox */
+.px-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: var(--px-text-sm);
+}
+
+.px-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--px-accent);
+}
+
+/* Progress bar unified */
+.px-progress {
+  display: grid;
+  gap: 6px;
+}
+
+.px-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--px-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--px-text-muted);
+}
+
+.px-progress-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.px-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--px-accent), var(--px-accent-warm));
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.px-progress-fill.neon {
+  background: linear-gradient(90deg, var(--px-accent-neon), #3fe7ff);
+}
+
+.px-progress-fill.indeterminate {
+  width: 40% !important;
+  animation: pxProgressIndeterminate 1.2s ease-in-out infinite;
+}
+
+@keyframes pxProgressIndeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(350%);
+  }
+}
+
+/* Toast */
+.px-toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.px-toast {
+  padding: 10px 16px;
+  background: var(--px-panel-solid);
+  border: 1px solid var(--px-border);
+  border-radius: var(--px-radius-sm);
+  font-size: var(--px-text-sm);
+  font-weight: 600;
+  box-shadow: var(--px-shadow);
+  animation: pxToastIn 0.25s ease;
+}
+
+.px-toast.error {
+  border-color: rgba(248, 79, 79, 0.4);
+  color: var(--px-danger);
+}
+
+@keyframes pxToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Search field */
+.px-search-field {
+  position: relative;
+  width: 100%;
+}
+
+.px-search-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: var(--px-panel-solid);
+  border: 1px solid var(--px-border);
+  border-radius: var(--px-radius-sm);
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  box-shadow: var(--px-shadow);
+}
+
+.px-search-dropdown li {
+  padding: 8px 12px;
+  font-size: var(--px-text-sm);
+  cursor: pointer;
+}
+
+.px-search-dropdown li:hover {
+  background: rgba(255, 212, 63, 0.08);
+  color: var(--px-accent);
+}

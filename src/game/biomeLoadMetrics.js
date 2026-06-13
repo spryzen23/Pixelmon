@@ -47,6 +47,17 @@ export function recordBiomeLoadMetric(metric) {
   const metrics = [...getStoredBiomeLoadMetrics(), nextMetric].slice(-500);
 
   storage.setItem(BIOME_LOAD_METRICS_KEY, JSON.stringify(metrics));
+
+  // Sync real-time to the python dashboard backend
+  fetch('/api/metrics/biome', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(nextMetric),
+  }).catch((err) => {
+    console.warn('Failed to sync biome metrics to server', err);
+  });
 }
 
 export function clearBiomeLoadMetrics() {
