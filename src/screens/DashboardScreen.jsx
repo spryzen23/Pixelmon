@@ -31,7 +31,17 @@ export function DashboardScreen() {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [purchaseLoading, setPurchaseLoading] = useState(false);
   const [purchaseSuccess, setPurchaseSuccess] = useState(null);
-  const [showV2Features, setShowV2Features] = useState(false);
+  const [showV2Features, setShowV2Features] = useState(() => {
+    return localStorage.getItem('pixelmon-enablev2') === 'true';
+  });
+
+  const handleToggleV2 = () => {
+    setShowV2Features((prev) => {
+      const next = !prev;
+      localStorage.setItem('pixelmon-enablev2', String(next));
+      return next;
+    });
+  };
 
   // Sync biomes
   useEffect(() => {
@@ -151,6 +161,16 @@ export function DashboardScreen() {
     goTo(SCREENS.battleRoyaleV2);
   };
 
+  const handleStartStaticRegion = () => {
+    setGameMode(GAME_MODES.staticRegion);
+    goTo(SCREENS.staticRegion);
+  };
+
+  const handleStartMapEditor = () => {
+    setGameMode(GAME_MODES.mapEditor);
+    goTo(SCREENS.mapEditor);
+  };
+
   const handleStartMinigames = () => {
     setGameMode(GAME_MODES.minigameHub);
     goTo(SCREENS.minigameHub);
@@ -181,7 +201,7 @@ export function DashboardScreen() {
           <button 
             type="button"
             className={`db-toggle-btn ${showV2Features ? 'active' : ''}`}
-            onClick={() => setShowV2Features(!showV2Features)}
+            onClick={handleToggleV2}
           >
             {showV2Features ? 'V2 Enabled' : 'Enable V2'}
           </button>
@@ -497,6 +517,64 @@ export function DashboardScreen() {
                     onClick={handleStartCampaignV2}
                   >
                     Launch Campaign V2
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* 1.6. Static Region Map Prototype Card */}
+            {showV2Features && (
+              <div className="mode-hub-card mode-campaign" style={{ borderTop: '2px solid #8e24aa' }}>
+                <div className="mode-card-header">
+                  <span className="mode-card-icon">🏔️</span>
+                  <div className="mode-card-title-group">
+                    <h3>Hisui Prototype</h3>
+                    <p>Static hand-crafted map</p>
+                  </div>
+                  <div className="mode-status-tag" style={{ background: 'rgba(142, 36, 170, 0.2)', color: '#8e24aa' }}>
+                    <span className="status-dot" style={{ background: '#8e24aa' }}></span>
+                    WIP
+                  </div>
+                </div>
+                <div className="mode-card-content">
+                  <p className="mode-card-desc">
+                    Explore a smooth, hand-crafted open world testing region with fixed landmarks.
+                  </p>
+                  <button
+                    className="launch-mode-btn"
+                    style={{ background: '#8e24aa', color: 'white' }}
+                    onClick={handleStartStaticRegion}
+                  >
+                    Explore Obsidian Fieldlands
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* 1.7. Map Editor Card */}
+            {showV2Features && (
+              <div className="mode-hub-card mode-campaign" style={{ borderTop: '2px solid #ff9800' }}>
+                <div className="mode-card-header">
+                  <span className="mode-card-icon">🛠️</span>
+                  <div className="mode-card-title-group">
+                    <h3>Map Baker (Dev Tool)</h3>
+                    <p>Programmatic map generator</p>
+                  </div>
+                  <div className="mode-status-tag" style={{ background: 'rgba(255, 152, 0, 0.2)', color: '#ff9800' }}>
+                    <span className="status-dot" style={{ background: '#ff9800' }}></span>
+                    DEV
+                  </div>
+                </div>
+                <div className="mode-card-content">
+                  <p className="mode-card-desc">
+                    Tweak procedural terrain settings and export static .GLB chunks for the Hisui Prototype.
+                  </p>
+                  <button
+                    className="launch-mode-btn"
+                    style={{ background: '#ff9800', color: 'white' }}
+                    onClick={handleStartMapEditor}
+                  >
+                    Open Map Editor
                   </button>
                 </div>
               </div>

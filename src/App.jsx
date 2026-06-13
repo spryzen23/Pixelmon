@@ -16,6 +16,8 @@ import { ClueGuesserScreen } from './screens/ClueGuesserScreen';
 import { TriviaTrainingScreen } from './screens/TriviaTrainingScreen';
 import { CampaignV2Screen } from './screens/CampaignV2Screen';
 import { BattleRoyaleV2Screen } from './screens/BattleRoyaleV2Screen';
+import { StaticRegionScreen } from './screens/StaticRegionScreen';
+import { MapEditorScreen } from './screens/MapEditorScreen';
 import './App.css';
 
 function ScreenRouter() {
@@ -54,6 +56,10 @@ function ScreenRouter() {
       return <CampaignV2Screen />;
     case SCREENS.battleRoyaleV2:
       return <BattleRoyaleV2Screen />;
+    case SCREENS.staticRegion:
+      return <StaticRegionScreen />;
+    case SCREENS.mapEditor:
+      return <MapEditorScreen />;
     default:
       return <WelcomeScreen />;
   }
