@@ -1,0 +1,349 @@
+{
+  "types": [
+    {
+      "type": "normal",
+      "locomotion": "quadruped",
+      "procedural": {
+        "spine": 0.3,
+        "tail": 0.2
+      },
+      "nativeBias": 0.6,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "fire",
+      "locomotion": "biped",
+      "procedural": {
+        "tail": 0.5,
+        "spine": 0.3
+      },
+      "nativeBias": 0.55,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "water",
+      "locomotion": "serpent",
+      "procedural": {
+        "tail": 0.6,
+        "spine": 0.4,
+        "fin": 0.3
+      },
+      "nativeBias": 0.5,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "electric",
+      "locomotion": "biped",
+      "procedural": {
+        "tail": 0.4,
+        "antenna": 0.5
+      },
+      "nativeBias": 0.55,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "grass",
+      "locomotion": "quadruped",
+      "procedural": {
+        "vine": 0.6,
+        "tail": 0.3
+      },
+      "nativeBias": 0.5,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "ice",
+      "locomotion": "biped",
+      "procedural": {
+        "tail": 0.3,
+        "spine": 0.2
+      },
+      "nativeBias": 0.55,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "fighting",
+      "locomotion": "biped",
+      "procedural": {
+        "upperArm": 0.5,
+        "spine": 0.3
+      },
+      "nativeBias": 0.65,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "poison",
+      "locomotion": "serpent",
+      "procedural": {
+        "tail": 0.5,
+        "vine": 0.3
+      },
+      "nativeBias": 0.5,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "ground",
+      "locomotion": "quadruped",
+      "procedural": {
+        "tail": 0.4,
+        "spine": 0.2
+      },
+      "nativeBias": 0.6,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "flying",
+      "locomotion": "aerial",
+      "procedural": {
+        "wing": 0.8,
+        "tail": 0.3
+      },
+      "nativeBias": 0.45,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "psychic",
+      "locomotion": "float",
+      "procedural": {
+        "float": 0.7,
+        "tail": 0.2
+      },
+      "nativeBias": 0.4,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "bug",
+      "locomotion": "hexapod",
+      "procedural": {
+        "wing": 0.4,
+        "antenna": 0.5,
+        "upperLeg": 0.4
+      },
+      "nativeBias": 0.45,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "rock",
+      "locomotion": "quadruped",
+      "procedural": {
+        "rigid": 0.5,
+        "spine": 0.2
+      },
+      "nativeBias": 0.55,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "ghost",
+      "locomotion": "float",
+      "procedural": {
+        "float": 0.6,
+        "tail": 0.4
+      },
+      "nativeBias": 0.4,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "dragon",
+      "locomotion": "serpent",
+      "procedural": {
+        "wing": 0.4,
+        "tail": 0.6,
+        "spine": 0.3
+      },
+      "nativeBias": 0.5,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "dark",
+      "locomotion": "quadruped",
+      "procedural": {
+        "tail": 0.4,
+        "spine": 0.3
+      },
+      "nativeBias": 0.55,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "steel",
+      "locomotion": "biped",
+      "procedural": {
+        "rigid": 0.4,
+        "spine": 0.2
+      },
+      "nativeBias": 0.6,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    },
+    {
+      "type": "fairy",
+      "locomotion": "biped",
+      "procedural": {
+        "wing": 0.3,
+        "tail": 0.2
+      },
+      "nativeBias": 0.5,
+      "attackClipHints": [
+        "attack",
+        "fight",
+        "strike"
+      ],
+      "fleeClipHints": [
+        "flee",
+        "run",
+        "retreat"
+      ]
+    }
+  ]
+}
