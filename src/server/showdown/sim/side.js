@@ -799,9 +799,9 @@ ${sideUpdate}`);
       return this.emitChoiceError(`Can't shift: You do not have a Pok\xE9mon in slot ${index + 1}`);
     } else if (this.requestState !== "move") {
       return this.emitChoiceError(`Can't shift: You can only shift during a move phase`);
-    } else if (this.battle.gameType !== "triples") {
-      return this.emitChoiceError(`Can't shift: You can only shift to the center in triples`);
-    } else if (index === 1) {
+    } else if (this.battle.gameType !== "triples" && this.battle.gameType !== "doubles") {
+      return this.emitChoiceError(`Can't shift: You can only shift in triples or doubles`);
+    } else if (this.battle.gameType === "triples" && index === 1) {
       return this.emitChoiceError(`Can't shift: You can only shift from the edge to the center`);
     }
     const pokemon = this.active[index];

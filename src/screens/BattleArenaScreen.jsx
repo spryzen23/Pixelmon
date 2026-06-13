@@ -731,7 +731,7 @@ export function BattleArenaScreen() {
       if (targetType === 'normal' || targetType === 'any') return targetIdx !== sourceIdx || targetIsFoe;
 
       // Multi-target logic checking
-      if (targetType === 'allAdjacent') return targetIdx !== sourceIdx;
+      if (targetType === 'allAdjacent') return targetIsFoe || targetIdx !== sourceIdx;
       if (targetType === 'allAdjacentFoes' || targetType === 'foeSide') return targetIsFoe;
       if (targetType === 'allySide') return !targetIsFoe && targetIdx !== sourceIdx;
       if (targetType === 'all') return true;
@@ -988,7 +988,8 @@ export function BattleArenaScreen() {
               ...localTeam[targetTeamIndex],
               transformData: {
                 sprite: targetEnemy?.sprite || '',
-                displayName: targetEnemy?.displayName || ''
+                displayName: targetEnemy?.displayName || '',
+                moves: targetEnemy?.moves || []
               }
             };
             _setPlayerTeam([...localTeam]);
@@ -1000,7 +1001,8 @@ export function BattleArenaScreen() {
             const playerTarget = playerTargetIdx !== null ? localTeam[playerTargetIdx] : null;
             localEnemySlots[sourceSlotIdx].transformData = {
               sprite: playerTarget?.sprite || '',
-              displayName: playerTarget?.displayName || ''
+              displayName: playerTarget?.displayName || '',
+              moves: playerTarget?.moves || []
             };
             _setEnemySlots([...localEnemySlots]);
           }
@@ -1240,7 +1242,8 @@ export function BattleArenaScreen() {
   const getMappedMoves = () => {
     const currentActivePoke = playerSlots[choosingSlotIdx] !== null ? playerTeam[playerSlots[choosingSlotIdx]] : null;
     return getRequestMoves().map((reqMove) => {
-      const detail = currentActivePoke?.moves?.find(
+      const allMoves = currentActivePoke?.transformData?.moves || currentActivePoke?.moves || [];
+      const detail = allMoves.find(
         m => m.name.toLowerCase().replace(/[^a-z0-9]+/g, '') === reqMove.id
       ) || { type: 'normal', power: 40 };
       return {
@@ -1278,7 +1281,7 @@ export function BattleArenaScreen() {
         </div>
         <div className="minigames-header-stats" style={{ display: 'flex', gap: '12px' }}>
           {stage !== 'draft' && (
-            <button className="btn-back" style={{ color: 'var(--px-red)', borderColor: 'var(--px-red)' }} id="flee-arena-btn" onClick={() => setStage('draft')}>
+            <button className="btn-back flee" id="flee-arena-btn" onClick={() => setStage('draft')}>
               🏳️ Flee Battle
             </button>
           )}

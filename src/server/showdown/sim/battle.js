@@ -2332,7 +2332,11 @@ class Battle {
       case "shift":
         if (!action.pokemon.isActive) return false;
         if (action.pokemon.fainted) return false;
-        this.swapPosition(action.pokemon, 1);
+        if (this.gameType === "doubles") {
+          this.swapPosition(action.pokemon, action.pokemon.position === 0 ? 1 : 0);
+        } else {
+          this.swapPosition(action.pokemon, 1);
+        }
         break;
       case "beforeTurn":
         this.eachEvent("BeforeTurn");

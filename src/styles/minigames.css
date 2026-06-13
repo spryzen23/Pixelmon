@@ -359,6 +359,17 @@ html, body {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+.btn-back.flee {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.btn-back.flee:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+}
+
 .minigame-content {
   padding: 24px;
 }
@@ -1292,9 +1303,9 @@ html, body {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90%;
-  max-width: 440px;
-  height: 80vh;
-  max-height: 600px;
+  max-width: 800px;
+  height: auto;
+  max-height: 95vh;
   background: #0b111a;
   border: 1px solid var(--px-border);
   border-radius: 16px;
@@ -1323,6 +1334,14 @@ html, body {
   flex-direction: column;
   gap: 16px;
   text-align: left;
+}
+
+@media (min-width: 768px) {
+  .dmg-calc-body {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 20px;
+  }
 }
 
 .dmg-calc-panel {
@@ -1361,6 +1380,21 @@ html, body {
 .dmg-calc-input:focus {
   border-color: var(--px-accent);
   outline: none;
+}
+
+.dmg-calc-input option {
+  background-color: #0a1120;
+  color: #fff;
+}
+
+.dmg-calc-input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.dmg-calc-input[type="number"]::-webkit-inner-spin-button,
+.dmg-calc-input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Distribution Rolls Bar Chart */
@@ -2316,8 +2350,10 @@ html, body {
 .draft-pool-scroll-container {
   max-height: 260px;
   overflow-y: auto;
-  padding-right: 4px;
-  margin-bottom: 16px;
+  padding: 6px;
+  padding-right: 8px;
+  margin: -6px;
+  margin-bottom: 10px;
 }
 
 /* =============================================

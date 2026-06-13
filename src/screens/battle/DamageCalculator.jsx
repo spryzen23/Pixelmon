@@ -16,8 +16,8 @@ export function DamageCalculator({ showCalc, setShowCalc, calcInputs, setCalcInp
         </div>
 
         <div className="dmg-calc-body">
-
-          <div className="dmg-calc-panel">
+          <div className="dmg-calc-left-col" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="dmg-calc-panel">
             <span className="config-section-title">Core Engine Variables</span>
             <div className="dmg-calc-grid-2">
               <div>
@@ -43,8 +43,8 @@ export function DamageCalculator({ showCalc, setShowCalc, calcInputs, setCalcInp
                 <input
                   type="number"
                   className="dmg-calc-input"
-                  value={calcInputs.attackStat}
-                  onChange={e => setCalcInputs({ ...calcInputs, attackStat: Math.max(1, Number(e.target.value)) })}
+                  value={calcInputs.atk}
+                  onChange={e => setCalcInputs({ ...calcInputs, atk: Math.max(1, Number(e.target.value)) })}
                 />
               </div>
               <div>
@@ -52,63 +52,111 @@ export function DamageCalculator({ showCalc, setShowCalc, calcInputs, setCalcInp
                 <input
                   type="number"
                   className="dmg-calc-input"
-                  value={calcInputs.defenseStat}
-                  onChange={e => setCalcInputs({ ...calcInputs, defenseStat: Math.max(1, Number(e.target.value)) })}
+                  value={calcInputs.def}
+                  onChange={e => setCalcInputs({ ...calcInputs, def: Math.max(1, Number(e.target.value)) })}
                 />
               </div>
             </div>
           </div>
 
           <div className="dmg-calc-panel">
-            <span className="config-section-title">Multipliers & Modifiers</span>
-            <div className="dmg-calc-grid-2">
+            <span className="config-section-title">Modifier Sliders</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '6px' }}>
+
               <div>
-                <label className="dmg-calc-label">STAB</label>
+                <label className="dmg-calc-label">Type Advantage Effectiveness</label>
+                <select
+                  className="dmg-calc-input"
+                  value={calcInputs.type}
+                  onChange={e => setCalcInputs({ ...calcInputs, type: Number(e.target.value) })}
+                >
+                  <option value="0.0">0x (Immune)</option>
+                  <option value="0.25">0.25x (Double Resisted)</option>
+                  <option value="0.5">0.5x (Resisted)</option>
+                  <option value="1.0">1x (Neutral)</option>
+                  <option value="2.0">2x (Super Effective)</option>
+                  <option value="4.0">4x (Ultra Effective)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="dmg-calc-label">STAB Modifier</label>
                 <select
                   className="dmg-calc-input"
                   value={calcInputs.stab}
                   onChange={e => setCalcInputs({ ...calcInputs, stab: Number(e.target.value) })}
                 >
-                  <option value={1}>None (1x)</option>
-                  <option value={1.5}>Standard STAB (1.5x)</option>
-                  <option value={2}>Adaptability (2x)</option>
+                  <option value="1.0">1x (None)</option>
+                  <option value="1.5">1.5x (STAB Bonus)</option>
+                  <option value="2.0">2x (Adaptability)</option>
                 </select>
               </div>
+
               <div>
-                <label className="dmg-calc-label">Type Effectiveness</label>
+                <label className="dmg-calc-label">Field Weather Modifier</label>
                 <select
                   className="dmg-calc-input"
-                  value={calcInputs.typeEffectiveness}
-                  onChange={e => setCalcInputs({ ...calcInputs, typeEffectiveness: Number(e.target.value) })}
+                  value={calcInputs.weather}
+                  onChange={e => setCalcInputs({ ...calcInputs, weather: Number(e.target.value) })}
                 >
-                  <option value={0}>Immune (0x)</option>
-                  <option value={0.25}>1/4 Resist (0.25x)</option>
-                  <option value={0.5}>1/2 Resist (0.5x)</option>
-                  <option value={1}>Neutral (1x)</option>
-                  <option value={2}>Super Effective (2x)</option>
-                  <option value={4}>4x Weakness (4x)</option>
+                  <option value="1.0">1x (Neutral)</option>
+                  <option value="1.5">1.5x (Boosted)</option>
+                  <option value="0.5">0.5x (Reduced)</option>
                 </select>
               </div>
+
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  className={`config-btn w-full ${calcInputs.burn === 0.5 ? 'active' : ''}`}
+                  onClick={() => setCalcInputs(p => ({ ...p, burn: p.burn === 0.5 ? 1.0 : 0.5 }))}
+                >
+                  Burned (0.5x)
+                </button>
+                <button
+                  className={`config-btn w-full ${calcInputs.crit === 1.5 ? 'active' : ''}`}
+                  onClick={() => setCalcInputs(p => ({ ...p, crit: p.crit === 1.5 ? 1.0 : 1.5 }))}
+                >
+                  Critical (1.5x)
+                </button>
+              </div>
+
+            </div>
+          </div>
+          </div>
+
+          <div className="dmg-calc-right-col" style={{ display: 'flex', flexDirection: 'column' }}>
+            {/* Damage roll outputs */}
+            <div className="dmg-calc-panel" style={{ background: 'rgba(255, 212, 63, 0.03)', borderColor: 'rgba(255, 212, 63, 0.2)', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+            <span className="config-section-title" style={{ color: 'var(--px-accent)' }}>Roll Outputs (Chaos Variance)</span>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
+              <div>
+                <span className="dmg-calc-label">Min Damage (85%)</span>
+                <strong style={{ fontSize: '18px', color: 'var(--px-accent-warm)' }}>{calculatedRolls[0]}</strong>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <span className="dmg-calc-label">Max Damage (100%)</span>
+                <strong style={{ fontSize: '18px', color: 'var(--px-accent)' }}>{calculatedBase}</strong>
+              </div>
+            </div>
+
+            <div className="chart-rolls-container" style={{ marginTop: '16px' }}>
+              {calculatedRolls.map((roll, idx) => (
+                <div key={idx} className="chart-roll-row">
+                  <span className="chart-roll-percentage">{85 + idx}%</span>
+                  <div className="chart-roll-bar-outer">
+                    <div
+                      className="chart-roll-bar-inner"
+                      style={{ width: `${((roll) / calculatedBase) * 100}%` }}
+                    />
+                  </div>
+                  <span className="chart-roll-value">{roll}</span>
+                </div>
+              ))}
+            </div>
             </div>
           </div>
 
-          <div className="dmg-calc-panel" style={{ background: 'var(--px-bg-darker)' }}>
-            <span className="config-section-title">Projected Damage Output</span>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                <span style={{ fontSize: '12px', color: 'var(--px-text-muted)' }}>Absolute Minimum (0.85)</span>
-                <span style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--px-sky)' }}>{calculatedRolls.min} HP</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                <span style={{ fontSize: '12px', color: 'var(--px-text-muted)' }}>Maximum Roll (1.00)</span>
-                <span style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--px-accent)' }}>{calculatedRolls.max} HP</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '8px', marginTop: '4px' }}>
-                <span style={{ fontSize: '12px', color: 'var(--px-text-muted)' }}>Critical Hit Max (1.5x)</span>
-                <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--px-red)' }}>{calculatedRolls.critMax} HP</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </>

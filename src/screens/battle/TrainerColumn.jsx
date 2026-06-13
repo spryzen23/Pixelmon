@@ -81,9 +81,6 @@ export function TrainerColumn({
               <button className="bl-action-btn items" id="items-action-btn" onClick={() => setBagOpen(true)}>
                 🎒 Items ({items.potions + items.fullRestores} left)
               </button>
-              <button className="bl-action-btn flee" id="flee-arena-btn" onClick={() => setStage('draft')}>
-                🏳️ Flee Battle
-              </button>
             </div>
           </>
         )

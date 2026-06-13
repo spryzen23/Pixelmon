@@ -49,29 +49,24 @@ export function ActionGrid({
               data-type={m.type}
               disabled={!playerTurn || isActing || m.disabled}
               onClick={() => handlePlayerAttack(i)}
-              style={{ 
-                background: `linear-gradient(135deg, ${TYPE_COLORS[m.type?.toLowerCase()] || '#888'} 0%, rgba(0,0,0,0.4) 100%)`, 
-                borderColor: TYPE_COLORS[m.type?.toLowerCase()] || '#888'
-              }}
+              style={{ backgroundColor: (TYPE_COLORS[m.type?.toLowerCase()] || '#888888') + '1A', borderColor: (TYPE_COLORS[m.type?.toLowerCase()] || '#888888') + '40' }}
             >
-              <span className="move-btn-keybind">Slot {i + 1}</span>
-              <span className="move-btn-name" style={{ color: '#fff', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>{m.move.replace(/-/g, ' ')}</span>
-              <span className="move-btn-type" style={{ background: 'rgba(0,0,0,0.5)', color: '#fff' }}>
-                {m.type.toUpperCase()} · PWR {m.power}
+              <span className="move-btn-name">{m.move.replace(/-/g, ' ')}</span>
+              <span className="move-btn-type" style={{ color: TYPE_COLORS[m.type?.toLowerCase()] || '#888' }}>
+                {m.type.toUpperCase()} • PWR {m.power}
               </span>
             </button>
           ))}
-          {battleFormat === 'triples' && !showSwitch && (choosingSlotIdx === 0 || choosingSlotIdx === 2) && (
+          {((battleFormat === 'triples' && (choosingSlotIdx === 0 || choosingSlotIdx === 2)) || battleFormat === 'doubles') && !showSwitch && (
             <button
               id="move-btn-shift"
               className="btn-action-move"
-              style={{ background: 'linear-gradient(135deg, var(--px-sky) 0%, #0d1626 100%)', borderColor: 'var(--px-sky)' }}
               disabled={!playerTurn || isActing}
               onClick={() => proceedToNextSlot('shift')}
+              style={{ backgroundColor: 'rgba(56, 189, 248, 0.1)', borderColor: 'rgba(56, 189, 248, 0.25)' }}
             >
-              <span className="move-btn-keybind">Action</span>
-              <span className="move-btn-name">🔀 Shift Position</span>
-              <span className="move-btn-type" style={{ background: 'var(--px-sky)', color: '#fff' }}>CENTER SWAP</span>
+              <span className="move-btn-name">🏰 Castle</span>
+              <span className="move-btn-type" style={{ color: 'var(--px-sky)' }}>POSITION SWAP</span>
             </button>
           )}
         </div>
