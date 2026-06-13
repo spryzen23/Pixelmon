@@ -20,6 +20,8 @@ export const SCREENS = {
   triviaTraining: 'triviaTraining',
   campaignV2: 'campaignV2',
   battleRoyaleV2: 'battleRoyaleV2',
+  staticRegion: 'staticRegion',
+  mapEditor: 'mapEditor',
 };
 
 export const GAME_MODES = {
@@ -29,6 +31,8 @@ export const GAME_MODES = {
   minigameHub: 'minigameHub',
   campaignV2: 'campaignV2',
   battleRoyaleV2: 'battleRoyaleV2',
+  staticRegion: 'staticRegion',
+  mapEditor: 'mapEditor',
 };
 
 export function GameProvider({ children }) {

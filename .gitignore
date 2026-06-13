@@ -30,7 +30,6 @@ references/
 
 # misc & env files
 .DS_Store
-.env.local
 .env.development.local
 .env.test.local
 .env.production.local
@@ -53,3 +52,4 @@ scripts/scratch/
 # OS files
 .DS_Store
 Thumbs.db
+config.bat
