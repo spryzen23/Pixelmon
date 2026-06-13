@@ -31,6 +31,7 @@ export function DashboardScreen() {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [purchaseLoading, setPurchaseLoading] = useState(false);
   const [purchaseSuccess, setPurchaseSuccess] = useState(null);
+  const [showV2Features, setShowV2Features] = useState(false);
 
   // Sync biomes
   useEffect(() => {
@@ -140,6 +141,16 @@ export function DashboardScreen() {
     goTo(SCREENS.battleRoyale);
   };
 
+  const handleStartCampaignV2 = () => {
+    setGameMode(GAME_MODES.campaignV2);
+    goTo(SCREENS.campaignV2);
+  };
+
+  const handleStartRoyaleV2 = () => {
+    setGameMode(GAME_MODES.battleRoyaleV2);
+    goTo(SCREENS.battleRoyaleV2);
+  };
+
   const handleStartMinigames = () => {
     setGameMode(GAME_MODES.minigameHub);
     goTo(SCREENS.minigameHub);
@@ -167,6 +178,13 @@ export function DashboardScreen() {
         <div className="db-title-area">
           <h1>PIXELMON</h1>
           <p>Voxel Legends Hub</p>
+          <button 
+            type="button"
+            className={`db-toggle-btn ${showV2Features ? 'active' : ''}`}
+            onClick={() => setShowV2Features(!showV2Features)}
+          >
+            {showV2Features ? 'V2 Enabled' : 'Enable V2'}
+          </button>
         </div>
         <div className="db-user-area">
           <div className="db-coin-badge" title="PokéCoins balance">
@@ -456,6 +474,34 @@ export function DashboardScreen() {
               </div>
             </div>
 
+            {/* 1.5. Campaign Mode V2 Card */}
+            {showV2Features && (
+              <div className="mode-hub-card mode-campaign" style={{ borderTop: '2px solid #7cb342' }}>
+                <div className="mode-card-header">
+                  <span className="mode-card-icon">🗺️</span>
+                  <div className="mode-card-title-group">
+                    <h3>Campaign Adventure V2</h3>
+                    <p>Chunk-based rendering engine</p>
+                  </div>
+                  <div className="mode-status-tag" style={{ background: 'rgba(124, 179, 66, 0.2)', color: '#7cb342' }}>
+                    <span className="status-dot" style={{ background: '#7cb342' }}></span>
+                    BETA
+                  </div>
+                </div>
+                <div className="mode-card-content">
+                  <p className="mode-card-desc">
+                    Experience the newly optimized, chunk-based biome map loading logic.
+                  </p>
+                  <button
+                    className="launch-mode-btn"
+                    onClick={handleStartCampaignV2}
+                  >
+                    Launch Campaign V2
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* 2. Sandbox Mode Card */}
             <div className="mode-hub-card mode-sandbox">
               <div className="mode-card-header">
@@ -497,6 +543,31 @@ export function DashboardScreen() {
                 </button>
               </div>
             </div>
+
+            {/* 3.5. Battle Royale Mode V2 Card */}
+            {showV2Features && (
+              <div className="mode-hub-card mode-royale" style={{ borderTop: '2px solid #7cb342' }}>
+                <div className="mode-card-header">
+                  <span className="mode-card-icon">⚔️</span>
+                  <div className="mode-card-title-group">
+                    <h3>Battle Royale V2</h3>
+                    <p>Next-gen multiplayer lobbys</p>
+                  </div>
+                  <div className="mode-status-tag" style={{ background: 'rgba(124, 179, 66, 0.2)', color: '#7cb342' }}>
+                    <span className="status-dot" style={{ background: '#7cb342' }}></span>
+                    BETA
+                  </div>
+                </div>
+                <div className="mode-card-content">
+                  <p className="mode-card-desc">
+                    Join dynamic online lobbies and catch as many voxel creatures as possible within a tight timer. Built on the V2 engine!
+                  </p>
+                  <button className="launch-mode-btn" onClick={handleStartRoyaleV2}>
+                    Join Royale Lobby V2
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* 4. Minigame Hub Card */}
             <div className="mode-hub-card mode-minigames">

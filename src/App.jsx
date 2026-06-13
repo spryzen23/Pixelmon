@@ -14,6 +14,8 @@ import { BattleArenaV2Screen } from './screens/BattleArenaV2Screen';
 import { DailyGridScreen } from './screens/DailyGridScreen';
 import { ClueGuesserScreen } from './screens/ClueGuesserScreen';
 import { TriviaTrainingScreen } from './screens/TriviaTrainingScreen';
+import { CampaignV2Screen } from './screens/CampaignV2Screen';
+import { BattleRoyaleV2Screen } from './screens/BattleRoyaleV2Screen';
 import './App.css';
 
 function ScreenRouter() {
@@ -48,6 +50,10 @@ function ScreenRouter() {
       return <ClueGuesserScreen />;
     case SCREENS.triviaTraining:
       return <TriviaTrainingScreen />;
+    case SCREENS.campaignV2:
+      return <CampaignV2Screen />;
+    case SCREENS.battleRoyaleV2:
+      return <BattleRoyaleV2Screen />;
     default:
       return <WelcomeScreen />;
   }

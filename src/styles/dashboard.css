@@ -138,6 +138,39 @@
   line-height: 1;
 }
 
+/* V2 Toggle button */
+.db-toggle-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 5px 14px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 12px;
+}
+
+.db-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.db-toggle-btn.active {
+  background: rgba(124, 179, 66, 0.15);
+  border-color: rgba(124, 179, 66, 0.4);
+  color: #7cb342;
+}
+
+.db-toggle-btn.active:hover {
+  background: rgba(124, 179, 66, 0.25);
+  border-color: rgba(124, 179, 66, 0.6);
+}
+
 /* Logout button */
 .db-logout-btn {
   background: rgba(248, 79, 79, 0.08);

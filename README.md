@@ -52,3 +52,7 @@ Welcome → Player select → Name + companion → Map select → Load → Play 
 ## Version roadmap
 
 See [docs/versions.md](docs/versions.md).
+
+
+
+py -3.11 -m streamlit run references/biome/tools/biome_dashboard/app.py

@@ -18,6 +18,8 @@ export const SCREENS = {
   dailyGrid: 'dailyGrid',
   clueGuesser: 'clueGuesser',
   triviaTraining: 'triviaTraining',
+  campaignV2: 'campaignV2',
+  battleRoyaleV2: 'battleRoyaleV2',
 };
 
 export const GAME_MODES = {
@@ -25,6 +27,8 @@ export const GAME_MODES = {
   sandbox: 'sandbox',
   battleRoyale: 'battleRoyale',
   minigameHub: 'minigameHub',
+  campaignV2: 'campaignV2',
+  battleRoyaleV2: 'battleRoyaleV2',
 };
 
 export function GameProvider({ children }) {
