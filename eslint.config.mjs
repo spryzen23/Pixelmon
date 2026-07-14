@@ -61,7 +61,7 @@ export default [
     },
   },
   {
-    files: ['src/game/**/*.js', 'src/hooks/**/*.js', 'src/components/**/*.js'],
+    files: ['src/game/**/*.js', 'src/hooks/**/*.js', 'src/components/**/*.js', 'src/app/**/*.js'],
     languageOptions: {
       globals: {
         ...globals.browser,

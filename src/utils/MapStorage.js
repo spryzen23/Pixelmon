@@ -16,7 +16,7 @@ function initDB() {
 
     const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-    request.onerror = (e) => reject(new Error('Failed to open IndexedDB'));
+    request.onerror = () => reject(new Error('Failed to open IndexedDB'));
 
     request.onupgradeneeded = (e) => {
       const db = e.target.result;

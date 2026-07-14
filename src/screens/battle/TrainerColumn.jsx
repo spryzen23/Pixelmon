@@ -11,8 +11,7 @@ export function TrainerColumn({
   activeRequest,
   playerSlots,
   currentFormat,
-  setShowCalc,
-  setStage
+  setShowCalc
 }) {
   return (
     <div className="bl-trainer-col" id="trainer-col">

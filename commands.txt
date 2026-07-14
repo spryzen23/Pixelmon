@@ -379,9 +379,31 @@ git push -u origin main
 
 
 
-.\graphify.bat build
+graphify.bat build
+
+
+graphify.bat update .
+
 
 
 cd e:\maha\pokemon_landing
 python -m http.server 8000
 # Open http://localhost:8000 in your browser
+
+
+python -m http.server 8000 --directory E:\maha\Pixelmon\pokemon_landing
+
+
+# From the project root — NOT from pokemon_landing/
+cd e:\maha\Pixelmon
+python -m http.server 8080
+# Then visit:
+http://localhost:8080/pokemon_landing/
+
+
+
+npm run dev
+# visit: http://localhost:3000/pokemon_landing/
+
+
+.\graphify.bat build

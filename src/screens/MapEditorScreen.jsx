@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF, Clone } from '@react-three/drei';
+import { useGLTF, Clone } from '@react-three/drei';
 import * as THREE from 'three';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { useGame, SCREENS } from '../context/GameContext';

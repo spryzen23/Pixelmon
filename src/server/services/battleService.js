@@ -306,15 +306,7 @@ function buildEnemyPokemon(setKey, index = 0) {
   };
 }
 
-/**
- * Returns the minimum number of Pokémon each team must supply so that every
- * active slot in the given format can be filled on turn 1.
- */
-function getMinActiveSlots(formatId) {
-  if (formatId === 'gen7doublescustomgame') return 2;
-  if (formatId === 'gen6triplescustomgame') return 3;
-  return 1;
-}
+
 
 function getEnemyTeam(difficulty, formatId, battleFormat) {
   const pool = DIFFICULTY_POOLS[difficulty] || DIFFICULTY_POOLS.boss;

@@ -15,7 +15,7 @@ describe('DamageCalculator UI Guardrails', () => {
         setShowCalc={vi.fn()}
         calcInputs={calcInputs}
         setCalcInputs={vi.fn()}
-        getDmgRolls={(val) => [85, 90, 100]}
+        getDmgRolls={(_val) => [85, 90, 100]}
         calcOutput={() => 100}
       />
     );

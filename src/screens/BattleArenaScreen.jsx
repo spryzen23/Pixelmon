@@ -4,11 +4,6 @@ import { api } from '../api';
 import {
   ArrowLeft,
   Swords,
-  Flame,
-  Droplet,
-  CloudSun,
-  Compass,
-  Wind,
   RotateCcw,
   ChevronDown,
   Check
@@ -22,13 +17,10 @@ import { DamageCalculator } from './battle/DamageCalculator';
 import { 
   parseCondition, 
   findTeamIndexForBattleIdent, 
-  getActiveTeamIndexFromRequest, 
   syncTeamFromRequest,
   findRequestPokemonForTeamIndex,
   getRequestSlotForTeamIndex,
-  cleanName,
-  normalizePokemonKey,
-  speciesFromDetails
+  cleanName
 } from './battle/BattleUtils';
 
 // Type effectiveness chart
@@ -113,7 +105,7 @@ const BATTLE_FORMATS = [
 ];
 
 // Spread moves that hit all Pokémon on field in doubles/triples
-const SPREAD_MOVE_IDS = new Set([
+const _SPREAD_MOVE_IDS = new Set([
   'earthquake', 'surf', 'discharge', 'dazzlinggleam', 'rockslide', 'lavaplume',
   'bulldoze', 'blizzard', 'heatwave', 'boomburst', 'selfdestruct', 'explosion',
   'magnitude', 'eruption', 'sludgewave', 'perishsong', 'brutalswing',
@@ -192,7 +184,7 @@ function BattleDropdown({ label, options, value, onChange, id }) {
 
 
 // Official Pokémon type color palette
-const TYPE_COLORS = {
+const _TYPE_COLORS = {
   normal: '#9fa19f',
   fire: '#e62829',
   water: '#2980ef',
@@ -313,14 +305,12 @@ function formatShowdownLog(line) {
     case '-boost': {
       const target = cleanName(parts[2]);
       const stat = parts[3];
-      const amount = parts[4];
       const statMap = { atk: 'Attack', def: 'Defense', spa: 'Sp. Atk', spd: 'Sp. Def', spe: 'Speed', accuracy: 'Accuracy', evasion: 'Evasion' };
       return `📈 <strong>${target}</strong>'s ${statMap[stat] || stat} rose!`;
     }
     case '-unboost': {
       const target = cleanName(parts[2]);
       const stat = parts[3];
-      const amount = parts[4];
       const statMap = { atk: 'Attack', def: 'Defense', spa: 'Sp. Atk', spd: 'Sp. Def', spe: 'Speed', accuracy: 'Accuracy', evasion: 'Evasion' };
       return `📉 <strong>${target}</strong>'s ${statMap[stat] || stat} fell!`;
     }
@@ -406,7 +396,7 @@ export function BattleArenaScreen() {
   const currentFormat = BATTLE_FORMATS.find(f => f.id === battleFormat) || BATTLE_FORMATS[0];
 
   // Showdown Battle States
-  const [battleId, setBattleId] = useState(null);
+  const [_battleId, setBattleId] = useState(null);
   const battleIdRef = useRef(null);
   const [playerSlots, setPlayerSlots] = useState([null, null, null]);
   const playerSlotsRef = useRef([null, null, null]);
@@ -414,7 +404,7 @@ export function BattleArenaScreen() {
   const enemySlotsRef = useRef([null, null, null]);
   const [choosingSlotIdx, setChoosingSlotIdx] = useState(0);
   const choosingSlotIdxRef = useRef(0);
-  const [turnChoices, setTurnChoices] = useState([]);
+  const [_turnChoices, setTurnChoices] = useState([]);
   const turnChoicesRef = useRef([]);
   const [targetSelection, setTargetSelection] = useState(null); // { moveSlotIndex, targetType }
   const [activeRequest, setActiveRequest] = useState(null);
@@ -444,7 +434,7 @@ export function BattleArenaScreen() {
   const [items, setItems] = useState({ potions: 3, fullRestores: 1 });
   const [bagOpen, setBagOpen] = useState(false);
   const [showSwitch, setShowSwitch] = useState(false);
-  const [switchTimer, setSwitchTimer] = useState(null);
+  const [_switchTimer, setSwitchTimer] = useState(null);
 
   // Damage Calculator Drawer State
   const [showCalc, setShowCalc] = useState(false);
@@ -524,6 +514,7 @@ export function BattleArenaScreen() {
     return () => {
       if (interval) clearInterval(interval);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeRequest, isActing, winner, playerTeam, choosingSlotIdx]);
 
   const getRequestMoves = useCallback(() => {
@@ -1065,7 +1056,6 @@ export function BattleArenaScreen() {
       const getAvailableSwitchCount = (currentChoices) => {
         let count = 0;
         for (let i = 0; i < playerTeamRef.current.length; i++) {
-          const p = playerTeamRef.current[i];
           const reqMon = findRequestPokemonForTeamIndex(activeRequestRef.current, playerTeamRef.current, i);
           const isFainted = reqMon ? reqMon.condition.includes('fnt') || reqMon.condition.startsWith('0') : false;
           const isActive = reqMon ? reqMon.active : false;
@@ -1174,7 +1164,7 @@ export function BattleArenaScreen() {
       return;
     }
 
-    const { moveSlotIndex, targetType } = targetSelection;
+    const { moveSlotIndex } = targetSelection;
 
     // Compute absolute targetLoc relative to side
     // Showdown targetLoc maps directly to targetIdx + 1 for foes
@@ -1268,9 +1258,6 @@ export function BattleArenaScreen() {
     }
     return list;
   };
-
-  const calculatedBase = calcOutput();
-  const calculatedRolls = getDmgRolls(calculatedBase);
 
   return (
     <div className="minigames-screen" id="battle-arena-screen">
@@ -1692,7 +1679,6 @@ export function BattleArenaScreen() {
             playerSlots={playerSlots}
             currentFormat={currentFormat}
             setShowCalc={setShowCalc}
-            setStage={setStage}
           />
         </div>
       )}

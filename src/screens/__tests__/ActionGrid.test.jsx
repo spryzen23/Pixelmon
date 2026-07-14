@@ -30,7 +30,6 @@ describe('ActionGrid UI Guardrails', () => {
     expect(btn).not.toBeNull();
     
     // Verify it relies on sleek CSS for background, or has subtle rgba/hex+alpha inline style
-    const bg = btn.style.backgroundColor;
     const bgShorthand = btn.style.background;
     
     // Guardrail: Do NOT use harsh inline linear-gradients that override the sleek minigames.css design

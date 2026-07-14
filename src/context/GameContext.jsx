@@ -5,6 +5,7 @@ const GameContext = createContext(null);
 
 export const SCREENS = {
   welcome: 'welcome',
+  auth: 'auth',
   dashboard: 'dashboard',
   profileSetup: 'profileSetup',
   loading: 'loading',

@@ -1,6 +1,7 @@
 import { GameProvider, useGame, SCREENS } from './context/GameContext';
 import { ToastProvider } from './hooks/useToast';
-import { WelcomeScreen } from './screens/WelcomeScreen';
+import { LandingScreen } from './screens/LandingScreen';
+import { AuthScreen } from './screens/AuthScreen';
 import { DashboardScreen } from './screens/DashboardScreen';
 import BattleRoyaleShell from './modes/battleRoyale/BattleRoyaleShell';
 import { ProfileSetupScreen } from './screens/ProfileSetupScreen';
@@ -25,7 +26,9 @@ function ScreenRouter() {
 
   switch (screen) {
     case SCREENS.welcome:
-      return <WelcomeScreen />;
+      return <LandingScreen />;
+    case SCREENS.auth:
+      return <AuthScreen />;
     case SCREENS.dashboard:
       return <DashboardScreen />;
     case SCREENS.battleRoyale:
@@ -61,7 +64,7 @@ function ScreenRouter() {
     case SCREENS.mapEditor:
       return <MapEditorScreen />;
     default:
-      return <WelcomeScreen />;
+      return <LandingScreen />;
   }
 }
 

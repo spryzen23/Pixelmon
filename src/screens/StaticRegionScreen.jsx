@@ -30,7 +30,7 @@ export function StaticRegionScreen() {
       const blob = await getMapBlob(id);
       const url = URL.createObjectURL(blob);
       setMapState({ url });
-    } catch (e) {
+    } catch {
       alert('Failed to load saved map.');
     }
   };
@@ -41,7 +41,7 @@ export function StaticRegionScreen() {
     try {
       await deleteMap(id);
       loadSavedMaps();
-    } catch (e) {
+    } catch {
       alert('Failed to delete map.');
     }
   };
