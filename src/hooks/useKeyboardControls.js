@@ -1,19 +1,19 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 const KEY_MAP = {
-  KeyW: 'forward',
-  ArrowUp: 'forward',
-  KeyS: 'backward',
-  ArrowDown: 'backward',
-  KeyA: 'left',
-  ArrowLeft: 'left',
-  KeyD: 'right',
-  ArrowRight: 'right',
-  Space: 'jump',
-  KeyJ: 'jump',
-  KeyC: 'crouch',
-  ShiftLeft: 'sprint',
-  ShiftRight: 'sprint',
+  KeyW: "forward",
+  ArrowUp: "forward",
+  KeyS: "backward",
+  ArrowDown: "backward",
+  KeyA: "left",
+  ArrowLeft: "left",
+  KeyD: "right",
+  ArrowRight: "right",
+  Space: "jump",
+  KeyJ: "jump",
+  KeyC: "crouch",
+  ShiftLeft: "sprint",
+  ShiftRight: "sprint",
 };
 
 const INITIAL_KEYS = {
@@ -43,7 +43,10 @@ export default function useKeyboardControls() {
         return;
       }
 
-      if (event.target?.tagName === 'INPUT' || event.target?.tagName === 'TEXTAREA') {
+      if (
+        event.target?.tagName === "INPUT" ||
+        event.target?.tagName === "TEXTAREA"
+      ) {
         return;
       }
 
@@ -69,18 +72,21 @@ export default function useKeyboardControls() {
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-    window.addEventListener('blur', handleBlur);
-    document.addEventListener('visibilitychange', handleVisibility);
-    document.addEventListener('pointerlockchange', handlePointerLockChange);
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener("blur", handleBlur);
+    document.addEventListener("visibilitychange", handleVisibility);
+    document.addEventListener("pointerlockchange", handlePointerLockChange);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-      window.removeEventListener('blur', handleBlur);
-      document.removeEventListener('visibilitychange', handleVisibility);
-      document.removeEventListener('pointerlockchange', handlePointerLockChange);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("blur", handleBlur);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      document.removeEventListener(
+        "pointerlockchange",
+        handlePointerLockChange
+      );
     };
   }, []);
 

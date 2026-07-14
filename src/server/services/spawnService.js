@@ -1,4 +1,4 @@
-import { getPokemonsSlim } from '../lib/dataStore.js';
+import { getPokemonsSlim } from "../lib/dataStore.js";
 
 export async function getRegionSpawnIndex(regionId) {
   const slim = await getPokemonsSlim();
@@ -37,7 +37,7 @@ export function initSpawnState(regionId, byLevel, ladderConfig) {
     maxUnlockedSpawnLevel: levels[0] ?? 1,
     levelPools,
     alphaCaught: false,
-    activeEggGroups: ladderConfig.eggGroupRotation?.waves?.[0] || ['field'],
+    activeEggGroups: ladderConfig.eggGroupRotation?.waves?.[0] || ["field"],
   };
 }
 
@@ -56,7 +56,9 @@ export function getSpawnCandidates(state, byLevel, options = {}) {
         const match = p.eggGroups?.some((g) => eggGroups.includes(g));
         if (!match) continue;
       }
-      const caught = state.levelPools[String(level)]?.caughtSpeciesIds?.includes(p.speciesId);
+      const caught = state.levelPools[
+        String(level)
+      ]?.caughtSpeciesIds?.includes(p.speciesId);
       if (caught) continue;
       candidates.push(p);
     }

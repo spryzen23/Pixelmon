@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from "react";
 
 export default class ModelErrorBoundary extends Component {
   constructor(props) {

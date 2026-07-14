@@ -1,14 +1,14 @@
-import { Line } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { useRef, useState } from 'react';
-import { Vector3 } from 'three';
+import { Line } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useRef, useState } from "react";
+import { Vector3 } from "three";
 import {
   getParallaxThrowVector,
   PROJECTILE_GRAVITY,
   PROJECTILE_RADIUS,
   PROJECTILE_UPWARD_BOOST,
-} from '../game/projectilePhysics';
-import { getTerrainSurfaceY } from '../game/world';
+} from "../game/projectilePhysics";
+import { getTerrainSurfaceY } from "../game/world";
 
 const SIMULATION_STEP = 0.08;
 const MAX_SIMULATION_TIME = 3;
@@ -48,7 +48,7 @@ function createThrowArc(player, camera, throwPower) {
 }
 
 export default function AimIndicator({ ball, playerRef, throwPower }) {
-  const lastSignature = useRef('');
+  const lastSignature = useRef("");
   const [arc, setArc] = useState(() => ({
     landingPoint: new Vector3(0, 0, 0),
     points: [],
@@ -74,7 +74,7 @@ export default function AimIndicator({ ball, playerRef, throwPower }) {
       camera.quaternion.z.toFixed(3),
       camera.quaternion.w.toFixed(3),
       throwPower.toFixed(2),
-    ].join(':');
+    ].join(":");
 
     if (signature === lastSignature.current) {
       return;
@@ -92,7 +92,7 @@ export default function AimIndicator({ ball, playerRef, throwPower }) {
     <group>
       <Line
         points={arc.points}
-        color={ball?.accentColor || '#fff3a8'}
+        color={ball?.accentColor || "#fff3a8"}
         lineWidth={2}
         transparent
         opacity={0.72}
@@ -102,13 +102,10 @@ export default function AimIndicator({ ball, playerRef, throwPower }) {
         gapSize={0.18}
       />
 
-      <mesh
-        position={arc.landingPoint}
-        rotation={[-Math.PI / 2, 0, 0]}
-      >
+      <mesh position={arc.landingPoint} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.3, 0.48, 32]} />
         <meshBasicMaterial
-          color={ball?.accentColor || '#fff3a8'}
+          color={ball?.accentColor || "#fff3a8"}
           depthWrite={false}
           opacity={0.68}
           transparent

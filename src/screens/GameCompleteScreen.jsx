@@ -1,12 +1,13 @@
-import { useEffect } from 'react';
-import confetti from 'canvas-confetti';
-import { useGame, SCREENS, GAME_MODES } from '../context/GameContext';
-import { getBiomeDisplayInfo } from '../game/biomeDisplay';
-import { Button } from '../components/ui/Button';
-import { ScreenFrame, ScreenFooter } from '../components/ui/layout/ScreenFrame';
+import { useEffect } from "react";
+import confetti from "canvas-confetti";
+import { useGame, SCREENS, GAME_MODES } from "../context/GameContext";
+import { getBiomeDisplayInfo } from "../game/biomeDisplay";
+import { Button } from "../components/ui/Button";
+import { ScreenFrame, ScreenFooter } from "../components/ui/layout/ScreenFrame";
 
 export function GameCompleteScreen() {
-  const { completeStats, session, player, goTo, setSession, setGameMode } = useGame();
+  const { completeStats, session, player, goTo, setSession, setGameMode } =
+    useGame();
   const display = getBiomeDisplayInfo(session?.pathId ?? 0);
 
   useEffect(() => {
@@ -56,7 +57,9 @@ export function GameCompleteScreen() {
           </div>
           <div className="game-complete-stat">
             <span className="info-label">Alpha</span>
-            <span className="info-value">{completeStats.alphaCaught ? 'Yes' : 'No'}</span>
+            <span className="info-value">
+              {completeStats.alphaCaught ? "Yes" : "No"}
+            </span>
           </div>
         </div>
       )}

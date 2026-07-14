@@ -1,17 +1,25 @@
-import { useEffect, useState, useRef } from 'react';
-import { api } from '../api';
-import { Button } from '../components/ui/Button';
-import { ProgressBar } from '../components/ui/ProgressBar';
-import { ScreenFrame } from '../components/ui/layout/ScreenFrame';
-import { getBiomeDisplayInfo } from '../game/biomeDisplay';
-import { initBiomeSpawnState } from '../game/spawnController';
-import { preloadBiome, setActivePathId } from '../game/world';
-import { useGame, SCREENS } from '../context/GameContext';
+import { useEffect, useState, useRef } from "react";
+import { api } from "../api";
+import { Button } from "../components/ui/Button";
+import { ProgressBar } from "../components/ui/ProgressBar";
+import { ScreenFrame } from "../components/ui/layout/ScreenFrame";
+import { getBiomeDisplayInfo } from "../game/biomeDisplay";
+import { initBiomeSpawnState } from "../game/spawnController";
+import { preloadBiome, setActivePathId } from "../game/world";
+import { useGame, SCREENS } from "../context/GameContext";
 
 export function LoadingScreen() {
-  const { player, session, setSession, setGameRuntime, setSpawnLadder, goTo, setPlayer } = useGame();
+  const {
+    player,
+    session,
+    setSession,
+    setGameRuntime,
+    setSpawnLadder,
+    goTo,
+    setPlayer,
+  } = useGame();
   const [error, setError] = useState(null);
-  const [phase, setPhase] = useState('session');
+  const [phase, setPhase] = useState("session");
   const [progress, setProgress] = useState(10);
 
   const playerRef = useRef(player);
@@ -33,24 +41,24 @@ export function LoadingScreen() {
     let cancelled = false;
     const controller = new AbortController();
     setActivePathId(sessionPathId);
-    setPhase('biome');
+    setPhase("biome");
     setProgress(35);
     preloadBiome(sessionPathId);
 
     (async () => {
       try {
         const fetchOpts = { signal: controller.signal };
-        setPhase('session');
+        setPhase("session");
         setProgress(25);
 
         const result = await api.startSession(
           playerId,
           { pathId: sessionPathId, regionId: sessionRegionId },
-          fetchOpts,
+          fetchOpts
         );
 
         if (cancelled) return;
-        setPhase('spawns');
+        setPhase("spawns");
         setProgress(55);
 
         const [spawnsRes, ladder, balls] = await Promise.all([
@@ -60,17 +68,20 @@ export function LoadingScreen() {
         ]);
 
         if (cancelled) return;
-        setPhase('ready');
+        setPhase("ready");
         setProgress(90);
 
         const byLevel = spawnsRes.byLevel || {};
         setSpawnLadder(ladder);
 
         const spawnState =
-          result.spawnState || initBiomeSpawnState(sessionRegionId, byLevel, ladder);
+          result.spawnState ||
+          initBiomeSpawnState(sessionRegionId, byLevel, ladder);
 
         const info = getBiomeDisplayInfo(sessionPathId);
-        setSession((prev) => (prev ? { ...prev, fantasyBiome: info.fantasyBiome } : null));
+        setSession((prev) =>
+          prev ? { ...prev, fantasyBiome: info.fantasyBiome } : null
+        );
 
         const latestPlayer = result.player || playerRef.current;
         setPlayer(latestPlayer);
@@ -79,7 +90,8 @@ export function LoadingScreen() {
           spawnState,
           byLevel,
           caughtCount:
-            latestPlayer?.perPathProgress?.[sessionRegionId]?.caughtEntryIds?.length || 0,
+            latestPlayer?.perPathProgress?.[sessionRegionId]?.caughtEntryIds
+              ?.length || 0,
           ballsConfig: balls,
           alphaSpawned: false,
         });
@@ -87,7 +99,7 @@ export function LoadingScreen() {
         setProgress(100);
         goTo(SCREENS.inGame);
       } catch (e) {
-        if (!cancelled && e.name !== 'AbortError') setError(e.message);
+        if (!cancelled && e.name !== "AbortError") setError(e.message);
       }
     })();
 
@@ -95,13 +107,24 @@ export function LoadingScreen() {
       cancelled = true;
       controller.abort();
     };
-  }, [playerId, sessionPathId, sessionRegionId, setGameRuntime, setSpawnLadder, goTo, setPlayer, setSession]);
+  }, [
+    playerId,
+    sessionPathId,
+    sessionRegionId,
+    setGameRuntime,
+    setSpawnLadder,
+    goTo,
+    setPlayer,
+    setSession,
+  ]);
 
   if (error) {
     return (
       <ScreenFrame className="screen-shell">
         <p className="error-text">{error}</p>
-        <Button onClick={() => goTo(SCREENS.dashboard)}>Back to Dashboard</Button>
+        <Button onClick={() => goTo(SCREENS.dashboard)}>
+          Back to Dashboard
+        </Button>
       </ScreenFrame>
     );
   }

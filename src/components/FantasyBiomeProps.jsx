@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
-import FantasyProp from './FantasyProp';
-import { FANTASY_BIOME_ID } from '../game/fantasyAssets';
-import { getBiomeProps } from '../game/world';
+import { useMemo } from "react";
+import FantasyProp from "./FantasyProp";
+import { FANTASY_BIOME_ID } from "../game/fantasyAssets";
+import { getBiomeProps } from "../game/world";
 
 export default function FantasyBiomeProps() {
   const { fantasyProps = [] } = useMemo(

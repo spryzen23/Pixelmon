@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { v4 as uuidv4 } from 'uuid';
+import { Router } from "express";
+import { v4 as uuidv4 } from "uuid";
 import {
   getBiomeMap,
   getBallsConfig,
@@ -8,31 +8,31 @@ import {
   listPlayers,
   getPlayer,
   savePlayer,
-} from '../lib/dataStore.js';
+} from "../lib/dataStore.js";
 import {
   getRegionSpawnIndex,
   initSpawnState,
   onCatch,
   isAlphaEligible,
-} from '../services/spawnService.js';
-import { getSpawnLadder } from '../lib/dataStore.js';
+} from "../services/spawnService.js";
+import { getSpawnLadder } from "../lib/dataStore.js";
 
 export const apiRouter = Router();
 
 const DEFAULT_CHARACTER_STYLE = {
-  id: 'player-21',
-  label: 'Arc Runner',
-  modelUrl: '/assets/players/player%20(21).glb',
-  motion: 'Idle, run, jump clips',
+  id: "player-21",
+  label: "Arc Runner",
+  modelUrl: "/assets/players/player%20(21).glb",
+  motion: "Idle, run, jump clips",
   fitHeight: 0.92,
   modelScale: 1,
 };
 
-apiRouter.get('/health', (req, res) => {
-  res.json({ ok: true, name: 'pixelmon', version: '0.1.0' });
+apiRouter.get("/health", (req, res) => {
+  res.json({ ok: true, name: "pixelmon", version: "0.1.0" });
 });
 
-apiRouter.get('/biomes', async (req, res, next) => {
+apiRouter.get("/biomes", async (req, res, next) => {
   try {
     const map = await getBiomeMap();
     res.json(map);
@@ -41,13 +41,17 @@ apiRouter.get('/biomes', async (req, res, next) => {
   }
 });
 
-apiRouter.get('/biomes/:regionId/spawns', async (req, res, next) => {
+apiRouter.get("/biomes/:regionId/spawns", async (req, res, next) => {
   try {
     const { regionId } = req.params;
     const level = req.query.level ? Number(req.query.level) : null;
     const byLevel = await getRegionSpawnIndex(regionId);
     if (level != null) {
-      return res.json({ regionId, level, pokemon: byLevel[String(level)] || [] });
+      return res.json({
+        regionId,
+        level,
+        pokemon: byLevel[String(level)] || [],
+      });
     }
     res.json({ regionId, byLevel });
   } catch (e) {
@@ -55,7 +59,7 @@ apiRouter.get('/biomes/:regionId/spawns', async (req, res, next) => {
   }
 });
 
-apiRouter.get('/config/balls', async (req, res, next) => {
+apiRouter.get("/config/balls", async (req, res, next) => {
   try {
     res.json(await getBallsConfig());
   } catch (e) {
@@ -63,7 +67,7 @@ apiRouter.get('/config/balls', async (req, res, next) => {
   }
 });
 
-apiRouter.get('/config/animation-types', async (req, res, next) => {
+apiRouter.get("/config/animation-types", async (req, res, next) => {
   try {
     res.json(await getTypeAnimationCatalog());
   } catch (e) {
@@ -71,7 +75,7 @@ apiRouter.get('/config/animation-types', async (req, res, next) => {
   }
 });
 
-apiRouter.get('/config/spawn-ladder', async (req, res, next) => {
+apiRouter.get("/config/spawn-ladder", async (req, res, next) => {
   try {
     res.json(await getSpawnLadder());
   } catch (e) {
@@ -79,7 +83,7 @@ apiRouter.get('/config/spawn-ladder', async (req, res, next) => {
   }
 });
 
-apiRouter.get('/starters', async (req, res, next) => {
+apiRouter.get("/starters", async (req, res, next) => {
   try {
     const slim = await getPokemonsSlim();
     res.json({ starters: slim.entries });
@@ -88,13 +92,15 @@ apiRouter.get('/starters', async (req, res, next) => {
   }
 });
 
-apiRouter.get('/pokedex', async (req, res, next) => {
+apiRouter.get("/pokedex", async (req, res, next) => {
   try {
-    const region = req.query.region || 'kanto';
+    const region = req.query.region || "kanto";
     const page = Math.max(1, Number(req.query.page) || 1);
     const limit = Math.min(100, Number(req.query.limit) || 40);
     const slim = await getPokemonsSlim();
-    const all = slim.entries.filter((e) => e.region === region && e.formTier === 1);
+    const all = slim.entries.filter(
+      (e) => e.region === region && e.formTier === 1
+    );
     const start = (page - 1) * limit;
     res.json({
       region,
@@ -108,7 +114,7 @@ apiRouter.get('/pokedex', async (req, res, next) => {
   }
 });
 
-apiRouter.get('/players', async (req, res, next) => {
+apiRouter.get("/players", async (req, res, next) => {
   try {
     res.json({ players: await listPlayers() });
   } catch (e) {
@@ -116,11 +122,11 @@ apiRouter.get('/players', async (req, res, next) => {
   }
 });
 
-apiRouter.post('/players', async (req, res, next) => {
+apiRouter.post("/players", async (req, res, next) => {
   try {
     const { displayName, companion, characterStyle } = req.body;
     if (!displayName?.trim()) {
-      return res.status(400).json({ error: 'displayName required' });
+      return res.status(400).json({ error: "displayName required" });
     }
     const id = uuidv4();
     const player = {
@@ -131,7 +137,7 @@ apiRouter.post('/players', async (req, res, next) => {
       unlockedPathIds: [0],
       completedPathIds: [],
       perPathProgress: {},
-      settings: { volume: 0.8, quality: 'medium' },
+      settings: { volume: 0.8, quality: "medium" },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -142,16 +148,16 @@ apiRouter.post('/players', async (req, res, next) => {
   }
 });
 
-apiRouter.get('/players/:id', async (req, res) => {
+apiRouter.get("/players/:id", async (req, res) => {
   try {
     const player = await getPlayer(req.params.id);
     res.json(player);
   } catch {
-    res.status(404).json({ error: 'Player not found' });
+    res.status(404).json({ error: "Player not found" });
   }
 });
 
-apiRouter.patch('/players/:id/save', async (req, res) => {
+apiRouter.patch("/players/:id/save", async (req, res) => {
   try {
     const player = await getPlayer(req.params.id);
     const patch = req.body;
@@ -167,11 +173,11 @@ apiRouter.patch('/players/:id/save', async (req, res) => {
     await savePlayer(merged);
     res.json(merged);
   } catch {
-    res.status(404).json({ error: 'Player not found' });
+    res.status(404).json({ error: "Player not found" });
   }
 });
 
-apiRouter.post('/players/:id/session/start', async (req, res, next) => {
+apiRouter.post("/players/:id/session/start", async (req, res, next) => {
   try {
     const player = await getPlayer(req.params.id);
     const { pathId, regionId } = req.body;
@@ -181,7 +187,11 @@ apiRouter.post('/players/:id/session/start', async (req, res, next) => {
     if (!spawnState) {
       spawnState = initSpawnState(regionId, byLevel, ladder);
     }
-    player.activeSession = { pathId, regionId, startedAt: new Date().toISOString() };
+    player.activeSession = {
+      pathId,
+      regionId,
+      startedAt: new Date().toISOString(),
+    };
     if (!player.perPathProgress[regionId]) {
       player.perPathProgress[regionId] = {};
     }
@@ -193,13 +203,13 @@ apiRouter.post('/players/:id/session/start', async (req, res, next) => {
   }
 });
 
-apiRouter.post('/players/:id/catch', async (req, res, next) => {
+apiRouter.post("/players/:id/catch", async (req, res, next) => {
   try {
     const player = await getPlayer(req.params.id);
     const { entryId, regionId, ballId, isAlpha } = req.body;
     const slim = await getPokemonsSlim();
     const entry = slim.entries.find((e) => e.entryId === entryId);
-    if (!entry) return res.status(400).json({ error: 'Invalid entry' });
+    if (!entry) return res.status(400).json({ error: "Invalid entry" });
 
     const ladder = await getSpawnLadder();
     const progress = player.perPathProgress[regionId] || {};
@@ -244,7 +254,7 @@ apiRouter.post('/players/:id/catch', async (req, res, next) => {
   }
 });
 
-apiRouter.post('/players/:id/map-complete', async (req, res, next) => {
+apiRouter.post("/players/:id/map-complete", async (req, res, next) => {
   try {
     const player = await getPlayer(req.params.id);
     const { pathId, regionId, stats } = req.body;
@@ -255,7 +265,10 @@ apiRouter.post('/players/:id/map-complete', async (req, res, next) => {
     const idx = map.regions.findIndex((r) => r.regionId === regionId);
     if (idx >= 0 && idx < map.regions.length - 1) {
       const nextRegion = map.regions[idx + 1];
-      if (nextRegion?.playable && !player.unlockedPathIds.includes(nextRegion.pathId)) {
+      if (
+        nextRegion?.playable &&
+        !player.unlockedPathIds.includes(nextRegion.pathId)
+      ) {
         player.unlockedPathIds.push(nextRegion.pathId);
       }
     }
@@ -275,5 +288,5 @@ apiRouter.post('/players/:id/map-complete', async (req, res, next) => {
 
 apiRouter.use((err, _req, res, _next) => {
   console.error(err);
-  res.status(500).json({ error: err.message || 'Server error' });
+  res.status(500).json({ error: err.message || "Server error" });
 });

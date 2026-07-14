@@ -1,6 +1,6 @@
-import { useGLTF } from '@react-three/drei';
-import { useMemo } from 'react';
-import { getPlantPropDef } from '../game/plantAssets';
+import { useGLTF } from "@react-three/drei";
+import { useMemo } from "react";
+import { getPlantPropDef } from "../game/plantAssets";
 
 export default function PlantProp({
   propKey,

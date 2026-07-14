@@ -1,4 +1,4 @@
-import { SUN_POSITION } from './Atmosphere';
+import { SUN_POSITION } from "./Atmosphere";
 
 export function SceneTheme({ theme, children }) {
   if (!theme) {

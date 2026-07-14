@@ -1,12 +1,6 @@
 const VISTA_Y = -28;
 
-function Patch({
-  accent,
-  color,
-  glow,
-  position,
-  rotation = 0,
-}) {
+function Patch({ accent, color, glow, position, rotation = 0 }) {
   return (
     <group position={position} rotation={[0, rotation, 0]}>
       <mesh>

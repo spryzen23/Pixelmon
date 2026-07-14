@@ -1,18 +1,18 @@
-import { Vector3 } from 'three';
+import { Vector3 } from "three";
 import {
   getParallaxThrowVector,
   DEFAULT_THROW_POWER,
   MIN_THROW_POWER,
   MAX_THROW_POWER,
-} from './projectilePhysics';
+} from "./projectilePhysics";
 
-describe('projectilePhysics', () => {
-  it('exports throw power bounds', () => {
+describe("projectilePhysics", () => {
+  it("exports throw power bounds", () => {
     expect(MIN_THROW_POWER).toBeLessThan(DEFAULT_THROW_POWER);
     expect(MAX_THROW_POWER).toBeGreaterThan(DEFAULT_THROW_POWER);
   });
 
-  it('computes normalized throw direction from camera to target', () => {
+  it("computes normalized throw direction from camera to target", () => {
     const camera = {
       position: new Vector3(0, 2, 5),
       getWorldDirection: (target) => target.set(0, 0, -1),

@@ -1,0 +1,10 @@
+node_modules
+.next
+coverage
+build
+dist
+public/assets
+reports
+src/server/showdown
+v2
+src/v2

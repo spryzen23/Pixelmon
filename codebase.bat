@@ -77,6 +77,7 @@ set "SECTION5_STATUS=SKIPPED"
 set "SECTION6_STATUS=SKIPPED"
 set "SECTION6_COVERAGE_STATUS=SKIPPED"
 set "SECTION7_STATUS=SKIPPED"
+set "SECTION7B_STATUS=SKIPPED"
 
 REM ANSI ESC (char 27). Avoid "prompt $E | cmd" — breaks CALL :color_echo on some Windows builds.
 set "ESC="
@@ -235,11 +236,24 @@ if /i "%SKIP_DATA_SETUP%"=="1" (
 )
 echo.
 
-REM --- [3] Typecheck (skipped) ---
+REM --- [3] Typecheck ---
 call :color_echo "%CYAN%" "[3/9] Type checking..."
 echo ----------------------------------------
-call :color_echo "%BLUE%" "  Skipped: JavaScript monorepo (client Vite + server Express; no tsc)."
-set "SECTION3_STATUS=SKIPPED"
+if /i "%SKIP_TYPECHECK%"=="1" (
+    call :color_echo "%YELLOW%" "  Skipped (SKIP_TYPECHECK=1)"
+    set "SECTION3_STATUS=SKIPPED"
+) else (
+    call :color_echo "%BLUE%" "  Running: npm.cmd run typecheck"
+    call npm.cmd run typecheck
+    if errorlevel 1 (
+        set /a ERROR_COUNT+=1
+        set "SECTION3_STATUS=FAILED"
+        call :color_echo "%RED%" "  X Type checking failed"
+    ) else (
+        set "SECTION3_STATUS=PASSED"
+        call :color_echo "%GREEN%" "  OK Type checking passed"
+    )
+)
 echo.
 
 REM --- [4] Prettier ---
@@ -249,7 +263,13 @@ if /i "%SKIP_PRETTIER%"=="1" (
     call :color_echo "%YELLOW%" "  Skipped (SKIP_PRETTIER=1)"
     set "SECTION4_STATUS=SKIPPED"
 ) else (
-    if not exist ".prettierrc" if not exist ".prettierrc.json" if not exist ".prettierrc.js" if /i not "%RUN_PRETTIER%"=="1" (
+    set "HAS_PRETTIER_CONFIG=0"
+    if exist ".prettierrc" set "HAS_PRETTIER_CONFIG=1"
+    if exist ".prettierrc.json" set "HAS_PRETTIER_CONFIG=1"
+    if exist ".prettierrc.js" set "HAS_PRETTIER_CONFIG=1"
+    if /i "%RUN_PRETTIER%"=="1" set "HAS_PRETTIER_CONFIG=1"
+    
+    if "!HAS_PRETTIER_CONFIG!"=="0" (
         call :color_echo "%YELLOW%" "  Skipped (no .prettierrc; set RUN_PRETTIER=1 to format client/server JS)"
         set "SECTION4_STATUS=SKIPPED"
     ) else (
@@ -342,7 +362,23 @@ if /i "%SKIP_TESTS%"=="1" (
 echo.
 
 REM --- [6b] Coverage ---
-call :color_echo "%BLUE%" "[6b] Coverage skipped (Client Vitest migrated to unified repository)"
+call :color_echo "%CYAN%" "[6b] Running Vitest tests with coverage..."
+echo ----------------------------------------
+if /i "%SKIP_VITEST_COVERAGE%"=="1" (
+    call :color_echo "%YELLOW%" "  Skipped (SKIP_VITEST_COVERAGE=1)"
+    set "SECTION6_COVERAGE_STATUS=SKIPPED"
+) else (
+    call :color_echo "%BLUE%" "  Running: npm.cmd run test:ui:coverage"
+    call npm.cmd run test:ui:coverage
+    if errorlevel 1 (
+        set /a ERROR_COUNT+=1
+        set "SECTION6_COVERAGE_STATUS=FAILED"
+        call :color_echo "%RED%" "  X Coverage check failed"
+    ) else (
+        set "SECTION6_COVERAGE_STATUS=PASSED"
+        call :color_echo "%GREEN%" "  OK Coverage generated successfully"
+    )
+)
 echo.
 
 REM --- [7] Build ---
@@ -369,6 +405,25 @@ if /i "%SKIP_BUILD%"=="1" (
 )
 echo.
 
+REM --- [7b] Graphify Build ---
+call :color_echo "%CYAN%" "[7b] Graphify build..."
+echo ----------------------------------------
+if exist "graphify.bat" (
+    call :color_echo "%BLUE%" "  Running: graphify.bat build"
+    call graphify.bat build
+    if errorlevel 1 (
+        set /a ERROR_COUNT+=1
+        set "SECTION7B_STATUS=FAILED"
+        call :color_echo "%RED%" "  X Graphify build failed"
+    ) else (
+        set "SECTION7B_STATUS=PASSED"
+        call :color_echo "%GREEN%" "  OK Graphify build successful"
+    )
+) else (
+    call :color_echo "%YELLOW%" "  Skipped (graphify.bat not found)"
+)
+echo.
+
 :summary
 echo.
 call :color_echo "%CYAN%" "========================================"
@@ -379,12 +434,13 @@ call :color_echo "%BLUE%" "Section Status:"
 echo   [0] Game asset inventory:             !SECTION0_STATUS!  (glb=!ASSET_GLB_COUNT!, reports\asset-inventory.txt)
 echo   [1] Cleanup and npm install:          !SECTION1_STATUS!
 echo   [2] Data preflight (build-slim):      !SECTION2_STATUS!
-echo   [3] Type checking (JS - skipped):     !SECTION3_STATUS!
+echo   [3] Type checking (tsc):              !SECTION3_STATUS!
 echo   [4] Prettier:                         !SECTION4_STATUS!
 echo   [5] ESLint:                           !SECTION5_STATUS!
 echo   [6] Tests (node:test):                !SECTION6_STATUS!
 echo   [6b] Vitest coverage:                 !SECTION6_COVERAGE_STATUS!
 echo   [7] Build (Next.js):                  !SECTION7_STATUS!
+echo   [7b] Build (Graphify):                 !SECTION7B_STATUS!
 echo.
 
 if !ERROR_COUNT! EQU 0 (

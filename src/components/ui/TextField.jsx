@@ -1,5 +1,5 @@
-export function TextField({ label, id, className = '', ...props }) {
-  const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
+export function TextField({ label, id, className = "", ...props }) {
+  const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
   return (
     <label className={`field-label ${className}`} htmlFor={inputId}>
       {label}

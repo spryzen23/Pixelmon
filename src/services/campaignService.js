@@ -1,5 +1,5 @@
-import { api } from '../api';
-import { getBiomeDisplayInfo } from '../game/biomeDisplay';
+import { api } from "../api";
+import { getBiomeDisplayInfo } from "../game/biomeDisplay";
 
 export function buildCampaignSession(region) {
   const display = getBiomeDisplayInfo(region.pathId);

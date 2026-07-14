@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
-import VillageProp from './VillageProp';
-import VillageScene from './VillageScene';
-import { VILLAGE_BIOME_ID } from '../game/villageAssets';
-import { getBiomeProps } from '../game/world';
+import { useMemo } from "react";
+import VillageProp from "./VillageProp";
+import VillageScene from "./VillageScene";
+import { VILLAGE_BIOME_ID } from "../game/villageAssets";
+import { getBiomeProps } from "../game/world";
 
 export default function VillageBiomeProps() {
   const { villageScene, villageProps = [] } = useMemo(

@@ -1,33 +1,30 @@
-import {
-  FANTASY_BIOME_ID,
-  pickFantasyPropVariant,
-} from './fantasyAssets';
+import { FANTASY_BIOME_ID, pickFantasyPropVariant } from "./fantasyAssets";
 import {
   FANTASY_VILLAGE_PLACEMENTS,
   isInsideVillageBounds as isInsideFantasyVillageBounds,
   resolveFantasyPlacement,
-} from './fantasyVillageLayout';
-import { pickPlantPropVariant } from './plantAssets';
-import { resolvePlantPlacement } from './plantPlacement';
+} from "./fantasyVillageLayout";
+import { pickPlantPropVariant } from "./plantAssets";
+import { resolvePlantPlacement } from "./plantPlacement";
 import {
   VILLAGE_BIOME_ID,
   VILLAGE_SCENE_ANCHOR,
   getVillageScenePosition,
   pickVillagePropVariant,
-} from './villageAssets';
+} from "./villageAssets";
 import {
   VILLAGE_CENTER_X,
   VILLAGE_CENTER_Z,
   VILLAGE_HALF_SIZE,
   isInsideVillageBounds,
   resolveVillagePlacement,
-} from './villageLayout';
+} from "./villageLayout";
 import {
   getRegionForPath,
   getRegionalBiomeForDex,
   getPokemonForRegion,
   REGIONAL_BIOMES,
-} from './pokemonData';
+} from "./pokemonData";
 
 export {
   getAllPlayableBiomes,
@@ -35,8 +32,13 @@ export {
   getRegionMeta,
   formatEggGroups,
   formatSpawnProgressLine,
-} from './biomeDisplay';
-export { getRegionForPath, getRegionalBiomeForDex, getPokemonForRegion, REGIONAL_BIOMES };
+} from "./biomeDisplay";
+export {
+  getRegionForPath,
+  getRegionalBiomeForDex,
+  getPokemonForRegion,
+  REGIONAL_BIOMES,
+};
 
 export const VOXEL_SIZE = 0.75;
 export const CHUNK_SIZE = 32;
@@ -78,8 +80,8 @@ export const PATH_HALF_WORLD_SIZE = PATH_WORLD_SIZE / 2;
 export const RENDER_DISTANCE = 2;
 
 export const CAVE_ZONES = {
-  EXTERIOR: 'exterior',
-  INTERIOR: 'interior',
+  EXTERIOR: "exterior",
+  INTERIOR: "interior",
 };
 
 export const CAVE_BIOME_ID = 4;
@@ -89,77 +91,120 @@ export const MOUNT_CORONET_PEAK_HEIGHT = 80;
 export const MOUNT_CORONET_SLOPE = 1.2;
 
 export const BIOMES = {
-  DESERT: 'desert',
-  PLAINS: 'plains',
-  SNOW: 'snow',
-  FANTASY: 'fantasy',
-  VILLAGE: 'village',
+  DESERT: "desert",
+  PLAINS: "plains",
+  SNOW: "snow",
+  FANTASY: "fantasy",
+  VILLAGE: "village",
 };
 
 export const WORLD_PATHS = [
-  { id: 0, name: 'Fieldlands Trail', biome: BIOMES.PLAINS, seed: 3.1 },
-  { id: 1, name: 'Sandglass Flats', biome: BIOMES.DESERT, seed: 18.6 },
-  { id: 2, name: 'Frostpine Pass', biome: BIOMES.SNOW, seed: 42.2 },
-  { id: 3, name: 'Coastal Run', biome: BIOMES.PLAINS, seed: 75.4 },
-  { id: 4, name: 'Crimson Mire', biome: BIOMES.PLAINS, seed: 103.9 },
-  { id: 5, name: 'Coronet Approach', biome: BIOMES.SNOW, seed: 160.3 },
-  { id: 6, name: 'Fantasy World', biome: BIOMES.FANTASY, seed: 201.7 },
-  { id: 7, name: 'Village World', biome: BIOMES.VILLAGE, seed: 240.5 },
+  { id: 0, name: "Fieldlands Trail", biome: BIOMES.PLAINS, seed: 3.1 },
+  { id: 1, name: "Sandglass Flats", biome: BIOMES.DESERT, seed: 18.6 },
+  { id: 2, name: "Frostpine Pass", biome: BIOMES.SNOW, seed: 42.2 },
+  { id: 3, name: "Coastal Run", biome: BIOMES.PLAINS, seed: 75.4 },
+  { id: 4, name: "Crimson Mire", biome: BIOMES.PLAINS, seed: 103.9 },
+  { id: 5, name: "Coronet Approach", biome: BIOMES.SNOW, seed: 160.3 },
+  { id: 6, name: "Fantasy World", biome: BIOMES.FANTASY, seed: 201.7 },
+  { id: 7, name: "Village World", biome: BIOMES.VILLAGE, seed: 240.5 },
 ];
 
 export const CREATURE_ASSET_MANIFEST = {
   0: {
     ordinary: [
-      { file: 'ordinary/creature_01.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+      {
+        file: "ordinary/creature_01.glb",
+        scale: 0.35,
+        rotation: [0, Math.PI / 2, 0],
+      },
     ],
-    alpha: { file: 'alpha.glb', scale: 0.35, rotation: [0, Math.PI / 2, 0] },
+    alpha: { file: "alpha.glb", scale: 0.35, rotation: [0, Math.PI / 2, 0] },
   },
   1: {
     ordinary: [
-      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
-      { file: 'ordinary/creature_02.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+      {
+        file: "ordinary/creature_01.glb",
+        scale: 0.45,
+        rotation: [0, Math.PI / 2, 0],
+      },
+      {
+        file: "ordinary/creature_02.glb",
+        scale: 0.45,
+        rotation: [0, Math.PI / 2, 0],
+      },
     ],
-    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    alpha: { file: "alpha.glb", scale: 0.45, rotation: [0, Math.PI / 2, 0] },
   },
   2: {
     ordinary: [
-      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+      {
+        file: "ordinary/creature_01.glb",
+        scale: 0.45,
+        rotation: [0, Math.PI / 2, 0],
+      },
     ],
-    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    alpha: { file: "alpha.glb", scale: 0.45, rotation: [0, Math.PI / 2, 0] },
   },
   3: {
     ordinary: [
-      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+      {
+        file: "ordinary/creature_01.glb",
+        scale: 0.45,
+        rotation: [0, Math.PI / 2, 0],
+      },
     ],
-    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    alpha: { file: "alpha.glb", scale: 0.45, rotation: [0, Math.PI / 2, 0] },
   },
   4: {
     ordinary: [
-      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+      {
+        file: "ordinary/creature_01.glb",
+        scale: 0.45,
+        rotation: [0, Math.PI / 2, 0],
+      },
     ],
-    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    alpha: { file: "alpha.glb", scale: 0.45, rotation: [0, Math.PI / 2, 0] },
   },
   5: {
     ordinary: [
-      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+      {
+        file: "ordinary/creature_01.glb",
+        scale: 0.45,
+        rotation: [0, Math.PI / 2, 0],
+      },
     ],
-    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    alpha: { file: "alpha.glb", scale: 0.45, rotation: [0, Math.PI / 2, 0] },
   },
   6: {
     ordinary: [
-      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+      {
+        file: "ordinary/creature_01.glb",
+        scale: 0.45,
+        rotation: [0, Math.PI / 2, 0],
+      },
     ],
-    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    alpha: { file: "alpha.glb", scale: 0.45, rotation: [0, Math.PI / 2, 0] },
   },
   7: {
     ordinary: [
-      { file: 'ordinary/creature_01.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+      {
+        file: "ordinary/creature_01.glb",
+        scale: 0.45,
+        rotation: [0, Math.PI / 2, 0],
+      },
     ],
-    alpha: { file: 'alpha.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] },
+    alpha: { file: "alpha.glb", scale: 0.45, rotation: [0, Math.PI / 2, 0] },
   },
 };
 
-export const BLOCK_TYPES = ['desert', 'dirt', 'grass', 'snow', 'stone', 'water'];
+export const BLOCK_TYPES = [
+  "desert",
+  "dirt",
+  "grass",
+  "snow",
+  "stone",
+  "water",
+];
 const GRID_EPSILON = 0.000001;
 const SPAWN_PAD_RADIUS = 9;
 const SPAWN_APPROACH_RADIUS = 17;
@@ -245,9 +290,10 @@ export function getOrdinaryCreatureAsset(
   spawnIndex = 0
 ) {
   const manifest = getCreatureAssetManifest(currentBiome);
-  const ordinary = manifest.ordinary.length > 0
-    ? manifest.ordinary
-    : [{ file: 'ordinary.glb', scale: 0.45, rotation: [0, Math.PI / 2, 0] }];
+  const ordinary =
+    manifest.ordinary.length > 0
+      ? manifest.ordinary
+      : [{ file: "ordinary.glb", scale: 0.45, rotation: [0, Math.PI / 2, 0] }];
   const asset = ordinary[spawnIndex % ordinary.length];
 
   return {
@@ -259,7 +305,7 @@ export function getOrdinaryCreatureAsset(
 export function getAlphaCreatureAsset(currentBiome = activeBiome) {
   const manifest = getCreatureAssetManifest(currentBiome);
   const asset = manifest.alpha || {
-    file: 'alpha.glb',
+    file: "alpha.glb",
     scale: 0.95,
     rotation: [0, Math.PI / 2, 0],
   };
@@ -329,7 +375,11 @@ export function getBiomeRenderDistance(currentBiome = activeBiome) {
   return RENDER_DISTANCE;
 }
 
-export function getSurroundingChunks(centerCx = 0, centerCz = 0, radius = RENDER_DISTANCE) {
+export function getSurroundingChunks(
+  centerCx = 0,
+  centerCz = 0,
+  radius = RENDER_DISTANCE
+) {
   const chunks = [];
 
   for (let cz = centerCz - radius; cz <= centerCz + radius; cz += 1) {
@@ -369,12 +419,13 @@ function getBiomeSurfaceY(tileIndexX, tileIndexZ, currentBiome) {
       0,
       (Math.max(Math.abs(tileIndexX), Math.abs(tileIndexZ)) -
         MAP_HALF_BLOCKS * 0.88) /
-      (MAP_HALF_BLOCKS * 0.12)
+        (MAP_HALF_BLOCKS * 0.12)
     ) * 5;
 
-  const rawHeight = Math.round(
-    rollingHill + centerLift + desertFlatten + mountainLift - edgeDrop
-  ) * VOXEL_SIZE;
+  const rawHeight =
+    Math.round(
+      rollingHill + centerLift + desertFlatten + mountainLift - edgeDrop
+    ) * VOXEL_SIZE;
   const spawnBaseY = currentBiome === 2 || currentBiome === 5 ? VOXEL_SIZE : 0;
   const spawnDistance = Math.hypot(tileIndexX, tileIndexZ);
 
@@ -397,25 +448,25 @@ function getBiomeSurfaceY(tileIndexX, tileIndexZ, currentBiome) {
 function getSurfaceBlockType(currentBiome, surfaceY) {
   if (currentBiome === FANTASY_BIOME_ID || currentBiome === VILLAGE_BIOME_ID) {
     if (surfaceY >= STONE_LINE_Y) {
-      return 'stone';
+      return "stone";
     }
 
-    return 'grass';
+    return "grass";
   }
 
   if (surfaceY >= SNOW_LINE_Y || currentBiome === 2 || currentBiome === 5) {
-    return 'snow';
+    return "snow";
   }
 
   if (surfaceY >= STONE_LINE_Y) {
-    return 'stone';
+    return "stone";
   }
 
   if (currentBiome === 1) {
-    return 'desert';
+    return "desert";
   }
 
-  return 'grass';
+  return "grass";
 }
 
 export function generateBiomeChunk(currentBiome, cx, cz) {
@@ -444,10 +495,11 @@ function createCoastalFallbackChunk(cx, cz) {
     for (let lz = 0; lz < CHUNK_SIZE; lz += 1) {
       const tileIndexZ = startZ + lz;
       const z = snapToVoxel(tileIndexZ * VOXEL_SIZE);
-      const shoreline = Math.sin(tileIndexX * 0.12) * 5 + Math.cos(tileIndexZ * 0.08) * 3;
+      const shoreline =
+        Math.sin(tileIndexX * 0.12) * 5 + Math.cos(tileIndexZ * 0.08) * 3;
       const isWater = tileIndexZ + shoreline < -10;
       const surfaceY = isWater ? WATER_LEVEL : 0;
-      const type = isWater ? 'water' : 'desert';
+      const type = isWater ? "water" : "desert";
 
       heightLookup.set(toTileKey(x, z), {
         biome: BIOMES.PLAINS,
@@ -488,7 +540,11 @@ function createBiomeChunk(currentBiome, cx, cz) {
     for (let lz = 0; lz < CHUNK_SIZE; lz += 1) {
       const tileIndexZ = startZ + lz;
       const z = snapToVoxel(tileIndexZ * VOXEL_SIZE);
-      const rawSurfaceY = getBiomeSurfaceY(tileIndexX, tileIndexZ, currentBiome);
+      const rawSurfaceY = getBiomeSurfaceY(
+        tileIndexX,
+        tileIndexZ,
+        currentBiome
+      );
       const waterNoise =
         Math.sin((tileIndexX + currentBiome * 7) * 0.19) +
         Math.cos((tileIndexZ - currentBiome * 5) * 0.17);
@@ -525,7 +581,7 @@ function createBiomeChunk(currentBiome, cx, cz) {
             x,
             y: snappedTopY - WATER_BLOCK_HEIGHT / 2,
             z,
-            type: 'water',
+            type: "water",
           });
           counts.water += 1;
         }
@@ -542,11 +598,11 @@ function createBiomeChunk(currentBiome, cx, cz) {
         const isSurface = snappedTopY === surfaceY;
         const type = isSurface
           ? currentBiome === 3
-            ? 'desert'
+            ? "desert"
             : getSurfaceBlockType(currentBiome, surfaceY)
           : snappedTopY >= STONE_LINE_Y
-            ? 'stone'
-            : 'dirt';
+            ? "stone"
+            : "dirt";
 
         blocks.push({
           x,
@@ -720,25 +776,25 @@ const VILLAGE_MAX_SCATTERED = 60;
 function getSurfaceBlockTypeForProp(currentBiome, surfaceY) {
   if (currentBiome === FANTASY_BIOME_ID || currentBiome === VILLAGE_BIOME_ID) {
     if (surfaceY >= STONE_LINE_Y) {
-      return 'stone';
+      return "stone";
     }
 
-    return 'grass';
+    return "grass";
   }
 
   if (surfaceY >= SNOW_LINE_Y || currentBiome === 2 || currentBiome === 5) {
-    return 'snow';
+    return "snow";
   }
 
   if (surfaceY >= STONE_LINE_Y) {
-    return 'stone';
+    return "stone";
   }
 
   if (currentBiome === 1) {
-    return 'desert';
+    return "desert";
   }
 
-  return 'grass';
+  return "grass";
 }
 
 function markPropFootprint(occupiedTiles, x, z, footprintRadius) {
@@ -759,8 +815,16 @@ function markPropFootprint(occupiedTiles, x, z, footprintRadius) {
 }
 
 function markVillageCollisionRect(occupiedTiles, centerX, centerZ, halfSize) {
-  for (let x = centerX - halfSize; x <= centerX + halfSize + GRID_EPSILON; x += VOXEL_SIZE) {
-    for (let z = centerZ - halfSize; z <= centerZ + halfSize + GRID_EPSILON; z += VOXEL_SIZE) {
+  for (
+    let x = centerX - halfSize;
+    x <= centerX + halfSize + GRID_EPSILON;
+    x += VOXEL_SIZE
+  ) {
+    for (
+      let z = centerZ - halfSize;
+      z <= centerZ + halfSize + GRID_EPSILON;
+      z += VOXEL_SIZE
+    ) {
       occupiedTiles.add(toTileKey(snapToVoxel(x), snapToVoxel(z)));
     }
   }
@@ -817,30 +881,44 @@ function generateFantasyBiomeProps(currentBiome) {
   let scatteredCount = 0;
 
   biomeMap.heightLookup.forEach((tile, key) => {
-    if (tile.isWater || tile.surfaceY <= WATER_LEVEL || scatteredCount >= FANTASY_MAX_SCATTERED) {
+    if (
+      tile.isWater ||
+      tile.surfaceY <= WATER_LEVEL ||
+      scatteredCount >= FANTASY_MAX_SCATTERED
+    ) {
       return;
     }
 
-    const [x, z] = key.split(':').map(Number);
+    const [x, z] = key.split(":").map(Number);
     const tileIndexX = getVoxelIndex(x);
     const tileIndexZ = getVoxelIndex(z);
     const spawnDistance = Math.hypot(tileIndexX, tileIndexZ);
 
-    if (spawnDistance <= SPAWN_PAD_RADIUS || isInsideFantasyVillageBounds(x, z)) {
+    if (
+      spawnDistance <= SPAWN_PAD_RADIUS ||
+      isInsideFantasyVillageBounds(x, z)
+    ) {
       return;
     }
 
     const surfaceType = getSurfaceBlockTypeForProp(currentBiome, tile.surfaceY);
     const roll = seededRandom(tileIndexX, tileIndexZ, currentBiome + 91);
-    const variantRoll = seededRandom(tileIndexX, tileIndexZ, currentBiome + 173);
+    const variantRoll = seededRandom(
+      tileIndexX,
+      tileIndexZ,
+      currentBiome + 173
+    );
     let propKey = null;
 
-    if (surfaceType === 'grass' && roll < FANTASY_TREE_DENSITY) {
-      propKey = pickFantasyPropVariant('tree', variantRoll);
-    } else if (surfaceType === 'grass' && roll < FANTASY_TREE_DENSITY + FANTASY_PLANT_DENSITY) {
-      propKey = pickFantasyPropVariant('plant', variantRoll);
-    } else if (surfaceType === 'stone' && roll < FANTASY_ROCK_DENSITY) {
-      propKey = pickFantasyPropVariant('rock', variantRoll);
+    if (surfaceType === "grass" && roll < FANTASY_TREE_DENSITY) {
+      propKey = pickFantasyPropVariant("tree", variantRoll);
+    } else if (
+      surfaceType === "grass" &&
+      roll < FANTASY_TREE_DENSITY + FANTASY_PLANT_DENSITY
+    ) {
+      propKey = pickFantasyPropVariant("plant", variantRoll);
+    } else if (surfaceType === "stone" && roll < FANTASY_ROCK_DENSITY) {
+      propKey = pickFantasyPropVariant("rock", variantRoll);
     }
 
     if (!propKey) {
@@ -882,7 +960,7 @@ function generateVillageBiomeProps(currentBiome) {
   const scenePos = getVillageScenePosition(anchorSurfaceY);
 
   const villageScene = {
-    key: 'village-scene',
+    key: "village-scene",
     x: scenePos.x,
     z: scenePos.z,
     surfaceY: scenePos.y,
@@ -893,11 +971,15 @@ function generateVillageBiomeProps(currentBiome) {
   let scatteredCount = 0;
 
   biomeMap.heightLookup.forEach((tile, key) => {
-    if (tile.isWater || tile.surfaceY <= WATER_LEVEL || scatteredCount >= VILLAGE_MAX_SCATTERED) {
+    if (
+      tile.isWater ||
+      tile.surfaceY <= WATER_LEVEL ||
+      scatteredCount >= VILLAGE_MAX_SCATTERED
+    ) {
       return;
     }
 
-    const [x, z] = key.split(':').map(Number);
+    const [x, z] = key.split(":").map(Number);
     const tileIndexX = getVoxelIndex(x);
     const tileIndexZ = getVoxelIndex(z);
     const spawnDistance = Math.hypot(tileIndexX, tileIndexZ);
@@ -908,23 +990,28 @@ function generateVillageBiomeProps(currentBiome) {
 
     const surfaceType = getSurfaceBlockTypeForProp(currentBiome, tile.surfaceY);
     const roll = seededRandom(tileIndexX, tileIndexZ, currentBiome + 91);
-    const variantRoll = seededRandom(tileIndexX, tileIndexZ, currentBiome + 173);
+    const variantRoll = seededRandom(
+      tileIndexX,
+      tileIndexZ,
+      currentBiome + 173
+    );
     let propKey = null;
 
-    if (surfaceType === 'grass' && roll < VILLAGE_TREE_DENSITY) {
-      propKey = pickVillagePropVariant('tree', variantRoll);
+    if (surfaceType === "grass" && roll < VILLAGE_TREE_DENSITY) {
+      propKey = pickVillagePropVariant("tree", variantRoll);
     } else if (
-      surfaceType === 'grass' &&
+      surfaceType === "grass" &&
       roll < VILLAGE_TREE_DENSITY + VILLAGE_PLANT_DENSITY
     ) {
-      propKey = pickVillagePropVariant('plant', variantRoll);
+      propKey = pickVillagePropVariant("plant", variantRoll);
     } else if (
-      surfaceType === 'grass' &&
-      roll < VILLAGE_TREE_DENSITY + VILLAGE_PLANT_DENSITY + VILLAGE_FENCE_DENSITY
+      surfaceType === "grass" &&
+      roll <
+        VILLAGE_TREE_DENSITY + VILLAGE_PLANT_DENSITY + VILLAGE_FENCE_DENSITY
     ) {
-      propKey = pickVillagePropVariant('fence', variantRoll);
-    } else if (surfaceType === 'stone' && roll < VILLAGE_FENCE_DENSITY) {
-      propKey = pickVillagePropVariant('rock', variantRoll);
+      propKey = pickVillagePropVariant("fence", variantRoll);
+    } else if (surfaceType === "stone" && roll < VILLAGE_FENCE_DENSITY) {
+      propKey = pickVillagePropVariant("rock", variantRoll);
     }
 
     if (!propKey) {
@@ -991,7 +1078,7 @@ function generateBiomeProps(currentBiome = activeBiome) {
       return;
     }
 
-    const [x, z] = key.split(':').map(Number);
+    const [x, z] = key.split(":").map(Number);
     const tileIndexX = getVoxelIndex(x);
     const tileIndexZ = getVoxelIndex(z);
     const spawnDistance = Math.hypot(tileIndexX, tileIndexZ);
@@ -1002,11 +1089,15 @@ function generateBiomeProps(currentBiome = activeBiome) {
 
     const surfaceType = getSurfaceBlockTypeForProp(currentBiome, tile.surfaceY);
     const roll = seededRandom(tileIndexX, tileIndexZ, currentBiome + 91);
-    const variantRoll = seededRandom(tileIndexX, tileIndexZ, currentBiome + 173);
+    const variantRoll = seededRandom(
+      tileIndexX,
+      tileIndexZ,
+      currentBiome + 173
+    );
 
     let propKey = null;
 
-    if (currentBiome === 1 && surfaceType === 'desert') {
+    if (currentBiome === 1 && surfaceType === "desert") {
       if (roll < CACTUS_DENSITY) {
         cacti.push({
           key: `cactus-${key}`,
@@ -1020,14 +1111,29 @@ function generateBiomeProps(currentBiome = activeBiome) {
       const desertRockRoll = roll - CACTUS_DENSITY;
 
       if (desertRockRoll < DESERT_ROCK_LARGE_DENSITY) {
-        propKey = pickPlantPropVariant('desert_large', currentBiome, variantRoll);
-      } else if (desertRockRoll < DESERT_ROCK_LARGE_DENSITY + DESERT_ROCK_DENSITY) {
-        propKey = pickPlantPropVariant('desert_rock', currentBiome, variantRoll);
+        propKey = pickPlantPropVariant(
+          "desert_large",
+          currentBiome,
+          variantRoll
+        );
+      } else if (
+        desertRockRoll <
+        DESERT_ROCK_LARGE_DENSITY + DESERT_ROCK_DENSITY
+      ) {
+        propKey = pickPlantPropVariant(
+          "desert_rock",
+          currentBiome,
+          variantRoll
+        );
       } else if (
         desertRockRoll <
         DESERT_ROCK_LARGE_DENSITY + DESERT_ROCK_DENSITY + DESERT_SCATTER_DENSITY
       ) {
-        propKey = pickPlantPropVariant('desert_scatter', currentBiome, variantRoll);
+        propKey = pickPlantPropVariant(
+          "desert_scatter",
+          currentBiome,
+          variantRoll
+        );
       }
 
       if (propKey) {
@@ -1047,22 +1153,22 @@ function generateBiomeProps(currentBiome = activeBiome) {
 
     if (
       PLAINS_TREE_BIOMES.has(currentBiome) &&
-      surfaceType === 'grass' &&
+      surfaceType === "grass" &&
       roll < PLANT_TREE_DENSITY
     ) {
-      propKey = pickPlantPropVariant('tree', currentBiome, variantRoll);
+      propKey = pickPlantPropVariant("tree", currentBiome, variantRoll);
     } else if (
       PLAINS_TREE_BIOMES.has(currentBiome) &&
-      surfaceType === 'grass' &&
+      surfaceType === "grass" &&
       roll < PLANT_TREE_DENSITY + PLANT_UNDERSTORY_DENSITY
     ) {
-      propKey = pickPlantPropVariant('plant', currentBiome, variantRoll);
+      propKey = pickPlantPropVariant("plant", currentBiome, variantRoll);
     } else if (
       SNOW_PINE_BIOMES.has(currentBiome) &&
-      surfaceType === 'snow' &&
+      surfaceType === "snow" &&
       roll < PLANT_PINE_DENSITY
     ) {
-      propKey = pickPlantPropVariant('pine', currentBiome, variantRoll);
+      propKey = pickPlantPropVariant("pine", currentBiome, variantRoll);
     }
 
     if (!propKey) {
@@ -1203,7 +1309,12 @@ export function getEntityY(
   return surfaceY + entityHeight / 2 + ENTITY_FOOT_CLEARANCE;
 }
 
-export function isInsideWorld(x = 0, z = 0, radius = 0, currentBiome = activeBiome) {
+export function isInsideWorld(
+  x = 0,
+  z = 0,
+  radius = 0,
+  currentBiome = activeBiome
+) {
   const boundary = getBiomeBoundary(currentBiome);
 
   return (
@@ -1214,7 +1325,12 @@ export function isInsideWorld(x = 0, z = 0, radius = 0, currentBiome = activeBio
   );
 }
 
-export function isWaterCollision(x, z, radius = PLAYER_RADIUS, currentBiome = activeBiome) {
+export function isWaterCollision(
+  x,
+  z,
+  radius = PLAYER_RADIUS,
+  currentBiome = activeBiome
+) {
   const minX = snapToVoxel(x - radius);
   const maxX = snapToVoxel(x + radius);
   const minZ = snapToVoxel(z - radius);
@@ -1298,7 +1414,7 @@ export function getSafeSpawnPosition({
       return;
     }
 
-    const [x, z] = key.split(':').map(Number);
+    const [x, z] = key.split(":").map(Number);
 
     if (!isSafeSpawnTile(x, z, currentBiome)) {
       return;
@@ -1318,16 +1434,9 @@ export function getSafeSpawnPosition({
 
   candidates.sort((a, b) => a.distance - b.distance);
   const safe = candidates[0];
-  const safeLift = Math.max(
-    lift,
-    entityHeight / 2 + ENTITY_FOOT_CLEARANCE
-  );
+  const safeLift = Math.max(lift, entityHeight / 2 + ENTITY_FOOT_CLEARANCE);
 
-  return [
-    safe.x,
-    safe.surfaceY + safeLift,
-    safe.z,
-  ];
+  return [safe.x, safe.surfaceY + safeLift, safe.z];
 }
 
 export function getPathSpawnPoint(
@@ -1354,8 +1463,12 @@ export function getRandomGrassPosition(
   currentBiome = activeBiome
 ) {
   for (let attempts = 0; attempts < 120; attempts += 1) {
-    const x = getTileCoord(centerX + Math.random() * spawnRadius * 2 - spawnRadius);
-    const z = getTileCoord(centerZ + Math.random() * spawnRadius * 2 - spawnRadius);
+    const x = getTileCoord(
+      centerX + Math.random() * spawnRadius * 2 - spawnRadius
+    );
+    const z = getTileCoord(
+      centerZ + Math.random() * spawnRadius * 2 - spawnRadius
+    );
 
     if (isWalkablePosition(x, z, radius, currentBiome)) {
       return [x, getEntityY(x, z, entityHeight, undefined, currentBiome), z];

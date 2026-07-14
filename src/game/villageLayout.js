@@ -1,4 +1,4 @@
-import { getVillagePropDef } from './villageAssets';
+import { getVillagePropDef } from "./villageAssets";
 
 export const VILLAGE_CENTER_X = 0;
 export const VILLAGE_CENTER_Z = -22;

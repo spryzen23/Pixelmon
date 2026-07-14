@@ -1,6 +1,6 @@
-import { api } from '../api';
+import { api } from "../api";
 
-const TOKEN_KEY = 'pixelmon-auth-token';
+const TOKEN_KEY = "pixelmon-auth-token";
 
 export function getStoredToken() {
   return localStorage.getItem(TOKEN_KEY);

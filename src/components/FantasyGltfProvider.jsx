@@ -1,17 +1,17 @@
-import { useGLTF } from '@react-three/drei';
-import { createContext, useCallback, useContext, useMemo } from 'react';
-import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
+import { useGLTF } from "@react-three/drei";
+import { createContext, useCallback, useContext, useMemo } from "react";
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import {
   FANTASY_GLB_URL,
   getFantasyNodeNames,
   isFantasyNodeAllowed,
-} from '../game/fantasyAssets';
+} from "../game/fantasyAssets";
 
 const FantasyGltfContext = createContext(null);
 
 function hideCollisionMeshes(object) {
   object.traverse((child) => {
-    if (child.name && child.name.includes('UCX')) {
+    if (child.name && child.name.includes("UCX")) {
       child.visible = false;
     }
   });
@@ -22,7 +22,11 @@ function buildPrefabCache(scene) {
   const wanted = new Set(getFantasyNodeNames());
 
   scene.traverse((child) => {
-    if (!child.name || !wanted.has(child.name) || !isFantasyNodeAllowed(child.name)) {
+    if (
+      !child.name ||
+      !wanted.has(child.name) ||
+      !isFantasyNodeAllowed(child.name)
+    ) {
       return;
     }
 
@@ -80,7 +84,7 @@ export function useFantasyGltf() {
   const context = useContext(FantasyGltfContext);
 
   if (!context) {
-    throw new Error('useFantasyGltf must be used within FantasyGltfProvider');
+    throw new Error("useFantasyGltf must be used within FantasyGltfProvider");
   }
 
   return context;

@@ -1,12 +1,20 @@
-import { createRequire } from 'module';
+import { createRequire } from "module";
+import path from "path";
 
-const _require = createRequire(import.meta.url);
-const Sim = _require('../showdown/sim/index.js');
+const _require = createRequire(import.meta.url)("module").createRequire(
+  import.meta.url
+);
+const _localPath = path;
+const Sim = eval(
+  "_require(_localPath.resolve(process.cwd(), 'src/server/showdown/sim/index.js'))"
+);
 
 export const { Dex } = Sim;
 
 export function toID(value) {
-  return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
 }
 
 export function normalizeBattleId(value) {
@@ -27,7 +35,7 @@ export function getMoveCatalogRecord(value) {
     priority: move.priority,
     target: move.target,
     flags: move.flags || {},
-    shortDesc: move.shortDesc || move.desc || '',
+    shortDesc: move.shortDesc || move.desc || "",
   };
 }
 
@@ -37,7 +45,7 @@ export function getAbilityCatalogRecord(value) {
   return {
     id: ability.id,
     name: ability.name,
-    shortDesc: ability.shortDesc || ability.desc || '',
+    shortDesc: ability.shortDesc || ability.desc || "",
   };
 }
 
@@ -47,7 +55,7 @@ export function getItemCatalogRecord(value) {
   return {
     id: item.id,
     name: item.name,
-    shortDesc: item.shortDesc || item.desc || '',
+    shortDesc: item.shortDesc || item.desc || "",
   };
 }
 

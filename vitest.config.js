@@ -7,5 +7,21 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/screens/__tests__/setup.js'],
+    include: [
+      'src/screens/__tests__/**/*.{test,spec}.{js,jsx}',
+      'src/game/**/*.{test,spec}.{js,jsx}'
+    ],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      include: ['src/**/*'],
+      exclude: [
+        'src/v2/**/*',
+        'src/**/*.test.{js,jsx}',
+        'src/screens/__tests__/**/*',
+        'src/types/**/*',
+        'src/server/**/*'
+      ],
+    },
   },
 });

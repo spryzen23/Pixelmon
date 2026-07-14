@@ -1,39 +1,45 @@
-import { createContext, useContext, useMemo, useState, useCallback } from 'react';
-import { api } from '../api';
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  useCallback,
+} from "react";
+import { api } from "../api";
 
 const GameContext = createContext(null);
 
 export const SCREENS = {
-  welcome: 'welcome',
-  auth: 'auth',
-  dashboard: 'dashboard',
-  profileSetup: 'profileSetup',
-  loading: 'loading',
-  inGame: 'inGame',
-  gameComplete: 'gameComplete',
-  pokedex: 'pokedex',
-  battleRoyale: 'battleRoyale',
-  minigameHub: 'minigameHub',
-  battleArena: 'battleArena',
-  battleArenaV2: 'battleArenaV2',
-  dailyGrid: 'dailyGrid',
-  clueGuesser: 'clueGuesser',
-  triviaTraining: 'triviaTraining',
-  campaignV2: 'campaignV2',
-  battleRoyaleV2: 'battleRoyaleV2',
-  staticRegion: 'staticRegion',
-  mapEditor: 'mapEditor',
+  welcome: "welcome",
+  auth: "auth",
+  dashboard: "dashboard",
+  profileSetup: "profileSetup",
+  loading: "loading",
+  inGame: "inGame",
+  gameComplete: "gameComplete",
+  pokedex: "pokedex",
+  battleRoyale: "battleRoyale",
+  minigameHub: "minigameHub",
+  battleArena: "battleArena",
+  battleArenaV2: "battleArenaV2",
+  dailyGrid: "dailyGrid",
+  clueGuesser: "clueGuesser",
+  triviaTraining: "triviaTraining",
+  campaignV2: "campaignV2",
+  battleRoyaleV2: "battleRoyaleV2",
+  staticRegion: "staticRegion",
+  mapEditor: "mapEditor",
 };
 
 export const GAME_MODES = {
-  campaign: 'campaign',
-  sandbox: 'sandbox',
-  battleRoyale: 'battleRoyale',
-  minigameHub: 'minigameHub',
-  campaignV2: 'campaignV2',
-  battleRoyaleV2: 'battleRoyaleV2',
-  staticRegion: 'staticRegion',
-  mapEditor: 'mapEditor',
+  campaign: "campaign",
+  sandbox: "sandbox",
+  battleRoyale: "battleRoyale",
+  minigameHub: "minigameHub",
+  campaignV2: "campaignV2",
+  battleRoyaleV2: "battleRoyaleV2",
+  staticRegion: "staticRegion",
+  mapEditor: "mapEditor",
 };
 
 export function GameProvider({ children }) {
@@ -54,18 +60,21 @@ export function GameProvider({ children }) {
   const addCoins = useCallback(
     async (amount) => {
       if (!user) {
-        const localCoins = Number(localStorage.getItem('pixelmon-localCoins') || 150) + amount;
-        localStorage.setItem('pixelmon-localCoins', localCoins);
+        const localCoins =
+          Number(localStorage.getItem("pixelmon-localCoins") || 150) + amount;
+        localStorage.setItem("pixelmon-localCoins", localCoins);
         return localCoins;
       }
       const nextCoins = (user.pokecoins ?? 500) + amount;
       try {
-        const updatedUser = await api.patchPlayer(user.id, { pokecoins: nextCoins });
+        const updatedUser = await api.patchPlayer(user.id, {
+          pokecoins: nextCoins,
+        });
         setUser(updatedUser);
         setPlayer((prev) => (prev ? { ...prev, coins: nextCoins } : null));
         return nextCoins;
       } catch (err) {
-        console.error('Failed to sync coins', err);
+        console.error("Failed to sync coins", err);
         return nextCoins;
       }
     },
@@ -75,22 +84,26 @@ export function GameProvider({ children }) {
   const spendCoins = useCallback(
     async (amount) => {
       if (!user) {
-        const currentLocal = Number(localStorage.getItem('pixelmon-localCoins') || 150);
+        const currentLocal = Number(
+          localStorage.getItem("pixelmon-localCoins") || 150
+        );
         if (currentLocal < amount) return false;
         const nextCoins = currentLocal - amount;
-        localStorage.setItem('pixelmon-localCoins', nextCoins);
+        localStorage.setItem("pixelmon-localCoins", nextCoins);
         return true;
       }
       const currentCoins = user.pokecoins ?? 500;
       if (currentCoins < amount) return false;
       const nextCoins = currentCoins - amount;
       try {
-        const updatedUser = await api.patchPlayer(user.id, { pokecoins: nextCoins });
+        const updatedUser = await api.patchPlayer(user.id, {
+          pokecoins: nextCoins,
+        });
         setUser(updatedUser);
         setPlayer((prev) => (prev ? { ...prev, coins: nextCoins } : null));
         return true;
       } catch (err) {
-        console.error('Failed to sync coins', err);
+        console.error("Failed to sync coins", err);
         return false;
       }
     },
@@ -121,7 +134,20 @@ export function GameProvider({ children }) {
       addCoins,
       spendCoins,
     }),
-    [screen, goTo, user, player, session, gameRuntime, completeStats, biomeMap, spawnLadder, gameMode, addCoins, spendCoins]
+    [
+      screen,
+      goTo,
+      user,
+      player,
+      session,
+      gameRuntime,
+      completeStats,
+      biomeMap,
+      spawnLadder,
+      gameMode,
+      addCoins,
+      spendCoins,
+    ]
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
@@ -129,6 +155,6 @@ export function GameProvider({ children }) {
 
 export function useGame() {
   const ctx = useContext(GameContext);
-  if (!ctx) throw new Error('useGame outside GameProvider');
+  if (!ctx) throw new Error("useGame outside GameProvider");
   return ctx;
 }

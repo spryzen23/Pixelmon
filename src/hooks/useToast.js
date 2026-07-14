@@ -1,11 +1,11 @@
-import { createContext, useCallback, useContext, useState } from 'react';
+import { createContext, useCallback, useContext, useState } from "react";
 
 const ToastContext = createContext(null);
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
-  const toast = useCallback((message, variant = 'default') => {
+  const toast = useCallback((message, variant = "default") => {
     const id = Date.now();
     setToasts((t) => [...t, { id, message, variant }]);
     setTimeout(() => {
@@ -30,7 +30,7 @@ export function ToastProvider({ children }) {
 export function useToast() {
   const ctx = useContext(ToastContext);
   if (!ctx) {
-    return { toast: (msg) => console.warn('[toast]', msg) };
+    return { toast: (msg) => console.warn("[toast]", msg) };
   }
   return ctx;
 }

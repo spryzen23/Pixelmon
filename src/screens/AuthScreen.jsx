@@ -1,25 +1,32 @@
-import { useEffect, useState } from 'react';
-import { useGame, SCREENS } from '../context/GameContext';
-import { login, register, verifySession, getStoredToken, setStoredToken, clearStoredToken } from '../services/authService';
-import { Button } from '../components/ui/Button';
-import { TextField } from '../components/ui/TextField';
-import { PasswordField } from '../components/ui/PasswordField';
-import { TabBar } from '../components/ui/TabBar';
-import { Modal } from '../components/ui/Modal';
-import { ScreenFrame } from '../components/ui/layout/ScreenFrame';
+import { useEffect, useState } from "react";
+import { useGame, SCREENS } from "../context/GameContext";
+import {
+  login,
+  register,
+  verifySession,
+  getStoredToken,
+  setStoredToken,
+  clearStoredToken,
+} from "../services/authService";
+import { Button } from "../components/ui/Button";
+import { TextField } from "../components/ui/TextField";
+import { PasswordField } from "../components/ui/PasswordField";
+import { TabBar } from "../components/ui/TabBar";
+import { Modal } from "../components/ui/Modal";
+import { ScreenFrame } from "../components/ui/layout/ScreenFrame";
 
 export function AuthScreen() {
   const { goTo, setUser } = useGame();
-  const [authTab, setAuthTab] = useState('login');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
+  const [authTab, setAuthTab] = useState("login");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [controlsOpen, setControlsOpen] = useState(false);
 
-  const isLoginTab = authTab === 'login';
+  const isLoginTab = authTab === "login";
 
   useEffect(() => {
     const token = getStoredToken();
@@ -48,27 +55,27 @@ export function AuthScreen() {
     if (!username.trim() || !password.trim()) return;
     if (!isLoginTab && !displayName.trim()) return;
 
-    setError('');
+    setError("");
     setSubmitting(true);
 
     try {
       const res = isLoginTab
         ? await login({ username: username.trim(), password: password.trim() })
         : await register({
-          username: username.trim(),
-          password: password.trim(),
-          displayName: displayName.trim(),
-        });
+            username: username.trim(),
+            password: password.trim(),
+            displayName: displayName.trim(),
+          });
 
       if (res.success && res.token && res.user) {
         setStoredToken(res.token);
         setUser(res.user);
         goTo(SCREENS.dashboard);
       } else {
-        setError('Authentication failed. Please try again.');
+        setError("Authentication failed. Please try again.");
       }
     } catch (err) {
-      setError(err.message || 'An error occurred during authentication.');
+      setError(err.message || "An error occurred during authentication.");
     } finally {
       setSubmitting(false);
     }
@@ -105,13 +112,13 @@ export function AuthScreen() {
         <TabBar
           variant="underline"
           tabs={[
-            { id: 'login', label: 'Login' },
-            { id: 'register', label: 'Register' },
+            { id: "login", label: "Login" },
+            { id: "register", label: "Register" },
           ]}
           activeId={authTab}
           onChange={(id) => {
             setAuthTab(id);
-            setError('');
+            setError("");
           }}
         />
 
@@ -132,17 +139,29 @@ export function AuthScreen() {
             placeholder="Username"
             maxLength={20}
           />
-          <PasswordField value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+          <PasswordField
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+          />
 
           {error && <p className="error-text">{error}</p>}
 
           <Button type="submit" variant="primary" disabled={submitting}>
-            {submitting ? 'Please wait...' : isLoginTab ? 'Login' : 'Create Account'}
+            {submitting
+              ? "Please wait..."
+              : isLoginTab
+                ? "Login"
+                : "Create Account"}
           </Button>
         </form>
       </div>
 
-      <Modal open={controlsOpen} title="Game Controls" onClose={() => setControlsOpen(false)}>
+      <Modal
+        open={controlsOpen}
+        title="Game Controls"
+        onClose={() => setControlsOpen(false)}
+      >
         <p>WASD — Move · F — Throw ball · E — Companion</p>
         <p>1 / 2 / 3 — Ball type · Q / R — Throw power</p>
         <p>6-0 / [ ] — Switch companion · Escape — Pause</p>

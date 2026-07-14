@@ -1,4 +1,4 @@
-import { Box } from '@react-three/drei';
+import { Box } from "@react-three/drei";
 
 export default function VoxelFallback({
   color,

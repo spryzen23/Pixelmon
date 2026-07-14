@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
-import { useFantasyGltf } from './FantasyGltfProvider';
-import { getFantasyPropDef } from '../game/fantasyAssets';
+import { useMemo } from "react";
+import { useFantasyGltf } from "./FantasyGltfProvider";
+import { getFantasyPropDef } from "../game/fantasyAssets";
 
 export default function FantasyProp({
   propKey,

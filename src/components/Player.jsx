@@ -1,4 +1,4 @@
-import { Box } from '@react-three/drei';
+import { Box } from "@react-three/drei";
 import {
   Suspense,
   forwardRef,
@@ -6,15 +6,15 @@ import {
   useImperativeHandle,
   useRef,
   useState,
-} from 'react';
-import { useFrame } from '@react-three/fiber';
-import { MathUtils, Vector3 } from 'three';
-import AnimatedModel from './AnimatedModel';
-import ModelErrorBoundary from './ModelErrorBoundary';
-import VoxelFallback from './VoxelFallback';
-import { lerpAngle } from '../game/animationUtils';
-import { normalizePlayerStyle } from '../game/playerStyles';
-import useKeyboardControls from '../hooks/useKeyboardControls';
+} from "react";
+import { useFrame } from "@react-three/fiber";
+import { MathUtils, Vector3 } from "three";
+import AnimatedModel from "./AnimatedModel";
+import ModelErrorBoundary from "./ModelErrorBoundary";
+import VoxelFallback from "./VoxelFallback";
+import { lerpAngle } from "../game/animationUtils";
+import { normalizePlayerStyle } from "../game/playerStyles";
+import useKeyboardControls from "../hooks/useKeyboardControls";
 import {
   PLAYER_HEIGHT,
   PLAYER_RADIUS,
@@ -26,7 +26,7 @@ import {
   getTerrainSurfaceY,
   isWaterTile,
   isWalkablePosition,
-} from '../game/world';
+} from "../game/world";
 
 const MOVE_SPEED = 4.5;
 const SPRINT_SPEED = 9.0;
@@ -202,18 +202,26 @@ const Player = forwardRef(function Player(
     cameraForward.y = 0;
 
     if (cameraForward.lengthSq() < 0.0001) {
-      cameraForward.set(Math.sin(player.rotation.y), 0, Math.cos(player.rotation.y));
+      cameraForward.set(
+        Math.sin(player.rotation.y),
+        0,
+        Math.cos(player.rotation.y)
+      );
     }
 
     cameraForward.normalize();
     const cameraYaw = Math.atan2(cameraForward.x, cameraForward.z);
-    
+
     // Relative look yaw and pitch for head tracking
     const camDir = new Vector3();
     camera.getWorldDirection(camDir);
     const cameraPitch = Math.asin(camDir.y);
-    const lookAngle = MathUtils.euclideanModulo(cameraYaw - player.rotation.y + Math.PI, Math.PI * 2) - Math.PI;
-    
+    const lookAngle =
+      MathUtils.euclideanModulo(
+        cameraYaw - player.rotation.y + Math.PI,
+        Math.PI * 2
+      ) - Math.PI;
+
     animInputRef.current.lookAngle = lookAngle;
     animInputRef.current.lookPitch = cameraPitch;
     animInputRef.current.vy = vy.current;
@@ -292,8 +300,8 @@ const Player = forwardRef(function Player(
 
     movement.multiplyScalar(
       currentMoveSpeed *
-      (isInWater || isSubmerged ? WATER_MOVE_MULTIPLIER : 1) *
-      delta
+        (isInWater || isSubmerged ? WATER_MOVE_MULTIPLIER : 1) *
+        delta
     );
 
     const prevX = player.position.x;
@@ -377,16 +385,16 @@ const Player = forwardRef(function Player(
 
   const modelYOffset = -PLAYER_HEIGHT / 2 + (isCrouching ? -0.22 : 0);
   const actionName = isJumping
-    ? 'Jump'
+    ? "Jump"
     : isCrouching
-      ? 'Crouch'
+      ? "Crouch"
       : isMoving
         ? isSprinting
-          ? 'Run'
-          : 'Walk'
-        : 'Idle';
+          ? "Run"
+          : "Walk"
+        : "Idle";
   const fallbackProps = {
-    color: '#2364ff',
+    color: "#2364ff",
     height: PLAYER_HEIGHT,
     width: 0.65,
     depth: 0.65,
@@ -401,7 +409,10 @@ const Player = forwardRef(function Player(
         <meshBasicMaterial transparent opacity={0} />
       </Box>
 
-      <ModelErrorBoundary resetKey={modelUrl} fallback={<VoxelFallback {...fallbackProps} />}>
+      <ModelErrorBoundary
+        resetKey={modelUrl}
+        fallback={<VoxelFallback {...fallbackProps} />}
+      >
         <Suspense fallback={<VoxelFallback {...fallbackProps} />}>
           <AnimatedModel
             key={modelUrl}
@@ -409,8 +420,8 @@ const Player = forwardRef(function Player(
             actionName={actionName}
             fallbackActionName={
               isMoving || isSprinting
-                ? ['Run', 'Walk', 'Idle']
-                : ['Idle', 'Walk']
+                ? ["Run", "Walk", "Idle"]
+                : ["Idle", "Walk"]
             }
             fitToHeight={modelFitHeight}
             position={[0, modelYOffset, 0]}

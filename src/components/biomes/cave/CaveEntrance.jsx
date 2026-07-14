@@ -1,13 +1,13 @@
-import { useFrame } from '@react-three/fiber';
-import { useRef } from 'react';
+import { useFrame } from "@react-three/fiber";
+import { useRef } from "react";
 import {
   CAVE_ENTRANCE_POSITION,
   CAVE_ENTRANCE_RADIUS,
   VOXEL_SIZE,
-} from '../../../game/biomeLandmarks';
+} from "../../../game/biomeLandmarks";
 
-const ROCK_COLOR = '#343a3d';
-const DARK_DOOR_COLOR = '#090d11';
+const ROCK_COLOR = "#343a3d";
+const DARK_DOOR_COLOR = "#090d11";
 
 const moundBlocks = [
   [-3, 0, -2, 1, 1, 1],
@@ -31,10 +31,7 @@ const moundBlocks = [
   [1, 3, -1, 1, 1, 1],
 ];
 
-export default function CaveEntrance({
-  onEnterCave,
-  playerRef,
-}) {
+export default function CaveEntrance({ onEnterCave, playerRef }) {
   const enteredRef = useRef(false);
 
   useFrame(() => {
@@ -56,7 +53,9 @@ export default function CaveEntrance({
   return (
     <group position={CAVE_ENTRANCE_POSITION}>
       <mesh position={[0, 0.45, -1.55]}>
-        <boxGeometry args={[VOXEL_SIZE * 3, VOXEL_SIZE * 2.2, VOXEL_SIZE * 0.35]} />
+        <boxGeometry
+          args={[VOXEL_SIZE * 3, VOXEL_SIZE * 2.2, VOXEL_SIZE * 0.35]}
+        />
         <meshBasicMaterial color={DARK_DOOR_COLOR} />
       </mesh>
 

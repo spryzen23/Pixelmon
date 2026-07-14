@@ -1,12 +1,12 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi } from "vitest";
 import {
   getAlphaSpawnPosition,
   ALPHA_SPAWN_DISTANCES,
   _resetSpawnVectors,
-} from './spawnPlacement';
+} from "./spawnPlacement";
 
-describe('getAlphaSpawnPosition', () => {
-  it('picks first walkable point along camera forward', () => {
+describe("getAlphaSpawnPosition", () => {
+  it("picks first walkable point along camera forward", () => {
     _resetSpawnVectors();
     const player = {
       position: { x: 0, y: 0, z: 0 },
@@ -38,7 +38,7 @@ describe('getAlphaSpawnPosition', () => {
     expect(getRandomGrassPosition).not.toHaveBeenCalled();
   });
 
-  it('falls back to random grass when no forward slot is walkable', () => {
+  it("falls back to random grass when no forward slot is walkable", () => {
     _resetSpawnVectors();
     const player = {
       position: { x: 2, y: 0, z: 3 },

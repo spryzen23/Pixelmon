@@ -1,22 +1,22 @@
-import { Canvas, useFrame } from '@react-three/fiber';
-import { useEffect, useMemo, useRef } from 'react';
-import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
-import Ashfall from '../../components/biomes/volcanic/Ashfall';
-import Atmosphere, { SUN_POSITION } from '../../components/Atmosphere';
-import CaveEntrance from '../../components/biomes/cave/CaveEntrance';
-import DistortionRealmLandmarks from '../../components/biomes/distortion/DistortionRealmLandmarks';
-import IceMountainLandmarks from '../../components/biomes/icy/IceMountainLandmarks';
-import OceanHorizon from '../../components/OceanHorizon';
-import Sandstorm from '../../components/Sandstorm';
-import Snowstorm from '../../components/Snowstorm';
-import VolcanoCrater from '../../components/biomes/volcanic/VolcanoCrater';
-import VoxelWorld from '../../components/VoxelWorld';
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useEffect, useMemo, useRef } from "react";
+import { ACESFilmicToneMapping, PCFSoftShadowMap } from "three";
+import Ashfall from "../../components/biomes/volcanic/Ashfall";
+import Atmosphere, { SUN_POSITION } from "../../components/Atmosphere";
+import CaveEntrance from "../../components/biomes/cave/CaveEntrance";
+import DistortionRealmLandmarks from "../../components/biomes/distortion/DistortionRealmLandmarks";
+import IceMountainLandmarks from "../../components/biomes/icy/IceMountainLandmarks";
+import OceanHorizon from "../../components/OceanHorizon";
+import Sandstorm from "../../components/Sandstorm";
+import Snowstorm from "../../components/Snowstorm";
+import VolcanoCrater from "../../components/biomes/volcanic/VolcanoCrater";
+import VoxelWorld from "../../components/VoxelWorld";
 import {
   CAVE_BIOME_ID,
   CAVE_ZONES,
   WORLD_PATHS,
   setActivePathId,
-} from '../../game/world';
+} from "../../game/world";
 
 function BlockyPlane() {
   const planeRef = useRef();
@@ -132,8 +132,9 @@ function DropCamera() {
 
 export default function BattleRoyaleDropScene({ currentBiome = 0 }) {
   const activeBiome = useMemo(() => {
-    return WORLD_PATHS.find((biome) => biome.id === currentBiome) ||
-      WORLD_PATHS[0];
+    return (
+      WORLD_PATHS.find((biome) => biome.id === currentBiome) || WORLD_PATHS[0]
+    );
   }, [currentBiome]);
 
   useEffect(() => {
@@ -154,44 +155,46 @@ export default function BattleRoyaleDropScene({ currentBiome = 0 }) {
     >
       <color
         attach="background"
-        args={[activeBiome.biome === 'distortion' ? '#03020b' : '#87ceeb']}
+        args={[activeBiome.biome === "distortion" ? "#03020b" : "#87ceeb"]}
       />
       <fog
         attach="fog"
         args={[
-          activeBiome.biome === 'distortion' ? '#160829' : '#d8eefb',
-          activeBiome.biome === 'distortion' ? 18 : 70,
-          activeBiome.biome === 'distortion' ? 125 : 360,
+          activeBiome.biome === "distortion" ? "#160829" : "#d8eefb",
+          activeBiome.biome === "distortion" ? 18 : 70,
+          activeBiome.biome === "distortion" ? 125 : 360,
         ]}
       />
-      {activeBiome.biome !== 'distortion' && (
+      {activeBiome.biome !== "distortion" && (
         <Atmosphere biomeType={activeBiome.biome} />
       )}
-      <ambientLight intensity={activeBiome.biome === 'distortion' ? 0.28 : 0.78} />
+      <ambientLight
+        intensity={activeBiome.biome === "distortion" ? 0.28 : 0.78}
+      />
       <directionalLight
         castShadow
         color="#ffffff"
-        intensity={activeBiome.biome === 'distortion' ? 0.14 : 1.25}
+        intensity={activeBiome.biome === "distortion" ? 0.14 : 1.25}
         position={SUN_POSITION}
       />
-      {activeBiome.biome !== 'moonlit' &&
-        activeBiome.biome !== 'distortion' && (
-        <OceanHorizon biomeType={activeBiome.biome} />
-      )}
+      {activeBiome.biome !== "moonlit" &&
+        activeBiome.biome !== "distortion" && (
+          <OceanHorizon biomeType={activeBiome.biome} />
+        )}
       <VoxelWorld
         caveZone={CAVE_ZONES.EXTERIOR}
         currentBiome={currentBiome}
         onBiomeReady={() => {}}
       />
       {currentBiome === CAVE_BIOME_ID && <CaveEntrance />}
-      {activeBiome.biome === 'volcanic' && (
+      {activeBiome.biome === "volcanic" && (
         <VolcanoCrater currentBiome={currentBiome} />
       )}
-      {activeBiome.biome === 'icy' && <IceMountainLandmarks />}
-      {activeBiome.biome === 'distortion' && <DistortionRealmLandmarks />}
-      {activeBiome.biome === 'desert' && <Sandstorm />}
-      {activeBiome.biome === 'volcanic' && <Ashfall />}
-      {activeBiome.biome === 'icy' && <Snowstorm />}
+      {activeBiome.biome === "icy" && <IceMountainLandmarks />}
+      {activeBiome.biome === "distortion" && <DistortionRealmLandmarks />}
+      {activeBiome.biome === "desert" && <Sandstorm />}
+      {activeBiome.biome === "volcanic" && <Ashfall />}
+      {activeBiome.biome === "icy" && <Snowstorm />}
       <BlockyPlane />
       <DropCamera />
     </Canvas>

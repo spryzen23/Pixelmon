@@ -1,4 +1,4 @@
-import { VOXEL_SIZE } from './world';
+import { VOXEL_SIZE } from "./world";
 
 export {
   VOXEL_SIZE,
@@ -7,7 +7,7 @@ export {
   DISTORTION_BIOME_ID,
   CAVE_ZONES,
   CAVE_BIOME_ID,
-} from './world';
+} from "./world";
 
 export const VOLCANO_CENTER_X = 0;
 export const VOLCANO_CENTER_Z = -42;
@@ -30,8 +30,8 @@ export const ICE_ROOM_INTERIOR_EXIT_RADIUS = 1.4;
 
 export const ICE_ROOM_DEFINITIONS = [
   {
-    id: 'black',
-    assetUrl: '/assets/Frostpine Pass/legendary/black_kyurem.glb',
+    id: "black",
+    assetUrl: "/assets/Frostpine Pass/legendary/black_kyurem.glb",
     chamberCenter: [42, 0, -35],
     entranceCenter: [38.25, 0, -36.75],
     guardianPosition: [42, 0, -35],
@@ -39,8 +39,8 @@ export const ICE_ROOM_DEFINITIONS = [
     modelScale: 0.42,
   },
   {
-    id: 'white',
-    assetUrl: '/assets/Frostpine Pass/legendary/white_kyurem.glb',
+    id: "white",
+    assetUrl: "/assets/Frostpine Pass/legendary/white_kyurem.glb",
     chamberCenter: [-27, 0, -31.5],
     entranceCenter: [-23.25, 0, -34.5],
     guardianPosition: [-27, 0, -31.5],

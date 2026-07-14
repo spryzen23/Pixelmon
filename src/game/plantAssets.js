@@ -1,6 +1,6 @@
-import plantsManifest from './plantsManifest.json';
+import plantsManifest from "./plantsManifest.json";
 
-export const PLANTS_BASE_URL = '/assets/plants';
+export const PLANTS_BASE_URL = "/assets/plants";
 
 export const PLANT_COLLISION = {
   tree: 1.1,
@@ -27,14 +27,17 @@ export const PLANT_PROP_DEFS = Object.fromEntries(
   ])
 );
 
-const CATEGORY_VARIANTS = Object.entries(PLANT_PROP_DEFS).reduce((acc, [key, def]) => {
-  if (!acc[def.category]) {
-    acc[def.category] = [];
-  }
+const CATEGORY_VARIANTS = Object.entries(PLANT_PROP_DEFS).reduce(
+  (acc, [key, def]) => {
+    if (!acc[def.category]) {
+      acc[def.category] = [];
+    }
 
-  acc[def.category].push(key);
-  return acc;
-}, {});
+    acc[def.category].push(key);
+    return acc;
+  },
+  {}
+);
 
 export function getPlantPropDef(propKey) {
   return PLANT_PROP_DEFS[propKey] || null;

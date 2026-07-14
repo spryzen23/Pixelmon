@@ -2,10 +2,10 @@ export function ProgressBar({
   value = 0,
   label,
   sublabel,
-  variant = 'default',
+  variant = "default",
   indeterminate = false,
   animated = false,
-  className = '',
+  className = "",
 }) {
   const pct = Math.max(0, Math.min(100, value));
   const isIndeterminate = indeterminate || animated;
@@ -19,7 +19,7 @@ export function ProgressBar({
         </div>
         <div className="px-progress-track">
           <div
-            className={`px-progress-fill ${variant === 'neon' ? 'neon' : ''} ${isIndeterminate ? 'indeterminate' : ''}`}
+            className={`px-progress-fill ${variant === "neon" ? "neon" : ""} ${isIndeterminate ? "indeterminate" : ""}`}
             style={isIndeterminate ? undefined : { width: `${pct}%` }}
           />
         </div>
@@ -29,9 +29,9 @@ export function ProgressBar({
 
   return (
     <div className={`power-meter ${className}`}>
-      <div className={isIndeterminate ? 'loading-bar' : 'power-track'}>
+      <div className={isIndeterminate ? "loading-bar" : "power-track"}>
         <div
-          className={isIndeterminate ? 'loading-bar-fill' : 'power-fill'}
+          className={isIndeterminate ? "loading-bar-fill" : "power-fill"}
           style={isIndeterminate ? undefined : { width: `${pct}%` }}
         />
       </div>

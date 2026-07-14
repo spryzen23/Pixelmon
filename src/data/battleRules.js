@@ -1,6 +1,6 @@
 export const BATTLE_RULES = {
   singles: {
-    title: 'Single Battle Strategy',
+    title: "Single Battle Strategy",
     tips: [
       "⚔️ 1v1 Format: Only one Pokémon from each side is on the field.",
       "🚀 Priority and Speed: Turn order is decided by Move Priority first, then Speed stat. Speed ties are a 50/50 coin flip.",
@@ -9,7 +9,7 @@ export const BATTLE_RULES = {
     spreadMoves: [],
   },
   doubles: {
-    title: 'Double Battle Strategy',
+    title: "Double Battle Strategy",
     tips: [
       "💥 Spread moves (Earthquake, Surf, Discharge) hit ALL Pokémon on field — 25% weaker.",
       "🎯 Single-target moves: choose which foe to attack each turn.",
@@ -19,10 +19,26 @@ export const BATTLE_RULES = {
       "⏱️ Turn Order: Move Priority first, then Speed. Speed ties are a 50/50 coin flip.",
       "⚡ Dynamic Speed: Speed changes mid-turn recalculate action order immediately.",
     ],
-    spreadMoves: ['Earthquake','Surf','Discharge','Dazzling Gleam','Rock Slide','Lava Plume','Bulldoze','Blizzard','Heat Wave','Boomburst','Self-Destruct','Explosion','Magnitude','Eruption','Sludge Wave'],
+    spreadMoves: [
+      "Earthquake",
+      "Surf",
+      "Discharge",
+      "Dazzling Gleam",
+      "Rock Slide",
+      "Lava Plume",
+      "Bulldoze",
+      "Blizzard",
+      "Heat Wave",
+      "Boomburst",
+      "Self-Destruct",
+      "Explosion",
+      "Magnitude",
+      "Eruption",
+      "Sludge Wave",
+    ],
   },
   triples: {
-    title: 'Triple Battle Strategy',
+    title: "Triple Battle Strategy",
     tips: [
       "📍 CENTER Pokémon can attack ANY target on the field.",
       "↔️ SIDE Pokémon can only reach adjacent foes (center + opposite side).",
@@ -32,6 +48,14 @@ export const BATTLE_RULES = {
       "⏱️ Turn Order: Move Priority first, then Speed. Speed ties are a 50/50 coin flip.",
       "⚡ Dynamic Speed: Speed changes mid-turn recalculate action order immediately.",
     ],
-    spreadMoves: ['Earthquake','Discharge','Blizzard','Rock Slide','Lava Plume','Bulldoze','Boomburst'],
-  }
+    spreadMoves: [
+      "Earthquake",
+      "Discharge",
+      "Blizzard",
+      "Rock Slide",
+      "Lava Plume",
+      "Bulldoze",
+      "Boomburst",
+    ],
+  },
 };

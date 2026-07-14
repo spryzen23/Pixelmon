@@ -1,6 +1,6 @@
-import { useFrame } from '@react-three/fiber';
-import { useRef } from 'react';
-import { Vector3 } from 'three';
+import { useFrame } from "@react-three/fiber";
+import { useRef } from "react";
+import { Vector3 } from "three";
 
 const SHOULDER_OFFSET_X = 1.2;
 const CAMERA_HEIGHT = 1.8;
@@ -65,11 +65,7 @@ export default function ThirdPersonCamera({ targetRef }) {
     lookRight.current.crossVectors(lookForward.current, WORLD_UP);
 
     if (lookRight.current.lengthSq() < 1e-6) {
-      lookRight.current.set(
-        lookForward.current.z,
-        0,
-        -lookForward.current.x
-      );
+      lookRight.current.set(lookForward.current.z, 0, -lookForward.current.x);
     }
 
     lookRight.current.normalize();

@@ -1,12 +1,6 @@
-import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef } from 'react';
-import {
-  AdditiveBlending,
-  Color,
-  DoubleSide,
-  FogExp2,
-  Vector3,
-} from 'three';
+import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef } from "react";
+import { AdditiveBlending, Color, DoubleSide, FogExp2, Vector3 } from "three";
 
 const MOTE_COUNT = 140;
 const ARC_POINT_COUNT = 9;
@@ -69,11 +63,14 @@ function BlueMotes({ playerRef }) {
       }
 
       if (Math.abs(array[offset] - player.position.x) > 28) {
-        array[offset] = player.position.x - Math.sign(array[offset] - player.position.x) * 28;
+        array[offset] =
+          player.position.x - Math.sign(array[offset] - player.position.x) * 28;
       }
 
       if (Math.abs(array[offset + 2] - player.position.z) > 28) {
-        array[offset + 2] = player.position.z - Math.sign(array[offset + 2] - player.position.z) * 28;
+        array[offset + 2] =
+          player.position.z -
+          Math.sign(array[offset + 2] - player.position.z) * 28;
       }
     }
 
@@ -221,7 +218,8 @@ function FloorCharge({ index, position }) {
   const materialRef = useRef();
 
   useFrame((state) => {
-    const pulse = 0.65 + Math.sin(state.clock.elapsedTime * 3 + index * 1.4) * 0.35;
+    const pulse =
+      0.65 + Math.sin(state.clock.elapsedTime * 3 + index * 1.4) * 0.35;
 
     if (meshRef.current) {
       meshRef.current.scale.setScalar(0.65 + pulse * 0.7);
@@ -234,11 +232,7 @@ function FloorCharge({ index, position }) {
   });
 
   return (
-    <mesh
-      ref={meshRef}
-      position={position}
-      rotation={[-Math.PI / 2, 0, 0]}
-    >
+    <mesh ref={meshRef} position={position} rotation={[-Math.PI / 2, 0, 0]}>
       <ringGeometry args={[0.08, 0.34, 18]} />
       <meshBasicMaterial
         ref={materialRef}
@@ -260,8 +254,8 @@ export default function CaveInteriorEffects({ playerRef }) {
     const previousFog = scene.fog;
     const previousBackground = scene.background;
 
-    scene.fog = new FogExp2('#101a24', 0.045);
-    scene.background = new Color('#081018');
+    scene.fog = new FogExp2("#101a24", 0.045);
+    scene.background = new Color("#081018");
 
     return () => {
       scene.fog = previousFog;
@@ -273,11 +267,7 @@ export default function CaveInteriorEffects({ playerRef }) {
     <group>
       <ambientLight intensity={0.18} />
       {crystalLights.map((position, index) => (
-        <ChargedCrystal
-          key={index}
-          index={index}
-          position={position}
-        />
+        <ChargedCrystal key={index} index={index} position={position} />
       ))}
       {electricArcPairs.map(([fromIndex, toIndex], index) => (
         <ElectricArc
@@ -288,11 +278,7 @@ export default function CaveInteriorEffects({ playerRef }) {
         />
       ))}
       {floorChargePositions.map((position, index) => (
-        <FloorCharge
-          key={index}
-          index={index}
-          position={position}
-        />
+        <FloorCharge key={index} index={index} position={position} />
       ))}
       <BlueMotes playerRef={playerRef} />
     </group>

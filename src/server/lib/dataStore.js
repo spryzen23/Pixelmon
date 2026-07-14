@@ -1,8 +1,8 @@
-import fs from 'fs/promises';
-import path from 'path';
-import NodeCache from 'node-cache';
-import { getDB } from './db.js';
-import { PUBLIC_DATASET } from './paths.js';
+import fs from "fs/promises";
+import path from "path";
+import NodeCache from "node-cache";
+import { getDB } from "./db.js";
+import { PUBLIC_DATASET } from "./paths.js";
 
 const cache = new NodeCache({ stdTTL: 300, checkperiod: 120 });
 const playerSaveChains = new Map();
@@ -19,7 +19,7 @@ async function getCachedConfig(key, fetchFn) {
 // Helper to retrieve configurations stored in SQLite as JSON
 async function getConfigFromDB(key) {
   const db = await getDB();
-  const row = await db.get('SELECT value FROM configs WHERE key = ?', [key]);
+  const row = await db.get("SELECT value FROM configs WHERE key = ?", [key]);
   if (!row) {
     throw new Error(`Config key not found in SQLite: ${key}`);
   }
@@ -27,45 +27,47 @@ async function getConfigFromDB(key) {
 }
 
 export async function getBiomeMap() {
-  return getCachedConfig('biomeMap', () => getConfigFromDB('biomeMap'));
+  return getCachedConfig("biomeMap", () => getConfigFromDB("biomeMap"));
 }
 
 export async function getSpawnLadder() {
-  return getCachedConfig('spawnLadder', () => getConfigFromDB('spawnLadder'));
+  return getCachedConfig("spawnLadder", () => getConfigFromDB("spawnLadder"));
 }
 
 export async function getBallsConfig() {
-  return getCachedConfig('balls', () => getConfigFromDB('balls'));
+  return getCachedConfig("balls", () => getConfigFromDB("balls"));
 }
 
 export async function getUnlocksConfig() {
-  return getCachedConfig('unlocks', () => getConfigFromDB('unlocks'));
+  return getCachedConfig("unlocks", () => getConfigFromDB("unlocks"));
 }
 
 export async function getTypeAnimationCatalog() {
-  return getCachedConfig('typeAnimationCatalog', () => getConfigFromDB('typeAnimationCatalog'));
+  return getCachedConfig("typeAnimationCatalog", () =>
+    getConfigFromDB("typeAnimationCatalog")
+  );
 }
 
 function localifyModelUrl(remoteUrl) {
-  if (!remoteUrl || typeof remoteUrl !== 'string') return remoteUrl;
-  
-  const index = remoteUrl.indexOf('/models/');
+  if (!remoteUrl || typeof remoteUrl !== "string") return remoteUrl;
+
+  const index = remoteUrl.indexOf("/models/");
   if (index !== -1) {
-    let subPath = remoteUrl.slice(index + '/models/'.length);
-    if (subPath.startsWith('opt/')) {
-      subPath = subPath.slice('opt/'.length);
+    let subPath = remoteUrl.slice(index + "/models/".length);
+    if (subPath.startsWith("opt/")) {
+      subPath = subPath.slice("opt/".length);
     }
     return `/assets/models/glb/${subPath}`;
   }
-  
+
   return remoteUrl;
 }
 
 export async function getPokemonsSlim() {
-  return getCachedConfig('pokemonsSlim', async () => {
+  return getCachedConfig("pokemonsSlim", async () => {
     const db = await getDB();
-    const paths = await db.all('SELECT * FROM pokemon_paths');
-    const entries = await db.all('SELECT * FROM pokemon_entries');
+    const paths = await db.all("SELECT * FROM pokemon_paths");
+    const entries = await db.all("SELECT * FROM pokemon_entries");
 
     entries.forEach((p) => {
       p.types = JSON.parse(p.types);
@@ -81,11 +83,14 @@ export async function getPokemonsSlim() {
 
 export async function getPokemonsFull() {
   // We keep the filesystem fallback for the full dataset since it's dev-only and large
-  const full = await getCachedConfig('pokemonsFull', async () => {
-    const raw = await fs.readFile(path.join(PUBLIC_DATASET, 'pokemons.json'), 'utf8');
+  const full = await getCachedConfig("pokemonsFull", async () => {
+    const raw = await fs.readFile(
+      path.join(PUBLIC_DATASET, "pokemons.json"),
+      "utf8"
+    );
     return JSON.parse(raw);
   });
-  
+
   if (full && full.biomes) {
     for (const biome of Object.values(full.biomes)) {
       for (const bucket of Object.values(biome.bySpawnLevel || {})) {
@@ -109,7 +114,7 @@ function normalizePlayer(player) {
 
 export async function findUserByTrainerId(trainerId) {
   const db = await getDB();
-  const rows = await db.all('SELECT data FROM players');
+  const rows = await db.all("SELECT data FROM players");
   for (const row of rows) {
     try {
       const user = JSON.parse(row.data);
@@ -117,7 +122,7 @@ export async function findUserByTrainerId(trainerId) {
         return normalizePlayer(user);
       }
     } catch (err) {
-      console.error('Failed to parse user state in findUserByTrainerId:', err);
+      console.error("Failed to parse user state in findUserByTrainerId:", err);
     }
   }
   return null;
@@ -125,7 +130,9 @@ export async function findUserByTrainerId(trainerId) {
 
 export async function listPlayers() {
   const db = await getDB();
-  const rows = await db.all('SELECT id, displayName, pokecoins, data, updatedAt FROM players');
+  const rows = await db.all(
+    "SELECT id, displayName, pokecoins, data, updatedAt FROM players"
+  );
   const players = [];
   for (const row of rows) {
     try {
@@ -138,7 +145,7 @@ export async function listPlayers() {
         updatedAt: row.updatedAt,
       });
     } catch (err) {
-      console.error('Failed to parse player profile from DB:', row.id, err);
+      console.error("Failed to parse player profile from DB:", row.id, err);
     }
   }
   return players;
@@ -146,11 +153,11 @@ export async function listPlayers() {
 
 export async function getPlayer(id) {
   const db = await getDB();
-  const row = await db.get('SELECT data FROM players WHERE id = ?', [id]);
+  const row = await db.get("SELECT data FROM players WHERE id = ?", [id]);
   if (row) {
     return normalizePlayer(JSON.parse(row.data));
   }
-  
+
   const user = await findUserByTrainerId(id);
   if (user) {
     const trainer = user.trainers.find((t) => t.id === id);
@@ -162,23 +169,24 @@ export async function getPlayer(id) {
       });
     }
   }
-  throw new Error('Player/Trainer not found: ' + id);
+  throw new Error("Player/Trainer not found: " + id);
 }
 
 async function savePlayerToDisk(player) {
   const db = await getDB();
-  const isTrainer = player.userId || (!player.trainers && player.characterStyle);
+  const isTrainer =
+    player.userId || (!player.trainers && player.characterStyle);
 
   if (isTrainer) {
     const userId = player.userId || (await findUserByTrainerId(player.id))?.id;
     if (!userId) {
-      throw new Error('Parent user not found for trainer: ' + player.id);
+      throw new Error("Parent user not found for trainer: " + player.id);
     }
-    
+
     // Load parent user from database
-    const row = await db.get('SELECT data FROM players WHERE id = ?', [userId]);
+    const row = await db.get("SELECT data FROM players WHERE id = ?", [userId]);
     if (!row) {
-      throw new Error('Parent user not found in DB: ' + userId);
+      throw new Error("Parent user not found in DB: " + userId);
     }
     const user = JSON.parse(row.data);
 
@@ -206,10 +214,10 @@ async function savePlayerToDisk(player) {
     }
 
     user.updatedAt = new Date().toISOString();
-    
+
     // Update parent user in SQLite
     await db.run(
-      'UPDATE players SET displayName = ?, username = ?, password = ?, pokecoins = ?, data = ?, updatedAt = ? WHERE id = ?',
+      "UPDATE players SET displayName = ?, username = ?, password = ?, pokecoins = ?, data = ?, updatedAt = ? WHERE id = ?",
       [
         user.displayName,
         user.username || null,
@@ -217,12 +225,14 @@ async function savePlayerToDisk(player) {
         user.pokecoins ?? 500,
         JSON.stringify(user),
         user.updatedAt,
-        user.id
+        user.id,
       ]
     );
 
     return {
-      ...(idx >= 0 ? user.trainers[idx] : user.trainers[user.trainers.length - 1]),
+      ...(idx >= 0
+        ? user.trainers[idx]
+        : user.trainers[user.trainers.length - 1]),
       coins: user.pokecoins,
       userId: user.id,
     };
@@ -246,7 +256,7 @@ async function savePlayerToDisk(player) {
         snapshot.password || null,
         snapshot.pokecoins ?? 500,
         JSON.stringify(snapshot),
-        snapshot.updatedAt
+        snapshot.updatedAt,
       ]
     );
     return snapshot;
@@ -254,11 +264,13 @@ async function savePlayerToDisk(player) {
 }
 
 export function savePlayer(player) {
-  const isTrainer = player.userId || (!player.trainers && player.characterStyle);
-  
+  const isTrainer =
+    player.userId || (!player.trainers && player.characterStyle);
+
   if (isTrainer) {
     const chainPromise = (async () => {
-      const userId = player.userId || (await findUserByTrainerId(player.id))?.id;
+      const userId =
+        player.userId || (await findUserByTrainerId(player.id))?.id;
       const lockId = userId || player.id;
       const prev = playerSaveChains.get(lockId) ?? Promise.resolve();
       const next = prev.then(() => savePlayerToDisk(player));
@@ -293,71 +305,78 @@ export function invalidateCache() {
 }
 
 const TYPE_MAPPING = {
-  1: 'normal',
-  2: 'fighting',
-  3: 'flying',
-  4: 'poison',
-  5: 'ground',
-  6: 'rock',
-  7: 'bug',
-  8: 'ghost',
-  9: 'steel',
-  10: 'fire',
-  11: 'water',
-  12: 'grass',
-  13: 'electric',
-  14: 'psychic',
-  15: 'ice',
-  16: 'dragon',
-  17: 'dark',
-  18: 'fairy'
+  1: "normal",
+  2: "fighting",
+  3: "flying",
+  4: "poison",
+  5: "ground",
+  6: "rock",
+  7: "bug",
+  8: "ghost",
+  9: "steel",
+  10: "fire",
+  11: "water",
+  12: "grass",
+  13: "electric",
+  14: "psychic",
+  15: "ice",
+  16: "dragon",
+  17: "dark",
+  18: "fairy",
 };
 
 const DAMAGE_CLASS_MAPPING = {
-  1: 'status',
-  2: 'physical',
-  3: 'special'
+  1: "status",
+  2: "physical",
+  3: "special",
 };
 
 export async function getLocalPokemon(nameOrId) {
   const db = await getDB();
   const lower = String(nameOrId).toLowerCase().trim();
   const isId = /^\d+$/.test(lower);
-  
+
   let row = null;
   if (isId) {
-    row = await db.get('SELECT * FROM raw_pokemon WHERE id = ?', [parseInt(lower, 10)]);
+    row = await db.get("SELECT * FROM raw_pokemon WHERE id = ?", [
+      parseInt(lower, 10),
+    ]);
   } else {
-    row = await db.get('SELECT * FROM raw_pokemon WHERE name = ?', [lower]);
+    row = await db.get("SELECT * FROM raw_pokemon WHERE name = ?", [lower]);
     if (!row) {
-      row = await db.get('SELECT * FROM raw_pokemon WHERE name LIKE ?', [`${lower}%`]);
+      row = await db.get("SELECT * FROM raw_pokemon WHERE name LIKE ?", [
+        `${lower}%`,
+      ]);
     }
   }
 
   if (!row) return null;
 
-  const dbStats = JSON.parse(row.stats || '[]');
-  const stats = dbStats.map(s => ({
+  const dbStats = JSON.parse(row.stats || "[]");
+  const stats = dbStats.map((s) => ({
     base_stat: s.bs,
-    stat: { name: s.n }
+    stat: { name: s.n },
   }));
 
-  const dbTypes = JSON.parse(row.types || '[]');
+  const dbTypes = JSON.parse(row.types || "[]");
   const types = dbTypes.map((t, idx) => ({
     slot: idx + 1,
-    type: { name: t.n }
+    type: { name: t.n },
   }));
 
-  const moveRows = await db.all(`
+  const moveRows = await db.all(
+    `
     SELECT DISTINCT rm.identifier AS name
     FROM raw_pokemon_moves rpm
     JOIN raw_moves rm ON rpm.move_id = rm.id
     WHERE rpm.pokemon_id = ?
     ORDER BY rpm.level ASC
-  `, [row.id]);
+  `,
+    [row.id]
+  );
 
-  const moves = moveRows.map(m => ({
-    move: { name: m.name }
+  const moves = moveRows.map((m) => ({
+    move: { name: m.name },
   }));
 
   return {
@@ -371,20 +390,22 @@ export async function getLocalPokemon(nameOrId) {
     sprites: {
       front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${row.id}.png`,
       other: {
-        'official-artwork': {
-          front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${row.id}.png`
-        }
-      }
+        "official-artwork": {
+          front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${row.id}.png`,
+        },
+      },
     },
-    moves
+    moves,
   };
 }
 
 export async function getLocalMove(name) {
   const db = await getDB();
   const lower = String(name).toLowerCase().trim();
-  
-  const row = await db.get('SELECT * FROM raw_moves WHERE identifier = ?', [lower]);
+
+  const row = await db.get("SELECT * FROM raw_moves WHERE identifier = ?", [
+    lower,
+  ]);
   if (!row) return null;
 
   return {
@@ -393,8 +414,9 @@ export async function getLocalMove(name) {
     power: row.power,
     accuracy: row.accuracy,
     pp: row.pp,
-    type: { name: TYPE_MAPPING[row.type_id] || 'normal' },
-    damage_class: { name: DAMAGE_CLASS_MAPPING[row.damage_class_id] || 'physical' }
+    type: { name: TYPE_MAPPING[row.type_id] || "normal" },
+    damage_class: {
+      name: DAMAGE_CLASS_MAPPING[row.damage_class_id] || "physical",
+    },
   };
 }
-

@@ -1,6 +1,6 @@
-import { Sphere } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { useRef } from 'react';
+import { Sphere } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useRef } from "react";
 
 const PARTICLES = [
   [0.28, 0.18, 0],
@@ -38,14 +38,10 @@ export default function CompanionRecallEffect({ id, position, onComplete }) {
   return (
     <group ref={groupRef} position={position}>
       {PARTICLES.map((particle, index) => (
-        <Sphere
-          key={`${id}-${index}`}
-          args={[0.08, 8, 8]}
-          position={particle}
-        >
+        <Sphere key={`${id}-${index}`} args={[0.08, 8, 8]} position={particle}>
           <meshStandardMaterial
-            color={index % 2 === 0 ? '#fff8c6' : '#ffd928'}
-            emissive={index % 2 === 0 ? '#fff0a0' : '#d99f00'}
+            color={index % 2 === 0 ? "#fff8c6" : "#ffd928"}
+            emissive={index % 2 === 0 ? "#fff0a0" : "#d99f00"}
             emissiveIntensity={0.4}
             roughness={0.45}
           />

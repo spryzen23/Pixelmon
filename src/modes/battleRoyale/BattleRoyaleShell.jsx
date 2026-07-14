@@ -1,26 +1,26 @@
 /* global process */
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { io } from 'socket.io-client';
-import BattleRoyaleArena from './BattleRoyaleArena';
-import BattleRoyaleDropScene from './BattleRoyaleDropScene';
-import { WORLD_PATHS } from '../../game/world';
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { io } from "socket.io-client";
+import BattleRoyaleArena from "./BattleRoyaleArena";
+import BattleRoyaleDropScene from "./BattleRoyaleDropScene";
+import { WORLD_PATHS } from "../../game/world";
 
 const BATTLE_ROYALE_SERVER_URL =
-  process.env.NEXT_PUBLIC_BATTLE_ROYALE_SERVER_URL || '';
+  process.env.NEXT_PUBLIC_BATTLE_ROYALE_SERVER_URL || "";
 
 const DROP_POINTS = [
-  { id: 'north-ridge', label: 'North Ridge', x: 0, z: -24 },
-  { id: 'west-cliffs', label: 'West Cliffs', x: -22, z: -8 },
-  { id: 'center-ruins', label: 'Center Ruins', x: 0, z: 0 },
-  { id: 'east-shore', label: 'East Shore', x: 24, z: 8 },
-  { id: 'south-camp', label: 'South Camp', x: 0, z: 24 },
+  { id: "north-ridge", label: "North Ridge", x: 0, z: -24 },
+  { id: "west-cliffs", label: "West Cliffs", x: -22, z: -8 },
+  { id: "center-ruins", label: "Center Ruins", x: 0, z: 0 },
+  { id: "east-shore", label: "East Shore", x: 24, z: 8 },
+  { id: "south-camp", label: "South Camp", x: 0, z: 24 },
 ];
 
 function formatMatchTime(totalSeconds = 0) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
 
-  return `${minutes}:${String(seconds).padStart(2, '0')}`;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
 function BattleRoyaleMatchView({
@@ -36,9 +36,9 @@ function BattleRoyaleMatchView({
     return (second.score || 0) - (first.score || 0);
   });
   const localPlayer = players.find((player) => player.id === localPlayerId);
-  const localDropPoint = DROP_POINTS.find(
-    (point) => point.id === localPlayer?.dropPointId
-  ) || DROP_POINTS[2];
+  const localDropPoint =
+    DROP_POINTS.find((point) => point.id === localPlayer?.dropPointId) ||
+    DROP_POINTS[2];
   const winnerNames = players
     .filter((player) => room?.winnerIds?.includes(player.id))
     .map((player) => player.name);
@@ -46,17 +46,17 @@ function BattleRoyaleMatchView({
   return (
     <main
       className={
-        room.phase === 'playing' || room.phase === 'dropping'
-          ? 'battle-royale-game-shell'
-          : 'battle-royale-shell'
+        room.phase === "playing" || room.phase === "dropping"
+          ? "battle-royale-game-shell"
+          : "battle-royale-shell"
       }
       data-testid="battle-royale-match"
     >
-      {room.phase === 'dropping' && (
+      {room.phase === "dropping" && (
         <BattleRoyaleDropScene currentBiome={room.biomeId} />
       )}
 
-      {room.phase === 'playing' && (
+      {room.phase === "playing" && (
         <BattleRoyaleArena
           creatures={room.creatures || []}
           currentBiome={room.biomeId}
@@ -70,20 +70,20 @@ function BattleRoyaleMatchView({
 
       <section
         className={
-          room.phase === 'playing' || room.phase === 'dropping'
-          ? 'battle-royale-panel match-panel match-panel-overlay'
-          : 'battle-royale-panel match-panel'
+          room.phase === "playing" || room.phase === "dropping"
+            ? "battle-royale-panel match-panel match-panel-overlay"
+            : "battle-royale-panel match-panel"
         }
       >
         <div className="battle-royale-heading">
           <div>
             <p className="mode-eyebrow">Battle Royale Match</p>
             <h1>
-              {room.phase === 'countdown' &&
+              {room.phase === "countdown" &&
                 `Dropping in ${room.countdownRemaining}`}
-              {room.phase === 'dropping' && 'Flying Over Drop Zone'}
-              {room.phase === 'playing' && 'Catch Race Live'}
-              {room.phase === 'finished' && 'Match Complete'}
+              {room.phase === "dropping" && "Flying Over Drop Zone"}
+              {room.phase === "playing" && "Catch Race Live"}
+              {room.phase === "finished" && "Match Complete"}
             </h1>
           </div>
           <button className="ghost-button" type="button" onClick={onBackToMenu}>
@@ -97,36 +97,34 @@ function BattleRoyaleMatchView({
             <p className="lobby-muted">
               Drop point: <strong>{localDropPoint.label}</strong>
             </p>
-            {room.phase === 'countdown' && (
+            {room.phase === "countdown" && (
               <p className="match-callout">
                 Everyone is ready. Locking loadout and starting the drop.
               </p>
             )}
-            {room.phase === 'dropping' && (
+            {room.phase === "dropping" && (
               <>
-                <span className="match-timer">
-                  {room.dropRemaining}
-                </span>
+                <span className="match-timer">{room.dropRemaining}</span>
                 <p className="match-callout">
                   Plane crossing the biome. Players spawn at selected locations
                   after the flyover.
                 </p>
               </>
             )}
-            {room.phase === 'playing' && (
+            {room.phase === "playing" && (
               <>
                 <span className="match-timer">
                   {formatMatchTime(room.matchRemaining)}
                 </span>
                 <p className="match-callout">
-                  Throw with Spacebar. Shared creatures left:{' '}
+                  Throw with Spacebar. Shared creatures left:{" "}
                   {room.creatures?.length || 0}
                 </p>
               </>
             )}
-            {room.phase === 'finished' && (
+            {room.phase === "finished" && (
               <p className="match-callout">
-                Winner: {winnerNames.length ? winnerNames.join(', ') : 'Tie'}
+                Winner: {winnerNames.length ? winnerNames.join(", ") : "Tie"}
               </p>
             )}
           </section>
@@ -140,7 +138,7 @@ function BattleRoyaleMatchView({
                     {index + 1}. {player.name}
                   </strong>
                   <span>{player.score || 0} catches</span>
-                  <em>{player.isReady ? 'Ready' : 'Not Ready'}</em>
+                  <em>{player.isReady ? "Ready" : "Not Ready"}</em>
                 </li>
               ))}
             </ul>
@@ -153,28 +151,31 @@ function BattleRoyaleMatchView({
 
 function BattleRoyaleShell({ onBackToMenu }) {
   const [dropPointId, setDropPointId] = useState(DROP_POINTS[2].id);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [fallbackCountdown, setFallbackCountdown] = useState(null);
   const [isReady, setIsReady] = useState(false);
-  const [localPlayerId, setLocalPlayerId] = useState('');
-  const [playerName, setPlayerName] = useState('');
+  const [localPlayerId, setLocalPlayerId] = useState("");
+  const [playerName, setPlayerName] = useState("");
   const [room, setRoom] = useState(null);
-  const [roomCode, setRoomCode] = useState('');
-  const [serverStatus, setServerStatus] = useState('offline');
+  const [roomCode, setRoomCode] = useState("");
+  const [serverStatus, setServerStatus] = useState("offline");
   const [selectedBiomeId, setSelectedBiomeId] = useState(WORLD_PATHS[0].id);
   const socketRef = useRef(null);
 
   const selectedBiome = useMemo(() => {
-    return WORLD_PATHS.find((biome) => biome.id === selectedBiomeId) ||
-      WORLD_PATHS[0];
+    return (
+      WORLD_PATHS.find((biome) => biome.id === selectedBiomeId) ||
+      WORLD_PATHS[0]
+    );
   }, [selectedBiomeId]);
 
   const selectedDropPoint = useMemo(() => {
-    return DROP_POINTS.find((point) => point.id === dropPointId) ||
-      DROP_POINTS[2];
+    return (
+      DROP_POINTS.find((point) => point.id === dropPointId) || DROP_POINTS[2]
+    );
   }, [dropPointId]);
 
-  const displayPlayerName = playerName.trim() || 'Player';
+  const displayPlayerName = playerName.trim() || "Player";
   const roomPlayers = room?.players || [];
   const allPlayersReady =
     roomPlayers.length >= 2 && roomPlayers.every((player) => player.isReady);
@@ -183,27 +184,27 @@ function BattleRoyaleShell({ onBackToMenu }) {
     if (!socketRef.current) {
       const socket = io(BATTLE_ROYALE_SERVER_URL, {
         autoConnect: false,
-        transports: ['websocket'],
+        transports: ["websocket"],
       });
 
-      socket.on('connect', () => {
+      socket.on("connect", () => {
         setLocalPlayerId(socket.id);
-        setServerStatus('connected');
-        setErrorMessage('');
+        setServerStatus("connected");
+        setErrorMessage("");
       });
 
-      socket.on('connect_error', () => {
-        setServerStatus('error');
+      socket.on("connect_error", () => {
+        setServerStatus("error");
         setErrorMessage(
-          'Could not reach the Battle Royale server. Run npm run br:server.'
+          "Could not reach the Battle Royale server. Run npm run br:server."
         );
       });
 
-      socket.on('disconnect', () => {
-        setServerStatus('offline');
+      socket.on("disconnect", () => {
+        setServerStatus("offline");
       });
 
-      socket.on('roomUpdated', (nextRoom) => {
+      socket.on("roomUpdated", (nextRoom) => {
         setRoom(nextRoom);
         if (Number.isFinite(nextRoom?.biomeId)) {
           setSelectedBiomeId(nextRoom.biomeId);
@@ -223,53 +224,56 @@ function BattleRoyaleShell({ onBackToMenu }) {
     }
 
     if (!socketRef.current.connected) {
-      setServerStatus('connecting');
+      setServerStatus("connecting");
       socketRef.current.connect();
     }
 
     return socketRef.current;
   }, []);
 
-  const emitLobbyUpdate = useCallback((updates = {}) => {
-    const socket = socketRef.current;
+  const emitLobbyUpdate = useCallback(
+    (updates = {}) => {
+      const socket = socketRef.current;
 
-    if (!room || !socket?.connected) {
-      return;
-    }
+      if (!room || !socket?.connected) {
+        return;
+      }
 
-    socket.emit('updateLobby', {
-      biomeId: selectedBiomeId,
-      dropPointId,
-      isReady,
-      playerName: displayPlayerName,
-      roomCode: room.code,
-      ...updates,
-    });
-  }, [displayPlayerName, dropPointId, isReady, room, selectedBiomeId]);
+      socket.emit("updateLobby", {
+        biomeId: selectedBiomeId,
+        dropPointId,
+        isReady,
+        playerName: displayPlayerName,
+        roomCode: room.code,
+        ...updates,
+      });
+    },
+    [displayPlayerName, dropPointId, isReady, room, selectedBiomeId]
+  );
 
   const handleRoomResponse = useCallback((ackError, response) => {
     if (ackError) {
-      setServerStatus('error');
-      setErrorMessage('Room server did not respond. Check npm run br:server.');
+      setServerStatus("error");
+      setErrorMessage("Room server did not respond. Check npm run br:server.");
       return;
     }
 
     if (!response?.ok) {
-      setErrorMessage(response?.error || 'Room request failed.');
+      setErrorMessage(response?.error || "Room request failed.");
       return;
     }
 
     setRoom(response.room);
     setRoomCode(response.room.code);
-    setServerStatus('connected');
-    setErrorMessage('');
+    setServerStatus("connected");
+    setErrorMessage("");
   }, []);
 
   const handleCreateRoom = useCallback(() => {
     const socket = getSocket();
 
     socket.timeout(6000).emit(
-      'createRoom',
+      "createRoom",
       {
         biomeId: selectedBiomeId,
         dropPointId,
@@ -291,7 +295,7 @@ function BattleRoyaleShell({ onBackToMenu }) {
     const socket = getSocket();
 
     socket.timeout(6000).emit(
-      'joinRoom',
+      "joinRoom",
       {
         biomeId: selectedBiomeId,
         dropPointId,
@@ -311,15 +315,21 @@ function BattleRoyaleShell({ onBackToMenu }) {
     selectedBiomeId,
   ]);
 
-  const handleBiomeSelect = useCallback((biomeId) => {
-    setSelectedBiomeId(biomeId);
-    emitLobbyUpdate({ biomeId });
-  }, [emitLobbyUpdate]);
+  const handleBiomeSelect = useCallback(
+    (biomeId) => {
+      setSelectedBiomeId(biomeId);
+      emitLobbyUpdate({ biomeId });
+    },
+    [emitLobbyUpdate]
+  );
 
-  const handleDropPointSelect = useCallback((nextDropPointId) => {
-    setDropPointId(nextDropPointId);
-    emitLobbyUpdate({ dropPointId: nextDropPointId });
-  }, [emitLobbyUpdate]);
+  const handleDropPointSelect = useCallback(
+    (nextDropPointId) => {
+      setDropPointId(nextDropPointId);
+      emitLobbyUpdate({ dropPointId: nextDropPointId });
+    },
+    [emitLobbyUpdate]
+  );
 
   const handleReadyToggle = useCallback(() => {
     setIsReady((current) => {
@@ -330,31 +340,37 @@ function BattleRoyaleShell({ onBackToMenu }) {
     });
   }, [emitLobbyUpdate]);
 
-  const handleCreatureCaught = useCallback((creatureId) => {
-    const socket = socketRef.current;
+  const handleCreatureCaught = useCallback(
+    (creatureId) => {
+      const socket = socketRef.current;
 
-    if (!room || !socket?.connected) {
-      return;
-    }
+      if (!room || !socket?.connected) {
+        return;
+      }
 
-    socket.emit('catchCreature', {
-      creatureId,
-      roomCode: room.code,
-    });
-  }, [room]);
+      socket.emit("catchCreature", {
+        creatureId,
+        roomCode: room.code,
+      });
+    },
+    [room]
+  );
 
-  const handlePositionChange = useCallback((position) => {
-    const socket = socketRef.current;
+  const handlePositionChange = useCallback(
+    (position) => {
+      const socket = socketRef.current;
 
-    if (!room || !socket?.connected) {
-      return;
-    }
+      if (!room || !socket?.connected) {
+        return;
+      }
 
-    socket.emit('updatePlayerPosition', {
-      position,
-      roomCode: room.code,
-    });
-  }, [room]);
+      socket.emit("updatePlayerPosition", {
+        position,
+        roomCode: room.code,
+      });
+    },
+    [room]
+  );
 
   useEffect(() => {
     return () => {
@@ -364,12 +380,12 @@ function BattleRoyaleShell({ onBackToMenu }) {
   }, []);
 
   useEffect(() => {
-    if (!room || (room.phase && room.phase !== 'lobby') || !allPlayersReady) {
+    if (!room || (room.phase && room.phase !== "lobby") || !allPlayersReady) {
       setFallbackCountdown(null);
       return undefined;
     }
 
-    socketRef.current?.emit('requestCountdownStart', { roomCode: room.code });
+    socketRef.current?.emit("requestCountdownStart", { roomCode: room.code });
     setFallbackCountdown(5);
 
     const countdownTimer = window.setInterval(() => {
@@ -389,21 +405,27 @@ function BattleRoyaleShell({ onBackToMenu }) {
   }, [allPlayersReady, room]);
 
   const effectiveRoom = useMemo(() => {
-    if (room && (!room.phase || room.phase === 'lobby') &&
-      fallbackCountdown !== null) {
+    if (
+      room &&
+      (!room.phase || room.phase === "lobby") &&
+      fallbackCountdown !== null
+    ) {
       return {
         ...room,
         countdownRemaining: fallbackCountdown,
-        phase: 'countdown',
+        phase: "countdown",
       };
     }
 
     return room;
   }, [fallbackCountdown, room]);
 
-  if (effectiveRoom?.phase === 'countdown' || effectiveRoom?.phase === 'dropping' ||
-    effectiveRoom?.phase === 'playing' ||
-    effectiveRoom?.phase === 'finished') {
+  if (
+    effectiveRoom?.phase === "countdown" ||
+    effectiveRoom?.phase === "dropping" ||
+    effectiveRoom?.phase === "playing" ||
+    effectiveRoom?.phase === "finished"
+  ) {
     return (
       <BattleRoyaleMatchView
         localPlayerId={localPlayerId}
@@ -424,11 +446,7 @@ function BattleRoyaleShell({ onBackToMenu }) {
             <p className="mode-eyebrow">Multiplayer Prototype</p>
             <h1 id="battle-title">Battle Royale Lobby</h1>
           </div>
-          <button
-            className="ghost-button"
-            type="button"
-            onClick={onBackToMenu}
-          >
+          <button className="ghost-button" type="button" onClick={onBackToMenu}>
             Back
           </button>
         </div>
@@ -458,7 +476,9 @@ function BattleRoyaleShell({ onBackToMenu }) {
                 aria-label="Room Code"
                 placeholder="Room code"
                 value={roomCode}
-                onChange={(event) => setRoomCode(event.target.value.toUpperCase())}
+                onChange={(event) =>
+                  setRoomCode(event.target.value.toUpperCase())
+                }
               />
               <button type="button" onClick={handleJoinRoom}>
                 Join Room
@@ -469,8 +489,9 @@ function BattleRoyaleShell({ onBackToMenu }) {
             </p>
             {room && (
               <p className="lobby-muted">
-                Room <strong>{room.code}</strong> has {roomPlayers.length}{' '}
-                player{roomPlayers.length === 1 ? '' : 's'}.
+                Room <strong>{room.code}</strong> has {roomPlayers.length}{" "}
+                player
+                {roomPlayers.length === 1 ? "" : "s"}.
               </p>
             )}
             {errorMessage && <p className="lobby-error">{errorMessage}</p>}
@@ -482,7 +503,7 @@ function BattleRoyaleShell({ onBackToMenu }) {
               {WORLD_PATHS.map((biome) => (
                 <button
                   key={biome.id}
-                  className={biome.id === selectedBiomeId ? 'selected' : ''}
+                  className={biome.id === selectedBiomeId ? "selected" : ""}
                   type="button"
                   onClick={() => handleBiomeSelect(biome.id)}
                 >
@@ -498,7 +519,7 @@ function BattleRoyaleShell({ onBackToMenu }) {
               {DROP_POINTS.map((point) => (
                 <button
                   key={point.id}
-                  className={point.id === dropPointId ? 'selected' : ''}
+                  className={point.id === dropPointId ? "selected" : ""}
                   type="button"
                   onClick={() => handleDropPointSelect(point.id)}
                 >
@@ -517,24 +538,27 @@ function BattleRoyaleShell({ onBackToMenu }) {
           <div>
             <span>Drop Point</span>
             <strong>
-              {selectedDropPoint.label} ({selectedDropPoint.x},{' '}
+              {selectedDropPoint.label} ({selectedDropPoint.x},{" "}
               {selectedDropPoint.z})
             </strong>
           </div>
           <div>
             <span>Status</span>
-            <strong>{isReady ? 'Ready' : 'Not Ready'}</strong>
+            <strong>{isReady ? "Ready" : "Not Ready"}</strong>
           </div>
           <button
-            className={isReady ? 'ready-button ready' : 'ready-button'}
+            className={isReady ? "ready-button ready" : "ready-button"}
             type="button"
             onClick={handleReadyToggle}
           >
-            {isReady ? 'Ready' : 'Mark Ready'}
+            {isReady ? "Ready" : "Mark Ready"}
           </button>
         </footer>
 
-        <section className="lobby-card player-list-card" aria-labelledby="players-title">
+        <section
+          className="lobby-card player-list-card"
+          aria-labelledby="players-title"
+        >
           <h2 id="players-title">Connected Players</h2>
           {roomPlayers.length > 0 ? (
             <ul className="player-list">
@@ -546,8 +570,8 @@ function BattleRoyaleShell({ onBackToMenu }) {
                 return (
                   <li key={player.id}>
                     <strong>{player.name}</strong>
-                    <span>{playerDropPoint?.label || 'Center Ruins'}</span>
-                    <em>{player.isReady ? 'Ready' : 'Not Ready'}</em>
+                    <span>{playerDropPoint?.label || "Center Ruins"}</span>
+                    <em>{player.isReady ? "Ready" : "Not Ready"}</em>
                   </li>
                 );
               })}

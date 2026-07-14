@@ -381,6 +381,7 @@ git push -u origin main
 
 graphify.bat build
 
+graphify.bat build
 
 graphify.bat update .
 

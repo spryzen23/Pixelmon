@@ -1,16 +1,16 @@
-import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Color, FogExp2, MathUtils } from 'three';
+import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Color, FogExp2, MathUtils } from "three";
 
 const ASH_PARTICLE_COUNT = 2200;
 const ASH_RADIUS = 38;
 const ASH_HEIGHT = 22;
 const CLEAR_FOG_DENSITY = 0.007;
 const ASH_FOG_DENSITY = 0.026;
-const CLEAR_FOG_COLOR = new Color('#6a3d35');
-const ASH_FOG_COLOR = new Color('#3a2e2d');
-const ASH_COLOR = '#5f5b56';
-const EMBER_COLOR = '#ff7a18';
+const CLEAR_FOG_COLOR = new Color("#6a3d35");
+const ASH_FOG_COLOR = new Color("#3a2e2d");
+const ASH_COLOR = "#5f5b56";
+const EMBER_COLOR = "#ff7a18";
 const WIND_X_SPEED = -2.2;
 const WIND_Z_SPEED = 3.4;
 const FALL_SPEED = 1.35;
@@ -58,25 +58,31 @@ export default function Ashfall({ playerRef }) {
     let isCancelled = false;
 
     const scheduleClear = () => {
-      timeoutId = window.setTimeout(() => {
-        if (isCancelled) {
-          return;
-        }
+      timeoutId = window.setTimeout(
+        () => {
+          if (isCancelled) {
+            return;
+          }
 
-        setIsAshy(true);
-        scheduleAsh();
-      }, randomRange(8000, 16000));
+          setIsAshy(true);
+          scheduleAsh();
+        },
+        randomRange(8000, 16000)
+      );
     };
 
     const scheduleAsh = () => {
-      timeoutId = window.setTimeout(() => {
-        if (isCancelled) {
-          return;
-        }
+      timeoutId = window.setTimeout(
+        () => {
+          if (isCancelled) {
+            return;
+          }
 
-        setIsAshy(false);
-        scheduleClear();
-      }, randomRange(14000, 26000));
+          setIsAshy(false);
+          scheduleClear();
+        },
+        randomRange(14000, 26000)
+      );
     };
 
     setIsAshy(true);
@@ -122,7 +128,8 @@ export default function Ashfall({ playerRef }) {
 
       for (let index = 0; index < count; index += 1) {
         const offset = index * 3;
-        const sway = Math.sin(elapsedTime * 1.6 + index * 0.37) * swayMultiplier;
+        const sway =
+          Math.sin(elapsedTime * 1.6 + index * 0.37) * swayMultiplier;
 
         array[offset] += (WIND_X_SPEED + sway) * delta * (0.4 + intensity);
         array[offset + 1] -= FALL_SPEED * fallMultiplier * delta;
@@ -155,7 +162,11 @@ export default function Ashfall({ playerRef }) {
     };
 
     updateParticles(ash, ASH_PARTICLE_COUNT, 1, 0.9);
-    ash.material.opacity = MathUtils.lerp(ash.material.opacity, targetOpacity, 0.035);
+    ash.material.opacity = MathUtils.lerp(
+      ash.material.opacity,
+      targetOpacity,
+      0.035
+    );
 
     if (ember) {
       updateParticles(ember, emberPositions.length / 3, 0.45, 1.3);

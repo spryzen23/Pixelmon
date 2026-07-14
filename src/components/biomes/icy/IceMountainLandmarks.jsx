@@ -1,8 +1,8 @@
-import { Suspense, useMemo, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { DoubleSide } from 'three';
-import AnimatedModel from '../../AnimatedModel';
-import ModelErrorBoundary from '../../ModelErrorBoundary';
+import { Suspense, useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { DoubleSide } from "three";
+import AnimatedModel from "../../AnimatedModel";
+import ModelErrorBoundary from "../../ModelErrorBoundary";
 import {
   getIceRoomById,
   getIceRoomInteriorExitPosition,
@@ -10,9 +10,9 @@ import {
   ICE_ROOM_INTERIOR_EXIT_RADIUS,
   KYUREM_GUARDIAN_RADIUS,
   VOXEL_SIZE,
-} from '../../../game/biomeLandmarks';
+} from "../../../game/biomeLandmarks";
 
-function GuardianFallback({ color = '#172033' }) {
+function GuardianFallback({ color = "#172033" }) {
   return (
     <group>
       <mesh castShadow receiveShadow position={[0, 0.75, 0]}>
@@ -21,20 +21,24 @@ function GuardianFallback({ color = '#172033' }) {
       </mesh>
       <mesh castShadow receiveShadow position={[0, 1.75, 0]}>
         <boxGeometry args={[1.45, 0.68, 1.45]} />
-        <meshStandardMaterial color="#8ee7ff" roughness={0.35} emissive="#1a6d8f" />
+        <meshStandardMaterial
+          color="#8ee7ff"
+          roughness={0.35}
+          emissive="#1a6d8f"
+        />
       </mesh>
     </group>
   );
 }
 
 const CAVE_MOUTH_ROCKS = [
-  [-1.35, -0.08, 0.02, 0.62, 1.12, 0.42, '#111a23'],
-  [1.32, -0.04, 0, 0.68, 1.2, 0.42, '#121f2c'],
-  [-0.56, 0.92, 0.03, 0.78, 0.56, 0.4, '#1b2e3e'],
-  [0.52, 1.02, 0.01, 0.9, 0.52, 0.4, '#20364a'],
-  [0, 1.34, -0.02, 0.7, 0.38, 0.36, '#0b1420'],
-  [-1.02, -0.7, 0.05, 0.56, 0.34, 0.38, '#46677f'],
-  [1.02, -0.66, 0.05, 0.62, 0.32, 0.38, '#5c8398'],
+  [-1.35, -0.08, 0.02, 0.62, 1.12, 0.42, "#111a23"],
+  [1.32, -0.04, 0, 0.68, 1.2, 0.42, "#121f2c"],
+  [-0.56, 0.92, 0.03, 0.78, 0.56, 0.4, "#1b2e3e"],
+  [0.52, 1.02, 0.01, 0.9, 0.52, 0.4, "#20364a"],
+  [0, 1.34, -0.02, 0.7, 0.38, 0.36, "#0b1420"],
+  [-1.02, -0.7, 0.05, 0.56, 0.34, 0.38, "#46677f"],
+  [1.02, -0.66, 0.05, 0.62, 0.32, 0.38, "#5c8398"],
 ];
 
 const CAVERN_EDGE_ROCKS = [
@@ -146,18 +150,25 @@ function CaveMouth({ onEnterRoom = () => {}, playerRef, room }) {
           transparent
         />
       </mesh>
-      {CAVE_MOUTH_ROCKS.map(([rockX, rockY, rockZ, width, height, depth, color], index) => (
-        <mesh
-          key={index}
-          castShadow
-          receiveShadow
-          position={[rockX, rockY + 0.62, rockZ]}
-        >
-          <boxGeometry args={[width, height, depth]} />
-          <meshStandardMaterial color={color} roughness={0.9} />
-        </mesh>
-      ))}
-      <pointLight color="#5db7ff" distance={4.5} intensity={0.55} position={[0, 0.95, 0.9]} />
+      {CAVE_MOUTH_ROCKS.map(
+        ([rockX, rockY, rockZ, width, height, depth, color], index) => (
+          <mesh
+            key={index}
+            castShadow
+            receiveShadow
+            position={[rockX, rockY + 0.62, rockZ]}
+          >
+            <boxGeometry args={[width, height, depth]} />
+            <meshStandardMaterial color={color} roughness={0.9} />
+          </mesh>
+        )
+      )}
+      <pointLight
+        color="#5db7ff"
+        distance={4.5}
+        intensity={0.55}
+        position={[0, 0.95, 0.9]}
+      />
     </group>
   );
 }
@@ -169,13 +180,23 @@ function KyuremGuardian({ room }) {
     <group position={room.guardianPosition}>
       <ModelErrorBoundary
         resetKey={url}
-        fallback={<GuardianFallback color={room.id === 'black' ? '#111827' : '#d9f4ff'} />}
+        fallback={
+          <GuardianFallback
+            color={room.id === "black" ? "#111827" : "#d9f4ff"}
+          />
+        }
       >
-        <Suspense fallback={<GuardianFallback color={room.id === 'black' ? '#111827' : '#d9f4ff'} />}>
+        <Suspense
+          fallback={
+            <GuardianFallback
+              color={room.id === "black" ? "#111827" : "#d9f4ff"}
+            />
+          }
+        >
           <AnimatedModel
             url={url}
             actionName="Idle"
-            fallbackActionName={['Walk', 'Run']}
+            fallbackActionName={["Walk", "Run"]}
             rotation={room.modelRotation}
             scale={room.modelScale}
           />
@@ -187,11 +208,11 @@ function KyuremGuardian({ room }) {
 
 function RoomShell({ room }) {
   const [x, y, z] = room.chamberCenter;
-  const wallColor = room.id === 'black' ? '#0b1420' : '#132330';
-  const wallAccent = room.id === 'black' ? '#18293a' : '#203948';
-  const floorColor = room.id === 'black' ? '#6ca3b5' : '#9bddeb';
-  const iceColor = room.id === 'black' ? '#28a9dc' : '#77e8ff';
-  const glowColor = room.id === 'black' ? '#31b6ff' : '#9ff4ff';
+  const wallColor = room.id === "black" ? "#0b1420" : "#132330";
+  const wallAccent = room.id === "black" ? "#18293a" : "#203948";
+  const floorColor = room.id === "black" ? "#6ca3b5" : "#9bddeb";
+  const iceColor = room.id === "black" ? "#28a9dc" : "#77e8ff";
+  const glowColor = room.id === "black" ? "#31b6ff" : "#9ff4ff";
 
   return (
     <group position={[x, y, z]}>
@@ -215,58 +236,117 @@ function RoomShell({ room }) {
 
       <mesh position={[0, 0.06, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[KYUREM_GUARDIAN_RADIUS * 1.85, 40]} />
-        <meshBasicMaterial color="#9ff4ff" transparent opacity={0.18} depthWrite={false} />
+        <meshBasicMaterial
+          color="#9ff4ff"
+          transparent
+          opacity={0.18}
+          depthWrite={false}
+        />
       </mesh>
 
-      {CAVERN_EDGE_ROCKS.map(([rockX, rockY, rockZ, width, height, depth], index) => (
-        <mesh key={`edge-${index}`} castShadow receiveShadow position={[rockX, rockY, rockZ]}>
-          <boxGeometry args={[width, height, depth]} />
-          <meshStandardMaterial
-            color={index % 3 === 0 ? wallAccent : wallColor}
-            roughness={0.94}
-          />
-        </mesh>
-      ))}
-
-      {CAVERN_LOW_ROCKS.map(([rockX, rockY, rockZ, width, height, depth], index) => (
-        <mesh key={`low-${index}`} castShadow receiveShadow position={[rockX, rockY, rockZ]}>
-          <boxGeometry args={[width, height, depth]} />
-          <meshStandardMaterial color="#263d4e" roughness={0.9} />
-        </mesh>
-      ))}
-
-      {CAVERN_CEILING_SHADOWS.map(([rockX, rockY, rockZ, width, height, depth], index) => (
-        <mesh key={`ceiling-${index}`} castShadow receiveShadow position={[rockX, rockY, rockZ]}>
-          <boxGeometry args={[width, height, depth]} />
-          <meshStandardMaterial color="#030812" roughness={0.98} />
-        </mesh>
-      ))}
-
-      {CAVERN_CRYSTALS.map(([crystalX, crystalY, crystalZ, width, height, depth], index) => (
-        <group key={`crystal-${index}`} position={[crystalX, crystalY, crystalZ]}>
-          <mesh castShadow receiveShadow rotation={[0, Math.PI / 4, 0]}>
+      {CAVERN_EDGE_ROCKS.map(
+        ([rockX, rockY, rockZ, width, height, depth], index) => (
+          <mesh
+            key={`edge-${index}`}
+            castShadow
+            receiveShadow
+            position={[rockX, rockY, rockZ]}
+          >
             <boxGeometry args={[width, height, depth]} />
             <meshStandardMaterial
-              color={iceColor}
-              emissive="#0878a8"
-              emissiveIntensity={0.85}
-              roughness={0.28}
+              color={index % 3 === 0 ? wallAccent : wallColor}
+              roughness={0.94}
             />
           </mesh>
-          <pointLight color={glowColor} distance={3.5} intensity={0.62} position={[0, 0.55, 0]} />
-        </group>
-      ))}
+        )
+      )}
+
+      {CAVERN_LOW_ROCKS.map(
+        ([rockX, rockY, rockZ, width, height, depth], index) => (
+          <mesh
+            key={`low-${index}`}
+            castShadow
+            receiveShadow
+            position={[rockX, rockY, rockZ]}
+          >
+            <boxGeometry args={[width, height, depth]} />
+            <meshStandardMaterial color="#263d4e" roughness={0.9} />
+          </mesh>
+        )
+      )}
+
+      {CAVERN_CEILING_SHADOWS.map(
+        ([rockX, rockY, rockZ, width, height, depth], index) => (
+          <mesh
+            key={`ceiling-${index}`}
+            castShadow
+            receiveShadow
+            position={[rockX, rockY, rockZ]}
+          >
+            <boxGeometry args={[width, height, depth]} />
+            <meshStandardMaterial color="#030812" roughness={0.98} />
+          </mesh>
+        )
+      )}
+
+      {CAVERN_CRYSTALS.map(
+        ([crystalX, crystalY, crystalZ, width, height, depth], index) => (
+          <group
+            key={`crystal-${index}`}
+            position={[crystalX, crystalY, crystalZ]}
+          >
+            <mesh castShadow receiveShadow rotation={[0, Math.PI / 4, 0]}>
+              <boxGeometry args={[width, height, depth]} />
+              <meshStandardMaterial
+                color={iceColor}
+                emissive="#0878a8"
+                emissiveIntensity={0.85}
+                roughness={0.28}
+              />
+            </mesh>
+            <pointLight
+              color={glowColor}
+              distance={3.5}
+              intensity={0.62}
+              position={[0, 0.55, 0]}
+            />
+          </group>
+        )
+      )}
 
       <mesh position={[0, 0.07, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[KYUREM_GUARDIAN_RADIUS * 0.9, KYUREM_GUARDIAN_RADIUS * 1.62, 40]} />
-        <meshBasicMaterial color={glowColor} transparent opacity={0.26} depthWrite={false} />
+        <ringGeometry
+          args={[
+            KYUREM_GUARDIAN_RADIUS * 0.9,
+            KYUREM_GUARDIAN_RADIUS * 1.62,
+            40,
+          ]}
+        />
+        <meshBasicMaterial
+          color={glowColor}
+          transparent
+          opacity={0.26}
+          depthWrite={false}
+        />
       </mesh>
       <mesh position={[0, 2.78, -2.92]}>
-        <boxGeometry args={[VOXEL_SIZE * 4.2, VOXEL_SIZE * 0.5, VOXEL_SIZE * 0.55]} />
+        <boxGeometry
+          args={[VOXEL_SIZE * 4.2, VOXEL_SIZE * 0.5, VOXEL_SIZE * 0.55]}
+        />
         <meshStandardMaterial color="#050a11" roughness={0.96} />
       </mesh>
-      <pointLight color={glowColor} distance={12} intensity={1.65} position={[0, 2.35, 0]} />
-      <pointLight color="#244bff" distance={8} intensity={0.65} position={[0, 1.65, -2.3]} />
+      <pointLight
+        color={glowColor}
+        distance={12}
+        intensity={1.65}
+        position={[0, 2.35, 0]}
+      />
+      <pointLight
+        color="#244bff"
+        distance={8}
+        intensity={0.65}
+        position={[0, 1.65, -2.3]}
+      />
     </group>
   );
 }
@@ -307,16 +387,17 @@ function ExitTrigger({ onExitRoom = () => {}, playerRef, room }) {
         <boxGeometry args={[VOXEL_SIZE * 2, VOXEL_SIZE * 1.8, 0.08]} />
         <meshBasicMaterial color="#040810" transparent opacity={0.82} />
       </mesh>
-      <pointLight color="#bdefff" distance={4.5} intensity={0.9} position={[0, 1.1, 0.5]} />
+      <pointLight
+        color="#bdefff"
+        distance={4.5}
+        intensity={0.9}
+        position={[0, 1.1, 0.5]}
+      />
     </group>
   );
 }
 
-export function IceKyuremRoomInterior({
-  activeRoomId,
-  onExitRoom,
-  playerRef,
-}) {
+export function IceKyuremRoomInterior({ activeRoomId, onExitRoom, playerRef }) {
   const room = useMemo(() => getIceRoomById(activeRoomId), [activeRoomId]);
 
   if (!room) {
@@ -327,11 +408,7 @@ export function IceKyuremRoomInterior({
     <>
       <RoomShell room={room} />
       <KyuremGuardian room={room} />
-      <ExitTrigger
-        onExitRoom={onExitRoom}
-        playerRef={playerRef}
-        room={room}
-      />
+      <ExitTrigger onExitRoom={onExitRoom} playerRef={playerRef} room={room} />
     </>
   );
 }

@@ -1,9 +1,9 @@
-import { PointerLockControls } from '@react-three/drei';
-import { useEffect, useRef } from 'react';
+import { PointerLockControls } from "@react-three/drei";
+import { useEffect, useRef } from "react";
 
 const RELOCK_COOLDOWN_MS = 850;
 const POINTER_LOCK_COOLDOWN_ERROR =
-  'Pointer lock cannot be acquired immediately after the user has exited the lock';
+  "Pointer lock cannot be acquired immediately after the user has exited the lock";
 
 export default function SafePointerLockControls(props) {
   const controlsRef = useRef(null);
@@ -28,7 +28,7 @@ export default function SafePointerLockControls(props) {
       }
     };
     const handleUnhandledRejection = (event) => {
-      const message = String(event.reason?.message || event.reason || '');
+      const message = String(event.reason?.message || event.reason || "");
 
       if (message.includes(POINTER_LOCK_COOLDOWN_ERROR)) {
         event.preventDefault();
@@ -53,8 +53,8 @@ export default function SafePointerLockControls(props) {
       domElement.requestPointerLock = (...requestArgs) => {
         const result = originalRequestPointerLock(...requestArgs);
 
-        if (result && typeof result.catch === 'function') {
-          return result.catch(() => { });
+        if (result && typeof result.catch === "function") {
+          return result.catch(() => {});
         }
 
         return result;
@@ -70,18 +70,21 @@ export default function SafePointerLockControls(props) {
       }
     };
 
-    controls.addEventListener('unlock', handleUnlock);
-    document.addEventListener('pointerlockerror', handlePointerLockError, true);
-    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    controls.addEventListener("unlock", handleUnlock);
+    document.addEventListener("pointerlockerror", handlePointerLockError, true);
+    window.addEventListener("unhandledrejection", handleUnhandledRejection);
 
     return () => {
-      controls.removeEventListener('unlock', handleUnlock);
+      controls.removeEventListener("unlock", handleUnlock);
       document.removeEventListener(
-        'pointerlockerror',
+        "pointerlockerror",
         handlePointerLockError,
         true
       );
-      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+      window.removeEventListener(
+        "unhandledrejection",
+        handleUnhandledRejection
+      );
       controls.lock = originalLock;
     };
   }, []);

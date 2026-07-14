@@ -1,6 +1,6 @@
-import { AUTO_ASSET_MANIFEST } from './generatedAssetManifest.js';
+import { AUTO_ASSET_MANIFEST } from "./generatedAssetManifest.js";
 
-const DEFAULT_WILD_URL = '/assets/wild_creature.glb';
+const DEFAULT_WILD_URL = "/assets/wild_creature.glb";
 
 function encodeAssetUrl(folderName, file) {
   return encodeURI(`/assets/${folderName}/${file}`);
@@ -17,7 +17,11 @@ export function resolveWildModel(entry, pathId = 0) {
 
   const manifest = AUTO_ASSET_MANIFEST[pathId];
   if (!manifest) {
-    return { modelUrl: DEFAULT_WILD_URL, modelScale: 0.35, modelRotation: [0, Math.PI / 2, 0] };
+    return {
+      modelUrl: DEFAULT_WILD_URL,
+      modelScale: 0.35,
+      modelRotation: [0, Math.PI / 2, 0],
+    };
   }
 
   const pool = entry?.isAlpha
@@ -33,7 +37,11 @@ export function resolveWildModel(entry, pathId = 0) {
     : null;
 
   if (!asset) {
-    return { modelUrl: DEFAULT_WILD_URL, modelScale: 0.35, modelRotation: [0, Math.PI / 2, 0] };
+    return {
+      modelUrl: DEFAULT_WILD_URL,
+      modelScale: 0.35,
+      modelRotation: [0, Math.PI / 2, 0],
+    };
   }
 
   return {

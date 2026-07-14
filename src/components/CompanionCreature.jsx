@@ -1,24 +1,24 @@
-import { Box } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+import { Box } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import {
   Suspense,
   forwardRef,
   useImperativeHandle,
   useRef,
   useState,
-} from 'react';
-import { Vector3 } from 'three';
-import AnimatedModel from './AnimatedModel';
-import ModelErrorBoundary from './ModelErrorBoundary';
-import VoxelFallback from './VoxelFallback';
-import { lerpAngle } from '../game/animationUtils';
-import useKeyboardControls from '../hooks/useKeyboardControls';
+} from "react";
+import { Vector3 } from "three";
+import AnimatedModel from "./AnimatedModel";
+import ModelErrorBoundary from "./ModelErrorBoundary";
+import VoxelFallback from "./VoxelFallback";
+import { lerpAngle } from "../game/animationUtils";
+import useKeyboardControls from "../hooks/useKeyboardControls";
 import {
   COMPANION_HEIGHT,
   getEntityY,
   isWalkablePosition,
-} from '../game/world';
-import { getFitToHeightForPokemon } from '../game/pokemonData';
+} from "../game/world";
+import { getFitToHeightForPokemon } from "../game/pokemonData";
 
 const FOLLOW_SPEED = 5;
 const MIN_FOLLOW_DISTANCE = 0.95;
@@ -26,12 +26,8 @@ const TRAIL_DISTANCE = 1.6;
 const ROTATION_SMOOTHING = 12;
 const DISPLACE_EPSILON = 0.0008;
 const MODEL_SCALE = 0.25;
-const DEFAULT_MODEL_URL = '/assets/companion.glb';
-const companionStart = [
-  -8.5,
-  getEntityY(-8.5, -6.8, COMPANION_HEIGHT),
-  -6.8,
-];
+const DEFAULT_MODEL_URL = "/assets/companion.glb";
+const companionStart = [-8.5, getEntityY(-8.5, -6.8, COMPANION_HEIGHT), -6.8];
 const targetPosition = new Vector3();
 const playerForward = new Vector3();
 
@@ -140,9 +136,11 @@ const CompanionCreature = forwardRef(function CompanionCreature(
     if (distanceToTarget > MIN_FOLLOW_DISTANCE) {
       const smoothing = 1 - Math.exp(-FOLLOW_SPEED * delta);
       const nextX =
-        companion.position.x + (targetPosition.x - companion.position.x) * smoothing;
+        companion.position.x +
+        (targetPosition.x - companion.position.x) * smoothing;
       const nextZ =
-        companion.position.z + (targetPosition.z - companion.position.z) * smoothing;
+        companion.position.z +
+        (targetPosition.z - companion.position.z) * smoothing;
 
       if (isWalkablePosition(nextX, nextZ, 0.35, currentPathId)) {
         companion.position.x = nextX;
@@ -198,13 +196,15 @@ const CompanionCreature = forwardRef(function CompanionCreature(
     previousY.current = companion.position.y;
   });
 
-  const companionFitHeight = companion ? getFitToHeightForPokemon(companion) : null;
-  const companionPrimaryType = companion?.types?.[0] || 'normal';
+  const companionFitHeight = companion
+    ? getFitToHeightForPokemon(companion)
+    : null;
+  const companionPrimaryType = companion?.types?.[0] || "normal";
   const companionScale = companion ? 1.0 : MODEL_SCALE;
   const modelYOffset = -COMPANION_HEIGHT / 2 + (isCrouching ? -0.12 : 0);
 
   const fallbackProps = {
-    color: '#ffd928',
+    color: "#ffd928",
     height: companionFitHeight || COMPANION_HEIGHT,
     width: 0.7,
     depth: 0.7,
@@ -219,12 +219,17 @@ const CompanionCreature = forwardRef(function CompanionCreature(
         <meshBasicMaterial transparent opacity={0} />
       </Box>
 
-      <ModelErrorBoundary resetKey={modelUrl} fallback={<VoxelFallback {...fallbackProps} />}>
+      <ModelErrorBoundary
+        resetKey={modelUrl}
+        fallback={<VoxelFallback {...fallbackProps} />}
+      >
         <Suspense fallback={<VoxelFallback {...fallbackProps} />}>
           <AnimatedModel
             url={modelUrl}
-            actionName={isMoving ? 'Walk' : 'Idle'}
-            fallbackActionName={isMoving ? ['Run', 'Walk', 'Idle'] : ['Idle', 'Walk']}
+            actionName={isMoving ? "Walk" : "Idle"}
+            fallbackActionName={
+              isMoving ? ["Run", "Walk", "Idle"] : ["Idle", "Walk"]
+            }
             position={[0, modelYOffset, 0]}
             rotation={modelRotation}
             scale={companionScale}

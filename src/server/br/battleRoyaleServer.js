@@ -1,6 +1,7 @@
-import { Server } from 'socket.io';
+import { Server } from "socket.io";
 
-const CLIENT_ORIGIN = process.env.BATTLE_ROYALE_CLIENT_ORIGIN || 'http://localhost:3000';
+const CLIENT_ORIGIN =
+  process.env.BATTLE_ROYALE_CLIENT_ORIGIN || "http://localhost:3000";
 const COUNTDOWN_SECONDS = 5;
 const DROP_SECONDS = 7;
 const MATCH_DURATION_SECONDS = 120;
@@ -8,8 +9,8 @@ const MATCH_CREATURE_COUNT = 24;
 const rooms = new Map();
 
 function makeRoomCode() {
-  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let code = '';
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
 
   for (let index = 0; index < 5; index += 1) {
     code += alphabet[Math.floor(Math.random() * alphabet.length)];
@@ -19,9 +20,9 @@ function makeRoomCode() {
 }
 
 function sanitizePlayerName(name) {
-  const trimmedName = String(name || '').trim();
+  const trimmedName = String(name || "").trim();
 
-  return trimmedName.slice(0, 18) || 'Player';
+  return trimmedName.slice(0, 18) || "Player";
 }
 
 function serializeRoom(room) {
@@ -63,7 +64,7 @@ function createMatchCreatures(room) {
 }
 
 function broadcastRoom(io, room) {
-  io.to(room.code).emit('roomUpdated', serializeRoom(room));
+  io.to(room.code).emit("roomUpdated", serializeRoom(room));
 }
 
 function clearRoomTimers(room) {
@@ -87,7 +88,7 @@ function canStartCountdown(room) {
   const players = Array.from(room.players.values());
 
   return (
-    room.phase === 'lobby' &&
+    room.phase === "lobby" &&
     players.length >= 2 &&
     players.every((player) => player.isReady)
   );
@@ -102,7 +103,7 @@ function finishMatch(io, room) {
     0
   );
 
-  room.phase = 'finished';
+  room.phase = "finished";
   room.matchRemaining = 0;
   room.winnerIds = players
     .filter((player) => (player.score || 0) === bestScore)
@@ -112,7 +113,7 @@ function finishMatch(io, room) {
 }
 
 function startMatch(io, room) {
-  if (room.phase !== 'dropping') {
+  if (room.phase !== "dropping") {
     return;
   }
 
@@ -121,7 +122,7 @@ function startMatch(io, room) {
     room.dropTimer = null;
   }
 
-  room.phase = 'playing';
+  room.phase = "playing";
   room.dropRemaining = 0;
   room.matchRemaining = MATCH_DURATION_SECONDS;
   room.winnerIds = [];
@@ -145,7 +146,7 @@ function startMatch(io, room) {
 }
 
 function startDrop(io, room) {
-  if (room.phase !== 'countdown') {
+  if (room.phase !== "countdown") {
     return;
   }
 
@@ -154,7 +155,7 @@ function startDrop(io, room) {
     room.countdownTimer = null;
   }
 
-  room.phase = 'dropping';
+  room.phase = "dropping";
   room.dropRemaining = DROP_SECONDS;
   room.dropStarted = true;
   broadcastRoom(io, room);
@@ -172,7 +173,7 @@ function startDrop(io, room) {
 }
 
 function cancelCountdown(io, room) {
-  if (room.phase !== 'countdown') {
+  if (room.phase !== "countdown") {
     return;
   }
 
@@ -181,20 +182,23 @@ function cancelCountdown(io, room) {
     room.countdownTimer = null;
   }
 
-  room.phase = 'lobby';
+  room.phase = "lobby";
   room.countdownRemaining = 0;
   broadcastRoom(io, room);
 }
 
 function maybeStartCountdown(io, room) {
-  if (room.phase === 'countdown' || room.phase === 'dropping' ||
-    room.phase === 'playing' ||
-    room.phase === 'finished') {
+  if (
+    room.phase === "countdown" ||
+    room.phase === "dropping" ||
+    room.phase === "playing" ||
+    room.phase === "finished"
+  ) {
     return;
   }
 
   if (canStartCountdown(room)) {
-    room.phase = 'countdown';
+    room.phase = "countdown";
     room.countdownRemaining = COUNTDOWN_SECONDS;
     broadcastRoom(io, room);
 
@@ -225,7 +229,7 @@ function maybeStartCountdown(io, room) {
 
 function addPlayerToRoom(socket, room, payload) {
   const player = {
-    dropPointId: payload.dropPointId || 'center-ruins',
+    dropPointId: payload.dropPointId || "center-ruins",
     id: socket.id,
     isReady: Boolean(payload.isReady),
     name: sanitizePlayerName(payload.playerName),
@@ -243,12 +247,12 @@ export function attachBattleRoyale(httpServer) {
   const io = new Server(httpServer, {
     cors: {
       origin: CLIENT_ORIGIN,
-      methods: ['GET', 'POST'],
+      methods: ["GET", "POST"],
     },
   });
 
-  io.on('connection', (socket) => {
-    socket.on('createRoom', (payload = {}, callback = () => { }) => {
+  io.on("connection", (socket) => {
+    socket.on("createRoom", (payload = {}, callback = () => {}) => {
       const code = makeRoomCode();
       const room = {
         biomeId: Number.isFinite(payload.biomeId) ? payload.biomeId : 0,
@@ -259,7 +263,7 @@ export function attachBattleRoyale(httpServer) {
         dropStarted: false,
         hostId: socket.id,
         matchRemaining: 0,
-        phase: 'lobby',
+        phase: "lobby",
         players: new Map(),
         winnerIds: [],
       };
@@ -273,17 +277,19 @@ export function attachBattleRoyale(httpServer) {
       maybeStartCountdown(io, room);
     });
 
-    socket.on('joinRoom', (payload = {}, callback = () => { }) => {
-      const requestedCode = String(payload.roomCode || '').trim().toUpperCase();
+    socket.on("joinRoom", (payload = {}, callback = () => {}) => {
+      const requestedCode = String(payload.roomCode || "")
+        .trim()
+        .toUpperCase();
       const room = rooms.get(requestedCode);
 
       if (!room) {
-        callback({ ok: false, error: 'Room not found.' });
+        callback({ ok: false, error: "Room not found." });
         return;
       }
 
-      if (room.phase !== 'lobby') {
-        callback({ ok: false, error: 'Match already started.' });
+      if (room.phase !== "lobby") {
+        callback({ ok: false, error: "Match already started." });
         return;
       }
 
@@ -295,8 +301,8 @@ export function attachBattleRoyale(httpServer) {
       maybeStartCountdown(io, room);
     });
 
-    socket.on('updateLobby', (payload = {}) => {
-      const roomCode = String(payload.roomCode || socket.data.roomCode || '')
+    socket.on("updateLobby", (payload = {}) => {
+      const roomCode = String(payload.roomCode || socket.data.roomCode || "")
         .trim()
         .toUpperCase();
       const room = rooms.get(roomCode);
@@ -311,7 +317,7 @@ export function attachBattleRoyale(httpServer) {
         player.name = sanitizePlayerName(payload.playerName);
       }
 
-      if (payload.dropPointId !== undefined && room.phase === 'lobby') {
+      if (payload.dropPointId !== undefined && room.phase === "lobby") {
         player.dropPointId = payload.dropPointId;
       }
 
@@ -319,7 +325,7 @@ export function attachBattleRoyale(httpServer) {
         player.isReady = Boolean(payload.isReady);
       }
 
-      if (payload.biomeId !== undefined && room.phase === 'lobby') {
+      if (payload.biomeId !== undefined && room.phase === "lobby") {
         room.biomeId = Number(payload.biomeId);
       }
 
@@ -327,28 +333,28 @@ export function attachBattleRoyale(httpServer) {
       maybeStartCountdown(io, room);
     });
 
-    socket.on('requestCountdownStart', (payload = {}, callback = () => { }) => {
-      const roomCode = String(payload.roomCode || socket.data.roomCode || '')
+    socket.on("requestCountdownStart", (payload = {}, callback = () => {}) => {
+      const roomCode = String(payload.roomCode || socket.data.roomCode || "")
         .trim()
         .toUpperCase();
       const room = rooms.get(roomCode);
 
       if (!room || !room.players.has(socket.id)) {
-        callback({ ok: false, error: 'Room not found.' });
+        callback({ ok: false, error: "Room not found." });
         return;
       }
 
       maybeStartCountdown(io, room);
-      callback({ ok: room.phase === 'countdown', room: serializeRoom(room) });
+      callback({ ok: room.phase === "countdown", room: serializeRoom(room) });
     });
 
-    socket.on('updatePlayerPosition', (payload = {}) => {
-      const roomCode = String(payload.roomCode || socket.data.roomCode || '')
+    socket.on("updatePlayerPosition", (payload = {}) => {
+      const roomCode = String(payload.roomCode || socket.data.roomCode || "")
         .trim()
         .toUpperCase();
       const room = rooms.get(roomCode);
 
-      if (!room || room.phase !== 'playing' || !room.players.has(socket.id)) {
+      if (!room || room.phase !== "playing" || !room.players.has(socket.id)) {
         return;
       }
 
@@ -362,13 +368,13 @@ export function attachBattleRoyale(httpServer) {
       broadcastRoom(io, room);
     });
 
-    socket.on('recordCatch', (payload = {}) => {
-      const roomCode = String(payload.roomCode || socket.data.roomCode || '')
+    socket.on("recordCatch", (payload = {}) => {
+      const roomCode = String(payload.roomCode || socket.data.roomCode || "")
         .trim()
         .toUpperCase();
       const room = rooms.get(roomCode);
 
-      if (!room || room.phase !== 'playing' || !room.players.has(socket.id)) {
+      if (!room || room.phase !== "playing" || !room.players.has(socket.id)) {
         return;
       }
 
@@ -377,24 +383,24 @@ export function attachBattleRoyale(httpServer) {
       broadcastRoom(io, room);
     });
 
-    socket.on('catchCreature', (payload = {}, callback = () => { }) => {
-      const roomCode = String(payload.roomCode || socket.data.roomCode || '')
+    socket.on("catchCreature", (payload = {}, callback = () => {}) => {
+      const roomCode = String(payload.roomCode || socket.data.roomCode || "")
         .trim()
         .toUpperCase();
       const room = rooms.get(roomCode);
 
-      if (!room || room.phase !== 'playing' || !room.players.has(socket.id)) {
-        callback({ ok: false, error: 'Match is not active.' });
+      if (!room || room.phase !== "playing" || !room.players.has(socket.id)) {
+        callback({ ok: false, error: "Match is not active." });
         return;
       }
 
-      const creatureId = String(payload.creatureId || '');
+      const creatureId = String(payload.creatureId || "");
       const creatureExists = room.creatures.some(
         (creature) => creature.id === creatureId
       );
 
       if (!creatureExists) {
-        callback({ ok: false, error: 'Creature already caught.' });
+        callback({ ok: false, error: "Creature already caught." });
         return;
       }
 
@@ -407,7 +413,7 @@ export function attachBattleRoyale(httpServer) {
       broadcastRoom(io, room);
     });
 
-    socket.on('disconnect', () => {
+    socket.on("disconnect", () => {
       const roomCode = socket.data.roomCode;
       const room = rooms.get(roomCode);
 

@@ -1,4 +1,4 @@
-export function TabBar({ tabs, activeId, onChange, variant = 'pill' }) {
+export function TabBar({ tabs, activeId, onChange, variant = "pill" }) {
   return (
     <div className="px-tab-bar" role="tablist">
       {tabs.map((tab) => (
@@ -8,9 +8,9 @@ export function TabBar({ tabs, activeId, onChange, variant = 'pill' }) {
           role="tab"
           aria-selected={activeId === tab.id}
           className={
-            variant === 'underline'
-              ? `px-tab-btn-underline ${activeId === tab.id ? 'active' : ''}`
-              : `px-tab-btn ${activeId === tab.id ? 'active' : ''}`
+            variant === "underline"
+              ? `px-tab-btn-underline ${activeId === tab.id ? "active" : ""}`
+              : `px-tab-btn ${activeId === tab.id ? "active" : ""}`
           }
           onClick={() => onChange(tab.id)}
         >

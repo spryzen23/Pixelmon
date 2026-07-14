@@ -1,14 +1,23 @@
-import { getPathEggGroups, getRegionForPath, REGIONAL_BIOMES } from './pokemonData';
+import {
+  getPathEggGroups,
+  getRegionForPath,
+  REGIONAL_BIOMES,
+} from "./pokemonData";
 
 const PATH_TERRAIN = [
-  { id: 0, name: 'Fieldlands Trail', biome: 'grassland', fantasyBiome: 'grass' },
-  { id: 1, name: 'Sandglass Flats', biome: 'desert', fantasyBiome: 'desert' },
-  { id: 2, name: 'Frostpine Pass', biome: 'snow', fantasyBiome: 'icy' },
-  { id: 3, name: 'Coastal Run', biome: 'coastal', fantasyBiome: 'cave' },
-  { id: 4, name: 'Crimson Mire', biome: 'mire', fantasyBiome: 'volcanic' },
-  { id: 5, name: 'Coronet Approach', biome: 'mountain', fantasyBiome: 'icy' },
-  { id: 6, name: 'Fantasy World', biome: 'tropical', fantasyBiome: 'sky' },
-  { id: 7, name: 'Village World', biome: 'village', fantasyBiome: 'moonlit' },
+  {
+    id: 0,
+    name: "Fieldlands Trail",
+    biome: "grassland",
+    fantasyBiome: "grass",
+  },
+  { id: 1, name: "Sandglass Flats", biome: "desert", fantasyBiome: "desert" },
+  { id: 2, name: "Frostpine Pass", biome: "snow", fantasyBiome: "icy" },
+  { id: 3, name: "Coastal Run", biome: "coastal", fantasyBiome: "cave" },
+  { id: 4, name: "Crimson Mire", biome: "mire", fantasyBiome: "volcanic" },
+  { id: 5, name: "Coronet Approach", biome: "mountain", fantasyBiome: "icy" },
+  { id: 6, name: "Fantasy World", biome: "tropical", fantasyBiome: "sky" },
+  { id: 7, name: "Village World", biome: "village", fantasyBiome: "moonlit" },
 ];
 
 function findRegionMeta(regionId) {
@@ -25,7 +34,9 @@ function findRegionMeta(regionId) {
 
 export function getRegionMeta(regionId) {
   const region = findRegionMeta(regionId);
-  const hasPath = Object.values(REGIONAL_BIOMES.pathToRegion || {}).includes(regionId);
+  const hasPath = Object.values(REGIONAL_BIOMES.pathToRegion || {}).includes(
+    regionId
+  );
 
   return {
     ...region,
@@ -66,7 +77,7 @@ export function getAllPlayableBiomes() {
 }
 
 export function formatEggGroups(eggGroups = []) {
-  return eggGroups.map((group) => group.replace(/-/g, ' ')).join('/');
+  return eggGroups.map((group) => group.replace(/-/g, " ")).join("/");
 }
 
 export function formatSpawnProgressLine({
@@ -75,7 +86,7 @@ export function formatSpawnProgressLine({
   active = 0,
   peak = 0,
   eggGroups = [],
-  regionName = '',
+  regionName = "",
 }) {
   const groups = formatEggGroups(eggGroups);
   const remaining = `${active}/${peak} remaining`;

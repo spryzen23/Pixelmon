@@ -1,10 +1,10 @@
-import { useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { useMemo, useRef } from 'react';
-import { Box3, Vector3 } from 'three';
-import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
-import { POKEBALL_MODEL_URLS } from '../game/balls';
-import { PROJECTILE_RADIUS } from '../game/projectilePhysics';
+import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
+import { Box3, Vector3 } from "three";
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
+import { POKEBALL_MODEL_URLS } from "../game/balls";
+import { PROJECTILE_RADIUS } from "../game/projectilePhysics";
 
 const bboxSize = new Vector3();
 const DEFAULT_TARGET_DIAMETER = PROJECTILE_RADIUS * 2;

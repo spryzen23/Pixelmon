@@ -1,7 +1,7 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { BoxGeometry, Object3D } from 'three';
-import { createProceduralVoxelMaterials } from '../game/proceduralVoxelMaterials';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useFrame } from "@react-three/fiber";
+import { BoxGeometry, Object3D } from "three";
+import { createProceduralVoxelMaterials } from "../game/proceduralVoxelMaterials";
 import {
   VOXEL_SIZE,
   CAVE_ZONES,
@@ -10,13 +10,13 @@ import {
   getBiomeRenderDistance,
   getChunkCoordsForPosition,
   WORLD_PATHS,
-} from '../game/world';
+} from "../game/world";
 
 const dummy = new Object3D();
 
 function ChunkBucket({ blocks, geometry, material, type }) {
   const meshRef = useRef();
-  const isLiquid = type === 'water' || type === 'lava';
+  const isLiquid = type === "water" || type === "lava";
 
   useLayoutEffect(() => {
     const mesh = meshRef.current;
@@ -88,7 +88,7 @@ function ChunkMesh({ chunk, geometry, materials }) {
 export default function VoxelWorld({
   caveZone = CAVE_ZONES.EXTERIOR,
   currentBiome = 0,
-  onBiomeReady = () => { },
+  onBiomeReady = () => {},
   playerRef,
 }) {
   const [centerChunk, setCenterChunk] = useState(() =>
@@ -124,10 +124,7 @@ export default function VoxelWorld({
       player.position.z
     );
 
-    if (
-      nextChunk.cx !== centerChunk.cx ||
-      nextChunk.cz !== centerChunk.cz
-    ) {
+    if (nextChunk.cx !== centerChunk.cx || nextChunk.cz !== centerChunk.cz) {
       setCenterChunk(nextChunk);
     }
   });
@@ -136,7 +133,7 @@ export default function VoxelWorld({
     const nextMaterials = createProceduralVoxelMaterials();
     const biome = WORLD_PATHS.find((path) => path.id === currentBiome);
 
-    if (biome?.biome === 'volcanic' && nextMaterials.lava) {
+    if (biome?.biome === "volcanic" && nextMaterials.lava) {
       nextMaterials.water = nextMaterials.lava;
     }
 

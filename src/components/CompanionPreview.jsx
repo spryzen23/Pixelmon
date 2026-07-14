@@ -1,19 +1,19 @@
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import { Suspense } from 'react';
-import AnimatedModel from './AnimatedModel';
-import ModelErrorBoundary from './ModelErrorBoundary';
-import VoxelFallback from './VoxelFallback';
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import { Suspense } from "react";
+import AnimatedModel from "./AnimatedModel";
+import ModelErrorBoundary from "./ModelErrorBoundary";
+import VoxelFallback from "./VoxelFallback";
 
 export default function CompanionPreview({
   modelUrl,
-  primaryType = 'normal',
+  primaryType = "normal",
   fitToHeight = 1.1,
   isFloating = false,
   rotation = [0, 0, 0],
 }) {
   const fallbackProps = {
-    color: '#3498db',
+    color: "#3498db",
     height: 1.0,
     width: 0.6,
     depth: 0.6,
@@ -25,7 +25,7 @@ export default function CompanionPreview({
     <Canvas
       shadows
       camera={{ position: [0, 0.8, 2.5], fov: 45 }}
-      style={{ pointerEvents: 'auto', background: 'transparent' }}
+      style={{ pointerEvents: "auto", background: "transparent" }}
     >
       <ambientLight intensity={1.6} />
       <directionalLight
@@ -45,7 +45,7 @@ export default function CompanionPreview({
             <AnimatedModel
               url={modelUrl}
               actionName="Idle"
-              fallbackActionName={['Walk', 'Idle']}
+              fallbackActionName={["Walk", "Idle"]}
               position={[0, isFloating ? -0.15 : -0.4, 0]}
               rotation={rotation}
               fitToHeight={fitToHeight}
@@ -58,13 +58,9 @@ export default function CompanionPreview({
       {/* Stylized Platform Stand */}
       <mesh position={[0, -0.45, 0]} receiveShadow>
         <cylinderGeometry args={[0.9, 0.95, 0.08, 32]} />
-        <meshStandardMaterial
-          color="#1a2536"
-          roughness={0.4}
-          metalness={0.8}
-        />
+        <meshStandardMaterial color="#1a2536" roughness={0.4} metalness={0.8} />
       </mesh>
-      
+
       <mesh position={[0, -0.445, 0]}>
         <cylinderGeometry args={[0.85, 0.85, 0.01, 32]} />
         <meshStandardMaterial

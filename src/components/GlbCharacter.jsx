@@ -1,19 +1,19 @@
-import { Suspense } from 'react';
-import AnimatedModel from './AnimatedModel';
-import ModelErrorBoundary from './ModelErrorBoundary';
-import VoxelFallback from './VoxelFallback';
+import { Suspense } from "react";
+import AnimatedModel from "./AnimatedModel";
+import ModelErrorBoundary from "./ModelErrorBoundary";
+import VoxelFallback from "./VoxelFallback";
 
 export default function GlbCharacter({
   url,
-  actionName = 'Idle',
-  fallbackActionName = 'Walk',
+  actionName = "Idle",
+  fallbackActionName = "Walk",
   position = [0, 0, 0],
   rotation = [0, 0, 0],
   scale = 1,
   inputRef = null,
   animProfile = null,
-  primaryType = 'normal',
-  fallbackColor = '#888888',
+  primaryType = "normal",
+  fallbackColor = "#888888",
   fallbackHeight = 1,
   fallbackWidth = 0.75,
 }) {

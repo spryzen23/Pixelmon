@@ -1,5 +1,5 @@
 export const VILLAGE_GLB_URL =
-  '/assets/idea_glbs/small_time_town__village_asset_pack.glb';
+  "/assets/idea_glbs/small_time_town__village_asset_pack.glb";
 
 export const VILLAGE_BIOME_ID = 7;
 
@@ -26,170 +26,170 @@ export const VILLAGE_COLLISION = {
 /** Logical prop key → GLB archetype node name and spawn metadata. */
 export const VILLAGE_PROP_DEFS = {
   barn: {
-    nodeName: 'Barn',
-    category: 'building',
+    nodeName: "Barn",
+    category: "building",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.building,
   },
   chapel: {
-    nodeName: 'Chapel',
-    category: 'building',
+    nodeName: "Chapel",
+    category: "building",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.building,
   },
   house_red: {
-    nodeName: 'House_Red',
-    category: 'building',
+    nodeName: "House_Red",
+    category: "building",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.house,
   },
   house_blue: {
-    nodeName: 'House_Blue',
-    category: 'building',
+    nodeName: "House_Blue",
+    category: "building",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.house,
   },
   house_purple: {
-    nodeName: 'House_Purple',
-    category: 'building',
+    nodeName: "House_Purple",
+    category: "building",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.house,
   },
   house_2story_purple: {
-    nodeName: 'House_2Story_Purple',
-    category: 'building',
+    nodeName: "House_2Story_Purple",
+    category: "building",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.building,
   },
   market_stall_red: {
-    nodeName: 'Market Stall Red',
-    category: 'building',
+    nodeName: "Market Stall Red",
+    category: "building",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.house,
   },
   market_stall_blue: {
-    nodeName: 'Market Stall Blue',
-    category: 'building',
+    nodeName: "Market Stall Blue",
+    category: "building",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.house,
   },
   windmill: {
-    nodeName: 'Windmill',
-    category: 'building',
+    nodeName: "Windmill",
+    category: "building",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.building,
   },
   well: {
-    nodeName: 'Well',
-    category: 'prop',
+    nodeName: "Well",
+    category: "prop",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.prop,
   },
   fountain: {
-    nodeName: 'Fountain',
-    category: 'prop',
+    nodeName: "Fountain",
+    category: "prop",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.prop,
   },
   tree_pine: {
-    nodeName: 'Tree_Pine',
-    category: 'tree',
+    nodeName: "Tree_Pine",
+    category: "tree",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.tree,
   },
   tree_tall: {
-    nodeName: 'Tree_Tall',
-    category: 'tree',
+    nodeName: "Tree_Tall",
+    category: "tree",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.tree,
   },
   tree_square: {
-    nodeName: 'Tree_Square',
-    category: 'tree',
+    nodeName: "Tree_Square",
+    category: "tree",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.tree,
   },
   daisy: {
-    nodeName: 'Daisy',
-    category: 'plant',
+    nodeName: "Daisy",
+    category: "plant",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.plant,
   },
   shroom: {
-    nodeName: 'Shroom',
-    category: 'plant',
+    nodeName: "Shroom",
+    category: "plant",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.small,
   },
   farm_cabbage: {
-    nodeName: 'Farm_Cabbage',
-    category: 'plant',
+    nodeName: "Farm_Cabbage",
+    category: "plant",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.small,
   },
   farm_carrot: {
-    nodeName: 'Farm_Carrot',
-    category: 'plant',
+    nodeName: "Farm_Carrot",
+    category: "plant",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.small,
   },
   farm_wheat: {
-    nodeName: 'Farm_Wheat',
-    category: 'plant',
+    nodeName: "Farm_Wheat",
+    category: "plant",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.small,
   },
   potted_bush: {
-    nodeName: 'Potted_Bush',
-    category: 'plant',
+    nodeName: "Potted_Bush",
+    category: "plant",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.plant,
   },
   fence: {
-    nodeName: 'Fence',
-    category: 'fence',
+    nodeName: "Fence",
+    category: "fence",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.fence,
   },
   stone_path: {
-    nodeName: 'StonePath',
-    category: 'ground',
+    nodeName: "StonePath",
+    category: "ground",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.ground,
   },
   boulder: {
-    nodeName: 'Boulder',
-    category: 'rock',
+    nodeName: "Boulder",
+    category: "rock",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.rock,
   },
   bench: {
-    nodeName: 'Bench',
-    category: 'prop',
+    nodeName: "Bench",
+    category: "prop",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.prop,
   },
   barrel: {
-    nodeName: 'Barrell',
-    category: 'prop',
+    nodeName: "Barrell",
+    category: "prop",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.small,
   },
   crate: {
-    nodeName: 'Crate',
-    category: 'prop',
+    nodeName: "Crate",
+    category: "prop",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.small,
   },
   hay_bale: {
-    nodeName: 'Hay_Bale',
-    category: 'prop',
+    nodeName: "Hay_Bale",
+    category: "prop",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.prop,
   },
   streetlight: {
-    nodeName: 'Streetlight',
-    category: 'prop',
+    nodeName: "Streetlight",
+    category: "prop",
     defaultScale: 0.34,
     collisionRadius: VILLAGE_COLLISION.small,
   },
@@ -233,11 +233,11 @@ export function isVillageNodeAllowed(nodeName) {
   }
 
   if (
-    nodeName.includes('_Material') ||
-    nodeName.startsWith('Object_') ||
-    nodeName.startsWith('Sketchfab') ||
-    nodeName === 'RootNode' ||
-    nodeName === 'World'
+    nodeName.includes("_Material") ||
+    nodeName.startsWith("Object_") ||
+    nodeName.startsWith("Sketchfab") ||
+    nodeName === "RootNode" ||
+    nodeName === "World"
   ) {
     return false;
   }

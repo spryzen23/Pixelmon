@@ -1,4 +1,4 @@
-import { Vector3 } from 'three';
+import { Vector3 } from "three";
 
 export const DEFAULT_THROW_POWER = 10;
 export const MIN_THROW_POWER = 6;

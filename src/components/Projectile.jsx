@@ -1,10 +1,10 @@
-import { Sphere } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { Suspense, useEffect, useMemo, useRef } from 'react';
-import BallModel from './BallModel';
-import ModelErrorBoundary from './ModelErrorBoundary';
-import { Vector3 } from 'three';
-import { getTerrainSurfaceY } from '../game/world';
+import { Sphere } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { Suspense, useEffect, useMemo, useRef } from "react";
+import BallModel from "./BallModel";
+import ModelErrorBoundary from "./ModelErrorBoundary";
+import { Vector3 } from "three";
+import { getTerrainSurfaceY } from "../game/world";
 import {
   MAX_PROJECTILE_DISTANCE,
   PROJECTILE_GRAVITY,
@@ -12,7 +12,7 @@ import {
   PROJECTILE_RADIUS,
   PROJECTILE_SPEED,
   PROJECTILE_UPWARD_BOOST,
-} from '../game/projectilePhysics';
+} from "../game/projectilePhysics";
 
 const BOUNCE_DAMPING = 0.48;
 const MAX_BOUNCES = 2;
@@ -45,7 +45,7 @@ export default function Projectile({
   const traveled = useRef(0);
   const bounces = useRef(0);
   const expired = useRef(false);
-  const mode = useRef('flying');
+  const mode = useRef("flying");
   const capturedWildId = useRef(null);
   const baseShakePosition = useRef(new Vector3());
   const shakeTimer = useRef(0);
@@ -78,7 +78,7 @@ export default function Projectile({
 
   const startCapture = (wildId, wildWorldPosition) => {
     capturedWildId.current = wildId;
-    mode.current = 'shaking';
+    mode.current = "shaking";
     shakeTimer.current = 0;
 
     const groundY =
@@ -98,8 +98,8 @@ export default function Projectile({
 
     wildRefs.current.forEach((wild, wildId) => {
       if (
-        mode.current !== 'flying' ||
-        wildStatusRef.current.get(wildId) !== 'active'
+        mode.current !== "flying" ||
+        wildStatusRef.current.get(wildId) !== "active"
       ) {
         return;
       }
@@ -123,7 +123,7 @@ export default function Projectile({
 
     checkWildCollision();
 
-    if (mode.current !== 'flying') {
+    if (mode.current !== "flying") {
       return;
     }
 
@@ -178,7 +178,7 @@ export default function Projectile({
     resolved.current = true;
 
     if (Math.random() <= (ball?.captureChance ?? SUCCESS_CHANCE)) {
-      mode.current = 'successBurst';
+      mode.current = "successBurst";
       burstTimer.current = 0;
       projectile.rotation.z = 0;
       projectile.position.copy(baseShakePosition.current);
@@ -211,22 +211,22 @@ export default function Projectile({
       return;
     }
 
-    if (mode.current === 'flying') {
+    if (mode.current === "flying") {
       updateFlying(delta);
       return;
     }
 
-    if (mode.current === 'shaking') {
+    if (mode.current === "shaking") {
       updateShaking(delta);
       return;
     }
 
-    if (mode.current === 'successBurst') {
+    if (mode.current === "successBurst") {
       updateSuccessBurst(delta);
     }
   });
 
-  const fallbackColor = ball?.color || '#e61f2c';
+  const fallbackColor = ball?.color || "#e61f2c";
 
   return (
     <group ref={projectileRef} position={initialPosition}>

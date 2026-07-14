@@ -1,18 +1,14 @@
-import { useMemo, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { DoubleSide } from 'three';
+import { useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { DoubleSide } from "three";
 import {
   DISTORTION_BIOME_ID,
   VOXEL_SIZE,
   getTerrainSurfaceY,
-} from '../../../game/biomeLandmarks';
+} from "../../../game/biomeLandmarks";
 
 function getGroundedPosition(x, z, yOffset = 0) {
-  return [
-    x,
-    getTerrainSurfaceY(x, z, DISTORTION_BIOME_ID) + yOffset,
-    z,
-  ];
+  return [x, getTerrainSurfaceY(x, z, DISTORTION_BIOME_ID) + yOffset, z];
 }
 
 function VoidWisps() {
@@ -68,14 +64,17 @@ function VoidWisps() {
 
 function FloatingFragments() {
   const groupRef = useRef();
-  const fragments = useMemo(() => [
-    [-18, 9, -18, 5.2, 0.5, 1.2, 0.2],
-    [18, 12, -12, 4.2, 0.45, 1.4, -0.5],
-    [-26, 15, 10, 6.4, 0.55, 1, 0.7],
-    [24, 7, 18, 4.8, 0.5, 1.1, -0.2],
-    [2, 18, -30, 7.2, 0.45, 1.2, 0.35],
-    [34, 20, -28, 3.5, 0.4, 1.1, 0.9],
-  ], []);
+  const fragments = useMemo(
+    () => [
+      [-18, 9, -18, 5.2, 0.5, 1.2, 0.2],
+      [18, 12, -12, 4.2, 0.45, 1.4, -0.5],
+      [-26, 15, 10, 6.4, 0.55, 1, 0.7],
+      [24, 7, 18, 4.8, 0.5, 1.1, -0.2],
+      [2, 18, -30, 7.2, 0.45, 1.2, 0.35],
+      [34, 20, -28, 3.5, 0.4, 1.1, 0.9],
+    ],
+    []
+  );
 
   useFrame(({ clock }) => {
     if (!groupRef.current) {
@@ -87,17 +86,24 @@ function FloatingFragments() {
     groupRef.current.children.forEach((child, index) => {
       child.rotation.y = time * (0.08 + index * 0.012);
       child.rotation.z = Math.sin(time * 0.34 + index) * 0.18;
-      child.position.y = fragments[index][1] + Math.sin(time * 0.55 + index) * 0.35;
+      child.position.y =
+        fragments[index][1] + Math.sin(time * 0.55 + index) * 0.35;
     });
   });
 
   return (
     <group ref={groupRef}>
       {fragments.map(([x, y, z, width, height, depth, rotation], index) => (
-        <mesh key={index} castShadow receiveShadow position={[x, y, z]} rotation={[0.22, rotation, 0.12]}>
+        <mesh
+          key={index}
+          castShadow
+          receiveShadow
+          position={[x, y, z]}
+          rotation={[0.22, rotation, 0.12]}
+        >
           <boxGeometry args={[width, height, depth]} />
           <meshStandardMaterial
-            color={index % 2 === 0 ? '#211548' : '#120c2a'}
+            color={index % 2 === 0 ? "#211548" : "#120c2a"}
             emissive="#14052a"
             emissiveIntensity={0.3}
             roughness={0.78}
@@ -124,20 +130,33 @@ function RuneObelisk({ position, rotation = 0, scale = 1 }) {
       </mesh>
       <mesh position={[0, 1.86 * s, 0]} rotation={[0, Math.PI / 4, 0]}>
         <octahedronGeometry args={[0.32 * s, 0]} />
-        <meshBasicMaterial color="#cf8cff" fog={false} transparent opacity={0.9} />
+        <meshBasicMaterial
+          color="#cf8cff"
+          fog={false}
+          transparent
+          opacity={0.9}
+        />
       </mesh>
-      <pointLight color="#b95cff" distance={7 * s} intensity={1.2} position={[0, 1.6 * s, 0]} />
+      <pointLight
+        color="#b95cff"
+        distance={7 * s}
+        intensity={1.2}
+        position={[0, 1.6 * s, 0]}
+      />
     </group>
   );
 }
 
 function GravityBridgeGlow() {
-  const bridges = useMemo(() => [
-    [0, 0, 33, -24, 8.3],
-    [0, 0, -32, -26, 4.6],
-    [0, 0, 31, 24, 4.3],
-    [0, 0, -24, 29, 7.4],
-  ], []);
+  const bridges = useMemo(
+    () => [
+      [0, 0, 33, -24, 8.3],
+      [0, 0, -32, -26, 4.6],
+      [0, 0, 31, 24, 4.3],
+      [0, 0, -24, 29, 7.4],
+    ],
+    []
+  );
 
   return (
     <group>
@@ -174,13 +193,16 @@ function GravityBridgeGlow() {
 }
 
 export default function DistortionRealmLandmarks() {
-  const obelisks = useMemo(() => [
-    [4, 7, 0.2, 1],
-    [-14, -6, -0.4, 0.9],
-    [16, -15, 0.5, 0.85],
-    [-19, 20, 0.1, 0.95],
-    [24, 18, -0.7, 0.8],
-  ], []);
+  const obelisks = useMemo(
+    () => [
+      [4, 7, 0.2, 1],
+      [-14, -6, -0.4, 0.9],
+      [16, -15, 0.5, 0.85],
+      [-19, 20, 0.1, 0.95],
+      [24, 18, -0.7, 0.8],
+    ],
+    []
+  );
 
   return (
     <group>
@@ -195,8 +217,13 @@ export default function DistortionRealmLandmarks() {
           scale={scale}
         />
       ))}
-      <hemisphereLight args={['#8e5cff', '#02010a', 0.38]} />
-      <pointLight color="#7d3cff" distance={55} intensity={1.35} position={[0, 16, 0]} />
+      <hemisphereLight args={["#8e5cff", "#02010a", 0.38]} />
+      <pointLight
+        color="#7d3cff"
+        distance={55}
+        intensity={1.35}
+        position={[0, 16, 0]}
+      />
     </group>
   );
 }

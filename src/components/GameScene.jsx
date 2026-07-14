@@ -1,35 +1,50 @@
-import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useThree } from '@react-three/fiber';
-import AimIndicator from './AimIndicator';
-import Atmosphere, { SUN_POSITION } from './Atmosphere';
-import BiomeLandmarks from './BiomeLandmarks';
-import BiomeProps from './BiomeProps';
-import CaptureBurst from './CaptureBurst';
-import CompanionCreature from './CompanionCreature';
-import CompanionRecallEffect from './CompanionRecallEffect';
-import FantasyBiomeProps from './FantasyBiomeProps';
-import { FantasyGltfProvider } from './FantasyGltfProvider';
-import OceanHorizon from './OceanHorizon';
-import PlantGltfPreloader from './PlantGltfPreloader';
-import Player from './Player';
-import Projectile from './Projectile';
-import Sandstorm from './Sandstorm';
-import Snowstorm from './Snowstorm';
-import SafePointerLockControls from './SafePointerLockControls';
-import ThirdPersonCamera from './ThirdPersonCamera';
-import VillageBiomeProps from './VillageBiomeProps';
-import { VillageGltfProvider } from './VillageGltfProvider';
-import VoxelWorld from './VoxelWorld';
-import WildCreature from './WildCreature';
-import { DEFAULT_BALL } from '../game/balls';
-import { getTypeAnimProfile, getFitToHeightForPokemon, getRotationForPokemon } from '../game/pokemonData';
-import { resolveWildModel } from '../game/assetResolver';
-import { getBiomeDisplayInfo } from '../game/biomeDisplay';
-import { getSpawnCandidates, pickRandomSpawn, isAlphaEligible } from '../game/spawnController';
-import { getAlphaSpawnPosition } from '../game/spawnPlacement';
-import { useGameInput } from '../hooks/useGameInput';
-import { FANTASY_BIOME_ID } from '../game/fantasyAssets';
-import { VILLAGE_BIOME_ID } from '../game/villageAssets';
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useThree } from "@react-three/fiber";
+import AimIndicator from "./AimIndicator";
+import Atmosphere, { SUN_POSITION } from "./Atmosphere";
+import BiomeLandmarks from "./BiomeLandmarks";
+import BiomeProps from "./BiomeProps";
+import CaptureBurst from "./CaptureBurst";
+import CompanionCreature from "./CompanionCreature";
+import CompanionRecallEffect from "./CompanionRecallEffect";
+import FantasyBiomeProps from "./FantasyBiomeProps";
+import { FantasyGltfProvider } from "./FantasyGltfProvider";
+import OceanHorizon from "./OceanHorizon";
+import PlantGltfPreloader from "./PlantGltfPreloader";
+import Player from "./Player";
+import Projectile from "./Projectile";
+import Sandstorm from "./Sandstorm";
+import Snowstorm from "./Snowstorm";
+import SafePointerLockControls from "./SafePointerLockControls";
+import ThirdPersonCamera from "./ThirdPersonCamera";
+import VillageBiomeProps from "./VillageBiomeProps";
+import { VillageGltfProvider } from "./VillageGltfProvider";
+import VoxelWorld from "./VoxelWorld";
+import WildCreature from "./WildCreature";
+import { DEFAULT_BALL } from "../game/balls";
+import {
+  getTypeAnimProfile,
+  getFitToHeightForPokemon,
+  getRotationForPokemon,
+} from "../game/pokemonData";
+import { resolveWildModel } from "../game/assetResolver";
+import { getBiomeDisplayInfo } from "../game/biomeDisplay";
+import {
+  getSpawnCandidates,
+  pickRandomSpawn,
+  isAlphaEligible,
+} from "../game/spawnController";
+import { getAlphaSpawnPosition } from "../game/spawnPlacement";
+import { useGameInput } from "../hooks/useGameInput";
+import { FANTASY_BIOME_ID } from "../game/fantasyAssets";
+import { VILLAGE_BIOME_ID } from "../game/villageAssets";
 import {
   COMPANION_HEIGHT,
   WILD_CREATURE_HEIGHT,
@@ -37,9 +52,9 @@ import {
   getPathSpawnPoint,
   getRandomGrassPosition,
   setActivePathId,
-} from '../game/world';
+} from "../game/world";
 
-const WILD_ID = 'wild-0';
+const WILD_ID = "wild-0";
 
 function displayFantasyBiome(pathId) {
   return getBiomeDisplayInfo(pathId).fantasyBiome;
@@ -61,12 +76,12 @@ function entryToWild(entry, position, pathId = 0) {
     ...entry,
     id: WILD_ID,
     position,
-    status: 'active',
+    status: "active",
     modelUrl: resolved.modelUrl,
     modelScale: fitHeight,
     fitToHeight: fitHeight,
     modelRotation: rot,
-    primaryType: entry.types?.[0] || 'normal',
+    primaryType: entry.types?.[0] || "normal",
     animProfile: getTypeAnimProfile(entry.types?.[0]),
     isAlpha: Boolean(entry.isAlpha),
   };
@@ -81,17 +96,18 @@ export function GameScene({
   onCatchResult,
   paused,
   onSpawnProgress,
-  onBiomeReady = () => { },
+  onBiomeReady = () => {},
   caveZone,
   iceRoomId = null,
-  onEnterCave = () => { },
-  onEnterIceRoom = () => { },
-  onExitIceRoom = () => { },
-  gameMode = 'campaign',
+  onEnterCave = () => {},
+  onEnterIceRoom = () => {},
+  onExitIceRoom = () => {},
+  gameMode = "campaign",
   _multiWildCount = 1,
 }) {
   const currentBiome = session.pathId;
-  const fantasyBiome = session.fantasyBiome || displayFantasyBiome(currentBiome);
+  const fantasyBiome =
+    session.fantasyBiome || displayFantasyBiome(currentBiome);
   const playerRef = useRef();
   const companionRef = useRef();
   const wildRefs = useRef(new Map());
@@ -122,15 +138,27 @@ export function GameScene({
 
   useEffect(() => {
     const currentId = player?.companion?.entryId;
-    if (currentId && prevCompanionIdRef.current && currentId !== prevCompanionIdRef.current) {
+    if (
+      currentId &&
+      prevCompanionIdRef.current &&
+      currentId !== prevCompanionIdRef.current
+    ) {
       const oldPosition = companionRef.current
-        ? [companionRef.current.position.x, companionRef.current.position.y, companionRef.current.position.z]
+        ? [
+            companionRef.current.position.x,
+            companionRef.current.position.y,
+            companionRef.current.position.z,
+          ]
         : playerSpawnPosition;
-      
+
       addCompanionEffect(oldPosition); // Recall effect at old position
 
       const newSpawnPos = playerRef.current
-        ? [playerRef.current.position.x, playerRef.current.position.y, playerRef.current.position.z]
+        ? [
+            playerRef.current.position.x,
+            playerRef.current.position.y,
+            playerRef.current.position.z,
+          ]
         : playerSpawnPosition;
 
       setCompanionSpawnPosition(newSpawnPos);
@@ -148,7 +176,9 @@ export function GameScene({
     let entry = null;
     let isAlphaSpawn = false;
     const alphaRoll =
-      gameMode === 'sandbox' ? Math.random() < 0.3 : isAlphaEligible(state) && !state.alphaCaught;
+      gameMode === "sandbox"
+        ? Math.random() < 0.3
+        : isAlphaEligible(state) && !state.alphaCaught;
     if (alphaRoll && !state.alphaCaught) {
       isAlphaSpawn = true;
       const lastLevel = String(state.levels[state.levels.length - 1]);
@@ -165,11 +195,7 @@ export function GameScene({
     }
 
     let pos;
-    if (
-      isAlphaSpawn &&
-      entry &&
-      playerRef.current
-    ) {
+    if (isAlphaSpawn && entry && playerRef.current) {
       pos = getAlphaSpawnPosition(playerRef.current, camera, currentBiome);
     } else {
       pos = getRandomGrassPosition(
@@ -184,7 +210,7 @@ export function GameScene({
 
     const mapped = entryToWild(entry, pos, currentBiome);
     setWild(mapped);
-    wildStatusRef.current.set(WILD_ID, mapped ? 'active' : 'idle');
+    wildStatusRef.current.set(WILD_ID, mapped ? "active" : "idle");
     onSpawnProgress?.(state);
   }, [gameRuntime, currentBiome, onSpawnProgress, camera, gameMode]);
 
@@ -265,18 +291,18 @@ export function GameScene({
   });
 
   const handleCaptureStart = useCallback(() => {
-    setWild((w) => (w ? { ...w, status: 'capturing' } : w));
-    wildStatusRef.current.set(WILD_ID, 'capturing');
+    setWild((w) => (w ? { ...w, status: "capturing" } : w));
+    wildStatusRef.current.set(WILD_ID, "capturing");
   }, []);
 
   const handleCaptureFail = useCallback(() => {
-    setWild((w) => (w ? { ...w, status: 'fleeing' } : w));
-    wildStatusRef.current.set(WILD_ID, 'fleeing');
+    setWild((w) => (w ? { ...w, status: "fleeing" } : w));
+    wildStatusRef.current.set(WILD_ID, "fleeing");
   }, []);
 
   const handleFleeComplete = useCallback(() => {
-    setWild((w) => (w ? { ...w, status: 'active' } : w));
-    wildStatusRef.current.set(WILD_ID, 'active');
+    setWild((w) => (w ? { ...w, status: "active" } : w));
+    wildStatusRef.current.set(WILD_ID, "active");
   }, []);
 
   const handleCaptureSuccess = useCallback(
@@ -291,7 +317,8 @@ export function GameScene({
     [wild, onCatchResult, addCaptureBurst, spawnWild]
   );
 
-  const companionModelUrl = player?.companion?.modelUrl || '/assets/companion.glb';
+  const companionModelUrl =
+    player?.companion?.modelUrl || "/assets/companion.glb";
 
   const worldContent = (
     <Suspense fallback={null}>
@@ -342,18 +369,22 @@ export function GameScene({
         />
       </Suspense>
 
-      <AimIndicator ball={equippedBall} playerRef={playerRef} throwPower={throwPower} />
+      <AimIndicator
+        ball={equippedBall}
+        playerRef={playerRef}
+        throwPower={throwPower}
+      />
 
-      {(currentBiome === 1 || fantasyBiome === 'desert') && (
+      {(currentBiome === 1 || fantasyBiome === "desert") && (
         <Sandstorm playerRef={playerRef} />
       )}
-      {(currentBiome === 2 || currentBiome === 5 || fantasyBiome === 'icy') && (
+      {(currentBiome === 2 || currentBiome === 5 || fantasyBiome === "icy") && (
         <Snowstorm playerRef={playerRef} />
       )}
 
       {isCompanionOut && (
         <CompanionCreature
-          key={`companion-${currentBiome}-${player?.companion?.entryId || 'default'}`}
+          key={`companion-${currentBiome}-${player?.companion?.entryId || "default"}`}
           companion={player?.companion}
           currentPathId={currentBiome}
           ref={companionRef}

@@ -1,10 +1,10 @@
-import { Vector3 } from 'three';
+import { Vector3 } from "three";
 import {
   WILD_CREATURE_HEIGHT,
   getEntityY,
   getRandomGrassPosition,
   isWalkablePosition,
-} from './world';
+} from "./world";
 
 export const ALPHA_SPAWN_RADIUS = 1.4;
 export const ALPHA_SPAWN_DISTANCES = [16, 18, 20, 22, 24, 14, 12];
@@ -33,7 +33,11 @@ export function getAlphaSpawnPosition(
   alphaForward.y = 0;
 
   if (alphaForward.lengthSq() < 0.0001) {
-    alphaForward.set(Math.sin(player.rotation.y), 0, Math.cos(player.rotation.y));
+    alphaForward.set(
+      Math.sin(player.rotation.y),
+      0,
+      Math.cos(player.rotation.y)
+    );
   }
 
   alphaForward.normalize();
@@ -45,7 +49,15 @@ export function getAlphaSpawnPosition(
       player.position.z + alphaForward.z * distance
     );
 
-    if (walkable(alphaSpawnTarget.x, alphaSpawnTarget.z, radius, currentBiome, caveZone)) {
+    if (
+      walkable(
+        alphaSpawnTarget.x,
+        alphaSpawnTarget.z,
+        radius,
+        currentBiome,
+        caveZone
+      )
+    ) {
       return [
         alphaSpawnTarget.x,
         entityY(

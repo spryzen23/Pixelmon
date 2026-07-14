@@ -1,13 +1,13 @@
 {
   "eslint.config.mjs": {
-    "mtime": 1781388015.0,
-    "ast_hash": "bcc3bd1ab5a9be74fd9f2e072327b2e7",
-    "semantic_hash": "bcc3bd1ab5a9be74fd9f2e072327b2e7"
+    "mtime": 1784063422.4537866,
+    "ast_hash": "77d86d9e58a1a0d8365e0e855d37600b",
+    "semantic_hash": "77d86d9e58a1a0d8365e0e855d37600b"
   },
   "package.json": {
-    "mtime": 1781388015.0,
-    "ast_hash": "9b653f3e323663f87dcc951339aace1c",
-    "semantic_hash": "9b653f3e323663f87dcc951339aace1c"
+    "mtime": 1784064966.5129392,
+    "ast_hash": "722dc31a6a5fa30f90425a2e1a651bd4",
+    "semantic_hash": "722dc31a6a5fa30f90425a2e1a651bd4"
   },
   "public/assets/models/Merged.json": {
     "mtime": 1781388015.0,
@@ -110,434 +110,434 @@
     "semantic_hash": "20b679e1ba131ff1c93fd960c5021d20"
   },
   "src/App.jsx": {
-    "mtime": 1784058002.0599236,
-    "ast_hash": "422ee609b235c67b719ce95e3b01e6a8",
-    "semantic_hash": ""
+    "mtime": 1784063416.4042242,
+    "ast_hash": "ebf115f3d82dcc4ff1aa4781a3159d1b",
+    "semantic_hash": "ebf115f3d82dcc4ff1aa4781a3159d1b"
   },
   "src/api.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "289178c707ee036e56bd1edabc5f18b6",
-    "semantic_hash": "289178c707ee036e56bd1edabc5f18b6"
+    "mtime": 1784063416.3796575,
+    "ast_hash": "4062f285a994ad9e0db92267f622851a",
+    "semantic_hash": "4062f285a994ad9e0db92267f622851a"
   },
   "src/app/api/[...path]/route.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "7c13db7bec94da50b74df1a7c1ccf764",
-    "semantic_hash": "7c13db7bec94da50b74df1a7c1ccf764"
+    "mtime": 1784063416.4991665,
+    "ast_hash": "f3e0d126b225fa3bfb748ad679c30805",
+    "semantic_hash": "f3e0d126b225fa3bfb748ad679c30805"
   },
   "src/app/api/metrics/biome/route.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "7cc171db700f84df43bc2231e2e4594b",
-    "semantic_hash": "7cc171db700f84df43bc2231e2e4594b"
+    "mtime": 1784063416.5226967,
+    "ast_hash": "798d7674da8d97180d88012e3e172022",
+    "semantic_hash": "798d7674da8d97180d88012e3e172022"
   },
   "src/app/layout.jsx": {
-    "mtime": 1784057955.7538188,
-    "ast_hash": "6a140252dd5ad109d469ee6f069fc7b9",
-    "semantic_hash": ""
+    "mtime": 1784063416.5379004,
+    "ast_hash": "20a8b495af154c500133cc3351605953",
+    "semantic_hash": "20a8b495af154c500133cc3351605953"
   },
   "src/app/page.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "03f5678ced799920fdcab9dcc7748abb",
-    "semantic_hash": "03f5678ced799920fdcab9dcc7748abb"
+    "mtime": 1784063416.5476124,
+    "ast_hash": "28b25c27a531fb6a6bb7adbd4f29c95e",
+    "semantic_hash": "28b25c27a531fb6a6bb7adbd4f29c95e"
   },
   "src/components/AimIndicator.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "0cb5d1c96f9736e4fa5a7fb7aa93715e",
-    "semantic_hash": "0cb5d1c96f9736e4fa5a7fb7aa93715e"
+    "mtime": 1784063416.581458,
+    "ast_hash": "283edb15d4aaf8a156038141b6883f8d",
+    "semantic_hash": "283edb15d4aaf8a156038141b6883f8d"
   },
   "src/components/AnimatedModel.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "72af9d0cb975e275f26525c428488911",
-    "semantic_hash": "72af9d0cb975e275f26525c428488911"
+    "mtime": 1784063416.6645467,
+    "ast_hash": "fc213e38854966670806ca903e064a8b",
+    "semantic_hash": "fc213e38854966670806ca903e064a8b"
   },
   "src/components/Atmosphere.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "c740b8ef04d7a8007163327313548cba",
-    "semantic_hash": "c740b8ef04d7a8007163327313548cba"
+    "mtime": 1784063416.6884422,
+    "ast_hash": "98a0874e042ce1e89b241ba09ba1a523",
+    "semantic_hash": "98a0874e042ce1e89b241ba09ba1a523"
   },
   "src/components/BallModel.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a2a2ec31948f184dcc5e8d46092d6e5b",
-    "semantic_hash": "a2a2ec31948f184dcc5e8d46092d6e5b"
+    "mtime": 1784063416.7061286,
+    "ast_hash": "279afb2a0c26917d2dea4761b4128fc7",
+    "semantic_hash": "279afb2a0c26917d2dea4761b4128fc7"
   },
   "src/components/BiomeLandmarks.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "725d5603551a0a967fec492692b703a9",
-    "semantic_hash": "725d5603551a0a967fec492692b703a9"
+    "mtime": 1784063416.719963,
+    "ast_hash": "7f8398a602fb143937e6576a4c89b578",
+    "semantic_hash": "7f8398a602fb143937e6576a4c89b578"
   },
   "src/components/BiomeProps.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "9b0b8c4e6c75311d93fef52590492a97",
-    "semantic_hash": "9b0b8c4e6c75311d93fef52590492a97"
+    "mtime": 1784063416.7313821,
+    "ast_hash": "69e88183cd6fd105cdfc057ece59553e",
+    "semantic_hash": "69e88183cd6fd105cdfc057ece59553e"
   },
   "src/components/Cactus.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "312ea5fd1a8599d26504ef64dbb3d833",
-    "semantic_hash": "312ea5fd1a8599d26504ef64dbb3d833"
+    "mtime": 1784063417.0979376,
+    "ast_hash": "a1fa8d1d4acd8418aa419b96ddab8f26",
+    "semantic_hash": "a1fa8d1d4acd8418aa419b96ddab8f26"
   },
   "src/components/CaptureBurst.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "c19cde3f1e032ccf54a40b7c42e604a2",
-    "semantic_hash": "c19cde3f1e032ccf54a40b7c42e604a2"
+    "mtime": 1784063417.122583,
+    "ast_hash": "af8bd4b7dcc5a9359922360f7ce13b9a",
+    "semantic_hash": "af8bd4b7dcc5a9359922360f7ce13b9a"
   },
   "src/components/CompanionCreature.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "556398aa8e307228b815f1e6e2fac60f",
-    "semantic_hash": "556398aa8e307228b815f1e6e2fac60f"
+    "mtime": 1784063417.156855,
+    "ast_hash": "14960c4f358f45b4d2fceff0a7ca78eb",
+    "semantic_hash": "14960c4f358f45b4d2fceff0a7ca78eb"
   },
   "src/components/CompanionPreview.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "1b7d833fc02e2f49016a5cd3de08f297",
-    "semantic_hash": "1b7d833fc02e2f49016a5cd3de08f297"
+    "mtime": 1784063417.1838522,
+    "ast_hash": "4247ddd98cf400ebf96dd2d05946be7d",
+    "semantic_hash": "4247ddd98cf400ebf96dd2d05946be7d"
   },
   "src/components/CompanionRecallEffect.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "21b4ca7338b809a378d2038081d515fc",
-    "semantic_hash": "21b4ca7338b809a378d2038081d515fc"
+    "mtime": 1784063417.2030833,
+    "ast_hash": "ccd1ca203f328eaa1a342d412ec53b5c",
+    "semantic_hash": "ccd1ca203f328eaa1a342d412ec53b5c"
   },
   "src/components/CreatureGltfPreloader.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "0d3cb6adffdf0be9310138ac67e34dcf",
-    "semantic_hash": "0d3cb6adffdf0be9310138ac67e34dcf"
+    "mtime": 1784063417.216735,
+    "ast_hash": "fdfe303b25a6c3ba854ccdb5362c23a4",
+    "semantic_hash": "fdfe303b25a6c3ba854ccdb5362c23a4"
   },
   "src/components/FantasyBiomeProps.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "f8e91e29f2396cd2d3e77441836448d8",
-    "semantic_hash": "f8e91e29f2396cd2d3e77441836448d8"
+    "mtime": 1784063417.2306037,
+    "ast_hash": "f068166c139070b94704268038b7f718",
+    "semantic_hash": "f068166c139070b94704268038b7f718"
   },
   "src/components/FantasyGltfProvider.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a9bf46e27e2b499e1b7b947e69e3c6ff",
-    "semantic_hash": "a9bf46e27e2b499e1b7b947e69e3c6ff"
+    "mtime": 1784063417.2714686,
+    "ast_hash": "2e088160edde9f2a279409e2aa80039c",
+    "semantic_hash": "2e088160edde9f2a279409e2aa80039c"
   },
   "src/components/FantasyProp.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "01b9342bed144ee03b615b4b28adabfb",
-    "semantic_hash": "01b9342bed144ee03b615b4b28adabfb"
+    "mtime": 1784063417.311127,
+    "ast_hash": "1adad4dbb4801b29843470bf8e1295cb",
+    "semantic_hash": "1adad4dbb4801b29843470bf8e1295cb"
   },
   "src/components/GameScene.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "cb42e0efd0ccc52a139fa479aa7d1272",
-    "semantic_hash": "cb42e0efd0ccc52a139fa479aa7d1272"
+    "mtime": 1784063417.391031,
+    "ast_hash": "d12b10681266daa68b598c5058e42504",
+    "semantic_hash": "d12b10681266daa68b598c5058e42504"
   },
   "src/components/GameView.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "687cdafbb99b9eb71311bca711b5cb05",
-    "semantic_hash": "687cdafbb99b9eb71311bca711b5cb05"
+    "mtime": 1784063417.535167,
+    "ast_hash": "903da24c008dc03fbbe5269102087ab7",
+    "semantic_hash": "903da24c008dc03fbbe5269102087ab7"
   },
   "src/components/GlbCharacter.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "288d442b1e35ab573cc4b661a2ad9dcb",
-    "semantic_hash": "288d442b1e35ab573cc4b661a2ad9dcb"
+    "mtime": 1784063417.5456703,
+    "ast_hash": "6fa0ca75e6ff626e3afa232872fc83d2",
+    "semantic_hash": "6fa0ca75e6ff626e3afa232872fc83d2"
   },
   "src/components/Hotbar.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "bd57fca1a38dead0b5d2961f2607d225",
-    "semantic_hash": "bd57fca1a38dead0b5d2961f2607d225"
+    "mtime": 1784063417.5578966,
+    "ast_hash": "0e69ae1ec1dfcf56597d021f6fd682fe",
+    "semantic_hash": "0e69ae1ec1dfcf56597d021f6fd682fe"
   },
   "src/components/LoadingOverlay.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "e7509deacf3aac2666293d1219156f6f",
-    "semantic_hash": "e7509deacf3aac2666293d1219156f6f"
+    "mtime": 1784063417.567572,
+    "ast_hash": "ccb6fc83aac5888980bc25bc1ede2fb4",
+    "semantic_hash": "ccb6fc83aac5888980bc25bc1ede2fb4"
   },
   "src/components/ModelErrorBoundary.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "dca7b956185badc0b0cec50178aadef9",
-    "semantic_hash": "dca7b956185badc0b0cec50178aadef9"
+    "mtime": 1784063417.5759716,
+    "ast_hash": "2ada0ab3411792f9ad825b7312d35aeb",
+    "semantic_hash": "2ada0ab3411792f9ad825b7312d35aeb"
   },
   "src/components/OceanHorizon.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "cb7cfa2fb5a1b3c28e18d487bca3c260",
-    "semantic_hash": "cb7cfa2fb5a1b3c28e18d487bca3c260"
+    "mtime": 1784063417.588546,
+    "ast_hash": "51ae399e23d298349313a058c0230b12",
+    "semantic_hash": "51ae399e23d298349313a058c0230b12"
   },
   "src/components/PlantGltfPreloader.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "63cdc7ba99dce22ecab1bc80553906c1",
-    "semantic_hash": "63cdc7ba99dce22ecab1bc80553906c1"
+    "mtime": 1784063417.5979896,
+    "ast_hash": "c7caf682f4e55af54c67cdd23a5a7822",
+    "semantic_hash": "c7caf682f4e55af54c67cdd23a5a7822"
   },
   "src/components/PlantProp.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "db2af21f99ee087977159adadb61a908",
-    "semantic_hash": "db2af21f99ee087977159adadb61a908"
+    "mtime": 1784063417.6134944,
+    "ast_hash": "815a2c780d456a7d3e3439fa23a462cc",
+    "semantic_hash": "815a2c780d456a7d3e3439fa23a462cc"
   },
   "src/components/Player.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "5b1562f93b8be392076da43659779af9",
-    "semantic_hash": "5b1562f93b8be392076da43659779af9"
+    "mtime": 1784063417.657323,
+    "ast_hash": "883b1f49c605007e21a71c9d5796e231",
+    "semantic_hash": "883b1f49c605007e21a71c9d5796e231"
   },
   "src/components/Projectile.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "575505991f120256c588033888e54c1a",
-    "semantic_hash": "575505991f120256c588033888e54c1a"
+    "mtime": 1784063417.6823545,
+    "ast_hash": "d3604d763e105b45ec60b661e42bd4c6",
+    "semantic_hash": "d3604d763e105b45ec60b661e42bd4c6"
   },
   "src/components/SafePointerLockControls.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "bf4ec41c696ff57e0334047dcf916fd1",
-    "semantic_hash": "bf4ec41c696ff57e0334047dcf916fd1"
+    "mtime": 1784063417.6995423,
+    "ast_hash": "4511265d418285bf45d7beb720329dbd",
+    "semantic_hash": "4511265d418285bf45d7beb720329dbd"
   },
   "src/components/Sandstorm.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "e703ac266fa653422c33785a30aab946",
-    "semantic_hash": "e703ac266fa653422c33785a30aab946"
+    "mtime": 1784063417.7378676,
+    "ast_hash": "e8e7d30e3b16472df9db9d66411c521e",
+    "semantic_hash": "e8e7d30e3b16472df9db9d66411c521e"
   },
   "src/components/SceneTheme.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "7d07f5443047db9ae868f399f0405add",
-    "semantic_hash": "7d07f5443047db9ae868f399f0405add"
+    "mtime": 1784063417.7523348,
+    "ast_hash": "d7b69117b88863c9ec08653805e8488a",
+    "semantic_hash": "d7b69117b88863c9ec08653805e8488a"
   },
   "src/components/Snowstorm.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "974e84585a49893036d59f8ba39a0939",
-    "semantic_hash": "974e84585a49893036d59f8ba39a0939"
+    "mtime": 1784063417.7729695,
+    "ast_hash": "53f11a6bf0eab82afba7949efa2bafe5",
+    "semantic_hash": "53f11a6bf0eab82afba7949efa2bafe5"
   },
   "src/components/ThirdPersonCamera.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "182c6e2512fae04c4d9535e7d452bb2f",
-    "semantic_hash": "182c6e2512fae04c4d9535e7d452bb2f"
+    "mtime": 1784063417.7887585,
+    "ast_hash": "da940db8391cd46b5e09f7874e5161d3",
+    "semantic_hash": "da940db8391cd46b5e09f7874e5161d3"
   },
   "src/components/VillageBiomeProps.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "257fd46f09e9e2f330279e9976672871",
-    "semantic_hash": "257fd46f09e9e2f330279e9976672871"
+    "mtime": 1784063417.972281,
+    "ast_hash": "5b7a2a56e53f3cbcba2e4bb83b0e7b15",
+    "semantic_hash": "5b7a2a56e53f3cbcba2e4bb83b0e7b15"
   },
   "src/components/VillageGltfProvider.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "369c73d07b21184b552b4b3c989b5cc5",
-    "semantic_hash": "369c73d07b21184b552b4b3c989b5cc5"
+    "mtime": 1784063417.99402,
+    "ast_hash": "2bee31dd1cfea61bb0f56d1f721bbce0",
+    "semantic_hash": "2bee31dd1cfea61bb0f56d1f721bbce0"
   },
   "src/components/VillageProp.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "5210db6f59a2004ab5bac3cc1d53c8ad",
-    "semantic_hash": "5210db6f59a2004ab5bac3cc1d53c8ad"
+    "mtime": 1784063418.0052805,
+    "ast_hash": "69e8755addb1143d20e47318de070778",
+    "semantic_hash": "69e8755addb1143d20e47318de070778"
   },
   "src/components/VillageScene.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "98410d8368d6bd87ac1a97768452c565",
-    "semantic_hash": "98410d8368d6bd87ac1a97768452c565"
+    "mtime": 1784063418.0158665,
+    "ast_hash": "b083e4c8e4144b6a64771334c0d20f63",
+    "semantic_hash": "b083e4c8e4144b6a64771334c0d20f63"
   },
   "src/components/VoxelFallback.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "85a1e67c8316e8393d0e6b4dfa1af81e",
-    "semantic_hash": "85a1e67c8316e8393d0e6b4dfa1af81e"
+    "mtime": 1784063418.0242872,
+    "ast_hash": "6a8b7a7bfc437eb32fa38d91db412307",
+    "semantic_hash": "6a8b7a7bfc437eb32fa38d91db412307"
   },
   "src/components/VoxelWorld.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "955c5a22fc9a791cd9cb019fcc41e851",
-    "semantic_hash": "955c5a22fc9a791cd9cb019fcc41e851"
+    "mtime": 1784063418.0403316,
+    "ast_hash": "39086b679afdd04042a7e81339482d97",
+    "semantic_hash": "39086b679afdd04042a7e81339482d97"
   },
   "src/components/WildCreature.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "145f8abb98742dfaeaf0307310791b6b",
-    "semantic_hash": "145f8abb98742dfaeaf0307310791b6b"
+    "mtime": 1784063418.0710664,
+    "ast_hash": "bb1532a505b6c274ecd2b42135642a44",
+    "semantic_hash": "bb1532a505b6c274ecd2b42135642a44"
   },
   "src/components/biomes/cave/CaveEntrance.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "2186456db8f9be6ac9b15c997decb53b",
-    "semantic_hash": "2186456db8f9be6ac9b15c997decb53b"
+    "mtime": 1784063416.756564,
+    "ast_hash": "7de7cd7012c090ec83658e740fb0e3c7",
+    "semantic_hash": "7de7cd7012c090ec83658e740fb0e3c7"
   },
   "src/components/biomes/cave/CaveInteriorEffects.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "feb3e09a7918313ba816b10420560289",
-    "semantic_hash": "feb3e09a7918313ba816b10420560289"
+    "mtime": 1784063416.7840612,
+    "ast_hash": "7ea700020b8c561890ada78f3864bd9f",
+    "semantic_hash": "7ea700020b8c561890ada78f3864bd9f"
   },
   "src/components/biomes/desert/Sandstorm.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "6028639e3b0a1eda773eaf1fe21f64c5",
-    "semantic_hash": "6028639e3b0a1eda773eaf1fe21f64c5"
+    "mtime": 1784063416.8179412,
+    "ast_hash": "5372a707e97588f3307540774b9d3720",
+    "semantic_hash": "5372a707e97588f3307540774b9d3720"
   },
   "src/components/biomes/distortion/DistortionRealmLandmarks.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "861f11fd4710e33afd24e87de51efa48",
-    "semantic_hash": "861f11fd4710e33afd24e87de51efa48"
+    "mtime": 1784063416.8525205,
+    "ast_hash": "709eda5693455e4db4b0748c28922691",
+    "semantic_hash": "709eda5693455e4db4b0748c28922691"
   },
   "src/components/biomes/icy/IceMountainLandmarks.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "291a3f30dc15cc5c832501379538ea80",
-    "semantic_hash": "291a3f30dc15cc5c832501379538ea80"
+    "mtime": 1784063416.899286,
+    "ast_hash": "889454de9b01d6e8842fe135275557dc",
+    "semantic_hash": "889454de9b01d6e8842fe135275557dc"
   },
   "src/components/biomes/icy/Snowstorm.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a88204f82965efe9794172019bdb1628",
-    "semantic_hash": "a88204f82965efe9794172019bdb1628"
+    "mtime": 1784063416.9145176,
+    "ast_hash": "ac50b3094bf236b1a1a08829910cd6fd",
+    "semantic_hash": "ac50b3094bf236b1a1a08829910cd6fd"
   },
   "src/components/biomes/moonlit/MoonlitLandmarks.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "abd22037845a605125a9ee5233cf1326",
-    "semantic_hash": "abd22037845a605125a9ee5233cf1326"
+    "mtime": 1784063416.9608648,
+    "ast_hash": "6b74afb9e3e3029028ff52612d321ab1",
+    "semantic_hash": "6b74afb9e3e3029028ff52612d321ab1"
   },
   "src/components/biomes/sky/DistantSkyIsland.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "d7a751b1c626e97e0ec662a4e404e226",
-    "semantic_hash": "d7a751b1c626e97e0ec662a4e404e226"
+    "mtime": 1784063416.9797156,
+    "ast_hash": "11827b0fe1ca5766a2f99c5d351e4758",
+    "semantic_hash": "11827b0fe1ca5766a2f99c5d351e4758"
   },
   "src/components/biomes/sky/SkyBelowVista.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "0c2002120428afe54147696321c31ff1",
-    "semantic_hash": "0c2002120428afe54147696321c31ff1"
+    "mtime": 1784063416.9900942,
+    "ast_hash": "9d884556a5e2e5451ff5d9facc7b4893",
+    "semantic_hash": "9d884556a5e2e5451ff5d9facc7b4893"
   },
   "src/components/biomes/sky/SkyBiomeLandmarks.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "f6fe648e6b26e09d07763d91c58be563",
-    "semantic_hash": "f6fe648e6b26e09d07763d91c58be563"
+    "mtime": 1784063417.012014,
+    "ast_hash": "fd57025bd02c85cfc24a06e7c4bd8e2b",
+    "semantic_hash": "fd57025bd02c85cfc24a06e7c4bd8e2b"
   },
   "src/components/biomes/volcanic/Ashfall.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "9a284f34dea94597b0da52694b9d80d6",
-    "semantic_hash": "9a284f34dea94597b0da52694b9d80d6"
+    "mtime": 1784063417.0392478,
+    "ast_hash": "7e3a61c9996e4f7d041e9deb72910024",
+    "semantic_hash": "7e3a61c9996e4f7d041e9deb72910024"
   },
   "src/components/biomes/volcanic/VolcanoCrater.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "55ad9e6852278f263291aad1619cf9c5",
-    "semantic_hash": "55ad9e6852278f263291aad1619cf9c5"
+    "mtime": 1784063417.07225,
+    "ast_hash": "3d7977e608fc5921a59b4f0341572054",
+    "semantic_hash": "3d7977e608fc5921a59b4f0341572054"
   },
   "src/components/gameScene/spawnLogic.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "83b8260556bd30314b82b39339e94d58",
-    "semantic_hash": "83b8260556bd30314b82b39339e94d58"
+    "mtime": 1784063417.4177222,
+    "ast_hash": "64100bc86a904ef1d7ad6358133b23ee",
+    "semantic_hash": "64100bc86a904ef1d7ad6358133b23ee"
   },
   "src/components/ui/Badge.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "b8cfcb0d94d2ef683356787ac0700c78",
-    "semantic_hash": "b8cfcb0d94d2ef683356787ac0700c78"
+    "mtime": 1784063417.7992845,
+    "ast_hash": "2f511a1416d26a18e230bafb289be7f5",
+    "semantic_hash": "2f511a1416d26a18e230bafb289be7f5"
   },
   "src/components/ui/Button.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "509b5c3f01da5acd1d8ca962b305225d",
-    "semantic_hash": "509b5c3f01da5acd1d8ca962b305225d"
+    "mtime": 1784063417.8059669,
+    "ast_hash": "d032656f3821bac8c880a12c4fe7ea09",
+    "semantic_hash": "d032656f3821bac8c880a12c4fe7ea09"
   },
   "src/components/ui/Checkbox.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "477ec86303e3474060531527f96cfff6",
-    "semantic_hash": "477ec86303e3474060531527f96cfff6"
+    "mtime": 1784063417.8155787,
+    "ast_hash": "80308cfa6e1ea149fa3e52484fc6f4ca",
+    "semantic_hash": "80308cfa6e1ea149fa3e52484fc6f4ca"
   },
   "src/components/ui/EmptyState.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "c60cef82368ae9ebf2a4738e80966e20",
-    "semantic_hash": "c60cef82368ae9ebf2a4738e80966e20"
+    "mtime": 1784063417.8282194,
+    "ast_hash": "2431881c3e60fd8c719a23363d52f777",
+    "semantic_hash": "2431881c3e60fd8c719a23363d52f777"
   },
   "src/components/ui/Modal.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "46d6ee99955ef5ff79929becf9df9098",
-    "semantic_hash": "46d6ee99955ef5ff79929becf9df9098"
+    "mtime": 1784063417.854347,
+    "ast_hash": "48d6b12ed6c19e3342cb26512c11bd1f",
+    "semantic_hash": "48d6b12ed6c19e3342cb26512c11bd1f"
   },
   "src/components/ui/Pagination.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a5aecfc27f6e599dd90bdd25641a9123",
-    "semantic_hash": "a5aecfc27f6e599dd90bdd25641a9123"
+    "mtime": 1784063417.8650415,
+    "ast_hash": "a84cfdb430b906a97bd1aed1a4c67fd6",
+    "semantic_hash": "a84cfdb430b906a97bd1aed1a4c67fd6"
   },
   "src/components/ui/PasswordField.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "c834528c75cedd8b1100c7d5300b912d",
-    "semantic_hash": "c834528c75cedd8b1100c7d5300b912d"
+    "mtime": 1784063417.8783095,
+    "ast_hash": "2f0e24f566af0a94ebc723b86ed5bea6",
+    "semantic_hash": "2f0e24f566af0a94ebc723b86ed5bea6"
   },
   "src/components/ui/ProgressBar.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "ef9a2cf2a016e5d6d5094351e13260c7",
-    "semantic_hash": "ef9a2cf2a016e5d6d5094351e13260c7"
+    "mtime": 1784063417.8892167,
+    "ast_hash": "ddefbbad33a3b7b41fe150645f0440b0",
+    "semantic_hash": "ddefbbad33a3b7b41fe150645f0440b0"
   },
   "src/components/ui/RadioGroup.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a3d3032d4f03efd93ed791a3153b6035",
-    "semantic_hash": "a3d3032d4f03efd93ed791a3153b6035"
+    "mtime": 1784063417.8958833,
+    "ast_hash": "7223a1df04c55573beeb9a5bb57750fc",
+    "semantic_hash": "7223a1df04c55573beeb9a5bb57750fc"
   },
   "src/components/ui/SearchField.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "323e5e130c2542000dd5f9b237fd699b",
-    "semantic_hash": "323e5e130c2542000dd5f9b237fd699b"
+    "mtime": 1784063417.904919,
+    "ast_hash": "be42ff19199bad071c86c6eee77cd2bf",
+    "semantic_hash": "be42ff19199bad071c86c6eee77cd2bf"
   },
   "src/components/ui/SelectField.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "bfa7d1c2547ed16b43e3599b0d1957df",
-    "semantic_hash": "bfa7d1c2547ed16b43e3599b0d1957df"
+    "mtime": 1784063417.9252098,
+    "ast_hash": "c87c86e8dad16a18c240db62b2c790ca",
+    "semantic_hash": "c87c86e8dad16a18c240db62b2c790ca"
   },
   "src/components/ui/TabBar.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a604e3eb85e832fbc59847b68c4f7f42",
-    "semantic_hash": "a604e3eb85e832fbc59847b68c4f7f42"
+    "mtime": 1784063417.9367573,
+    "ast_hash": "2512e13e339f9b83cd971a8fd6407d18",
+    "semantic_hash": "2512e13e339f9b83cd971a8fd6407d18"
   },
   "src/components/ui/TextField.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "0d8bb34470aaf097fa860c5aebf8cf2f",
-    "semantic_hash": "0d8bb34470aaf097fa860c5aebf8cf2f"
+    "mtime": 1784063417.9475229,
+    "ast_hash": "a589fb948be5df8823fb5875a3346cf1",
+    "semantic_hash": "a589fb948be5df8823fb5875a3346cf1"
   },
   "src/components/ui/WizardStepper.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "74e30ad5ed5b78f05d774564e896b099",
-    "semantic_hash": "74e30ad5ed5b78f05d774564e896b099"
+    "mtime": 1784063417.9610412,
+    "ast_hash": "75129553e94bccd93d480e7caf1fd779",
+    "semantic_hash": "75129553e94bccd93d480e7caf1fd779"
   },
   "src/components/ui/layout/ScreenFrame.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "afdb5bda05a38912098291858d429406",
-    "semantic_hash": "afdb5bda05a38912098291858d429406"
+    "mtime": 1784063417.8457167,
+    "ast_hash": "089b629c736a12bf67034f2478d62270",
+    "semantic_hash": "089b629c736a12bf67034f2478d62270"
   },
   "src/context/GameContext.jsx": {
-    "mtime": 1784057832.4436355,
-    "ast_hash": "cb24c1d322e1d6b28b902f62bdb2502e",
-    "semantic_hash": ""
+    "mtime": 1784063418.1025338,
+    "ast_hash": "bdfd3cac8de28f651a7660c8ea40cf39",
+    "semantic_hash": "bdfd3cac8de28f651a7660c8ea40cf39"
   },
   "src/data/battleRules.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "97d438b4aad59d6ccf3b8eedde6356f6",
-    "semantic_hash": "97d438b4aad59d6ccf3b8eedde6356f6"
+    "mtime": 1784063418.1159768,
+    "ast_hash": "b42069c5cacd5b4bc87146cbaf301979",
+    "semantic_hash": "b42069c5cacd5b4bc87146cbaf301979"
   },
   "src/game/animationUtils.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "4ff596219d11f2e8a7bc304e1ae6d686",
-    "semantic_hash": "4ff596219d11f2e8a7bc304e1ae6d686"
+    "mtime": 1784063418.1549983,
+    "ast_hash": "2820eee95f7c0450edadded6809a2945",
+    "semantic_hash": "2820eee95f7c0450edadded6809a2945"
   },
   "src/game/animationUtils.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "6dc3ed8c14c08703419974c1cfa4e5f5",
-    "semantic_hash": "6dc3ed8c14c08703419974c1cfa4e5f5"
+    "mtime": 1784063418.1985533,
+    "ast_hash": "c8556c546e0b1732dc7a3b1a1bfcd17b",
+    "semantic_hash": "c8556c546e0b1732dc7a3b1a1bfcd17b"
   },
   "src/game/assetResolver.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "2992fec3956862faaf58f89c33a4f61c",
-    "semantic_hash": "2992fec3956862faaf58f89c33a4f61c"
+    "mtime": 1784063418.255766,
+    "ast_hash": "3906530c0189658096d41f6c97854e55",
+    "semantic_hash": "3906530c0189658096d41f6c97854e55"
   },
   "src/game/assetResolver.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "2a938536acf5595e4ed275b7ce19813a",
-    "semantic_hash": "2a938536acf5595e4ed275b7ce19813a"
+    "mtime": 1784063418.2816408,
+    "ast_hash": "a7041b49b35ee861e514f9b3660294b6",
+    "semantic_hash": "a7041b49b35ee861e514f9b3660294b6"
   },
   "src/game/assets.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "e44cf38fb5bc20985d3add9f1ead4695",
-    "semantic_hash": "e44cf38fb5bc20985d3add9f1ead4695"
+    "mtime": 1784063418.2912445,
+    "ast_hash": "18ed9e8cbb88ad16bb9d701519d2d000",
+    "semantic_hash": "18ed9e8cbb88ad16bb9d701519d2d000"
   },
   "src/game/assets.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "b55579134d44160dda3d6f7b46cad96b",
-    "semantic_hash": "b55579134d44160dda3d6f7b46cad96b"
+    "mtime": 1784063418.2979157,
+    "ast_hash": "987ef54c2f04bc79f0c44bf018c644c0",
+    "semantic_hash": "987ef54c2f04bc79f0c44bf018c644c0"
   },
   "src/game/atmosphereConfig.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "3798012c91ca98524f40e14a4dc552f9",
-    "semantic_hash": "3798012c91ca98524f40e14a4dc552f9"
+    "mtime": 1784063418.3061619,
+    "ast_hash": "7f01a12cd5b3196c736fe00a57eda25e",
+    "semantic_hash": "7f01a12cd5b3196c736fe00a57eda25e"
   },
   "src/game/balls.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "bda9360b5ab105ea7b9f0aa57514bd8f",
-    "semantic_hash": "bda9360b5ab105ea7b9f0aa57514bd8f"
+    "mtime": 1784063418.3168094,
+    "ast_hash": "557979040a25aa34eb573fbac0084913",
+    "semantic_hash": "557979040a25aa34eb573fbac0084913"
   },
   "src/game/biomeDisplay.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "b5454a1f073211069524a7dd718a9142",
-    "semantic_hash": "b5454a1f073211069524a7dd718a9142"
+    "mtime": 1784063418.3672204,
+    "ast_hash": "98f2e960a715abffa5bd6b3a0c953302",
+    "semantic_hash": "98f2e960a715abffa5bd6b3a0c953302"
   },
   "src/game/biomeDisplay.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "e723a58f72960268276b1ea764014779",
-    "semantic_hash": "e723a58f72960268276b1ea764014779"
+    "mtime": 1784063418.3898828,
+    "ast_hash": "8f76c67937364051023f2ac0bb404118",
+    "semantic_hash": "8f76c67937364051023f2ac0bb404118"
   },
   "src/game/biomeLandmarks.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "953b3e72ba8ae48996a103ebdd44124d",
-    "semantic_hash": "953b3e72ba8ae48996a103ebdd44124d"
+    "mtime": 1784063418.4180324,
+    "ast_hash": "50869f2d3e0a1ff7c2d34f3dfe582a9c",
+    "semantic_hash": "50869f2d3e0a1ff7c2d34f3dfe582a9c"
   },
   "src/game/biomeLoadMetrics.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "92e8f00a84796226cad63513b6010197",
-    "semantic_hash": "92e8f00a84796226cad63513b6010197"
+    "mtime": 1784063418.4401426,
+    "ast_hash": "2773e3d4112d887cdff26a95c97c89da",
+    "semantic_hash": "2773e3d4112d887cdff26a95c97c89da"
   },
   "src/game/data/regionalBiomes.json": {
     "mtime": 1781388015.0,
@@ -555,39 +555,39 @@
     "semantic_hash": "3997006d4d9c24cea05d4e7577a0955f"
   },
   "src/game/fantasyAssets.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "cc33d68181885694cf49c0918f9e25ac",
-    "semantic_hash": "cc33d68181885694cf49c0918f9e25ac"
+    "mtime": 1784063418.66391,
+    "ast_hash": "b92d2d3f15ae744fbb26f2f2d543fd37",
+    "semantic_hash": "b92d2d3f15ae744fbb26f2f2d543fd37"
   },
   "src/game/fantasyVillageLayout.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "d89b93d19fc7a875aebb5068f71f9984",
-    "semantic_hash": "d89b93d19fc7a875aebb5068f71f9984"
+    "mtime": 1784063418.8212185,
+    "ast_hash": "a3212693d90cb583caf43a0a117c3a0e",
+    "semantic_hash": "a3212693d90cb583caf43a0a117c3a0e"
   },
   "src/game/generatedAssetManifest.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "d957e6fc37d98da5f67a38b1d1fcce85",
-    "semantic_hash": "d957e6fc37d98da5f67a38b1d1fcce85"
+    "mtime": 1784063418.874713,
+    "ast_hash": "9014c689c96ee1d19a09ddac6e6f66c6",
+    "semantic_hash": "9014c689c96ee1d19a09ddac6e6f66c6"
   },
   "src/game/logger.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "58ec19bd511b7b0e7291f1fd2d4af24e",
-    "semantic_hash": "58ec19bd511b7b0e7291f1fd2d4af24e"
+    "mtime": 1784063418.906832,
+    "ast_hash": "21b57c8cfeb7a556aff6b7145d2a68ef",
+    "semantic_hash": "21b57c8cfeb7a556aff6b7145d2a68ef"
   },
   "src/game/plantAssets.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "063de17c30184e3862e49a2d9d32a6bc",
-    "semantic_hash": "063de17c30184e3862e49a2d9d32a6bc"
+    "mtime": 1784063418.9965556,
+    "ast_hash": "87ecf6d0d84f5cc0a29a12196afb493b",
+    "semantic_hash": "87ecf6d0d84f5cc0a29a12196afb493b"
   },
   "src/game/plantAssets.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a14e561e07a0421612383b930edbd637",
-    "semantic_hash": "a14e561e07a0421612383b930edbd637"
+    "mtime": 1784063419.0225494,
+    "ast_hash": "ee54c24e614d5325a2f7ab6a5a45dc17",
+    "semantic_hash": "ee54c24e614d5325a2f7ab6a5a45dc17"
   },
   "src/game/plantPlacement.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a37cd2674edc04fad20a47172d6446f7",
-    "semantic_hash": "a37cd2674edc04fad20a47172d6446f7"
+    "mtime": 1784063419.090134,
+    "ast_hash": "7cc1b0b0f115b99736a04557087fcc36",
+    "semantic_hash": "7cc1b0b0f115b99736a04557087fcc36"
   },
   "src/game/plantsManifest.json": {
     "mtime": 1781388015.0,
@@ -595,329 +595,329 @@
     "semantic_hash": "04d7f3ebb6ede1edd045c83838c14753"
   },
   "src/game/playerStyles.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "6200b1d9f62e4c10011201850cc18eae",
-    "semantic_hash": "6200b1d9f62e4c10011201850cc18eae"
+    "mtime": 1784063419.140378,
+    "ast_hash": "91495f9f65bccf81cb6fe79f0103e0c1",
+    "semantic_hash": "91495f9f65bccf81cb6fe79f0103e0c1"
   },
   "src/game/pokemonData.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "8cfe7ce821990acc72eae3ea29f41b82",
-    "semantic_hash": "8cfe7ce821990acc72eae3ea29f41b82"
+    "mtime": 1784063419.1844661,
+    "ast_hash": "9bbb102e4e10e63876db9ad6b33aacdc",
+    "semantic_hash": "9bbb102e4e10e63876db9ad6b33aacdc"
   },
   "src/game/pokemonData.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "6753ee107096ad53e176008bf62a71df",
-    "semantic_hash": "6753ee107096ad53e176008bf62a71df"
+    "mtime": 1784063419.229728,
+    "ast_hash": "59bd1ca1c2c873565261381729b8617c",
+    "semantic_hash": "59bd1ca1c2c873565261381729b8617c"
   },
   "src/game/proceduralVoxelMaterials.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "36abeb1bb92561be401b426be94e5d15",
-    "semantic_hash": "36abeb1bb92561be401b426be94e5d15"
+    "mtime": 1784063419.3123062,
+    "ast_hash": "a5c64b03e6a428e415d0dce9ff55494c",
+    "semantic_hash": "a5c64b03e6a428e415d0dce9ff55494c"
   },
   "src/game/projectilePhysics.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "e376324af931877db4be351bff9b628d",
-    "semantic_hash": "e376324af931877db4be351bff9b628d"
+    "mtime": 1784063419.3336942,
+    "ast_hash": "5d663766ec1ca402e3d7acb2d4910a05",
+    "semantic_hash": "5d663766ec1ca402e3d7acb2d4910a05"
   },
   "src/game/projectilePhysics.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "84ca98705f9cb6c5a7751cd1f2f2e5fc",
-    "semantic_hash": "84ca98705f9cb6c5a7751cd1f2f2e5fc"
+    "mtime": 1784063419.3496559,
+    "ast_hash": "ac8a517fb9aaa9517b22be132cf89c0c",
+    "semantic_hash": "ac8a517fb9aaa9517b22be132cf89c0c"
   },
   "src/game/sceneThemes.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a82c284adc2adf830b513a6dd46b8284",
-    "semantic_hash": "a82c284adc2adf830b513a6dd46b8284"
+    "mtime": 1784063419.394627,
+    "ast_hash": "f8b2068f9238b2cc3db5f84860dc89ee",
+    "semantic_hash": "f8b2068f9238b2cc3db5f84860dc89ee"
   },
   "src/game/spawnController.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "43ed50d2c8b8dd66e9f4268940b423a3",
-    "semantic_hash": "43ed50d2c8b8dd66e9f4268940b423a3"
+    "mtime": 1784063419.4217231,
+    "ast_hash": "93e67fa74c09011d74d63c37f5819fc5",
+    "semantic_hash": "93e67fa74c09011d74d63c37f5819fc5"
   },
   "src/game/spawnController.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "18000af2e23a4bbf2d53a7b12814bf7b",
-    "semantic_hash": "18000af2e23a4bbf2d53a7b12814bf7b"
+    "mtime": 1784063419.437758,
+    "ast_hash": "df2badb898dfb329e88a7005e1eee49d",
+    "semantic_hash": "df2badb898dfb329e88a7005e1eee49d"
   },
   "src/game/spawnPlacement.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "33ee7998bac7d64d775a9bf767dd5021",
-    "semantic_hash": "33ee7998bac7d64d775a9bf767dd5021"
+    "mtime": 1784063419.4564295,
+    "ast_hash": "6a0d8a851ee53ed4de049f87f51df58e",
+    "semantic_hash": "6a0d8a851ee53ed4de049f87f51df58e"
   },
   "src/game/spawnPlacement.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "464dfd733fe95cfc7e6915ab8c6951bb",
-    "semantic_hash": "464dfd733fe95cfc7e6915ab8c6951bb"
+    "mtime": 1784063419.4745433,
+    "ast_hash": "218b0473e5286e8b70a0d934440cc8a7",
+    "semantic_hash": "218b0473e5286e8b70a0d934440cc8a7"
   },
   "src/game/typeAnims.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "8fcdebbde7fadae5d274a64faa83eabb",
-    "semantic_hash": "8fcdebbde7fadae5d274a64faa83eabb"
+    "mtime": 1784063419.4865854,
+    "ast_hash": "3a59bc5372658b0368e0f0af6264cb92",
+    "semantic_hash": "3a59bc5372658b0368e0f0af6264cb92"
   },
   "src/game/villageAssets.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "43a9e13376a667fec7465423990571b2",
-    "semantic_hash": "43a9e13376a667fec7465423990571b2"
+    "mtime": 1784063419.5146124,
+    "ast_hash": "1f23ec7956368174528a8911619a0e22",
+    "semantic_hash": "1f23ec7956368174528a8911619a0e22"
   },
   "src/game/villageLayout.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "0d66ad0ee5452e3d3a25e0fe8cedccc8",
-    "semantic_hash": "0d66ad0ee5452e3d3a25e0fe8cedccc8"
+    "mtime": 1784063419.5352383,
+    "ast_hash": "4e7c59d2624e5f7903a57f93a1b98ffe",
+    "semantic_hash": "4e7c59d2624e5f7903a57f93a1b98ffe"
   },
   "src/game/world.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "d4b5030938e229501f429c0482deaff1",
-    "semantic_hash": "d4b5030938e229501f429c0482deaff1"
+    "mtime": 1784063419.716309,
+    "ast_hash": "3dafeca519971ee0c45eaa66fce3ef01",
+    "semantic_hash": "3dafeca519971ee0c45eaa66fce3ef01"
   },
   "src/game/world.props.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "e98ca510196808c87c198e73e261124d",
-    "semantic_hash": "e98ca510196808c87c198e73e261124d"
+    "mtime": 1784063419.7345877,
+    "ast_hash": "00799a8b04b2fdb35865ce5bef75250f",
+    "semantic_hash": "00799a8b04b2fdb35865ce5bef75250f"
   },
   "src/hooks/useAudioManager.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "4d11a7c6f968be208ece5287b337d816",
-    "semantic_hash": "4d11a7c6f968be208ece5287b337d816"
+    "mtime": 1784063419.7548618,
+    "ast_hash": "42878e7ce62f7d2c91582cff9dd58232",
+    "semantic_hash": "42878e7ce62f7d2c91582cff9dd58232"
   },
   "src/hooks/useGameInput.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "97bae49950c3ad0d72b4be8c17408156",
-    "semantic_hash": "97bae49950c3ad0d72b4be8c17408156"
+    "mtime": 1784063419.772911,
+    "ast_hash": "e5f09fe9ba5d82d733155ee68b23f1d9",
+    "semantic_hash": "e5f09fe9ba5d82d733155ee68b23f1d9"
   },
   "src/hooks/useKeyboardControls.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "00d835090e5832e254b1583a07c1cf3f",
-    "semantic_hash": "00d835090e5832e254b1583a07c1cf3f"
+    "mtime": 1784063419.7906554,
+    "ast_hash": "56a6d8947d5d303993f1077d6c69e4d2",
+    "semantic_hash": "56a6d8947d5d303993f1077d6c69e4d2"
   },
   "src/hooks/useKeyboardShortcuts.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "3f22db2f78f4259ac7a54ee459e4b500",
-    "semantic_hash": "3f22db2f78f4259ac7a54ee459e4b500"
+    "mtime": 1784063419.8032963,
+    "ast_hash": "43b78194cc8d502510c213c9d7c592d8",
+    "semantic_hash": "43b78194cc8d502510c213c9d7c592d8"
   },
   "src/hooks/usePagination.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "72e86a27323e8e23fd7ab991223cf5a4",
-    "semantic_hash": "72e86a27323e8e23fd7ab991223cf5a4"
+    "mtime": 1784063419.81577,
+    "ast_hash": "224740ce649a0ab6b5c23242ffa6fa89",
+    "semantic_hash": "224740ce649a0ab6b5c23242ffa6fa89"
   },
   "src/hooks/usePreloadProgress.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "1d5945c57a6cae949deeeed2e443c00f",
-    "semantic_hash": "1d5945c57a6cae949deeeed2e443c00f"
+    "mtime": 1784063419.829276,
+    "ast_hash": "fa435621cd59c641b0df45ca05408bdd",
+    "semantic_hash": "fa435621cd59c641b0df45ca05408bdd"
   },
   "src/hooks/useToast.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "48a9bf4f9544434d7b108eaf8332a28b",
-    "semantic_hash": "48a9bf4f9544434d7b108eaf8332a28b"
+    "mtime": 1784063419.848012,
+    "ast_hash": "79a625633b3710d7b9dfe11fdcfcd474",
+    "semantic_hash": "79a625633b3710d7b9dfe11fdcfcd474"
   },
   "src/hooks/useViewportLayout.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "b6a1eebed704e9c3c6cef2149ff509a9",
-    "semantic_hash": "b6a1eebed704e9c3c6cef2149ff509a9"
+    "mtime": 1784063419.8661566,
+    "ast_hash": "41725b42b3d3c22615b0ba0ab29fed42",
+    "semantic_hash": "41725b42b3d3c22615b0ba0ab29fed42"
   },
   "src/hooks/useWizard.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "8f982869f2f3188aca5cbcba799cad1b",
-    "semantic_hash": "8f982869f2f3188aca5cbcba799cad1b"
+    "mtime": 1784063419.8774548,
+    "ast_hash": "5069f16ca67859c4efcdd4016d2ff2ee",
+    "semantic_hash": "5069f16ca67859c4efcdd4016d2ff2ee"
   },
   "src/main.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "f0222472688faf5fa50c23d57d5212a8",
-    "semantic_hash": "f0222472688faf5fa50c23d57d5212a8"
+    "mtime": 1784063419.8867433,
+    "ast_hash": "df7a8a21dce7b1379c6b025f2edf9aaa",
+    "semantic_hash": "df7a8a21dce7b1379c6b025f2edf9aaa"
   },
   "src/modes/battleRoyale/BattleRoyaleArena.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "3057a26437eafb37754bc29f873c4e37",
-    "semantic_hash": "3057a26437eafb37754bc29f873c4e37"
+    "mtime": 1784063419.9674246,
+    "ast_hash": "9cf75e6aebe6955b88fbf531a5a47ad7",
+    "semantic_hash": "9cf75e6aebe6955b88fbf531a5a47ad7"
   },
   "src/modes/battleRoyale/BattleRoyaleDropScene.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "4fc3af2a480f9047ce1f495789c7bcdc",
-    "semantic_hash": "4fc3af2a480f9047ce1f495789c7bcdc"
+    "mtime": 1784063419.992741,
+    "ast_hash": "8297742302d17ee3844e132f84b4f5ce",
+    "semantic_hash": "8297742302d17ee3844e132f84b4f5ce"
   },
   "src/modes/battleRoyale/BattleRoyaleShell.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "524f35092c50d37fb893016617295f68",
-    "semantic_hash": "524f35092c50d37fb893016617295f68"
+    "mtime": 1784063420.0831394,
+    "ast_hash": "39f917796a147035dc43fe4478e69949",
+    "semantic_hash": "39f917796a147035dc43fe4478e69949"
   },
   "src/screens/BattleArenaScreen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "7aa21876d9dffdfa6c608ff8581d981a",
-    "semantic_hash": "7aa21876d9dffdfa6c608ff8581d981a"
+    "mtime": 1784063420.6903865,
+    "ast_hash": "8af741ff87f219699abd8263dff7ee8c",
+    "semantic_hash": "8af741ff87f219699abd8263dff7ee8c"
   },
   "src/screens/BattleArenaV2Screen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "967e45e308bf4b8c4c11562d6cfd82ec",
-    "semantic_hash": "967e45e308bf4b8c4c11562d6cfd82ec"
+    "mtime": 1784063420.8112314,
+    "ast_hash": "897de5467b18db31c9e90464c4768479",
+    "semantic_hash": "897de5467b18db31c9e90464c4768479"
   },
   "src/screens/BattleRoyaleV2Screen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "29d9778bfa75b8c9b65fe11911dbf03f",
-    "semantic_hash": "29d9778bfa75b8c9b65fe11911dbf03f"
+    "mtime": 1784063420.8303535,
+    "ast_hash": "b1ab23baa58ab494a73b4c82255635bb",
+    "semantic_hash": "b1ab23baa58ab494a73b4c82255635bb"
   },
   "src/screens/CampaignV2Screen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "98e207803dc6beb077d93fc56faa2d99",
-    "semantic_hash": "98e207803dc6beb077d93fc56faa2d99"
+    "mtime": 1784063420.8454666,
+    "ast_hash": "923771723dfdef93a9d25f5724963e9e",
+    "semantic_hash": "923771723dfdef93a9d25f5724963e9e"
   },
   "src/screens/ClueGuesserScreen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "c2c951493c94605a33915021125897eb",
-    "semantic_hash": "c2c951493c94605a33915021125897eb"
+    "mtime": 1784063420.9939773,
+    "ast_hash": "8419da1b6729b030ec5dad29dc9923e2",
+    "semantic_hash": "8419da1b6729b030ec5dad29dc9923e2"
   },
   "src/screens/DailyGridScreen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "7572714e0f436c254d827c74b1499751",
-    "semantic_hash": "7572714e0f436c254d827c74b1499751"
+    "mtime": 1784063421.0715098,
+    "ast_hash": "707b4d35bc2d220a7025181ac873fd66",
+    "semantic_hash": "707b4d35bc2d220a7025181ac873fd66"
   },
   "src/screens/DashboardScreen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a008f88c1de3713eae976dbb4d0dacf7",
-    "semantic_hash": "a008f88c1de3713eae976dbb4d0dacf7"
+    "mtime": 1784063421.1878636,
+    "ast_hash": "8a303128b38fa91024fa2438eebbd742",
+    "semantic_hash": "8a303128b38fa91024fa2438eebbd742"
   },
   "src/screens/GameCompleteScreen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "379b36c8b3de424e7d9016aa2cd8139f",
-    "semantic_hash": "379b36c8b3de424e7d9016aa2cd8139f"
+    "mtime": 1784063421.199974,
+    "ast_hash": "35225572788c738d0c1425ed406fa7ba",
+    "semantic_hash": "35225572788c738d0c1425ed406fa7ba"
   },
   "src/screens/LoadingScreen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "526e226e3aa101e6603b74571c3f6386",
-    "semantic_hash": "526e226e3aa101e6603b74571c3f6386"
+    "mtime": 1784063421.424112,
+    "ast_hash": "0aa0256b814ba0a2cc5d3b6e0d916c94",
+    "semantic_hash": "0aa0256b814ba0a2cc5d3b6e0d916c94"
   },
   "src/screens/MapEditorScreen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a97845251cdf92a72c147d214f52d4d1",
-    "semantic_hash": "a97845251cdf92a72c147d214f52d4d1"
+    "mtime": 1784063421.5319543,
+    "ast_hash": "90143af39205db280539e381d9eb5631",
+    "semantic_hash": "90143af39205db280539e381d9eb5631"
   },
   "src/screens/MinigameHubScreen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "4d937434c22df6c63d45d99d27131c27",
-    "semantic_hash": "4d937434c22df6c63d45d99d27131c27"
+    "mtime": 1784063421.5646353,
+    "ast_hash": "5cb1974f7a50cce9a9f7890df25a6178",
+    "semantic_hash": "5cb1974f7a50cce9a9f7890df25a6178"
   },
   "src/screens/PokedexScreen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "45f39abf88a14153e1a227fa3ca0c3d2",
-    "semantic_hash": "45f39abf88a14153e1a227fa3ca0c3d2"
+    "mtime": 1784063421.582556,
+    "ast_hash": "cf2ed2219c2a2f90bacd56a27cc743d6",
+    "semantic_hash": "cf2ed2219c2a2f90bacd56a27cc743d6"
   },
   "src/screens/ProfileSetupScreen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "78b933d4f6c32d771938ce930a0c3497",
-    "semantic_hash": "78b933d4f6c32d771938ce930a0c3497"
+    "mtime": 1784063421.6448016,
+    "ast_hash": "6b1dde957492396a9666cd36131f949c",
+    "semantic_hash": "6b1dde957492396a9666cd36131f949c"
   },
   "src/screens/StaticRegionScreen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "1bd37698b94cc0eb8398c4638845f33b",
-    "semantic_hash": "1bd37698b94cc0eb8398c4638845f33b"
+    "mtime": 1784063421.6734838,
+    "ast_hash": "ca098d7ebab39a1a2b144691e331be7f",
+    "semantic_hash": "ca098d7ebab39a1a2b144691e331be7f"
   },
   "src/screens/TriviaTrainingScreen.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "e3507be6828ade120a88fbec2db75513",
-    "semantic_hash": "e3507be6828ade120a88fbec2db75513"
+    "mtime": 1784063421.7544827,
+    "ast_hash": "58d7612595ebf077f3c5e17ff6bb5f22",
+    "semantic_hash": "58d7612595ebf077f3c5e17ff6bb5f22"
   },
   "src/screens/__tests__/ActionGrid.test.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "1d242483b34c0473a9b4c03351c8cdea",
-    "semantic_hash": "1d242483b34c0473a9b4c03351c8cdea"
+    "mtime": 1784063420.1099792,
+    "ast_hash": "e28a5a1628239767a5a7f44d3a785852",
+    "semantic_hash": "e28a5a1628239767a5a7f44d3a785852"
   },
   "src/screens/__tests__/DamageCalculator.test.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "c49094e339c736652c273259adc890a2",
-    "semantic_hash": "c49094e339c736652c273259adc890a2"
+    "mtime": 1784063420.1232998,
+    "ast_hash": "33a4dfd22df4d2e0dbec4fbcef978ee7",
+    "semantic_hash": "33a4dfd22df4d2e0dbec4fbcef978ee7"
   },
   "src/screens/__tests__/TrainerColumn.test.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "caf01d155a6ccc91b7191d86128bb670",
-    "semantic_hash": "caf01d155a6ccc91b7191d86128bb670"
+    "mtime": 1784063420.1512601,
+    "ast_hash": "14db46cf0b03ef9a0be041b8531a8888",
+    "semantic_hash": "14db46cf0b03ef9a0be041b8531a8888"
   },
   "src/screens/__tests__/setup.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "00e47f7b9836e8f731101981fa2bb2de",
-    "semantic_hash": "00e47f7b9836e8f731101981fa2bb2de"
+    "mtime": 1784063420.1342251,
+    "ast_hash": "166a26ce4265ed1175aab3efd38ff02b",
+    "semantic_hash": "166a26ce4265ed1175aab3efd38ff02b"
   },
   "src/screens/battle/ActionGrid.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "1977d131b6c6ece5a922e4c188aca09e",
-    "semantic_hash": "1977d131b6c6ece5a922e4c188aca09e"
+    "mtime": 1784063420.222925,
+    "ast_hash": "e904524da2622c4f045290e7290a5c98",
+    "semantic_hash": "e904524da2622c4f045290e7290a5c98"
   },
   "src/screens/battle/BattleUtils.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "26f1e7c1f52cd619da5b72b5d913fd89",
-    "semantic_hash": "26f1e7c1f52cd619da5b72b5d913fd89"
+    "mtime": 1784063420.269126,
+    "ast_hash": "70e7b4e6f994604b009e223e890ff13f",
+    "semantic_hash": "70e7b4e6f994604b009e223e890ff13f"
   },
   "src/screens/battle/DamageCalculator.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "b49f3214e8967a0ffad258c9093c8a9c",
-    "semantic_hash": "b49f3214e8967a0ffad258c9093c8a9c"
+    "mtime": 1784063420.319229,
+    "ast_hash": "02f9153c7c5aa3f0590c35373f5841cd",
+    "semantic_hash": "02f9153c7c5aa3f0590c35373f5841cd"
   },
   "src/screens/battle/SwitchUI.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "05f54581c68b232f7c85dcbe833ed4ff",
-    "semantic_hash": "05f54581c68b232f7c85dcbe833ed4ff"
+    "mtime": 1784063420.33824,
+    "ast_hash": "cbd4a612eae4bf1fd813af9e2e27f46c",
+    "semantic_hash": "cbd4a612eae4bf1fd813af9e2e27f46c"
   },
   "src/screens/battle/TrainerColumn.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "930e8a13256fedb990d466ea0adf6900",
-    "semantic_hash": "930e8a13256fedb990d466ea0adf6900"
+    "mtime": 1784063420.3682418,
+    "ast_hash": "a031ff680ddf3b9a9202e40173f62d70",
+    "semantic_hash": "a031ff680ddf3b9a9202e40173f62d70"
   },
   "src/server/br/battleRoyaleServer.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "b7a7db01d7f083f54b117e3bd019b5db",
-    "semantic_hash": "b7a7db01d7f083f54b117e3bd019b5db"
+    "mtime": 1784063421.8183787,
+    "ast_hash": "1dfa4b88f0e34a18c2cc6bc33a51f103",
+    "semantic_hash": "1dfa4b88f0e34a18c2cc6bc33a51f103"
   },
   "src/server/index.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "5edd049d073a97d28cffd6d1ac0f1bb5",
-    "semantic_hash": "5edd049d073a97d28cffd6d1ac0f1bb5"
+    "mtime": 1784063421.8438702,
+    "ast_hash": "6a0655ec619dd3ed00d8cf76dbdb662f",
+    "semantic_hash": "6a0655ec619dd3ed00d8cf76dbdb662f"
   },
   "src/server/lib/dataStore.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "bea425e4ac136dfa964ffffcbbac6890",
-    "semantic_hash": "bea425e4ac136dfa964ffffcbbac6890"
+    "mtime": 1784063421.913203,
+    "ast_hash": "ae87509fa9af78e68dd80345335d0717",
+    "semantic_hash": "ae87509fa9af78e68dd80345335d0717"
   },
   "src/server/lib/db.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "eb3734c7c9679e6a3dc4c74755653245",
-    "semantic_hash": "eb3734c7c9679e6a3dc4c74755653245"
+    "mtime": 1784063421.925364,
+    "ast_hash": "68df3631bd99b8bb83736c9723110943",
+    "semantic_hash": "68df3631bd99b8bb83736c9723110943"
   },
   "src/server/lib/paths.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "f881fed8c8fbdd03bd5977bb5be80939",
-    "semantic_hash": "f881fed8c8fbdd03bd5977bb5be80939"
+    "mtime": 1784063421.9360752,
+    "ast_hash": "3a70363e3bb851bf78f1b1b41f6330c4",
+    "semantic_hash": "3a70363e3bb851bf78f1b1b41f6330c4"
   },
   "src/server/routes/api.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "3470e6eda3441418e4a66f5b45d36eb3",
-    "semantic_hash": "3470e6eda3441418e4a66f5b45d36eb3"
+    "mtime": 1784063421.9769394,
+    "ast_hash": "79c3c4bcb531059d6678baa519c95952",
+    "semantic_hash": "79c3c4bcb531059d6678baa519c95952"
   },
   "src/server/routes/battle.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "999910e13ff4a742a35d8f433119c226",
-    "semantic_hash": "999910e13ff4a742a35d8f433119c226"
+    "mtime": 1784063421.9895678,
+    "ast_hash": "71f491479a4d90f502cd26b2773f4252",
+    "semantic_hash": "71f491479a4d90f502cd26b2773f4252"
   },
   "src/server/routes/battleEngine.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "017f36e822074096b71a3f9566be370a",
-    "semantic_hash": "017f36e822074096b71a3f9566be370a"
+    "mtime": 1784063422.0075524,
+    "ast_hash": "c23c01e911d8d73fe048a080918b1472",
+    "semantic_hash": "c23c01e911d8d73fe048a080918b1472"
   },
   "src/server/services/battleEngineCatalog.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "8897161700e6e52cf086e00a906c6ced",
-    "semantic_hash": "8897161700e6e52cf086e00a906c6ced"
+    "mtime": 1784063422.0417564,
+    "ast_hash": "3c244f42c2b06a705cd766ae7eeaa854",
+    "semantic_hash": "3c244f42c2b06a705cd766ae7eeaa854"
   },
   "src/server/services/battleEngineService.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "81dba154e48c8e18d9cf5ed8d290062d",
-    "semantic_hash": "81dba154e48c8e18d9cf5ed8d290062d"
+    "mtime": 1784063422.132608,
+    "ast_hash": "b55278707f9461bb203eae5fbdb6d3d1",
+    "semantic_hash": "b55278707f9461bb203eae5fbdb6d3d1"
   },
   "src/server/services/battleService.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "e87e8a74af44fd1fff6f3779878d2de2",
-    "semantic_hash": "e87e8a74af44fd1fff6f3779878d2de2"
+    "mtime": 1784063422.197505,
+    "ast_hash": "3188191e430ee3315049591c4d94b5a1",
+    "semantic_hash": "3188191e430ee3315049591c4d94b5a1"
   },
   "src/server/services/spawnService.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "9281f8ceddb928f38b8866adbb5d60c4",
-    "semantic_hash": "9281f8ceddb928f38b8866adbb5d60c4"
+    "mtime": 1784063422.2164218,
+    "ast_hash": "0e5c699e5a54301435f47d1a3789e84f",
+    "semantic_hash": "0e5c699e5a54301435f47d1a3789e84f"
   },
   "src/server/showdown/config/config-example.js": {
     "mtime": 1781388015.0,
@@ -2560,359 +2560,54 @@
     "semantic_hash": "327bcf4ea8c776004e92aba9ad95f851"
   },
   "src/server/test/battle.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "319b065b0f6f817a8fe6507c9c567202",
-    "semantic_hash": "319b065b0f6f817a8fe6507c9c567202"
+    "mtime": 1784063422.2880948,
+    "ast_hash": "43a152db1b37e03bbaa0ea3727762e6a",
+    "semantic_hash": "43a152db1b37e03bbaa0ea3727762e6a"
   },
   "src/server/test/battleEngine.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "0041dcbb292383504a26ab43d86728d1",
-    "semantic_hash": "0041dcbb292383504a26ab43d86728d1"
+    "mtime": 1784063422.3155665,
+    "ast_hash": "bdef0047b928c7a3f5002e3fd22efc87",
+    "semantic_hash": "bdef0047b928c7a3f5002e3fd22efc87"
   },
   "src/server/test/db.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "f7fb98910ed70ea3916be729a5afb63f",
-    "semantic_hash": "f7fb98910ed70ea3916be729a5afb63f"
+    "mtime": 1784063422.3471851,
+    "ast_hash": "f0b99d80c026bc03a08ff8d57e44c571",
+    "semantic_hash": "f0b99d80c026bc03a08ff8d57e44c571"
   },
   "src/server/test/spawnService.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "6fb879ff33fd1e6bc9478ee08a434e63",
-    "semantic_hash": "6fb879ff33fd1e6bc9478ee08a434e63"
+    "mtime": 1784063422.364195,
+    "ast_hash": "b0c3cb9451be37162c7fc76be6ca1bcf",
+    "semantic_hash": "b0c3cb9451be37162c7fc76be6ca1bcf"
   },
   "src/services/authService.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "fcb2c0f3cfce0effae47ce3289eb2cdc",
-    "semantic_hash": "fcb2c0f3cfce0effae47ce3289eb2cdc"
+    "mtime": 1784063422.3787186,
+    "ast_hash": "ddea62b16dd5b5f8a2017a00af4c6f69",
+    "semantic_hash": "ddea62b16dd5b5f8a2017a00af4c6f69"
   },
   "src/services/campaignService.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "91f298e2eb34e0ee9fbcb58282bd0092",
-    "semantic_hash": "91f298e2eb34e0ee9fbcb58282bd0092"
+    "mtime": 1784063422.3863616,
+    "ast_hash": "1268c4b50f58c542a4da61f1a34cf2c0",
+    "semantic_hash": "1268c4b50f58c542a4da61f1a34cf2c0"
   },
   "src/services/shopService.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "7afa0f875bc94f3e03c839e7dd3deda2",
-    "semantic_hash": "7afa0f875bc94f3e03c839e7dd3deda2"
+    "mtime": 1784063422.3950577,
+    "ast_hash": "f849795ccbf249b8189421953fb0f467",
+    "semantic_hash": "f849795ccbf249b8189421953fb0f467"
   },
   "src/services/trainerService.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "dc6e8107c34a3817291e490c81bb6d48",
-    "semantic_hash": "dc6e8107c34a3817291e490c81bb6d48"
+    "mtime": 1784063422.4023464,
+    "ast_hash": "3bb7043bf22eeab8cba36cfae085961c",
+    "semantic_hash": "3bb7043bf22eeab8cba36cfae085961c"
   },
   "src/utils/MapStorage.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "ba52935d561b6542e10e339c90b94a10",
-    "semantic_hash": "ba52935d561b6542e10e339c90b94a10"
-  },
-  "v2/biome/public/manifest.json": {
-    "mtime": 1781388015.0,
-    "ast_hash": "d9d975cebe2ec20b6c652e1e4c12ccf0",
-    "semantic_hash": "d9d975cebe2ec20b6c652e1e4c12ccf0"
-  },
-  "v2/biome/scripts/generateAssetManifest.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "127abf0dfc6c23e2c5aadda75c30a501",
-    "semantic_hash": "127abf0dfc6c23e2c5aadda75c30a501"
-  },
-  "v2/biome/server/battleRoyaleServer.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "fecc48e4c5070bbb95241611ebc7ae71",
-    "semantic_hash": "fecc48e4c5070bbb95241611ebc7ae71"
-  },
-  "v2/biome/src/App.test.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "7c3837fef6be976f1d03104460443a57",
-    "semantic_hash": "7c3837fef6be976f1d03104460443a57"
-  },
-  "v2/biome/src/app/App.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "d80b9a9b0835cc2ae50dc867ee684047",
-    "semantic_hash": "d80b9a9b0835cc2ae50dc867ee684047"
-  },
-  "v2/biome/src/app/ModeSelectScreen.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "3032895b8a10a0f6c83e9d28aede90d6",
-    "semantic_hash": "3032895b8a10a0f6c83e9d28aede90d6"
-  },
-  "v2/biome/src/biomes/cave/CaveEntrance.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "46870b04a2f7495a1a3c36f267947910",
-    "semantic_hash": "46870b04a2f7495a1a3c36f267947910"
-  },
-  "v2/biome/src/biomes/cave/CaveInteriorEffects.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "feb3e09a7918313ba816b10420560289",
-    "semantic_hash": "feb3e09a7918313ba816b10420560289"
-  },
-  "v2/biome/src/biomes/desert/Sandstorm.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "4d1fdcb5193a50046f9f442dc82350fa",
-    "semantic_hash": "4d1fdcb5193a50046f9f442dc82350fa"
-  },
-  "v2/biome/src/biomes/distortion/DistortionRealmLandmarks.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "1c3e56dc8b3261b78ffcf3316ebdccc6",
-    "semantic_hash": "1c3e56dc8b3261b78ffcf3316ebdccc6"
-  },
-  "v2/biome/src/biomes/icy/IceMountainLandmarks.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "cbeaa7fa43215f50db38a73e3b969b1d",
-    "semantic_hash": "cbeaa7fa43215f50db38a73e3b969b1d"
-  },
-  "v2/biome/src/biomes/icy/Snowstorm.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a88204f82965efe9794172019bdb1628",
-    "semantic_hash": "a88204f82965efe9794172019bdb1628"
-  },
-  "v2/biome/src/biomes/moonlit/MoonlitLandmarks.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "12850c29dda14b8531d372b802519baa",
-    "semantic_hash": "12850c29dda14b8531d372b802519baa"
-  },
-  "v2/biome/src/biomes/sky/DistantSkyIsland.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "d7a751b1c626e97e0ec662a4e404e226",
-    "semantic_hash": "d7a751b1c626e97e0ec662a4e404e226"
-  },
-  "v2/biome/src/biomes/sky/SkyBelowVista.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "0c2002120428afe54147696321c31ff1",
-    "semantic_hash": "0c2002120428afe54147696321c31ff1"
-  },
-  "v2/biome/src/biomes/sky/SkyBiomeLandmarks.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "2d361b276b3d78ddc350bfe5c7395938",
-    "semantic_hash": "2d361b276b3d78ddc350bfe5c7395938"
-  },
-  "v2/biome/src/biomes/volcanic/Ashfall.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "9a284f34dea94597b0da52694b9d80d6",
-    "semantic_hash": "9a284f34dea94597b0da52694b9d80d6"
-  },
-  "v2/biome/src/biomes/volcanic/VolcanoCrater.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "76a99f0c9d2dbc26724ba761a80fdcb6",
-    "semantic_hash": "76a99f0c9d2dbc26724ba761a80fdcb6"
-  },
-  "v2/biome/src/entities/AnimatedModel.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "009e7a3877ec2e82dd6ae865bf03e06a",
-    "semantic_hash": "009e7a3877ec2e82dd6ae865bf03e06a"
-  },
-  "v2/biome/src/entities/CompanionCreature.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a7f111ff13ce270343f8cbc86630bca0",
-    "semantic_hash": "a7f111ff13ce270343f8cbc86630bca0"
-  },
-  "v2/biome/src/entities/ModelErrorBoundary.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "dca7b956185badc0b0cec50178aadef9",
-    "semantic_hash": "dca7b956185badc0b0cec50178aadef9"
-  },
-  "v2/biome/src/entities/Player.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "295b4147ada3f4a3e9cc991a7c361d98",
-    "semantic_hash": "295b4147ada3f4a3e9cc991a7c361d98"
-  },
-  "v2/biome/src/entities/VoxelFallback.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "7b1aba55ecda42f575be9b81368c0ec0",
-    "semantic_hash": "7b1aba55ecda42f575be9b81368c0ec0"
-  },
-  "v2/biome/src/entities/WildCreature.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "cc13c2ef6dc85067abd22b7f55345e92",
-    "semantic_hash": "cc13c2ef6dc85067abd22b7f55345e92"
-  },
-  "v2/biome/src/environment/Atmosphere.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "d3d759ae2d3e74285965370ef4a3f160",
-    "semantic_hash": "d3d759ae2d3e74285965370ef4a3f160"
-  },
-  "v2/biome/src/environment/OceanHorizon.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "30f98f3453e4c9758365fabaa5ef7669",
-    "semantic_hash": "30f98f3453e4c9758365fabaa5ef7669"
-  },
-  "v2/biome/src/game/balls.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "3478a75e4877ecd70a6f5c8ab2c610a9",
-    "semantic_hash": "3478a75e4877ecd70a6f5c8ab2c610a9"
-  },
-  "v2/biome/src/game/biomeLoadMetrics.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "92e8f00a84796226cad63513b6010197",
-    "semantic_hash": "92e8f00a84796226cad63513b6010197"
-  },
-  "v2/biome/src/game/proceduralVoxelMaterials.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "36abeb1bb92561be401b426be94e5d15",
-    "semantic_hash": "36abeb1bb92561be401b426be94e5d15"
-  },
-  "v2/biome/src/game/projectilePhysics.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "4ec9777a919e5eddfe12a895e47e9a42",
-    "semantic_hash": "4ec9777a919e5eddfe12a895e47e9a42"
-  },
-  "v2/biome/src/hooks/useKeyboardControls.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "cfe9c3093e2e29859540b1c45b337fb8",
-    "semantic_hash": "cfe9c3093e2e29859540b1c45b337fb8"
-  },
-  "v2/biome/src/index.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "a8706475bf738dbf3eff617703d948a5",
-    "semantic_hash": "a8706475bf738dbf3eff617703d948a5"
-  },
-  "v2/biome/src/regions/CustomImportRegion.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "d41ec43f6215b7775c2e1b5bf8cbaeb4",
-    "semantic_hash": "d41ec43f6215b7775c2e1b5bf8cbaeb4"
-  },
-  "v2/biome/src/regions/ObsidianFieldlands.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "7e9e5f27c878962a98544dc0d0b06d8d",
-    "semantic_hash": "7e9e5f27c878962a98544dc0d0b06d8d"
-  },
-  "v2/biome/src/regions/StaticRegionLoader.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "7659bbbe1d090ed066112491a60766e2",
-    "semantic_hash": "7659bbbe1d090ed066112491a60766e2"
-  },
-  "v2/biome/src/regions/StaticRegionPlayer.jsx": {
-    "mtime": 1781388015.0,
-    "ast_hash": "3a2f67126aa56e05d04fdaf2aa34f081",
-    "semantic_hash": "3a2f67126aa56e05d04fdaf2aa34f081"
-  },
-  "v2/biome/src/reportWebVitals.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "240e2381f826a9bb84d178b29b7b9abe",
-    "semantic_hash": "240e2381f826a9bb84d178b29b7b9abe"
-  },
-  "v2/biome/src/scenes/battleRoyale/BattleRoyaleArena.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "2a8f628659a0b0a76eaed4c219e32c0d",
-    "semantic_hash": "2a8f628659a0b0a76eaed4c219e32c0d"
-  },
-  "v2/biome/src/scenes/battleRoyale/BattleRoyaleDropScene.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "e8698dc788fdc9fb5534036259390e53",
-    "semantic_hash": "e8698dc788fdc9fb5534036259390e53"
-  },
-  "v2/biome/src/scenes/battleRoyale/BattleRoyaleShell.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "9d0d366af91e891d9c6da5d843d630db",
-    "semantic_hash": "9d0d366af91e891d9c6da5d843d630db"
-  },
-  "v2/biome/src/scenes/normal/GameScene.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "c407dc645cd7fe3d8500d10b24e543bb",
-    "semantic_hash": "c407dc645cd7fe3d8500d10b24e543bb"
-  },
-  "v2/biome/src/setupTests.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "1a77571e1a8cf36018a41bcedf60db75",
-    "semantic_hash": "1a77571e1a8cf36018a41bcedf60db75"
-  },
-  "v2/biome/src/systems/AimIndicator.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "18fa63b9e5d0489eee57c5422a7a9dd1",
-    "semantic_hash": "18fa63b9e5d0489eee57c5422a7a9dd1"
-  },
-  "v2/biome/src/systems/CaptureBurst.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "c19cde3f1e032ccf54a40b7c42e604a2",
-    "semantic_hash": "c19cde3f1e032ccf54a40b7c42e604a2"
-  },
-  "v2/biome/src/systems/CompanionRecallEffect.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "21b4ca7338b809a378d2038081d515fc",
-    "semantic_hash": "21b4ca7338b809a378d2038081d515fc"
-  },
-  "v2/biome/src/systems/Projectile.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "d3c05e43f284a379d56a767e4a8df592",
-    "semantic_hash": "d3c05e43f284a379d56a767e4a8df592"
-  },
-  "v2/biome/src/systems/SafePointerLockControls.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "14aa8a3aefd63004c525f74377548d40",
-    "semantic_hash": "14aa8a3aefd63004c525f74377548d40"
-  },
-  "v2/biome/src/systems/ThirdPersonCamera.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "7c6668e0e735cc4c30052e324b924133",
-    "semantic_hash": "7c6668e0e735cc4c30052e324b924133"
-  },
-  "v2/biome/src/ui/Hotbar.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "c12229dd2d8d6c360c9e876e2df40184",
-    "semantic_hash": "c12229dd2d8d6c360c9e876e2df40184"
-  },
-  "v2/biome/src/ui/LoadingOverlay.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "e9570a576477e398c6d65abb2a596ec1",
-    "semantic_hash": "e9570a576477e398c6d65abb2a596ec1"
-  },
-  "v2/biome/src/world/VoxelWorld.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "628268d49a115dfcba92f60a00d7ad70",
-    "semantic_hash": "628268d49a115dfcba92f60a00d7ad70"
-  },
-  "v2/biome/src/world/assetManifest.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "fea6ee04a3defc49b0bef4b7db0f7252",
-    "semantic_hash": "fea6ee04a3defc49b0bef4b7db0f7252"
-  },
-  "v2/biome/src/world/biomes.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "4c3a9ffccdbd0ce2833872c5b0ebc76f",
-    "semantic_hash": "4c3a9ffccdbd0ce2833872c5b0ebc76f"
-  },
-  "v2/biome/src/world/constants.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "9d72bcd5ed4101d3e61f1103f55dd106",
-    "semantic_hash": "9d72bcd5ed4101d3e61f1103f55dd106"
-  },
-  "v2/biome/src/world/generatedAssetManifest.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "fd1718cf375f8ad27ccff6cb59b849fa",
-    "semantic_hash": "fd1718cf375f8ad27ccff6cb59b849fa"
-  },
-  "v2/biome/src/world/heightLookup.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "40a6e58b35d2b2de8cbd5394637652f0",
-    "semantic_hash": "40a6e58b35d2b2de8cbd5394637652f0"
-  },
-  "v2/biome/src/world/index.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "e6867f8e8d231f9300770dea251d3f38",
-    "semantic_hash": "e6867f8e8d231f9300770dea251d3f38"
-  },
-  "v2/biome/src/world/mapCache.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "6cdd9465c92051512cd74c239d646b68",
-    "semantic_hash": "6cdd9465c92051512cd74c239d646b68"
-  },
-  "v2/biome/src/world/terrainGeneration.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "0b17102065db1a063a7de8c293a427b9",
-    "semantic_hash": "0b17102065db1a063a7de8c293a427b9"
-  },
-  "v2/biome/tools/biome_dashboard/app.py": {
-    "mtime": 1781388015.0,
-    "ast_hash": "9da30ec2bdbf4ed8c4199e5eb277d183",
-    "semantic_hash": "9da30ec2bdbf4ed8c4199e5eb277d183"
-  },
-  "v2/biome/tools/biome_dashboard/biome_load_metrics.json": {
-    "mtime": 1781388015.0,
-    "ast_hash": "586644fbde4aed17277f9ff01066088a",
-    "semantic_hash": "586644fbde4aed17277f9ff01066088a"
+    "mtime": 1784063422.4283764,
+    "ast_hash": "9c927847733a9cd6ce3aaacc4089eb43",
+    "semantic_hash": "9c927847733a9cd6ce3aaacc4089eb43"
   },
   "vitest.config.js": {
-    "mtime": 1781388015.0,
-    "ast_hash": "3f6283d5f81651aaed8516da9b26eaa4",
-    "semantic_hash": "3f6283d5f81651aaed8516da9b26eaa4"
+    "mtime": 1784063537.980405,
+    "ast_hash": "78322890ed946a0d5c6b9a02f4642034",
+    "semantic_hash": "78322890ed946a0d5c6b9a02f4642034"
   },
   "graphify-lib.ps1": {
     "mtime": 1784037812.2346773,
@@ -2955,8 +2650,8 @@
     "semantic_hash": ""
   },
   "commands.txt": {
-    "mtime": 1784058108.532197,
-    "ast_hash": "e0d233c718e97204efdefd69677c0963",
+    "mtime": 1784065079.3945286,
+    "ast_hash": "ad9b814899603436dce32ea9d88266e6",
     "semantic_hash": ""
   },
   "promsts.txt": {
@@ -3007,26 +2702,6 @@
   "src/game/assets/README.md": {
     "mtime": 1781388015.0,
     "ast_hash": "e9766b541c331428ef142155530871a4",
-    "semantic_hash": ""
-  },
-  "v2/biome/README.md": {
-    "mtime": 1781388015.0,
-    "ast_hash": "24116801db872e9a11af56ca26aae619",
-    "semantic_hash": ""
-  },
-  "v2/biome/public/index.html": {
-    "mtime": 1781388015.0,
-    "ast_hash": "ef8a02db437c74f2ecb0d88becc4b9d4",
-    "semantic_hash": ""
-  },
-  "v2/biome/public/robots.txt": {
-    "mtime": 1781388015.0,
-    "ast_hash": "fa1ded1ed7c11438a9b0385b1e112850",
-    "semantic_hash": ""
-  },
-  "v2/biome/tools/biome_dashboard/requirements.txt": {
-    "mtime": 1781388015.0,
-    "ast_hash": "215ddd9b9d0f41e1a5708edfb850524b",
     "semantic_hash": ""
   },
   "public/assets/battleassets/cutered.png": {
@@ -15354,34 +15029,334 @@
     "ast_hash": "917515db74ea8d1aee6a246cfbcc0b45",
     "semantic_hash": ""
   },
-  "v2/biome/public/logo192.png": {
-    "mtime": 1781388015.0,
-    "ast_hash": "33dbdd0177549353eeeb785d02c294af",
-    "semantic_hash": ""
-  },
-  "v2/biome/public/logo512.png": {
-    "mtime": 1781388015.0,
-    "ast_hash": "917515db74ea8d1aee6a246cfbcc0b45",
-    "semantic_hash": ""
-  },
-  "v2/biome/src/logo.svg": {
-    "mtime": 1781388015.0,
-    "ast_hash": "06e733283fa43d1dd57738cfc409adbd",
-    "semantic_hash": ""
-  },
   ".agents/AGENTS.md": {
     "mtime": 1784041933.699081,
     "ast_hash": "36a48e4be0b6ea3791b128a31fe1618a",
     "semantic_hash": ""
   },
   "src/screens/AuthScreen.jsx": {
-    "mtime": 1784057841.600405,
-    "ast_hash": "b523fb8d9b10336d950baeeae953dfb3",
-    "semantic_hash": ""
+    "mtime": 1784063420.1802304,
+    "ast_hash": "4b976d274fe89c386a2a3c28ff752121",
+    "semantic_hash": "4b976d274fe89c386a2a3c28ff752121"
   },
   "src/screens/LandingScreen.jsx": {
-    "mtime": 1784058021.944358,
-    "ast_hash": "42e74ab932178553e0516febdf5f411d",
+    "mtime": 1784063421.4065583,
+    "ast_hash": "84584bd3547f9b2f07179639df4a934f",
+    "semantic_hash": "84584bd3547f9b2f07179639df4a934f"
+  },
+  "next-env.d.ts": {
+    "mtime": 1784064783.6338735,
+    "ast_hash": "b698cdd97fe8e3bd16dcd74899ad7cef",
+    "semantic_hash": "b698cdd97fe8e3bd16dcd74899ad7cef"
+  },
+  "src/v2/App.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7c3837fef6be976f1d03104460443a57",
+    "semantic_hash": "7c3837fef6be976f1d03104460443a57"
+  },
+  "src/v2/app/App.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d80b9a9b0835cc2ae50dc867ee684047",
+    "semantic_hash": "d80b9a9b0835cc2ae50dc867ee684047"
+  },
+  "src/v2/app/ModeSelectScreen.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3032895b8a10a0f6c83e9d28aede90d6",
+    "semantic_hash": "3032895b8a10a0f6c83e9d28aede90d6"
+  },
+  "src/v2/biomes/cave/CaveEntrance.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "46870b04a2f7495a1a3c36f267947910",
+    "semantic_hash": "46870b04a2f7495a1a3c36f267947910"
+  },
+  "src/v2/biomes/cave/CaveInteriorEffects.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "feb3e09a7918313ba816b10420560289",
+    "semantic_hash": "feb3e09a7918313ba816b10420560289"
+  },
+  "src/v2/biomes/desert/Sandstorm.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4d1fdcb5193a50046f9f442dc82350fa",
+    "semantic_hash": "4d1fdcb5193a50046f9f442dc82350fa"
+  },
+  "src/v2/biomes/distortion/DistortionRealmLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1c3e56dc8b3261b78ffcf3316ebdccc6",
+    "semantic_hash": "1c3e56dc8b3261b78ffcf3316ebdccc6"
+  },
+  "src/v2/biomes/icy/IceMountainLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cbeaa7fa43215f50db38a73e3b969b1d",
+    "semantic_hash": "cbeaa7fa43215f50db38a73e3b969b1d"
+  },
+  "src/v2/biomes/icy/Snowstorm.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a88204f82965efe9794172019bdb1628",
+    "semantic_hash": "a88204f82965efe9794172019bdb1628"
+  },
+  "src/v2/biomes/moonlit/MoonlitLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "12850c29dda14b8531d372b802519baa",
+    "semantic_hash": "12850c29dda14b8531d372b802519baa"
+  },
+  "src/v2/biomes/sky/DistantSkyIsland.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d7a751b1c626e97e0ec662a4e404e226",
+    "semantic_hash": "d7a751b1c626e97e0ec662a4e404e226"
+  },
+  "src/v2/biomes/sky/SkyBelowVista.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0c2002120428afe54147696321c31ff1",
+    "semantic_hash": "0c2002120428afe54147696321c31ff1"
+  },
+  "src/v2/biomes/sky/SkyBiomeLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2d361b276b3d78ddc350bfe5c7395938",
+    "semantic_hash": "2d361b276b3d78ddc350bfe5c7395938"
+  },
+  "src/v2/biomes/volcanic/Ashfall.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9a284f34dea94597b0da52694b9d80d6",
+    "semantic_hash": "9a284f34dea94597b0da52694b9d80d6"
+  },
+  "src/v2/biomes/volcanic/VolcanoCrater.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "76a99f0c9d2dbc26724ba761a80fdcb6",
+    "semantic_hash": "76a99f0c9d2dbc26724ba761a80fdcb6"
+  },
+  "src/v2/entities/AnimatedModel.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "009e7a3877ec2e82dd6ae865bf03e06a",
+    "semantic_hash": "009e7a3877ec2e82dd6ae865bf03e06a"
+  },
+  "src/v2/entities/CompanionCreature.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a7f111ff13ce270343f8cbc86630bca0",
+    "semantic_hash": "a7f111ff13ce270343f8cbc86630bca0"
+  },
+  "src/v2/entities/ModelErrorBoundary.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "dca7b956185badc0b0cec50178aadef9",
+    "semantic_hash": "dca7b956185badc0b0cec50178aadef9"
+  },
+  "src/v2/entities/Player.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "295b4147ada3f4a3e9cc991a7c361d98",
+    "semantic_hash": "295b4147ada3f4a3e9cc991a7c361d98"
+  },
+  "src/v2/entities/VoxelFallback.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7b1aba55ecda42f575be9b81368c0ec0",
+    "semantic_hash": "7b1aba55ecda42f575be9b81368c0ec0"
+  },
+  "src/v2/entities/WildCreature.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cc13c2ef6dc85067abd22b7f55345e92",
+    "semantic_hash": "cc13c2ef6dc85067abd22b7f55345e92"
+  },
+  "src/v2/environment/Atmosphere.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d3d759ae2d3e74285965370ef4a3f160",
+    "semantic_hash": "d3d759ae2d3e74285965370ef4a3f160"
+  },
+  "src/v2/environment/OceanHorizon.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "30f98f3453e4c9758365fabaa5ef7669",
+    "semantic_hash": "30f98f3453e4c9758365fabaa5ef7669"
+  },
+  "src/v2/game/balls.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3478a75e4877ecd70a6f5c8ab2c610a9",
+    "semantic_hash": "3478a75e4877ecd70a6f5c8ab2c610a9"
+  },
+  "src/v2/game/biomeLoadMetrics.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "92e8f00a84796226cad63513b6010197",
+    "semantic_hash": "92e8f00a84796226cad63513b6010197"
+  },
+  "src/v2/game/proceduralVoxelMaterials.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "36abeb1bb92561be401b426be94e5d15",
+    "semantic_hash": "36abeb1bb92561be401b426be94e5d15"
+  },
+  "src/v2/game/projectilePhysics.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4ec9777a919e5eddfe12a895e47e9a42",
+    "semantic_hash": "4ec9777a919e5eddfe12a895e47e9a42"
+  },
+  "src/v2/hooks/useKeyboardControls.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cfe9c3093e2e29859540b1c45b337fb8",
+    "semantic_hash": "cfe9c3093e2e29859540b1c45b337fb8"
+  },
+  "src/v2/index.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a8706475bf738dbf3eff617703d948a5",
+    "semantic_hash": "a8706475bf738dbf3eff617703d948a5"
+  },
+  "src/v2/regions/CustomImportRegion.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d41ec43f6215b7775c2e1b5bf8cbaeb4",
+    "semantic_hash": "d41ec43f6215b7775c2e1b5bf8cbaeb4"
+  },
+  "src/v2/regions/ObsidianFieldlands.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7e9e5f27c878962a98544dc0d0b06d8d",
+    "semantic_hash": "7e9e5f27c878962a98544dc0d0b06d8d"
+  },
+  "src/v2/regions/StaticRegionLoader.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7659bbbe1d090ed066112491a60766e2",
+    "semantic_hash": "7659bbbe1d090ed066112491a60766e2"
+  },
+  "src/v2/regions/StaticRegionPlayer.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3a2f67126aa56e05d04fdaf2aa34f081",
+    "semantic_hash": "3a2f67126aa56e05d04fdaf2aa34f081"
+  },
+  "src/v2/reportWebVitals.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "240e2381f826a9bb84d178b29b7b9abe",
+    "semantic_hash": "240e2381f826a9bb84d178b29b7b9abe"
+  },
+  "src/v2/scenes/battleRoyale/BattleRoyaleArena.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2a8f628659a0b0a76eaed4c219e32c0d",
+    "semantic_hash": "2a8f628659a0b0a76eaed4c219e32c0d"
+  },
+  "src/v2/scenes/battleRoyale/BattleRoyaleDropScene.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e8698dc788fdc9fb5534036259390e53",
+    "semantic_hash": "e8698dc788fdc9fb5534036259390e53"
+  },
+  "src/v2/scenes/battleRoyale/BattleRoyaleShell.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9d0d366af91e891d9c6da5d843d630db",
+    "semantic_hash": "9d0d366af91e891d9c6da5d843d630db"
+  },
+  "src/v2/scenes/normal/GameScene.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c407dc645cd7fe3d8500d10b24e543bb",
+    "semantic_hash": "c407dc645cd7fe3d8500d10b24e543bb"
+  },
+  "src/v2/setupTests.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1a77571e1a8cf36018a41bcedf60db75",
+    "semantic_hash": "1a77571e1a8cf36018a41bcedf60db75"
+  },
+  "src/v2/systems/AimIndicator.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "18fa63b9e5d0489eee57c5422a7a9dd1",
+    "semantic_hash": "18fa63b9e5d0489eee57c5422a7a9dd1"
+  },
+  "src/v2/systems/CaptureBurst.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c19cde3f1e032ccf54a40b7c42e604a2",
+    "semantic_hash": "c19cde3f1e032ccf54a40b7c42e604a2"
+  },
+  "src/v2/systems/CompanionRecallEffect.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "21b4ca7338b809a378d2038081d515fc",
+    "semantic_hash": "21b4ca7338b809a378d2038081d515fc"
+  },
+  "src/v2/systems/Projectile.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d3c05e43f284a379d56a767e4a8df592",
+    "semantic_hash": "d3c05e43f284a379d56a767e4a8df592"
+  },
+  "src/v2/systems/SafePointerLockControls.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "14aa8a3aefd63004c525f74377548d40",
+    "semantic_hash": "14aa8a3aefd63004c525f74377548d40"
+  },
+  "src/v2/systems/ThirdPersonCamera.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7c6668e0e735cc4c30052e324b924133",
+    "semantic_hash": "7c6668e0e735cc4c30052e324b924133"
+  },
+  "src/v2/ui/Hotbar.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c12229dd2d8d6c360c9e876e2df40184",
+    "semantic_hash": "c12229dd2d8d6c360c9e876e2df40184"
+  },
+  "src/v2/ui/LoadingOverlay.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e9570a576477e398c6d65abb2a596ec1",
+    "semantic_hash": "e9570a576477e398c6d65abb2a596ec1"
+  },
+  "src/v2/world/VoxelWorld.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "628268d49a115dfcba92f60a00d7ad70",
+    "semantic_hash": "628268d49a115dfcba92f60a00d7ad70"
+  },
+  "src/v2/world/assetManifest.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "fea6ee04a3defc49b0bef4b7db0f7252",
+    "semantic_hash": "fea6ee04a3defc49b0bef4b7db0f7252"
+  },
+  "src/v2/world/biomes.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4c3a9ffccdbd0ce2833872c5b0ebc76f",
+    "semantic_hash": "4c3a9ffccdbd0ce2833872c5b0ebc76f"
+  },
+  "src/v2/world/constants.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9d72bcd5ed4101d3e61f1103f55dd106",
+    "semantic_hash": "9d72bcd5ed4101d3e61f1103f55dd106"
+  },
+  "src/v2/world/generatedAssetManifest.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "fd1718cf375f8ad27ccff6cb59b849fa",
+    "semantic_hash": "fd1718cf375f8ad27ccff6cb59b849fa"
+  },
+  "src/v2/world/heightLookup.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "40a6e58b35d2b2de8cbd5394637652f0",
+    "semantic_hash": "40a6e58b35d2b2de8cbd5394637652f0"
+  },
+  "src/v2/world/index.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e6867f8e8d231f9300770dea251d3f38",
+    "semantic_hash": "e6867f8e8d231f9300770dea251d3f38"
+  },
+  "src/v2/world/mapCache.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6cdd9465c92051512cd74c239d646b68",
+    "semantic_hash": "6cdd9465c92051512cd74c239d646b68"
+  },
+  "src/v2/world/terrainGeneration.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0b17102065db1a063a7de8c293a427b9",
+    "semantic_hash": "0b17102065db1a063a7de8c293a427b9"
+  },
+  "tools/biome_dashboard/app.py": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9da30ec2bdbf4ed8c4199e5eb277d183",
+    "semantic_hash": "9da30ec2bdbf4ed8c4199e5eb277d183"
+  },
+  "tools/biome_dashboard/biome_load_metrics.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "586644fbde4aed17277f9ff01066088a",
+    "semantic_hash": "586644fbde4aed17277f9ff01066088a"
+  },
+  "tsconfig.json": {
+    "mtime": 1784062585.255985,
+    "ast_hash": "32447c98a18918ec7fe3a50447b9e67d",
+    "semantic_hash": "32447c98a18918ec7fe3a50447b9e67d"
+  },
+  "tools/biome_dashboard/requirements.txt": {
+    "mtime": 1781388015.0,
+    "ast_hash": "215ddd9b9d0f41e1a5708edfb850524b",
     "semantic_hash": ""
+  },
+  "src/v2/logo.svg": {
+    "mtime": 1781388015.0,
+    "ast_hash": "06e733283fa43d1dd57738cfc409adbd",
+    "semantic_hash": ""
+  },
+  "src/types/jsx.d.ts": {
+    "mtime": 1784062874.8387132,
+    "ast_hash": "7ab42d3641396fa7081d287050f1595c",
+    "semantic_hash": "7ab42d3641396fa7081d287050f1595c"
   }
 }

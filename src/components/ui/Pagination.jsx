@@ -1,6 +1,6 @@
-import { Button } from './Button';
+import { Button } from "./Button";
 
-export function Pagination({ page, totalPages, onPageChange, className = '' }) {
+export function Pagination({ page, totalPages, onPageChange, className = "" }) {
   if (totalPages <= 1) return null;
 
   return (
@@ -11,7 +11,11 @@ export function Pagination({ page, totalPages, onPageChange, className = '' }) {
       <span className="px-pagination-label">
         Page {page} / {totalPages}
       </span>
-      <Button sm disabled={page >= totalPages} onClick={() => onPageChange(page + 1)}>
+      <Button
+        sm
+        disabled={page >= totalPages}
+        onClick={() => onPageChange(page + 1)}
+      >
         Next
       </Button>
     </div>

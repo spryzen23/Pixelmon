@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { useVillageGltf } from './VillageGltfProvider';
+import { useMemo } from "react";
+import { useVillageGltf } from "./VillageGltfProvider";
 
 export default function VillageScene({ x, z, surfaceY, scale, rotationY = 0 }) {
   const { cloneVillageScene } = useVillageGltf();

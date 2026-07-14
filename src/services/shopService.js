@@ -1,4 +1,4 @@
-import { api } from '../api';
+import { api } from "../api";
 
 export async function purchaseBall(player, user, ballId, cost) {
   const newCoins = (user.pokecoins ?? 500) - cost;

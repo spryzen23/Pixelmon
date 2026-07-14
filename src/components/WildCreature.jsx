@@ -1,16 +1,16 @@
-import { Box } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { Vector3 } from 'three';
-import AnimatedModel from './AnimatedModel';
-import ModelErrorBoundary from './ModelErrorBoundary';
-import VoxelFallback from './VoxelFallback';
-import { lerpAngle } from '../game/animationUtils';
+import { Box } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Vector3 } from "three";
+import AnimatedModel from "./AnimatedModel";
+import ModelErrorBoundary from "./ModelErrorBoundary";
+import VoxelFallback from "./VoxelFallback";
+import { lerpAngle } from "../game/animationUtils";
 import {
   WILD_CREATURE_HEIGHT,
   getEntityY,
   isWalkablePosition,
-} from '../game/world';
+} from "../game/world";
 
 const WANDER_RADIUS = 4;
 const WANDER_SPEED = 1.35;
@@ -19,13 +19,17 @@ const FLEE_DURATION = 2;
 const ARRIVAL_DISTANCE = 0.08;
 const DEFAULT_MODEL_SCALE = 0.35;
 const DEFAULT_ALPHA_MULTIPLIER = 2.5;
-const DEFAULT_MODEL_URL = '/assets/wild_creature.glb';
+const DEFAULT_MODEL_URL = "/assets/wild_creature.glb";
 const ROTATION_SMOOTHING = 10;
 const DISPLACE_EPSILON = 0.0008;
 const direction = new Vector3();
 const modelOffset = [0, -WILD_CREATURE_HEIGHT / 2, 0];
 
-function WildFallback({ rotation = [0, 0, 0], scale = DEFAULT_MODEL_SCALE, height = WILD_CREATURE_HEIGHT }) {
+function WildFallback({
+  rotation = [0, 0, 0],
+  scale = DEFAULT_MODEL_SCALE,
+  height = WILD_CREATURE_HEIGHT,
+}) {
   return (
     <VoxelFallback
       color="#dc2f32"
@@ -70,12 +74,12 @@ export default function WildCreature({
   modelScale = DEFAULT_MODEL_SCALE,
   modelUrl = DEFAULT_MODEL_URL,
   modelRotation = [Math.PI / 2, 0, 0],
-  primaryType = 'normal',
+  primaryType = "normal",
   animProfile = null,
   onFleeComplete,
   playerRef,
   registerRef,
-  status = 'active',
+  status = "active",
   fitToHeight = null,
 }) {
   const creatureRef = useRef();
@@ -91,9 +95,12 @@ export default function WildCreature({
     moveSpeedFactor: 1,
   });
   const [isMoving, setIsMoving] = useState(false);
-  const start = useMemo(() => new Vector3(...initialPosition), [initialPosition]);
+  const start = useMemo(
+    () => new Vector3(...initialPosition),
+    [initialPosition]
+  );
   const ai = useRef({
-    mode: 'pause',
+    mode: "pause",
     pauseTimer: randomPause(),
     target: start.clone(),
   });
@@ -105,7 +112,7 @@ export default function WildCreature({
   }, [id, registerRef]);
 
   useEffect(() => {
-    if (status === 'fleeing') {
+    if (status === "fleeing") {
       fleeTimer.current = 0;
     }
   }, [status]);
@@ -127,7 +134,11 @@ export default function WildCreature({
     if (moved) {
       const targetYaw = Math.atan2(dx, dz);
       const rotationAlpha = 1 - Math.exp(-ROTATION_SMOOTHING * delta);
-      creature.rotation.y = lerpAngle(creature.rotation.y, targetYaw, rotationAlpha);
+      creature.rotation.y = lerpAngle(
+        creature.rotation.y,
+        targetYaw,
+        rotationAlpha
+      );
       animInputRef.current.forwardInput = 1;
       animInputRef.current.strafeInput = 0;
     }
@@ -151,12 +162,12 @@ export default function WildCreature({
     );
     previousY.current = creature.position.y;
 
-    if (status === 'capturing') {
+    if (status === "capturing") {
       setMoving(false);
       return;
     }
 
-    if (status === 'fleeing') {
+    if (status === "fleeing") {
       const player = playerRef.current;
       fleeTimer.current += delta;
       animInputRef.current.moveSpeedFactor = FLEE_SPEED / WANDER_SPEED;
@@ -177,7 +188,14 @@ export default function WildCreature({
         const nextZ = prevZ + direction.z * FLEE_SPEED * delta;
 
         if (isWalkablePosition(nextX, nextZ, 0.45, currentPathId)) {
-          const moved = applyDisplacement(creature, prevX, prevZ, nextX, nextZ, delta);
+          const moved = applyDisplacement(
+            creature,
+            prevX,
+            prevZ,
+            nextX,
+            nextZ,
+            delta
+          );
           creature.position.x = nextX;
           creature.position.y = getEntityY(
             nextX,
@@ -205,15 +223,17 @@ export default function WildCreature({
 
     animInputRef.current.moveSpeedFactor = 1;
 
-    if (ai.current.mode === 'pause') {
+    if (ai.current.mode === "pause") {
       ai.current.pauseTimer -= delta;
       setMoving(false);
       animInputRef.current.forwardInput = 0;
       animInputRef.current.strafeInput = 0;
 
       if (ai.current.pauseTimer <= 0) {
-        ai.current.target.copy(randomNearbyTarget(creature.position, currentPathId));
-        ai.current.mode = 'walk';
+        ai.current.target.copy(
+          randomNearbyTarget(creature.position, currentPathId)
+        );
+        ai.current.mode = "walk";
       }
 
       return;
@@ -222,7 +242,7 @@ export default function WildCreature({
     direction.copy(ai.current.target).sub(creature.position);
 
     if (direction.length() <= ARRIVAL_DISTANCE) {
-      ai.current.mode = 'pause';
+      ai.current.mode = "pause";
       ai.current.pauseTimer = randomPause();
       setMoving(false);
       return;
@@ -236,7 +256,14 @@ export default function WildCreature({
     const nextZ = prevZ + direction.z * WANDER_SPEED * delta;
 
     if (isWalkablePosition(nextX, nextZ, 0.45, currentPathId)) {
-      const moved = applyDisplacement(creature, prevX, prevZ, nextX, nextZ, delta);
+      const moved = applyDisplacement(
+        creature,
+        prevX,
+        prevZ,
+        nextX,
+        nextZ,
+        delta
+      );
       creature.position.x = nextX;
       creature.position.y = getEntityY(
         nextX,
@@ -249,7 +276,7 @@ export default function WildCreature({
       creature.position.z = nextZ;
       setMoving(moved);
     } else {
-      ai.current.mode = 'pause';
+      ai.current.mode = "pause";
       ai.current.pauseTimer = randomPause();
       setMoving(false);
     }
@@ -259,7 +286,7 @@ export default function WildCreature({
     <group
       ref={creatureRef}
       position={initialPosition}
-      visible={status !== 'capturing'}
+      visible={status !== "capturing"}
     >
       <Box args={[0.75, WILD_CREATURE_HEIGHT, 0.75]} visible={false}>
         <meshBasicMaterial transparent opacity={0} />
@@ -267,13 +294,35 @@ export default function WildCreature({
 
       <ModelErrorBoundary
         resetKey={modelUrl}
-        fallback={<WildFallback rotation={modelRotation} scale={fitToHeight ? 1.0 : visualScale} height={fitToHeight || WILD_CREATURE_HEIGHT} />}
+        fallback={
+          <WildFallback
+            rotation={modelRotation}
+            scale={fitToHeight ? 1.0 : visualScale}
+            height={fitToHeight || WILD_CREATURE_HEIGHT}
+          />
+        }
       >
-        <Suspense fallback={<WildFallback rotation={modelRotation} scale={fitToHeight ? 1.0 : visualScale} height={fitToHeight || WILD_CREATURE_HEIGHT} />}>
+        <Suspense
+          fallback={
+            <WildFallback
+              rotation={modelRotation}
+              scale={fitToHeight ? 1.0 : visualScale}
+              height={fitToHeight || WILD_CREATURE_HEIGHT}
+            />
+          }
+        >
           <AnimatedModel
             url={modelUrl}
-            actionName={status === 'fleeing' ? 'Run' : isMoving ? 'Walk' : 'Idle'}
-            fallbackActionName={status === 'fleeing' ? ['Flee', 'Run', 'Walk'] : isMoving ? ['Run', 'Walk', 'Idle'] : ['Idle', 'Walk']}
+            actionName={
+              status === "fleeing" ? "Run" : isMoving ? "Walk" : "Idle"
+            }
+            fallbackActionName={
+              status === "fleeing"
+                ? ["Flee", "Run", "Walk"]
+                : isMoving
+                  ? ["Run", "Walk", "Idle"]
+                  : ["Idle", "Walk"]
+            }
             position={modelOffset}
             rotation={modelRotation}
             scale={fitToHeight ? 1.0 : visualScale}

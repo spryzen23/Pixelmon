@@ -2,17 +2,12 @@ export function ScreenFrame({
   header,
   footer,
   children,
-  className = '',
+  className = "",
   wide = false,
 }) {
-  const cls = [
-    'px-frame',
-    'screen',
-    wide ? 'px-frame-wide' : '',
-    className,
-  ]
+  const cls = ["px-frame", "screen", wide ? "px-frame-wide" : "", className]
     .filter(Boolean)
-    .join(' ');
+    .join(" ");
 
   return (
     <div className={cls}>
@@ -23,7 +18,13 @@ export function ScreenFrame({
   );
 }
 
-export function ScreenHeader({ eyebrow, title, subtitle, actions, className = '' }) {
+export function ScreenHeader({
+  eyebrow,
+  title,
+  subtitle,
+  actions,
+  className = "",
+}) {
   return (
     <div className={`px-screen-header ${className}`}>
       <div className="px-screen-header-text">
@@ -36,6 +37,8 @@ export function ScreenHeader({ eyebrow, title, subtitle, actions, className = ''
   );
 }
 
-export function ScreenFooter({ children, className = '' }) {
-  return <div className={`px-screen-footer btn-row ${className}`}>{children}</div>;
+export function ScreenFooter({ children, className = "" }) {
+  return (
+    <div className={`px-screen-footer btn-row ${className}`}>{children}</div>
+  );
 }

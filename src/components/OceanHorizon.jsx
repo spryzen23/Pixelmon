@@ -1,15 +1,10 @@
-import { useMemo } from 'react';
-import {
-  Color,
-  MeshBasicMaterial,
-  RingGeometry,
-  ShaderMaterial,
-} from 'three';
+import { useMemo } from "react";
+import { Color, MeshBasicMaterial, RingGeometry, ShaderMaterial } from "three";
 import {
   DEFAULT_FOG_COLOR,
   DEFAULT_FOG_DENSITY,
-} from '../game/atmosphereConfig';
-import { WATER_LEVEL } from '../game/world';
+} from "../game/atmosphereConfig";
+import { WATER_LEVEL } from "../game/world";
 
 /** Ocean ring outside the playable voxel area (see BIOME_BOUNDARY ~35). */
 const OCEAN_INNER_RADIUS = 48;
@@ -17,11 +12,11 @@ const OCEAN_OUTER_RADIUS = 720;
 const SEA_INNER_RADIUS = 42;
 const SEA_OUTER_RADIUS = 200;
 
-const DEEP_WATER = new Color('#2f8ec8');
-const MID_WATER = new Color('#4aade0');
-const HORIZON_WATER = new Color('#7ec8eb');
-const SKY_WATER = new Color('#b8dff5');
-const SEA_SURFACE = '#4dbdeb';
+const DEEP_WATER = new Color("#2f8ec8");
+const MID_WATER = new Color("#4aade0");
+const HORIZON_WATER = new Color("#7ec8eb");
+const SKY_WATER = new Color("#b8dff5");
+const SEA_SURFACE = "#4dbdeb";
 
 export default function OceanHorizon() {
   const oceanGeometry = useMemo(() => {

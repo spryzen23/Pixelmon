@@ -1,9 +1,9 @@
 // src/utils/MapStorage.js
 // A lightweight wrapper around IndexedDB for storing massive .glb Blobs natively
 
-const DB_NAME = 'PixelmonMapsDB';
+const DB_NAME = "PixelmonMapsDB";
 const DB_VERSION = 1;
-const STORE_NAME = 'CustomMaps';
+const STORE_NAME = "CustomMaps";
 
 let dbInstance = null;
 
@@ -16,13 +16,16 @@ function initDB() {
 
     const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-    request.onerror = () => reject(new Error('Failed to open IndexedDB'));
+    request.onerror = () => reject(new Error("Failed to open IndexedDB"));
 
     request.onupgradeneeded = (e) => {
       const db = e.target.result;
       if (!db.objectStoreNames.contains(STORE_NAME)) {
         // Store maps with an auto-incrementing ID
-        db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+        db.createObjectStore(STORE_NAME, {
+          keyPath: "id",
+          autoIncrement: true,
+        });
       }
     };
 
@@ -36,24 +39,28 @@ function initDB() {
 export async function saveMap(name, blob) {
   const db = await initDB();
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, 'readwrite');
+    const transaction = db.transaction(STORE_NAME, "readwrite");
     const store = transaction.objectStore(STORE_NAME);
 
     const mapData = {
-      name: name || 'Untitled Map',
+      name: name || "Untitled Map",
       blob: blob, // Store the binary Blob natively!
       createdAt: Date.now(),
-      sizeBytes: blob.size
+      sizeBytes: blob.size,
     };
 
     const request = store.add(mapData);
 
     request.onsuccess = () => resolve(request.result); // Returns the new ID
     request.onerror = (e) => {
-      if (e.target.error.name === 'QuotaExceededError') {
-        reject(new Error('Storage Full: Please delete old maps or free up space on your device.'));
+      if (e.target.error.name === "QuotaExceededError") {
+        reject(
+          new Error(
+            "Storage Full: Please delete old maps or free up space on your device."
+          )
+        );
       } else {
-        reject(new Error('Failed to save map.'));
+        reject(new Error("Failed to save map."));
       }
     };
   });
@@ -63,22 +70,24 @@ export async function saveMap(name, blob) {
 export async function getMaps() {
   const db = await initDB();
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, 'readonly');
+    const transaction = db.transaction(STORE_NAME, "readonly");
     const store = transaction.objectStore(STORE_NAME);
     const request = store.getAll();
 
     request.onsuccess = () => {
       const items = request.result || [];
       // Strip the massive blobbinary so we can render lists instantly
-      const metadata = items.map(item => ({
-        id: item.id,
-        name: item.name,
-        createdAt: item.createdAt,
-        sizeBytes: item.sizeBytes
-      })).sort((a, b) => b.createdAt - a.createdAt); // Newest first
+      const metadata = items
+        .map((item) => ({
+          id: item.id,
+          name: item.name,
+          createdAt: item.createdAt,
+          sizeBytes: item.sizeBytes,
+        }))
+        .sort((a, b) => b.createdAt - a.createdAt); // Newest first
       resolve(metadata);
     };
-    request.onerror = () => reject(new Error('Failed to get maps.'));
+    request.onerror = () => reject(new Error("Failed to get maps."));
   });
 }
 
@@ -86,26 +95,26 @@ export async function getMaps() {
 export async function getMapBlob(id) {
   const db = await initDB();
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, 'readonly');
+    const transaction = db.transaction(STORE_NAME, "readonly");
     const store = transaction.objectStore(STORE_NAME);
     const request = store.get(id);
 
     request.onsuccess = () => {
       if (request.result) resolve(request.result.blob);
-      else reject(new Error('Map not found.'));
+      else reject(new Error("Map not found."));
     };
-    request.onerror = () => reject(new Error('Failed to load map blob.'));
+    request.onerror = () => reject(new Error("Failed to load map blob."));
   });
 }
 
 export async function deleteMap(id) {
   const db = await initDB();
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, 'readwrite');
+    const transaction = db.transaction(STORE_NAME, "readwrite");
     const store = transaction.objectStore(STORE_NAME);
     const request = store.delete(id);
 
     request.onsuccess = () => resolve();
-    request.onerror = () => reject(new Error('Failed to delete map.'));
+    request.onerror = () => reject(new Error("Failed to delete map."));
   });
 }

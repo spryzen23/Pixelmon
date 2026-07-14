@@ -3,14 +3,14 @@ import {
   getOrdinaryCreatureAsset,
   getPathSpawnPoint,
   getRandomGrassPosition,
-} from '../../game/world';
-import { buildCreatureSpawn } from '../../game/buildCreatureSpawn';
+} from "../../game/world";
+import { buildCreatureSpawn } from "../../game/buildCreatureSpawn";
 import {
   getPathEggGroups,
   getRegionForPath,
   getTypeAnimProfile,
   pickSpawnEntries,
-} from '../../game/pokemonData';
+} from "../../game/pokemonData";
 
 function enrichEntry(entry) {
   if (!entry) return entry;

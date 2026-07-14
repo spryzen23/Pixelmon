@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 
 export function useWizard(totalSteps = 4) {
   const [step, setStep] = useState(1);

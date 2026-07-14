@@ -1,6 +1,6 @@
-import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { MathUtils } from 'three';
+import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { MathUtils } from "three";
 import {
   applyDefaultFog,
   lerpFogExp2,
@@ -8,12 +8,12 @@ import {
   SNOW_FOG_DENSITY,
   SNOW_STORM_FOG_COLOR,
   SNOW_STORM_FOG_DENSITY,
-} from '../game/atmosphereConfig';
+} from "../game/atmosphereConfig";
 
 const SNOW_PARTICLE_COUNT = 2400;
 const SNOW_RADIUS = 34;
 const SNOW_HEIGHT = 24;
-const SNOW_COLOR = '#f7fbff';
+const SNOW_COLOR = "#f7fbff";
 const WIND_X_SPEED = 1.8;
 const WIND_Z_SPEED = -4.2;
 const FALL_SPEED = 3.8;
@@ -54,25 +54,31 @@ export default function Snowstorm({ playerRef }) {
     let isCancelled = false;
 
     const scheduleClear = () => {
-      timeoutId = window.setTimeout(() => {
-        if (isCancelled) {
-          return;
-        }
+      timeoutId = window.setTimeout(
+        () => {
+          if (isCancelled) {
+            return;
+          }
 
-        setIsStorming(true);
-        scheduleStorm();
-      }, randomRange(12000, 26000));
+          setIsStorming(true);
+          scheduleStorm();
+        },
+        randomRange(12000, 26000)
+      );
     };
 
     const scheduleStorm = () => {
-      timeoutId = window.setTimeout(() => {
-        if (isCancelled) {
-          return;
-        }
+      timeoutId = window.setTimeout(
+        () => {
+          if (isCancelled) {
+            return;
+          }
 
-        setIsStorming(false);
-        scheduleClear();
-      }, randomRange(12000, 22000));
+          setIsStorming(false);
+          scheduleClear();
+        },
+        randomRange(12000, 22000)
+      );
     };
 
     scheduleClear();

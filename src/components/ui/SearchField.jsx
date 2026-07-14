@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export function SearchField({
   value,
   onChange,
   onSelect,
   suggestions = [],
-  placeholder = 'Search...',
+  placeholder = "Search...",
   maxSuggestions = 5,
-  className = '',
+  className = "",
 }) {
   const [open, setOpen] = useState(false);
   const visible = suggestions.slice(0, maxSuggestions);

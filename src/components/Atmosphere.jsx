@@ -1,13 +1,13 @@
-import { Sky } from '@react-three/drei';
-import { DoubleSide } from 'three';
+import { Sky } from "@react-three/drei";
+import { DoubleSide } from "three";
 
 const SUN_POSITION = [70, 55, -95];
-const CLOUD_COLOR = '#f5f8fb';
-const CLOUD_SHADOW = '#d7e0e7';
-const ASH_CLOUD_COLOR = '#5d5551';
-const ASH_CLOUD_SHADOW = '#2f2927';
-const MOON_CLOUD_COLOR = '#273453';
-const MOON_CLOUD_SHADOW = '#10172b';
+const CLOUD_COLOR = "#f5f8fb";
+const CLOUD_SHADOW = "#d7e0e7";
+const ASH_CLOUD_COLOR = "#5d5551";
+const ASH_CLOUD_SHADOW = "#2f2927";
+const MOON_CLOUD_COLOR = "#273453";
+const MOON_CLOUD_SHADOW = "#10172b";
 
 const CLOUDS = [
   {
@@ -46,7 +46,11 @@ const CLOUDS = [
   },
 ];
 
-function CloudBlock({ block, color = CLOUD_COLOR, shadowColor = CLOUD_SHADOW }) {
+function CloudBlock({
+  block,
+  color = CLOUD_COLOR,
+  shadowColor = CLOUD_SHADOW,
+}) {
   const [x, y, z, width, height, depth] = block;
 
   return (
@@ -111,9 +115,9 @@ function SquareSun() {
   );
 }
 
-export default function Atmosphere({ biomeType = 'grass' }) {
-  const volcanic = biomeType === 'volcanic';
-  const moonlit = biomeType === 'moonlit' || biomeType === 'distortion';
+export default function Atmosphere({ biomeType = "grass" }) {
+  const volcanic = biomeType === "volcanic";
+  const moonlit = biomeType === "moonlit" || biomeType === "distortion";
 
   return (
     <>

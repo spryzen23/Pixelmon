@@ -1,5 +1,5 @@
-export function SelectField({ label, id, options, className = '', ...props }) {
-  const selectId = id || label?.toLowerCase().replace(/\s+/g, '-');
+export function SelectField({ label, id, options, className = "", ...props }) {
+  const selectId = id || label?.toLowerCase().replace(/\s+/g, "-");
   return (
     <label className={`field-label ${className}`} htmlFor={selectId}>
       {label && <span>{label}</span>}

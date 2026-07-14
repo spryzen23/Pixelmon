@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { Vector3 } from 'three';
-import { getParallaxThrowVector } from '../game/projectilePhysics';
+import { useEffect } from "react";
+import { Vector3 } from "three";
+import { getParallaxThrowVector } from "../game/projectilePhysics";
 
 const throwForward = new Vector3();
 const throwOrigin = new Vector3();
@@ -26,7 +26,7 @@ export function useGameInput({
 
       const player = playerRef.current;
 
-      if (event.code === 'KeyE') {
+      if (event.code === "KeyE") {
         event.preventDefault();
         if (isCompanionOut) {
           const source = companionRef.current || player;
@@ -56,7 +56,7 @@ export function useGameInput({
         return;
       }
 
-      if (event.code !== 'KeyF' && event.code !== 'Space') return;
+      if (event.code !== "KeyF" && event.code !== "Space") return;
       event.preventDefault();
 
       getParallaxThrowVector(camera, player, throwOrigin, throwForward);
@@ -69,8 +69,8 @@ export function useGameInput({
       });
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [
     addCompanionEffect,
     camera,

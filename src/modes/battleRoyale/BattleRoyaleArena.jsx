@@ -1,35 +1,47 @@
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ACESFilmicToneMapping, PCFSoftShadowMap, MathUtils, Vector3 } from 'three';
-import AimIndicator from '../../components/AimIndicator';
-import AnimatedModel from '../../components/AnimatedModel';
-import Ashfall from '../../components/biomes/volcanic/Ashfall';
-import Atmosphere, { SUN_POSITION } from '../../components/Atmosphere';
-import CaveEntrance from '../../components/biomes/cave/CaveEntrance';
-import CaveInteriorEffects from '../../components/biomes/cave/CaveInteriorEffects';
-import DistortionRealmLandmarks from '../../components/biomes/distortion/DistortionRealmLandmarks';
-import DistantSkyIsland from '../../components/biomes/sky/DistantSkyIsland';
-import Hotbar from '../../components/Hotbar';
-import IceMountainLandmarks from '../../components/biomes/icy/IceMountainLandmarks';
-import MoonlitLandmarks from '../../components/biomes/moonlit/MoonlitLandmarks';
-import OceanHorizon from '../../components/OceanHorizon';
-import Projectile from '../../components/Projectile';
-import Sandstorm from '../../components/Sandstorm';
-import SkyBelowVista from '../../components/biomes/sky/SkyBelowVista';
-import SkyBiomeLandmarks from '../../components/biomes/sky/SkyBiomeLandmarks';
-import Snowstorm from '../../components/Snowstorm';
-import VolcanoCrater from '../../components/biomes/volcanic/VolcanoCrater';
-import VoxelWorld from '../../components/VoxelWorld';
-import WildCreature from '../../components/WildCreature';
-import { BALL_TYPES, DEFAULT_BALL } from '../../game/balls';
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import {
+  ACESFilmicToneMapping,
+  PCFSoftShadowMap,
+  MathUtils,
+  Vector3,
+} from "three";
+import AimIndicator from "../../components/AimIndicator";
+import AnimatedModel from "../../components/AnimatedModel";
+import Ashfall from "../../components/biomes/volcanic/Ashfall";
+import Atmosphere, { SUN_POSITION } from "../../components/Atmosphere";
+import CaveEntrance from "../../components/biomes/cave/CaveEntrance";
+import CaveInteriorEffects from "../../components/biomes/cave/CaveInteriorEffects";
+import DistortionRealmLandmarks from "../../components/biomes/distortion/DistortionRealmLandmarks";
+import DistantSkyIsland from "../../components/biomes/sky/DistantSkyIsland";
+import Hotbar from "../../components/Hotbar";
+import IceMountainLandmarks from "../../components/biomes/icy/IceMountainLandmarks";
+import MoonlitLandmarks from "../../components/biomes/moonlit/MoonlitLandmarks";
+import OceanHorizon from "../../components/OceanHorizon";
+import Projectile from "../../components/Projectile";
+import Sandstorm from "../../components/Sandstorm";
+import SkyBelowVista from "../../components/biomes/sky/SkyBelowVista";
+import SkyBiomeLandmarks from "../../components/biomes/sky/SkyBiomeLandmarks";
+import Snowstorm from "../../components/Snowstorm";
+import VolcanoCrater from "../../components/biomes/volcanic/VolcanoCrater";
+import VoxelWorld from "../../components/VoxelWorld";
+import WildCreature from "../../components/WildCreature";
+import { BALL_TYPES, DEFAULT_BALL } from "../../game/balls";
 import {
   DEFAULT_THROW_POWER,
   MAX_THROW_POWER,
   MIN_THROW_POWER,
   THROW_POWER_STEP,
   getParallaxThrowVector,
-} from '../../game/projectilePhysics';
-import useKeyboardControls from '../../hooks/useKeyboardControls';
+} from "../../game/projectilePhysics";
+import useKeyboardControls from "../../hooks/useKeyboardControls";
 import {
   CAVE_BIOME_ID,
   CAVE_ZONES,
@@ -43,15 +55,15 @@ import {
   getOrdinaryCreatureAsset,
   isWalkablePosition,
   setActivePathId,
-} from '../../game/world';
+} from "../../game/world";
 
-const PLAYER_COLORS = ['#4db3ff', '#ffdb4d', '#ff6b6b', '#9cff75'];
+const PLAYER_COLORS = ["#4db3ff", "#ffdb4d", "#ff6b6b", "#9cff75"];
 const MOVE_SPEED = 5;
 const MOUSE_SENSITIVITY = 0.0024;
 const CAMERA_DISTANCE = 7;
 const CAMERA_HEIGHT = 3.2;
 const CAMERA_SHOULDER_OFFSET = 1.4;
-const PLAYER_MODEL_URL = '/assets/player.glb';
+const PLAYER_MODEL_URL = "/assets/player.glb";
 const PLAYER_MODEL_SCALE = 1.1;
 const PLAYER_MODEL_OFFSET = [0, -PLAYER_HEIGHT / 2, 0];
 const PLAYER_MODEL_ROTATION = [0, 0, 0];
@@ -117,25 +129,24 @@ function BattleRoyaleLocalPlayer({
         return;
       }
 
-        yawRef.current += event.movementX * MOUSE_SENSITIVITY;
-        const minPitch =
-          currentBiome === SKY_BIOME_ID ||
-          currentBiome === DISTORTION_BIOME_ID
-            ? -1.08
-            : -0.58;
-        pitchRef.current = MathUtils.clamp(
-          pitchRef.current - event.movementY * MOUSE_SENSITIVITY,
-          minPitch,
-          0.38
-        );
+      yawRef.current += event.movementX * MOUSE_SENSITIVITY;
+      const minPitch =
+        currentBiome === SKY_BIOME_ID || currentBiome === DISTORTION_BIOME_ID
+          ? -1.08
+          : -0.58;
+      pitchRef.current = MathUtils.clamp(
+        pitchRef.current - event.movementY * MOUSE_SENSITIVITY,
+        minPitch,
+        0.38
+      );
     };
 
-    canvas.addEventListener('click', handleCanvasClick);
-    document.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener("click", handleCanvasClick);
+    document.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      canvas.removeEventListener('click', handleCanvasClick);
-      document.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener("click", handleCanvasClick);
+      document.removeEventListener("mousemove", handleMouseMove);
     };
   }, [currentBiome, gl]);
 
@@ -251,7 +262,7 @@ function BattleRoyaleLocalPlayer({
         <AnimatedModel
           url={PLAYER_MODEL_URL}
           actionName="Idle"
-          fallbackActionName={['Walk', 'Run']}
+          fallbackActionName={["Walk", "Run"]}
           position={PLAYER_MODEL_OFFSET}
           rotation={PLAYER_MODEL_ROTATION}
           scale={PLAYER_MODEL_SCALE}
@@ -261,7 +272,13 @@ function BattleRoyaleLocalPlayer({
   );
 }
 
-function RemotePlayerMarker({ caveZone, currentBiome, dropPoint, index, player }) {
+function RemotePlayerMarker({
+  caveZone,
+  currentBiome,
+  dropPoint,
+  index,
+  player,
+}) {
   const position = player.position
     ? [player.position.x, player.position.y, player.position.z]
     : getDropPointPosition(dropPoint, currentBiome, caveZone);
@@ -291,7 +308,7 @@ function RemotePlayerMarker({ caveZone, currentBiome, dropPoint, index, player }
         <AnimatedModel
           url={PLAYER_MODEL_URL}
           actionName="Idle"
-          fallbackActionName={['Walk', 'Run']}
+          fallbackActionName={["Walk", "Run"]}
           position={PLAYER_MODEL_OFFSET}
           rotation={PLAYER_MODEL_ROTATION}
           scale={PLAYER_MODEL_SCALE}
@@ -349,18 +366,23 @@ function BattleRoyaleCatchLayer({
   useEffect(() => {
     wildStatusRef.current.clear();
     creatures.forEach((creature) => {
-      wildStatusRef.current.set(creature.id, 'active');
+      wildStatusRef.current.set(creature.id, "active");
     });
   }, [creatures]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.repeat || event.code !== 'Space' || !playerRef.current) {
+      if (event.repeat || event.code !== "Space" || !playerRef.current) {
         return;
       }
 
       event.preventDefault();
-      getParallaxThrowVector(camera, playerRef.current, throwOrigin, throwForward);
+      getParallaxThrowVector(
+        camera,
+        playerRef.current,
+        throwOrigin,
+        throwForward
+      );
       projectileId.current += 1;
       setProjectiles((current) => [
         ...current,
@@ -374,10 +396,10 @@ function BattleRoyaleCatchLayer({
       ]);
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [ball, camera, playerRef, throwPower]);
 
@@ -391,45 +413,46 @@ function BattleRoyaleCatchLayer({
         throwPower={throwPower}
       />
 
-      {shouldShowCreatures && creatures.map((creature, index) => {
-        const asset = getOrdinaryCreatureAsset(
-          currentBiome,
-          creature.assetIndex ?? index
-        );
-        const x = creature.x || 0;
-        const z = creature.z || 0;
-        const position = [
-          x,
-          getEntityY(
-            x,
-            z,
-            WILD_CREATURE_HEIGHT,
-            undefined,
+      {shouldShowCreatures &&
+        creatures.map((creature, index) => {
+          const asset = getOrdinaryCreatureAsset(
             currentBiome,
-            caveZone
-          ),
-          z,
-        ];
+            creature.assetIndex ?? index
+          );
+          const x = creature.x || 0;
+          const z = creature.z || 0;
+          const position = [
+            x,
+            getEntityY(
+              x,
+              z,
+              WILD_CREATURE_HEIGHT,
+              undefined,
+              currentBiome,
+              caveZone
+            ),
+            z,
+          ];
 
-        return (
-          <Suspense key={creature.id} fallback={null}>
-            <WildCreature
-              caveZone={caveZone}
-              currentPathId={currentBiome}
-              id={creature.id}
-              initialPosition={position}
-              isStatic
-              modelRotation={asset.rotation || [0, Math.PI / 2, 0]}
-              modelScale={asset.scale ?? 0.35}
-              modelUrl={asset.url || '/assets/wild_creature.glb'}
-              playerRef={playerRef}
-              registerRef={registerWildRef}
-              status="active"
-              onFleeComplete={() => {}}
-            />
-          </Suspense>
-        );
-      })}
+          return (
+            <Suspense key={creature.id} fallback={null}>
+              <WildCreature
+                caveZone={caveZone}
+                currentPathId={currentBiome}
+                id={creature.id}
+                initialPosition={position}
+                isStatic
+                modelRotation={asset.rotation || [0, Math.PI / 2, 0]}
+                modelScale={asset.scale ?? 0.35}
+                modelUrl={asset.url || "/assets/wild_creature.glb"}
+                playerRef={playerRef}
+                registerRef={registerWildRef}
+                status="active"
+                onFleeComplete={() => {}}
+              />
+            </Suspense>
+          );
+        })}
 
       {projectiles.map((projectile) => (
         <Projectile
@@ -460,7 +483,7 @@ export default function BattleRoyaleArena({
   creatures = [],
   currentBiome = 0,
   dropPoints = [],
-  localPlayerId = '',
+  localPlayerId = "",
   onCreatureCaught = () => {},
   onPositionChange = () => {},
   players = [],
@@ -470,15 +493,17 @@ export default function BattleRoyaleArena({
   const [isCaveTransitioning, setIsCaveTransitioning] = useState(false);
   const [throwPower, setThrowPower] = useState(DEFAULT_THROW_POWER);
   const localPlayerRef = useRef();
-  const activeBiome = WORLD_PATHS.find((biome) => biome.id === currentBiome) ||
-    WORLD_PATHS[0];
+  const activeBiome =
+    WORLD_PATHS.find((biome) => biome.id === currentBiome) || WORLD_PATHS[0];
   const localPlayer = players.find((player) => player.id === localPlayerId);
-  const localDropPoint = dropPoints.find(
-    (point) => point.id === localPlayer?.dropPointId
-  ) || dropPoints[2] || dropPoints[0];
+  const localDropPoint =
+    dropPoints.find((point) => point.id === localPlayer?.dropPointId) ||
+    dropPoints[2] ||
+    dropPoints[0];
   const equippedBall = useMemo(() => {
-    return BALL_TYPES.find((ball) => ball.id === equippedBallId) ||
-      DEFAULT_BALL;
+    return (
+      BALL_TYPES.find((ball) => ball.id === equippedBallId) || DEFAULT_BALL
+    );
   }, [equippedBallId]);
 
   useEffect(() => {
@@ -516,11 +541,11 @@ export default function BattleRoyaleArena({
         setEquippedBallId(selectedBall.id);
       }
 
-      if (event.code === 'KeyR') {
+      if (event.code === "KeyR") {
         updateThrowPower(1);
       }
 
-      if (event.code === 'KeyQ') {
+      if (event.code === "KeyQ") {
         updateThrowPower(-1);
       }
     };
@@ -530,12 +555,12 @@ export default function BattleRoyaleArena({
       updateThrowPower(event.deltaY < 0 ? 1 : -1);
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("wheel", handleWheel);
     };
   }, []);
 
@@ -554,79 +579,75 @@ export default function BattleRoyaleArena({
       >
         <color
           attach="background"
-          args={[activeBiome.biome === 'distortion' ? '#03020b' : '#87ceeb']}
+          args={[activeBiome.biome === "distortion" ? "#03020b" : "#87ceeb"]}
         />
         <fog
           attach="fog"
           args={[
-            activeBiome.biome === 'distortion' ? '#160829' : '#d8eefb',
-            activeBiome.biome === 'distortion' ? 10 : 60,
-            activeBiome.biome === 'distortion' ? 82 : 320,
+            activeBiome.biome === "distortion" ? "#160829" : "#d8eefb",
+            activeBiome.biome === "distortion" ? 10 : 60,
+            activeBiome.biome === "distortion" ? 82 : 320,
           ]}
         />
         {caveZone !== CAVE_ZONES.INTERIOR &&
-          activeBiome.biome !== 'distortion' && (
-          <Atmosphere biomeType={activeBiome.biome} />
-        )}
-        <ambientLight intensity={activeBiome.biome === 'distortion' ? 0.26 : 0.7} />
+          activeBiome.biome !== "distortion" && (
+            <Atmosphere biomeType={activeBiome.biome} />
+          )}
+        <ambientLight
+          intensity={activeBiome.biome === "distortion" ? 0.26 : 0.7}
+        />
         <directionalLight
           castShadow
           color="#ffffff"
-          intensity={activeBiome.biome === 'distortion' ? 0.08 : 1.25}
+          intensity={activeBiome.biome === "distortion" ? 0.08 : 1.25}
           position={SUN_POSITION}
         />
         {caveZone !== CAVE_ZONES.INTERIOR &&
-          activeBiome.biome !== 'sky' &&
-          activeBiome.biome !== 'distortion' &&
-          activeBiome.biome !== 'moonlit' && (
-          <OceanHorizon biomeType={activeBiome.biome} />
-        )}
+          activeBiome.biome !== "sky" &&
+          activeBiome.biome !== "distortion" &&
+          activeBiome.biome !== "moonlit" && (
+            <OceanHorizon biomeType={activeBiome.biome} />
+          )}
         {caveZone !== CAVE_ZONES.INTERIOR &&
-          activeBiome.biome !== 'sky' &&
-          activeBiome.biome !== 'distortion' &&
-          activeBiome.biome !== 'moonlit' && (
-          <DistantSkyIsland currentBiome={currentBiome} />
-        )}
+          activeBiome.biome !== "sky" &&
+          activeBiome.biome !== "distortion" &&
+          activeBiome.biome !== "moonlit" && (
+            <DistantSkyIsland currentBiome={currentBiome} />
+          )}
         <VoxelWorld
           caveZone={caveZone}
           currentBiome={currentBiome}
           onBiomeReady={() => {}}
           playerRef={localPlayerRef}
         />
-        {currentBiome === CAVE_BIOME_ID &&
-          caveZone === CAVE_ZONES.EXTERIOR && (
-            <CaveEntrance
-              onEnterCave={handleEnterCave}
-              playerRef={localPlayerRef}
-            />
-          )}
-        {currentBiome === CAVE_BIOME_ID &&
-          caveZone === CAVE_ZONES.INTERIOR && (
-            <CaveInteriorEffects playerRef={localPlayerRef} />
-          )}
-        {activeBiome.biome === 'volcanic' && (
+        {currentBiome === CAVE_BIOME_ID && caveZone === CAVE_ZONES.EXTERIOR && (
+          <CaveEntrance
+            onEnterCave={handleEnterCave}
+            playerRef={localPlayerRef}
+          />
+        )}
+        {currentBiome === CAVE_BIOME_ID && caveZone === CAVE_ZONES.INTERIOR && (
+          <CaveInteriorEffects playerRef={localPlayerRef} />
+        )}
+        {activeBiome.biome === "volcanic" && (
           <VolcanoCrater currentBiome={currentBiome} />
         )}
-        {activeBiome.biome === 'moonlit' && (
-          <MoonlitLandmarks />
-        )}
-        {activeBiome.biome === 'distortion' && (
-          <DistortionRealmLandmarks />
-        )}
-        {activeBiome.biome === 'sky' && (
+        {activeBiome.biome === "moonlit" && <MoonlitLandmarks />}
+        {activeBiome.biome === "distortion" && <DistortionRealmLandmarks />}
+        {activeBiome.biome === "sky" && (
           <>
             <SkyBiomeLandmarks />
             <SkyBelowVista />
           </>
         )}
-        {activeBiome.biome === 'icy' && <IceMountainLandmarks />}
-        {activeBiome.biome === 'desert' && (
+        {activeBiome.biome === "icy" && <IceMountainLandmarks />}
+        {activeBiome.biome === "desert" && (
           <Sandstorm playerRef={localPlayerRef} />
         )}
-        {activeBiome.biome === 'volcanic' && (
+        {activeBiome.biome === "volcanic" && (
           <Ashfall playerRef={localPlayerRef} />
         )}
-        {activeBiome.biome === 'icy' && (
+        {activeBiome.biome === "icy" && (
           <Snowstorm playerRef={localPlayerRef} />
         )}
         <BattleRoyaleLocalPlayer
@@ -664,14 +685,9 @@ export default function BattleRoyaleArena({
             );
           })}
       </Canvas>
-      <Hotbar
-        equippedBallId={equippedBallId}
-        throwPower={throwPower}
-      />
+      <Hotbar equippedBallId={equippedBallId} throwPower={throwPower} />
       <div
-        className={`cave-fade-overlay ${
-          isCaveTransitioning ? 'visible' : ''
-        }`}
+        className={`cave-fade-overlay ${isCaveTransitioning ? "visible" : ""}`}
       />
     </>
   );

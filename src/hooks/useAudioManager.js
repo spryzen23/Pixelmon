@@ -1,8 +1,8 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef } from "react";
 
 const SFX = {
-  throw: '/assets/audio/throw.mp3',
-  catch: '/assets/audio/catch.mp3',
+  throw: "/assets/audio/throw.mp3",
+  catch: "/assets/audio/catch.mp3",
 };
 
 export function useAudioManager() {
@@ -19,7 +19,7 @@ export function useAudioManager() {
     }
 
     audio.currentTime = 0;
-    audio.play().catch(() => { });
+    audio.play().catch(() => {});
   }, []);
 
   return { play };

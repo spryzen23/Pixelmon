@@ -1,27 +1,23 @@
-import { useMemo, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { DoubleSide } from 'three';
+import { useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { DoubleSide } from "three";
 import {
   MOONLIT_BIOME_ID,
   VOXEL_SIZE,
   getTerrainSurfaceY,
-} from '../../../game/biomeLandmarks';
+} from "../../../game/biomeLandmarks";
 
-const TRUNK = '#34243d';
-const TRUNK_DARK = '#201628';
-const LEAF_DARK = '#1f2a52';
-const LEAF_MID = '#33406f';
-const LEAF_SILVER = '#91a9bd';
-const FLOWER_CORE = '#c8fff5';
-const FLOWER_BLUE = '#6ff3ff';
-const FLOWER_VIOLET = '#c08cff';
+const TRUNK = "#34243d";
+const TRUNK_DARK = "#201628";
+const LEAF_DARK = "#1f2a52";
+const LEAF_MID = "#33406f";
+const LEAF_SILVER = "#91a9bd";
+const FLOWER_CORE = "#c8fff5";
+const FLOWER_BLUE = "#6ff3ff";
+const FLOWER_VIOLET = "#c08cff";
 
 function getGroundedPosition(x, z, yOffset = 0) {
-  return [
-    x,
-    getTerrainSurfaceY(x, z, MOONLIT_BIOME_ID) + yOffset,
-    z,
-  ];
+  return [x, getTerrainSurfaceY(x, z, MOONLIT_BIOME_ID) + yOffset, z];
 }
 
 function Block({
@@ -37,7 +33,7 @@ function Block({
       <boxGeometry args={size} />
       <meshStandardMaterial
         color={color}
-        emissive={emissive || '#000000'}
+        emissive={emissive || "#000000"}
         emissiveIntensity={emissive ? emissiveIntensity : 0}
         roughness={roughness}
       />
@@ -60,7 +56,8 @@ function MoonlitTree({ position, scale = 1 }) {
   layers.forEach((layer, layerIndex) => {
     for (let x = -layer.radius; x <= layer.radius; x += 1) {
       for (let z = -layer.radius; z <= layer.radius; z += 1) {
-        const corner = Math.abs(x) === layer.radius && Math.abs(z) === layer.radius;
+        const corner =
+          Math.abs(x) === layer.radius && Math.abs(z) === layer.radius;
         const hash = Math.abs(
           Math.sin((x + 11) * 12.989 + (z + 5) * 78.233 + layerIndex * 9.7)
         );
@@ -69,11 +66,8 @@ function MoonlitTree({ position, scale = 1 }) {
           continue;
         }
 
-        const color = hash > 0.78
-          ? LEAF_SILVER
-          : hash > 0.38
-            ? LEAF_MID
-            : LEAF_DARK;
+        const color =
+          hash > 0.78 ? LEAF_SILVER : hash > 0.38 ? LEAF_MID : LEAF_DARK;
 
         leafBlocks.push([x * leafSize, layer.y, z * leafSize, color]);
       }
@@ -132,7 +126,12 @@ function GlowFlowerPatch({ position, rotation = 0, scale = 1 }) {
           />
         </group>
       ))}
-      <pointLight color="#8ff7ff" distance={3.5 * s} intensity={0.55} position={[0, 0.65 * s, 0]} />
+      <pointLight
+        color="#8ff7ff"
+        distance={3.5 * s}
+        intensity={0.55}
+        position={[0, 0.65 * s, 0]}
+      />
     </group>
   );
 }
@@ -190,18 +189,21 @@ function Fireflies() {
 
 function MoonlitMist() {
   const mistRef = useRef();
-  const banks = useMemo(() => [
-    [-24, -20, 8.5, 2.3, 0.1],
-    [-18, 8, 10, 2.6, -0.25],
-    [-8, -14, 7, 2, 0.45],
-    [-3, 18, 11, 2.8, -0.55],
-    [8, -22, 9, 2.35, 0.3],
-    [12, 10, 7.5, 2.1, -0.1],
-    [20, -6, 10.5, 2.7, 0.62],
-    [26, 22, 8, 2.2, -0.38],
-    [-28, 24, 9.5, 2.5, 0.2],
-    [2, 0, 12, 3.1, 0],
-  ], []);
+  const banks = useMemo(
+    () => [
+      [-24, -20, 8.5, 2.3, 0.1],
+      [-18, 8, 10, 2.6, -0.25],
+      [-8, -14, 7, 2, 0.45],
+      [-3, 18, 11, 2.8, -0.55],
+      [8, -22, 9, 2.35, 0.3],
+      [12, 10, 7.5, 2.1, -0.1],
+      [20, -6, 10.5, 2.7, 0.62],
+      [26, 22, 8, 2.2, -0.38],
+      [-28, 24, 9.5, 2.5, 0.2],
+      [2, 0, 12, 3.1, 0],
+    ],
+    []
+  );
   const motePositions = useMemo(() => {
     const count = 260;
     const data = new Float32Array(count * 3);
@@ -307,23 +309,29 @@ function MoonDisc() {
 }
 
 export default function MoonlitLandmarks() {
-  const trees = useMemo(() => [
-    [-20, -12, 1.25],
-    [-12, 18, 1.05],
-    [12, -20, 1.18],
-    [21, 8, 1.12],
-    [3, 25, 0.95],
-    [-25, 23, 1],
-    [27, -8, 1.1],
-  ], []);
-  const flowers = useMemo(() => [
-    [-7, -6, 0.2, 1.2],
-    [8, 8, -0.55, 1],
-    [-16, 7, 0.1, 0.95],
-    [14, -3, 0.8, 1.15],
-    [2, -18, 1.1, 1],
-    [22, 20, -0.2, 0.9],
-  ], []);
+  const trees = useMemo(
+    () => [
+      [-20, -12, 1.25],
+      [-12, 18, 1.05],
+      [12, -20, 1.18],
+      [21, 8, 1.12],
+      [3, 25, 0.95],
+      [-25, 23, 1],
+      [27, -8, 1.1],
+    ],
+    []
+  );
+  const flowers = useMemo(
+    () => [
+      [-7, -6, 0.2, 1.2],
+      [8, 8, -0.55, 1],
+      [-16, 7, 0.1, 0.95],
+      [14, -3, 0.8, 1.15],
+      [2, -18, 1.1, 1],
+      [22, 20, -0.2, 0.9],
+    ],
+    []
+  );
 
   return (
     <group>
@@ -345,10 +353,13 @@ export default function MoonlitLandmarks() {
           scale={scale}
         />
       ))}
-      <hemisphereLight
-        args={['#b8d6ff', '#171327', 0.42]}
+      <hemisphereLight args={["#b8d6ff", "#171327", 0.42]} />
+      <pointLight
+        color="#a9c6ff"
+        distance={22}
+        intensity={0.65}
+        position={[0, VOXEL_SIZE * 8, 4]}
       />
-      <pointLight color="#a9c6ff" distance={22} intensity={0.65} position={[0, VOXEL_SIZE * 8, 4]} />
     </group>
   );
 }

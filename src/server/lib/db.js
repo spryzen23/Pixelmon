@@ -1,7 +1,7 @@
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
-import path from 'path';
-import { DATA } from './paths.js';
+import sqlite3 from "sqlite3";
+import { open } from "sqlite";
+import path from "path";
+import { DATA } from "./paths.js";
 
 let dbInstance = null;
 let dbPromise = null;
@@ -11,17 +11,17 @@ export function getDB() {
   if (dbPromise) return dbPromise;
 
   dbPromise = (async () => {
-    const dbPath = path.join(DATA, 'pixelmon.db');
-    
+    const dbPath = path.join(DATA, "pixelmon.db");
+
     const db = await open({
       filename: dbPath,
-      driver: sqlite3.Database
+      driver: sqlite3.Database,
     });
 
     // Optimize SQLite settings for performance
-    await db.run('PRAGMA journal_mode = WAL');
-    await db.run('PRAGMA synchronous = NORMAL');
-    await db.run('PRAGMA foreign_keys = ON');
+    await db.run("PRAGMA journal_mode = WAL");
+    await db.run("PRAGMA synchronous = NORMAL");
+    await db.run("PRAGMA foreign_keys = ON");
 
     await initSchema(db);
 
@@ -94,13 +94,13 @@ async function initSchema(db) {
   `);
 
   try {
-    await db.exec('ALTER TABLE players ADD COLUMN username TEXT');
+    await db.exec("ALTER TABLE players ADD COLUMN username TEXT");
   } catch (err) {
     // Ignore if column already exists
   }
 
   try {
-    await db.exec('ALTER TABLE players ADD COLUMN password TEXT');
+    await db.exec("ALTER TABLE players ADD COLUMN password TEXT");
   } catch (err) {
     // Ignore if column already exists
   }
@@ -120,7 +120,9 @@ async function initSchema(db) {
       short_effect TEXT
     )
   `);
-  await db.exec(`CREATE INDEX IF NOT EXISTS idx_raw_abilities_name ON raw_abilities(name);`);
+  await db.exec(
+    `CREATE INDEX IF NOT EXISTS idx_raw_abilities_name ON raw_abilities(name);`
+  );
 
   // 6. Moves Table
   await db.exec(`
@@ -138,7 +140,9 @@ async function initSchema(db) {
       flavor_texts TEXT    -- JSON
     )
   `);
-  await db.exec(`CREATE INDEX IF NOT EXISTS idx_raw_moves_name ON raw_moves(identifier);`);
+  await db.exec(
+    `CREATE INDEX IF NOT EXISTS idx_raw_moves_name ON raw_moves(identifier);`
+  );
 
   // 7. Raw Pokemon stats & details
   await db.exec(`
@@ -153,7 +157,9 @@ async function initSchema(db) {
       abilities TEXT    -- JSON
     )
   `);
-  await db.exec(`CREATE INDEX IF NOT EXISTS idx_raw_pokemon_name ON raw_pokemon(name);`);
+  await db.exec(
+    `CREATE INDEX IF NOT EXISTS idx_raw_pokemon_name ON raw_pokemon(name);`
+  );
 
   // 8. Pokemon Moves (learn method mapping)
   await db.exec(`
@@ -166,7 +172,9 @@ async function initSchema(db) {
       PRIMARY KEY (pokemon_id, version_group_id, move_id, pokemon_move_method_id, level)
     )
   `);
-  await db.exec(`CREATE INDEX IF NOT EXISTS idx_raw_pokemon_moves_poke ON raw_pokemon_moves(pokemon_id);`);
+  await db.exec(
+    `CREATE INDEX IF NOT EXISTS idx_raw_pokemon_moves_poke ON raw_pokemon_moves(pokemon_id);`
+  );
 
   // 9. Evolution Chains
   await db.exec(`
@@ -187,7 +195,9 @@ async function initSchema(db) {
       flavor_text_entries TEXT -- JSON
     )
   `);
-  await db.exec(`CREATE INDEX IF NOT EXISTS idx_raw_pokemon_species_name ON raw_pokemon_species(name);`);
+  await db.exec(
+    `CREATE INDEX IF NOT EXISTS idx_raw_pokemon_species_name ON raw_pokemon_species(name);`
+  );
 
   // 11. Machines Table
   await db.exec(`

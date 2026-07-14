@@ -1,57 +1,40 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import Cactus from './Cactus';
+import Cactus from "./Cactus";
 
-import FantasyBiomeProps from './FantasyBiomeProps';
+import FantasyBiomeProps from "./FantasyBiomeProps";
 
-import PlantProp from './PlantProp';
+import PlantProp from "./PlantProp";
 
-import VillageBiomeProps from './VillageBiomeProps';
+import VillageBiomeProps from "./VillageBiomeProps";
 
-import { FANTASY_BIOME_ID } from '../game/fantasyAssets';
+import { FANTASY_BIOME_ID } from "../game/fantasyAssets";
 
-import { VILLAGE_BIOME_ID } from '../game/villageAssets';
+import { VILLAGE_BIOME_ID } from "../game/villageAssets";
 
-import { getBiomeProps } from '../game/world';
-
-
+import { getBiomeProps } from "../game/world";
 
 export default function BiomeProps({ currentBiome = 0 }) {
-
   const biomeProps = useMemo(
-
     () => getBiomeProps(currentBiome),
 
     [currentBiome]
-
   );
 
-
-
   if (currentBiome === FANTASY_BIOME_ID) {
-
     return <FantasyBiomeProps />;
-
   }
 
   if (currentBiome === VILLAGE_BIOME_ID) {
-
     return <VillageBiomeProps />;
-
   }
 
   const { cacti, plantProps = [] } = biomeProps;
 
-
-
   return (
-
     <group key={`props-${currentBiome}`}>
-
       {plantProps.map((prop) => (
-
         <PlantProp
-
           key={prop.key}
 
           glbUrl={prop.glbUrl}
@@ -67,17 +50,11 @@ export default function BiomeProps({ currentBiome = 0 }) {
           x={prop.x}
 
           z={prop.z}
-
         />
-
       ))}
 
-
-
       {cacti.map((cactus) => (
-
         <Cactus
-
           key={cactus.key}
 
           x={cactus.x}
@@ -85,14 +62,8 @@ export default function BiomeProps({ currentBiome = 0 }) {
           z={cactus.z}
 
           surfaceY={cactus.surfaceY}
-
         />
-
       ))}
-
     </group>
-
   );
-
 }
-

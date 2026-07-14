@@ -1,4 +1,4 @@
-import { getPlantPropDef } from './plantAssets';
+import { getPlantPropDef } from "./plantAssets";
 
 /**
  * @typedef {Object} PlantPropDef

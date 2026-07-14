@@ -1,7 +1,7 @@
-import { Sphere } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { useMemo, useRef } from 'react';
-import { Vector3 } from 'three';
+import { Sphere } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
+import { Vector3 } from "three";
 
 const BURST_DURATION = 1;
 const PARTICLE_COUNT = 14;
@@ -59,7 +59,7 @@ export default function CaptureBurst({ id, position, onComplete }) {
       {particles.map((particle, index) => (
         <Sphere key={`${id}-${index}`} args={[particle.radius, 8, 8]}>
           <meshBasicMaterial
-            color={index % 2 === 0 ? '#fff6a8' : '#ffd43b'}
+            color={index % 2 === 0 ? "#fff6a8" : "#ffd43b"}
             transparent
             opacity={0.9}
           />

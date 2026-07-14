@@ -1,15 +1,15 @@
-import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Color, FogExp2, MathUtils } from 'three';
+import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Color, FogExp2, MathUtils } from "three";
 
 const SNOW_PARTICLE_COUNT = 2400;
 const SNOW_RADIUS = 34;
 const SNOW_HEIGHT = 24;
 const CLEAR_FOG_DENSITY = 0.005;
 const STORM_FOG_DENSITY = 0.038;
-const CLEAR_FOG_COLOR = new Color('#d8eefb');
-const STORM_FOG_COLOR = new Color('#e8f6ff');
-const SNOW_COLOR = '#f7fbff';
+const CLEAR_FOG_COLOR = new Color("#d8eefb");
+const STORM_FOG_COLOR = new Color("#e8f6ff");
+const SNOW_COLOR = "#f7fbff";
 const WIND_X_SPEED = 1.8;
 const WIND_Z_SPEED = -4.2;
 const FALL_SPEED = 3.8;
@@ -51,25 +51,31 @@ export default function Snowstorm({ playerRef }) {
     let isCancelled = false;
 
     const scheduleClear = () => {
-      timeoutId = window.setTimeout(() => {
-        if (isCancelled) {
-          return;
-        }
+      timeoutId = window.setTimeout(
+        () => {
+          if (isCancelled) {
+            return;
+          }
 
-        setIsStorming(true);
-        scheduleStorm();
-      }, randomRange(12000, 26000));
+          setIsStorming(true);
+          scheduleStorm();
+        },
+        randomRange(12000, 26000)
+      );
     };
 
     const scheduleStorm = () => {
-      timeoutId = window.setTimeout(() => {
-        if (isCancelled) {
-          return;
-        }
+      timeoutId = window.setTimeout(
+        () => {
+          if (isCancelled) {
+            return;
+          }
 
-        setIsStorming(false);
-        scheduleClear();
-      }, randomRange(12000, 22000));
+          setIsStorming(false);
+          scheduleClear();
+        },
+        randomRange(12000, 22000)
+      );
     };
 
     scheduleClear();
@@ -149,9 +155,7 @@ export default function Snowstorm({ playerRef }) {
     );
 
     if (scene.fog?.isFogExp2) {
-      const targetDensity = isStorming
-        ? STORM_FOG_DENSITY
-        : CLEAR_FOG_DENSITY;
+      const targetDensity = isStorming ? STORM_FOG_DENSITY : CLEAR_FOG_DENSITY;
       const targetColor = isStorming ? STORM_FOG_COLOR : CLEAR_FOG_COLOR;
 
       scene.fog.density = MathUtils.lerp(

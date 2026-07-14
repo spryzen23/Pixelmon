@@ -1,6 +1,6 @@
-import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Color, FogExp2, MathUtils } from 'three';
+import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Color, FogExp2, MathUtils } from "three";
 
 const PARTICLE_COUNT = 3000;
 const TORNADO_PARTICLE_COUNT = 850;
@@ -11,11 +11,11 @@ const TORNADO_BOTTOM_RADIUS = 0.35;
 const TORNADO_TOP_RADIUS = 4.8;
 const CLEAR_FOG_DENSITY = 0.006;
 const STORM_FOG_DENSITY = 0.055;
-const CLEAR_FOG_COLOR = new Color('#d8eefb');
-const STORM_FOG_COLOR = new Color('#d2b48c');
+const CLEAR_FOG_COLOR = new Color("#d8eefb");
+const STORM_FOG_COLOR = new Color("#d2b48c");
 const WIND_X_SPEED = 12;
 const WIND_Z_SPEED = 5;
-const PARTICLE_COLOR = '#d2b48c';
+const PARTICLE_COLOR = "#d2b48c";
 
 function randomRange(min, max) {
   return min + Math.random() * (max - min);
@@ -74,25 +74,31 @@ export default function Sandstorm({ playerRef }) {
     let isCancelled = false;
 
     const scheduleClear = () => {
-      timeoutId = window.setTimeout(() => {
-        if (isCancelled) {
-          return;
-        }
+      timeoutId = window.setTimeout(
+        () => {
+          if (isCancelled) {
+            return;
+          }
 
-        setIsStorming(true);
-        scheduleStorm();
-      }, randomRange(15000, 30000));
+          setIsStorming(true);
+          scheduleStorm();
+        },
+        randomRange(15000, 30000)
+      );
     };
 
     const scheduleStorm = () => {
-      timeoutId = window.setTimeout(() => {
-        if (isCancelled) {
-          return;
-        }
+      timeoutId = window.setTimeout(
+        () => {
+          if (isCancelled) {
+            return;
+          }
 
-        setIsStorming(false);
-        scheduleClear();
-      }, randomRange(10000, 20000));
+          setIsStorming(false);
+          scheduleClear();
+        },
+        randomRange(10000, 20000)
+      );
     };
 
     scheduleClear();
@@ -200,7 +206,8 @@ export default function Sandstorm({ playerRef }) {
         tornadoArray[offset] = tornadoCenterX + Math.cos(swirlAngle) * radius;
         tornadoArray[offset + 1] =
           height + Math.sin(elapsedTime * 3 + index * 0.11) * 0.18;
-        tornadoArray[offset + 2] = tornadoCenterZ + Math.sin(swirlAngle) * radius;
+        tornadoArray[offset + 2] =
+          tornadoCenterZ + Math.sin(swirlAngle) * radius;
       }
 
       tornadoAttribute.needsUpdate = true;
@@ -213,9 +220,7 @@ export default function Sandstorm({ playerRef }) {
     }
 
     if (scene.fog?.isFogExp2) {
-      const targetDensity = isStorming
-        ? STORM_FOG_DENSITY
-        : CLEAR_FOG_DENSITY;
+      const targetDensity = isStorming ? STORM_FOG_DENSITY : CLEAR_FOG_DENSITY;
       const targetColor = isStorming ? STORM_FOG_COLOR : CLEAR_FOG_COLOR;
 
       scene.fog.density = MathUtils.lerp(

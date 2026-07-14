@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
-import { Button } from './Button';
+import { useEffect } from "react";
+import { Button } from "./Button";
 
 export function Modal({ open, title, children, onClose, actions }) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose?.();
+      if (e.key === "Escape") onClose?.();
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
   if (!open) return null;
@@ -20,7 +20,7 @@ export function Modal({ open, title, children, onClose, actions }) {
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? 'px-modal-title' : undefined}
+        aria-labelledby={title ? "px-modal-title" : undefined}
       >
         {title && (
           <h2 className="px-modal-title" id="px-modal-title">

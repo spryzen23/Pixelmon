@@ -1,4 +1,4 @@
-import { MathUtils } from 'three';
+import { MathUtils } from "three";
 
 export function lerpAngle(from, to, alpha) {
   const angleDelta =
@@ -11,27 +11,31 @@ export function lerpAngle(from, to, alpha) {
 export function isLeftSide(name) {
   const n = name.toLowerCase();
 
-  if (n.includes('left')) {
+  if (n.includes("left")) {
     return true;
   }
 
-  if (n.includes('right')) {
+  if (n.includes("right")) {
     return false;
   }
 
-  if (n.includes('lfeeler') || n.includes('lvine')) {
+  if (n.includes("lfeeler") || n.includes("lvine")) {
     return true;
   }
 
-  if (n.includes('rfeeler') || n.includes('rvine')) {
+  if (n.includes("rfeeler") || n.includes("rvine")) {
     return false;
   }
 
-  if (/^l(thigh|leg|foot|toe|hip|arm|forearm|hand|shoulder|ear|finger)/.test(n)) {
+  if (
+    /^l(thigh|leg|foot|toe|hip|arm|forearm|hand|shoulder|ear|finger)/.test(n)
+  ) {
     return true;
   }
 
-  if (/^r(thigh|leg|foot|toe|hip|arm|forearm|hand|shoulder|ear|finger)/.test(n)) {
+  if (
+    /^r(thigh|leg|foot|toe|hip|arm|forearm|hand|shoulder|ear|finger)/.test(n)
+  ) {
     return false;
   }
 
@@ -42,64 +46,68 @@ export function matchesCategory(name, category) {
   const n = name.toLowerCase();
 
   switch (category) {
-    case 'upperLeg':
+    case "upperLeg":
       return (
-        n.includes('thigh') ||
-        n.includes('upleg') ||
-        (n.includes('hip') && !n.includes('end') && !n.includes('waist'))
+        n.includes("thigh") ||
+        n.includes("upleg") ||
+        (n.includes("hip") && !n.includes("end") && !n.includes("waist"))
       );
-    case 'lowerLeg':
+    case "lowerLeg":
       return (
-        (n.includes('leg') || n.includes('shin')) &&
-        !n.includes('upleg') &&
-        !n.includes('fore') &&
-        !n.includes('thigh') &&
-        !n.includes('feeler')
+        (n.includes("leg") || n.includes("shin")) &&
+        !n.includes("upleg") &&
+        !n.includes("fore") &&
+        !n.includes("thigh") &&
+        !n.includes("feeler")
       );
-    case 'foot':
-      return n.includes('foot') || n.includes('toe') || n.includes('shoe');
-    case 'upperArm':
-      return n.includes('shoulder') || (n.includes('arm') && !n.includes('fore'));
-    case 'lowerArm':
-      return n.includes('forearm');
-    case 'hand':
-      return n.includes('hand') || n.includes('finger');
-    case 'head':
+    case "foot":
+      return n.includes("foot") || n.includes("toe") || n.includes("shoe");
+    case "upperArm":
       return (
-        n.includes('head') ||
-        n.includes('jaw') ||
-        n.includes('neck') ||
-        n.includes('ear')
+        n.includes("shoulder") || (n.includes("arm") && !n.includes("fore"))
       );
-    case 'spine':
+    case "lowerArm":
+      return n.includes("forearm");
+    case "hand":
+      return n.includes("hand") || n.includes("finger");
+    case "head":
       return (
-        n.includes('spine') ||
-        n.includes('waist') ||
-        n.includes('torso') ||
-        n.includes('shirt') ||
-        n.includes('vest') ||
-        n.includes('coat_back') ||
-        n.includes('coat_panel') ||
-        n.includes('coat_tail')
+        n.includes("head") ||
+        n.includes("jaw") ||
+        n.includes("neck") ||
+        n.includes("ear")
       );
-    case 'tail':
-      return n.includes('tail');
-    case 'vine':
-      return n.includes('vine') || n.includes('feeler');
-    case 'rigid':
+    case "spine":
       return (
-        n.includes('geometry') ||
-        n === 'bulbasaur' ||
-        (n.includes('bulbasaur') && !n.includes('vine'))
+        n.includes("spine") ||
+        n.includes("waist") ||
+        n.includes("torso") ||
+        n.includes("shirt") ||
+        n.includes("vest") ||
+        n.includes("coat_back") ||
+        n.includes("coat_panel") ||
+        n.includes("coat_tail")
       );
-    case 'wing':
-      return n.includes('wing') || n.includes('feather') || n.includes('bat');
-    case 'fin':
-      return n.includes('fin') || n.includes('flipper');
-    case 'antenna':
-      return n.includes('antenna') || n.includes('horn') || n.includes('feeler');
-    case 'float':
-      return n.includes('float') || n.includes('hover') || n.includes('cloud');
+    case "tail":
+      return n.includes("tail");
+    case "vine":
+      return n.includes("vine") || n.includes("feeler");
+    case "rigid":
+      return (
+        n.includes("geometry") ||
+        n === "bulbasaur" ||
+        (n.includes("bulbasaur") && !n.includes("vine"))
+      );
+    case "wing":
+      return n.includes("wing") || n.includes("feather") || n.includes("bat");
+    case "fin":
+      return n.includes("fin") || n.includes("flipper");
+    case "antenna":
+      return (
+        n.includes("antenna") || n.includes("horn") || n.includes("feeler")
+      );
+    case "float":
+      return n.includes("float") || n.includes("hover") || n.includes("cloud");
     default:
       return false;
   }
@@ -114,11 +122,15 @@ export function resolveAnimationClip(names, actionName, fallbackActionName) {
     return null;
   }
 
-  const primary = String(actionName || '').toLowerCase();
+  const primary = String(actionName || "").toLowerCase();
   const preferred = [
     actionName,
-    ...(Array.isArray(fallbackActionName) ? fallbackActionName : [fallbackActionName]),
-  ].filter(Boolean).map(x => x.toLowerCase());
+    ...(Array.isArray(fallbackActionName)
+      ? fallbackActionName
+      : [fallbackActionName]),
+  ]
+    .filter(Boolean)
+    .map((x) => x.toLowerCase());
 
   // 1. Try exact matches first
   for (const preferredName of preferred) {
@@ -130,7 +142,8 @@ export function resolveAnimationClip(names, actionName, fallbackActionName) {
 
   // 2. Standard regex mappings for walk/run/jump/crouch
   const findFirst = (patterns) =>
-    names.find((name) => patterns.some((pattern) => pattern.test(name))) || null;
+    names.find((name) => patterns.some((pattern) => pattern.test(name))) ||
+    null;
 
   if (/run|sprint|jog/i.test(primary)) {
     const runClip = findFirst([/^run(ning)?$/i, /^jog(ging)?$/i, /run|jog/i]);
@@ -148,13 +161,19 @@ export function resolveAnimationClip(names, actionName, fallbackActionName) {
   }
 
   if (/crouch|duck|sneak/i.test(primary)) {
-    const crouchClip = findFirst([/^crouch(ing)?$/i, /^duck(ing)?$/i, /crouch|duck|sneak/i]);
+    const crouchClip = findFirst([
+      /^crouch(ing)?$/i,
+      /^duck(ing)?$/i,
+      /crouch|duck|sneak/i,
+    ]);
     if (crouchClip) return crouchClip;
   }
 
   // 3. Try partial matches for each preferred action in order (e.g. pm0023_00_idle containing idle)
   for (const preferredName of preferred) {
-    const partial = names.find((name) => name.toLowerCase().includes(preferredName));
+    const partial = names.find((name) =>
+      name.toLowerCase().includes(preferredName)
+    );
     if (partial) {
       return partial;
     }
@@ -171,7 +190,7 @@ export function resolveAnimationClip(names, actionName, fallbackActionName) {
   }
 
   // 5. Fallback to any clip containing common locomotion words
-  const fallbackWords = ['idle', 'walk', 'run', 'stand', 'wait'];
+  const fallbackWords = ["idle", "walk", "run", "stand", "wait"];
   for (const word of fallbackWords) {
     const fallback = names.find((name) => name.toLowerCase().includes(word));
     if (fallback) return fallback;
@@ -182,16 +201,16 @@ export function resolveAnimationClip(names, actionName, fallbackActionName) {
 
 /** True when the current actionName requests walk/run (ignores fallback list). */
 export function isPrimaryWalking(actionName) {
-  return /walk|run|jog/i.test(String(actionName || ''));
+  return /walk|run|jog/i.test(String(actionName || ""));
 }
 
 /** True when the current actionName requests idle/stand. */
 export function isPrimaryIdle(actionName) {
-  return /idle/i.test(String(actionName || ''));
+  return /idle/i.test(String(actionName || ""));
 }
 
 export function isPrimaryJumping(actionName) {
-  return /jump|leap/i.test(String(actionName || ''));
+  return /jump|leap/i.test(String(actionName || ""));
 }
 
 /** Resolve attack/flee/special action clips when present in GLB. */
@@ -229,7 +248,11 @@ export function shouldUseNativeAnimationClip(clipName) {
     return true;
   }
 
-  if (/idle|idling|walk|walking|run|running|jog|jogging|jump|jumping|stand|standing|wait|slither/i.test(lower)) {
+  if (
+    /idle|idling|walk|walking|run|running|jog|jogging|jump|jumping|stand|standing|wait|slither/i.test(
+      lower
+    )
+  ) {
     return true;
   }
 
@@ -244,12 +267,12 @@ export function isStrafeLeanPart(name) {
   const n = name.toLowerCase();
 
   return (
-    matchesCategory(name, 'spine') ||
-    matchesCategory(name, 'head') ||
-    matchesCategory(name, 'upperArm') ||
-    matchesCategory(name, 'lowerArm') ||
-    matchesCategory(name, 'hand') ||
-    n.includes('coat_panel') ||
-    n.includes('coat_tail')
+    matchesCategory(name, "spine") ||
+    matchesCategory(name, "head") ||
+    matchesCategory(name, "upperArm") ||
+    matchesCategory(name, "lowerArm") ||
+    matchesCategory(name, "hand") ||
+    n.includes("coat_panel") ||
+    n.includes("coat_tail")
   );
 }

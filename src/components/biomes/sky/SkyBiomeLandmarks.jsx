@@ -1,26 +1,33 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 import {
   SKY_BIOME_ID,
   VOXEL_SIZE,
   getTerrainSurfaceY,
-} from '../../../game/biomeLandmarks';
+} from "../../../game/biomeLandmarks";
 
-const CLOUD = '#f7fcff';
-const CLOUD_SHADE = '#d7edf8';
-const SKY_STONE = '#b7c6d1';
-const GOLD = '#f5dc76';
-const TRUNK = '#5d3d25';
-const LEAF = '#3d9838';
-const LEAF_LIGHT = '#62bd54';
-const FLOWER = '#f3d4ff';
+const CLOUD = "#f7fcff";
+const CLOUD_SHADE = "#d7edf8";
+const SKY_STONE = "#b7c6d1";
+const GOLD = "#f5dc76";
+const TRUNK = "#5d3d25";
+const LEAF = "#3d9838";
+const LEAF_LIGHT = "#62bd54";
+const FLOWER = "#f3d4ff";
 
-function Block({ color, emissive, opacity = 1, position, roughness = 0.72, size }) {
+function Block({
+  color,
+  emissive,
+  opacity = 1,
+  position,
+  roughness = 0.72,
+  size,
+}) {
   return (
     <mesh castShadow={opacity >= 0.9} receiveShadow position={position}>
       <boxGeometry args={size} />
       <meshStandardMaterial
         color={color}
-        emissive={emissive || '#000000'}
+        emissive={emissive || "#000000"}
         emissiveIntensity={emissive ? 0.28 : 0}
         opacity={opacity}
         roughness={roughness}
@@ -73,7 +80,11 @@ function SkyTree({ position, scale = 1 }) {
 
   return (
     <group position={position}>
-      <Block color={TRUNK} position={[0, 0.42 * s, 0]} size={[0.28 * s, 0.84 * s, 0.28 * s]} />
+      <Block
+        color={TRUNK}
+        position={[0, 0.42 * s, 0]}
+        size={[0.28 * s, 0.84 * s, 0.28 * s]}
+      />
       {leafBlocks.map(([x, y, z, size, color], index) => (
         <Block
           key={index}
@@ -89,11 +100,33 @@ function SkyTree({ position, scale = 1 }) {
 function SkyGate({ position }) {
   return (
     <group position={position}>
-      <Block color={SKY_STONE} position={[-1.15, 0.8, 0]} size={[0.38, 1.6, 0.38]} />
-      <Block color={SKY_STONE} position={[1.15, 0.8, 0]} size={[0.38, 1.6, 0.38]} />
-      <Block color={SKY_STONE} position={[0, 1.72, 0]} size={[2.75, 0.38, 0.42]} />
-      <Block color={GOLD} emissive="#fff0a0" position={[0, 1.22, 0]} size={[0.58, 0.58, 0.18]} />
-      <pointLight color="#fff1a5" distance={7} intensity={0.85} position={[0, 1.55, 0]} />
+      <Block
+        color={SKY_STONE}
+        position={[-1.15, 0.8, 0]}
+        size={[0.38, 1.6, 0.38]}
+      />
+      <Block
+        color={SKY_STONE}
+        position={[1.15, 0.8, 0]}
+        size={[0.38, 1.6, 0.38]}
+      />
+      <Block
+        color={SKY_STONE}
+        position={[0, 1.72, 0]}
+        size={[2.75, 0.38, 0.42]}
+      />
+      <Block
+        color={GOLD}
+        emissive="#fff0a0"
+        position={[0, 1.22, 0]}
+        size={[0.58, 0.58, 0.18]}
+      />
+      <pointLight
+        color="#fff1a5"
+        distance={7}
+        intensity={0.85}
+        position={[0, 1.55, 0]}
+      />
     </group>
   );
 }
@@ -102,33 +135,50 @@ function GrassPatch({ position, rotation = 0 }) {
   return (
     <group position={position} rotation={[0, rotation, 0]}>
       <Block color="#79d65d" position={[0, 0.05, 0]} size={[2.2, 0.1, 0.32]} />
-      <Block color="#bfeea7" position={[0.7, 0.08, 0.28]} size={[1.1, 0.08, 0.24]} />
-      <Block color={FLOWER} position={[-0.85, 0.11, -0.2]} size={[0.34, 0.12, 0.34]} />
+      <Block
+        color="#bfeea7"
+        position={[0.7, 0.08, 0.28]}
+        size={[1.1, 0.08, 0.24]}
+      />
+      <Block
+        color={FLOWER}
+        position={[-0.85, 0.11, -0.2]}
+        size={[0.34, 0.12, 0.34]}
+      />
     </group>
   );
 }
 
 export default function SkyBiomeLandmarks() {
-  const clouds = useMemo(() => [
-    [-19, -9, 1.15],
-    [19, -8, 1],
-    [-17, 13, 0.95],
-    [18, 15, 1.08],
-    [0, 23, 0.9],
-    [0, -25, 1.05],
-  ], []);
-  const trees = useMemo(() => [
-    [-13, -7, 1.15],
-    [12, -12, 0.95],
-    [-9, 14, 1.05],
-    [14, 10, 0.9],
-  ], []);
-  const patches = useMemo(() => [
-    [-5, -5, 0.2],
-    [6, 4, -0.5],
-    [-12, 4, 0.9],
-    [10, -2, -0.1],
-  ], []);
+  const clouds = useMemo(
+    () => [
+      [-19, -9, 1.15],
+      [19, -8, 1],
+      [-17, 13, 0.95],
+      [18, 15, 1.08],
+      [0, 23, 0.9],
+      [0, -25, 1.05],
+    ],
+    []
+  );
+  const trees = useMemo(
+    () => [
+      [-13, -7, 1.15],
+      [12, -12, 0.95],
+      [-9, 14, 1.05],
+      [14, 10, 0.9],
+    ],
+    []
+  );
+  const patches = useMemo(
+    () => [
+      [-5, -5, 0.2],
+      [6, 4, -0.5],
+      [-12, 4, 0.9],
+      [10, -2, -0.1],
+    ],
+    []
+  );
 
   return (
     <group>
@@ -162,7 +212,12 @@ export default function SkyBiomeLandmarks() {
         roughness={0.28}
         size={[3.4, 0.08, 2.2]}
       />
-      <pointLight color="#bdefff" distance={24} intensity={0.65} position={[0, VOXEL_SIZE * 14, 0]} />
+      <pointLight
+        color="#bdefff"
+        distance={24}
+        intensity={0.65}
+        position={[0, VOXEL_SIZE * 14, 0]}
+      />
     </group>
   );
 }

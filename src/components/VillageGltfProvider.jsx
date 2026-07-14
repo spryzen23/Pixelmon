@@ -1,11 +1,11 @@
-import { useGLTF } from '@react-three/drei';
-import { createContext, useCallback, useContext, useMemo } from 'react';
-import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
+import { useGLTF } from "@react-three/drei";
+import { createContext, useCallback, useContext, useMemo } from "react";
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import {
   VILLAGE_GLB_URL,
   getVillageArchetypeNodeNames,
   isVillageNodeAllowed,
-} from '../game/villageAssets';
+} from "../game/villageAssets";
 
 const VillageGltfContext = createContext(null);
 
@@ -14,7 +14,11 @@ function buildPrefabCache(scene) {
   const wanted = new Set(getVillageArchetypeNodeNames());
 
   scene.traverse((child) => {
-    if (!child.name || !wanted.has(child.name) || !isVillageNodeAllowed(child.name)) {
+    if (
+      !child.name ||
+      !wanted.has(child.name) ||
+      !isVillageNodeAllowed(child.name)
+    ) {
       return;
     }
 
@@ -32,7 +36,7 @@ function findRootNode(scene) {
   let rootNode = null;
 
   scene.traverse((child) => {
-    if (child.name === 'RootNode') {
+    if (child.name === "RootNode") {
       rootNode = child;
     }
   });
@@ -92,7 +96,7 @@ export function useVillageGltf() {
   const context = useContext(VillageGltfContext);
 
   if (!context) {
-    throw new Error('useVillageGltf must be used within VillageGltfProvider');
+    throw new Error("useVillageGltf must be used within VillageGltfProvider");
   }
 
   return context;

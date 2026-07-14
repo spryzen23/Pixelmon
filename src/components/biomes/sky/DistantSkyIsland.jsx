@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
 const SKY_ISLAND_PLACEMENTS = {
   0: {
@@ -73,8 +73,8 @@ function CloudPuff({ position, scale = 1 }) {
 }
 
 export default function DistantSkyIsland({ currentBiome = 0 }) {
-  const placement = SKY_ISLAND_PLACEMENTS[currentBiome] ||
-    SKY_ISLAND_PLACEMENTS[0];
+  const placement =
+    SKY_ISLAND_PLACEMENTS[currentBiome] || SKY_ISLAND_PLACEMENTS[0];
   const rimBlocks = useMemo(() => {
     return Array.from({ length: 20 }, (_, index) => {
       const angle = (index / 20) * Math.PI * 2;
@@ -95,20 +95,45 @@ export default function DistantSkyIsland({ currentBiome = 0 }) {
       rotation={placement.rotation}
       scale={[placement.scale, placement.scale, placement.scale]}
     >
-      <Block color="#6bcf4e" opacity={0.42} position={[0, 2.7, 0]} size={[15, 1.2, 10]} />
-      <Block color="#3f8f3a" opacity={0.38} position={[0, 1.8, 0]} size={[18, 1.5, 11]} />
+      <Block
+        color="#6bcf4e"
+        opacity={0.42}
+        position={[0, 2.7, 0]}
+        size={[15, 1.2, 10]}
+      />
+      <Block
+        color="#3f8f3a"
+        opacity={0.38}
+        position={[0, 1.8, 0]}
+        size={[18, 1.5, 11]}
+      />
       {rimBlocks.map(([x, y, z, size], index) => (
         <Block
           key={`rim-${index}`}
-          color={index % 3 === 0 ? '#7dd961' : '#4f9c43'}
+          color={index % 3 === 0 ? "#7dd961" : "#4f9c43"}
           opacity={0.36}
           position={[x, 2.25 + y, z]}
           size={[size, 1.2, size * 0.86]}
         />
       ))}
-      <Block color="#69736f" opacity={0.45} position={[0, -1.4, 0]} size={[12, 4.8, 8]} />
-      <Block color="#4e5855" opacity={0.42} position={[0, -5.7, 0]} size={[7.4, 4.2, 5.1]} />
-      <Block color="#36413f" opacity={0.38} position={[0, -9.2, 0]} size={[3.6, 3.3, 2.4]} />
+      <Block
+        color="#69736f"
+        opacity={0.45}
+        position={[0, -1.4, 0]}
+        size={[12, 4.8, 8]}
+      />
+      <Block
+        color="#4e5855"
+        opacity={0.42}
+        position={[0, -5.7, 0]}
+        size={[7.4, 4.2, 5.1]}
+      />
+      <Block
+        color="#36413f"
+        opacity={0.38}
+        position={[0, -9.2, 0]}
+        size={[3.6, 3.3, 2.4]}
+      />
       <CloudPuff position={[-8, -2.8, 2]} scale={1.1} />
       <CloudPuff position={[9, -3.6, -1.4]} scale={0.92} />
     </group>

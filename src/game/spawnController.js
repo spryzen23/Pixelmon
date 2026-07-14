@@ -25,7 +25,7 @@ export function initBiomeSpawnState(regionId, byLevel, ladderConfig) {
     maxUnlockedSpawnLevel: levels[0] ?? 1,
     levelPools,
     alphaCaught: false,
-    activeEggGroups: ladderConfig.eggGroupRotation?.waves?.[0] || ['field'],
+    activeEggGroups: ladderConfig.eggGroupRotation?.waves?.[0] || ["field"],
   };
 }
 

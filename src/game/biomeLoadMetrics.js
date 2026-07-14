@@ -1,7 +1,7 @@
-export const BIOME_LOAD_METRICS_KEY = 'voxelLegends.biomeLoadMetrics.v1';
+export const BIOME_LOAD_METRICS_KEY = "voxelLegends.biomeLoadMetrics.v1";
 
 function getStorage() {
-  if (typeof window === 'undefined' || !window.localStorage) {
+  if (typeof window === "undefined" || !window.localStorage) {
     return null;
   }
 
@@ -26,7 +26,7 @@ export function getStoredBiomeLoadMetrics() {
 
     return Array.isArray(parsed) ? parsed : parsed.events || [];
   } catch (error) {
-    console.warn('Biome load metrics could not be read.', error);
+    console.warn("Biome load metrics could not be read.", error);
 
     return [];
   }
@@ -49,14 +49,14 @@ export function recordBiomeLoadMetric(metric) {
   storage.setItem(BIOME_LOAD_METRICS_KEY, JSON.stringify(metrics));
 
   // Sync real-time to the python dashboard backend
-  fetch('/api/metrics/biome', {
-    method: 'POST',
+  fetch("/api/metrics/biome", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(nextMetric),
   }).catch((err) => {
-    console.warn('Failed to sync biome metrics to server', err);
+    console.warn("Failed to sync biome metrics to server", err);
   });
 }
 
@@ -76,13 +76,13 @@ export function downloadBiomeLoadMetrics() {
     schemaVersion: 1,
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {
-    type: 'application/json',
+    type: "application/json",
   });
   const url = URL.createObjectURL(blob);
-  const anchor = document.createElement('a');
+  const anchor = document.createElement("a");
 
   anchor.href = url;
-  anchor.download = 'biome_load_metrics.json';
+  anchor.download = "biome_load_metrics.json";
   anchor.click();
   URL.revokeObjectURL(url);
 }

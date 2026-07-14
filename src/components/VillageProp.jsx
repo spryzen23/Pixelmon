@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
-import { useVillageGltf } from './VillageGltfProvider';
-import { getVillagePropDef } from '../game/villageAssets';
+import { useMemo } from "react";
+import { useVillageGltf } from "./VillageGltfProvider";
+import { getVillagePropDef } from "../game/villageAssets";
 
 export default function VillageProp({
   propKey,

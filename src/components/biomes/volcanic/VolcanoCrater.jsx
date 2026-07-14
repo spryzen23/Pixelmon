@@ -1,12 +1,10 @@
-import { Suspense, useEffect, useMemo, useRef, Component } from 'react';
-import { useGLTF } from '@react-three/drei';
-import { Box3, MeshStandardMaterial, Vector3 } from 'three';
-import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
-import {
-  getVolcanoPrimalPosition,
-} from '../../../game/biomeLandmarks';
+import { Suspense, useEffect, useMemo, useRef, Component } from "react";
+import { useGLTF } from "@react-three/drei";
+import { Box3, MeshStandardMaterial, Vector3 } from "three";
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
+import { getVolcanoPrimalPosition } from "../../../game/biomeLandmarks";
 
-const PRIMAL_MODEL_URL = '/assets/Volcanic Biome/legendary/primal_groudon.glb';
+const PRIMAL_MODEL_URL = "/assets/Volcanic Biome/legendary/primal_groudon.glb";
 const PRIMAL_TARGET_HEIGHT = 2.17;
 const PRIMAL_MAX_SCALE = 0.504;
 const PRIMAL_MIN_SCALE = 0.05;
@@ -23,7 +21,7 @@ class PrimalModelErrorBoundary extends Component {
   }
 
   componentDidCatch(error) {
-    console.warn('Primal model failed to load, using fallback.', error);
+    console.warn("Primal model failed to load, using fallback.", error);
   }
 
   render() {
@@ -77,11 +75,7 @@ function PrimalModel() {
     );
 
     return {
-      position: [
-        -center.x,
-        -box.min.y - 0.12 / scale,
-        -center.z,
-      ],
+      position: [-center.x, -box.min.y - 0.12 / scale, -center.z],
       scale,
     };
   }, [gltfScene]);
@@ -97,7 +91,7 @@ function PrimalModel() {
 
       if (!node.material) {
         node.material = new MeshStandardMaterial({
-          color: '#213f6f',
+          color: "#213f6f",
           roughness: 0.68,
         });
       }
@@ -105,11 +99,7 @@ function PrimalModel() {
   }, [gltfScene]);
 
   return (
-    <group
-      ref={modelRef}
-      rotation={[0, Math.PI, 0]}
-      scale={fit.scale}
-    >
+    <group ref={modelRef} rotation={[0, Math.PI, 0]} scale={fit.scale}>
       <primitive object={gltfScene} position={fit.position} />
     </group>
   );
