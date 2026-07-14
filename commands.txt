@@ -1,0 +1,378 @@
+# ========================================
+# PIXELMON (Voxel Legends) - PROJECT COMMANDS REFERENCE
+# ========================================
+#
+# Quick reference for developing and validating this codebase.
+# Detailed gameplay and asset docs: README.md
+# AI / task prompts for agents: promsts.txt
+# Automated health check: codebase.bat
+#
+# ========================================
+# TABLE OF CONTENTS
+# ========================================
+#
+# 1. PROJECT OVERVIEW
+# 2. QUICK START
+# 3. NPM SCRIPTS
+# 4. CODEBASE.BAT (FULL PIPELINE)
+# 5. ASSET COMMANDS
+# 6. LINT, FORMAT, TEST
+# 7. BUILD & DEPLOY
+# 8. GIT COMMANDS
+# 9. PROJECT STRUCTURE
+# 10. GAMEPLAY & DEBUG
+# 11. COMMON WORKFLOWS
+# 12. TROUBLESHOOTING
+# 13. ENVIRONMENT VARIABLES
+# 14. NOTES
+#
+# ========================================
+# 1. PROJECT OVERVIEW
+# ========================================
+#
+# Pixelmon (package name: pixelmon) is a browser-based voxel creature-catching prototype.
+#
+# Stack:
+#   - React 19 + Create React App (react-scripts 5)
+#   - Three.js + @react-three/fiber + @react-three/drei
+#   - InstancedMesh terrain, GLB models from public/assets
+#   - Jest + React Testing Library (unit tests)
+#
+# Game design (current):
+#   - 6 finite biomes (WORLD_PATHS in src/game/world.js)
+#   - One active biome at a time; 3x3 chunk map per biome
+#   - Ordinary creatures + alpha spawn after all ordinary caught
+#   - Third-person movement, pointer lock, projectile catching
+#   - Weather: sandstorm (desert), snowstorm (snow biomes)
+#
+# Dev server: http://localhost:3000 (default CRA port)
+#
+# ========================================
+# 2. QUICK START
+# ========================================
+#
+# From repo root (E:\maha\Pixelmon or your clone path):
+#
+cd E:\maha\Pixelmon
+npm install
+npm start
+#
+# Run all automated checks (recommended before commits):
+codebase.bat
+#
+# Or step-by-step:
+npm test -- --watchAll=false --passWithNoTests
+npm run build
+#
+# ========================================
+# 3. NPM SCRIPTS
+# ========================================
+#
+# Install dependencies:
+npm install
+#
+# Start dev server (hot reload):
+npm start
+#
+# Production build (output: build/):
+npm run build
+#
+# Run tests once (CI mode):
+set CI=true&& npm test -- --watchAll=false --passWithNoTests
+#
+# Run tests in watch mode (interactive):
+npm test
+#
+# Run tests with coverage:
+set CI=true&& npm test -- --watchAll=false --coverage --passWithNoTests
+#
+# Eject from CRA (irreversible — avoid unless necessary):
+npm run eject
+#
+# Regenerate Pokemon regional/spawn/type catalogs from docs/Pokemon-master:
+npm run generate-catalogs
+#
+# Regenerate pokemons.md + public/assets/dataSet/pokemons.json (by biome, spawn level, evolution stage):
+npm run generate-pokemons-md
+#
+# ========================================
+# 4. CODEBASE.BAT (FULL PIPELINE)
+# ========================================
+#
+# Windows batch launcher. Copies itself to %TEMP% so edits mid-run do not break execution.
+#
+# Default pipeline (steps 0–6), then optional step 7 (npm start):
+codebase.bat
+#
+# Environment flags (set before running):
+#
+# SKIP_ASSET_INVENTORY=1     Skip GLB inventory under public\assets
+# SKIP_CLEAN=1               Keep node_modules; only remove build\ and coverage\
+# SKIP_PRETTIER=1            Skip Prettier
+# RUN_PRETTIER=1             Run Prettier even without .prettierrc
+# SKIP_ESLINT=1              Skip ESLint
+# RUN_TEST_COVERAGE=1        Run Jest with --coverage (step 5b)
+# AUTO_START_DEV=1           Start npm start after checks without prompting
+# AUTO_SKIP_DEV=1            Never prompt for dev server
+#
+# Examples:
+set SKIP_CLEAN=1&& codebase.bat
+set AUTO_START_DEV=1&& codebase.bat
+set RUN_TEST_COVERAGE=1&& codebase.bat
+#
+# Pipeline steps:
+#   [0] Asset inventory — counts public\assets\*.glb, warns if core GLBs missing
+#   [1] Clean + npm install (unless SKIP_CLEAN=1)
+#   [2] TypeScript — skipped (JavaScript CRA project)
+#   [3] Prettier check/write on src and public
+#   [4] ESLint on src (with --fix retry)
+#   [5] Jest tests
+#   [5b] Coverage (optional)
+#   [6] npm run build
+#   [7] npm start (optional)
+#
+# Capture full log to file:
+codebase.bat > error.txt 2>&1
+#
+# ========================================
+# 5. ASSET COMMANDS
+# ========================================
+#
+# Count biome GLB models (PowerShell):
+powershell -NoProfile -Command "(Get-ChildItem -Path 'public\assets' -Filter '*.glb' -Recurse).Count"
+#
+# List all GLB paths:
+dir /s /b public\assets\*.glb
+#
+# Legacy poke_glb folder (if present):
+dir /s /b public\poke_glb\*.glb
+#
+# Verify core assets exist:
+if not exist "public\assets\player.glb" echo MISSING player.glb
+if not exist "public\assets\companion.glb" echo MISSING companion.glb
+if not exist "public\assets\wild_creature.glb" echo MISSING wild_creature.glb
+#
+# Add a new ordinary creature:
+#   1. Copy GLB to: public/assets/<Biome Name>/ordinary/creature_XX.glb
+#   2. Register in CREATURE_ASSET_MANIFEST in src/game/world.js
+#   3. Folder name must match WORLD_PATHS[].name exactly (spaces allowed; URLs encoded in code)
+#
+# Add a new biome:
+#   1. Create folder: public/assets/<New Biome Name>/ordinary/ and alpha.glb
+#   2. Add entry to WORLD_PATHS and CREATURE_ASSET_MANIFEST in src/game/world.js
+#   3. Wire biome button in src/App.jsx biome menu
+#   4. Add weather/atmosphere rules in GameScene if needed
+#
+# ========================================
+# 6. LINT, FORMAT, TEST
+# ========================================
+#
+# ESLint (src only):
+npx eslint src
+npx eslint src --fix
+#
+# Prettier (if .prettierrc exists or RUN_PRETTIER=1 in codebase.bat):
+npx prettier --check src public
+npx prettier --write src public
+#
+# Single test file:
+npm test -- --watchAll=false src/game/animationUtils.test.js
+#
+# ========================================
+# 7. BUILD & DEPLOY
+# ========================================
+#
+# Local production build:
+npm run build
+#
+# Serve build folder locally (install serve once: npm i -g serve):
+npx serve -s build -l 3000
+#
+# Build output size check (PowerShell):
+powershell -NoProfile -Command "(Get-ChildItem build -Recurse | Measure-Object -Property Length -Sum).Sum / 1MB"
+#
+# Deploy: upload contents of build/ to any static host (S3, Netlify, GitHub Pages, etc.)
+# Ensure server serves index.html for SPA routes if you add routing later.
+#
+# ========================================
+# 8. GIT COMMANDS
+# ========================================
+#
+# Status and diff:
+git status
+git diff
+git log --oneline -10
+#
+# Stage and commit (example):
+git add src commands.txt promsts.txt
+git commit -m "Add project command and prompt references"
+#
+# Do not commit secrets, error.txt logs, or local scratch output unless intentional.
+#
+# ========================================
+# 9. PROJECT STRUCTURE
+# ========================================
+#
+# pixelmon/
+#   codebase.bat          Automated check pipeline
+#   commands.txt          This file
+#   promsts.txt           AI / development prompts
+#   package.json          Dependencies and npm scripts
+#   README.md             Gameplay, assets, architecture
+#   public/
+#     assets/             Active game assets (biomes, player, textures)
+#       player.glb
+#       companion.glb
+#       wild_creature.glb
+#       <Biome Name>/ordinary/*.glb
+#       <Biome Name>/alpha.glb
+#     index.html
+#   src/
+#     App.jsx               Canvas shell, HUD, biome switching
+#     App.css               Overlay UI styles
+#     index.js              React entry
+#     index.css             Global styles
+#     components/
+#       GameScene.js        Main R3F scene, creatures, projectiles
+#       Player.js           Movement and animation
+#       VoxelWorld.js       Instanced terrain
+#       WildCreature.js     AI and GLB rendering
+#       AnimatedModel.js    GLB loader wrapper
+#       LoadingOverlay.js   Biome transition overlay
+#       Hotbar.js           Ball selection UI
+#       Atmosphere.js       Lighting and sky
+#       OceanHorizon.js     Horizon ocean plane
+#       Sandstorm.js        Desert weather
+#       Snowstorm.js        Snow weather
+#       ...                 Camera, aim, effects, props
+#     game/
+#       world.js            Biomes, terrain, spawns, manifest
+#       balls.js            Ball types and capture rates
+#       projectilePhysics.js Throw math
+#       animationUtils.js   Clip helpers
+#       pokeModels.js       Legacy poke_glb helpers (if used)
+#     hooks/
+#       useKeyboardControls.js
+#   scratch/                Optional local experiments (not shipped)
+#
+# ========================================
+# 10. GAMEPLAY & DEBUG
+# ========================================
+#
+# Controls (in-game):
+#   Click canvas          Pointer lock
+#   WASD / arrows         Move
+#   Space                 Throw equipped ball
+#   E                     Recall / send companion
+#   Q / R / mouse wheel   Adjust throw power
+#   1 / 2 / 3             Switch ball type
+#   Biome menu (right)    Switch biome (triggers LoadingOverlay)
+#
+# Browser debugging:
+#   F12                   DevTools
+#   Performance tab       Profile frame drops (instancing, GLB count)
+#   Network tab           Verify /assets/... GLB loads (404 = wrong path or manifest)
+#
+# React DevTools:
+#   Inspect App state: caughtCount, currentBiome, throwPower, isLoading
+#
+# Common code breakpoints:
+#   src/components/GameScene.js     Catch logic, alpha spawn
+#   src/game/world.js               Terrain height, walkability
+#   src/components/AnimatedModel.js GLB load failures
+#
+# ========================================
+# 11. COMMON WORKFLOWS
+# ========================================
+#
+# A. New developer onboarding
+#    1. git clone <repo>
+#    2. npm install
+#    3. npm start
+#    4. Read README.md controls section
+#    5. Run codebase.bat once to verify machine setup
+#
+# B. Add creature to existing biome
+#    1. Add GLB under public/assets/<Biome>/ordinary/
+#    2. Edit CREATURE_ASSET_MANIFEST in src/game/world.js
+#    3. npm start — verify scale/rotation in-game
+#    4. npm test && npm run build
+#
+# C. Fix GLB wrong orientation or scale
+#    1. Adjust manifest entry: scale, rotation [x,y,z] radians
+#    2. Do not change gameplay constants unless hitbox feels wrong
+#
+# D. Performance pass
+#    1. Reduce draw calls (instancing already used for terrain)
+#    2. Limit concurrent WildCreature instances in GameScene
+#    3. Profile with React Profiler + Chrome Performance
+#    4. Use prompts: "optimise biome load time" in promsts.txt
+#
+# E. Pre-release check
+#    codebase.bat
+#    Review error.txt if redirected
+#    Manual play-test: all 6 biomes, catch ordinary + alpha, companion recall
+#
+# ========================================
+# 12. TROUBLESHOOTING
+# ========================================
+#
+# npm install fails:
+#   - Use Node 18+ LTS
+#   - Delete node_modules and package-lock.json, then npm install again
+#
+# npm run build fails:
+#   - Run npx eslint src and fix errors
+#   - Check for case-sensitive import paths (Linux CI vs Windows dev)
+#
+# Black screen / WebGL context lost:
+#   - Update GPU drivers; try another browser
+#   - Reduce canvas pixel ratio in App.jsx if added
+#
+# Models invisible or huge:
+#   - Fix CREATURE_ASSET_MANIFEST scale/rotation
+#   - Confirm file path matches biome folder name (spaces → encoded URLs in world.js)
+#
+# Biome switch infinite loading:
+#   - Check handleBiomeReady / preloadBiome in App.jsx and world.js
+#   - clearAllBiomeCaches on switch
+#
+# Pointer lock not working:
+#   - User gesture required; click canvas first
+#   - See SafePointerLockControls.js
+#
+# Tests fail in CI but pass locally:
+#   - set CI=true before npm test
+#   - Avoid timing-dependent tests without mocks
+#
+# codebase.bat BOM error on first line:
+#   - Save codebase.bat as UTF-8 without BOM
+#
+# ========================================
+# 13. ENVIRONMENT VARIABLES
+# ========================================
+#
+# Create React App (optional .env in project root):
+#
+# PORT=3000                    Dev server port
+# BROWSER=none                 Skip auto-opening browser
+# GENERATE_SOURCEMAP=false     Smaller production build
+# CI=true                      Used by codebase.bat for non-interactive tests
+#
+# codebase.bat flags (see section 4) are process env vars, not .env file entries.
+#
+# ========================================
+# 14. NOTES
+# ========================================
+#
+# - This project has no backend API; all state is client-side React state.
+# - public/poke_glb may exist for legacy experiments; active paths use public/assets.
+# - Prefer README.md for asset conventions; use promsts.txt when working with AI agents.
+# - Run codebase.bat after large refactors or before opening a PR.
+# - Keep commands.txt and promsts.txt updated when adding biomes, scripts, or tooling.
+git init
+git remote add origin https://github.com/spryzen23/Pixelmon.git
+git branch -M main
+git add .
+git commit -m "emailapis deployment v1"
+git push -u origin main

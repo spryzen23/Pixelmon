@@ -1,0 +1,2937 @@
+{
+  "eslint.config.mjs": {
+    "mtime": 1781388015.0,
+    "ast_hash": "bcc3bd1ab5a9be74fd9f2e072327b2e7",
+    "semantic_hash": "bcc3bd1ab5a9be74fd9f2e072327b2e7"
+  },
+  "package.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9b653f3e323663f87dcc951339aace1c",
+    "semantic_hash": "9b653f3e323663f87dcc951339aace1c"
+  },
+  "public/assets/models/Merged.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "639feebefe3154fec0eae41e468cb58b",
+    "semantic_hash": "639feebefe3154fec0eae41e468cb58b"
+  },
+  "public/assets/models/MergedOpt.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "25bae9028d08c6774d0fe83675686306",
+    "semantic_hash": "25bae9028d08c6774d0fe83675686306"
+  },
+  "public/assets/plants/manifest.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "04d7f3ebb6ede1edd045c83838c14753",
+    "semantic_hash": "04d7f3ebb6ede1edd045c83838c14753"
+  },
+  "public/assets/pokeballs/manifest.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e884d1c27ae4b5265eb083a11b2b1993",
+    "semantic_hash": "e884d1c27ae4b5265eb083a11b2b1993"
+  },
+  "public/manifest.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d48d4ec511401bb4c379b309b67d80c6",
+    "semantic_hash": "d48d4ec511401bb4c379b309b67d80c6"
+  },
+  "scripts/convert-desert-glb-pbr.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e1a0e892f126d4231efdd0030f930626",
+    "semantic_hash": "e1a0e892f126d4231efdd0030f930626"
+  },
+  "scripts/fix-biome-imports.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0c38d4f3049461eb62d12f917ee18b20",
+    "semantic_hash": "0c38d4f3049461eb62d12f917ee18b20"
+  },
+  "scripts/fix-br-imports.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cbb06de176e674a91a7dbf14cf7dfa86",
+    "semantic_hash": "cbb06de176e674a91a7dbf14cf7dfa86"
+  },
+  "scripts/inspect-desert-pack-glb.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f5ac3d139925904ded06f0839a15bff7",
+    "semantic_hash": "f5ac3d139925904ded06f0839a15bff7"
+  },
+  "scripts/inspect-forest-pack-glb.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e92fe764117df477a9a37667f01daad8",
+    "semantic_hash": "e92fe764117df477a9a37667f01daad8"
+  },
+  "scripts/inspect-plants-glb.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "afcf5f89c0826db8ad9d5cd6c1268adc",
+    "semantic_hash": "afcf5f89c0826db8ad9d5cd6c1268adc"
+  },
+  "scripts/inspect-village-glb.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7edc92a46fe6c7bc362497e066eda548",
+    "semantic_hash": "7edc92a46fe6c7bc362497e066eda548"
+  },
+  "scripts/migrate-to-sqlite.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "820961935f2f0004ff02416ca5659f4c",
+    "semantic_hash": "820961935f2f0004ff02416ca5659f4c"
+  },
+  "scripts/patch-mediapipe-sourcemap.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f82eb1be87095048b42b8b16a8ecdfba",
+    "semantic_hash": "f82eb1be87095048b42b8b16a8ecdfba"
+  },
+  "scripts/plants-manifest-io.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0dc41f2b99a5893f91d0b7c44d089b4f",
+    "semantic_hash": "0dc41f2b99a5893f91d0b7c44d089b4f"
+  },
+  "scripts/split-desert-pack-glb.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0e3741284aed806d7e6fedd479d78791",
+    "semantic_hash": "0e3741284aed806d7e6fedd479d78791"
+  },
+  "scripts/split-forest-pack-glb.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ac1a57d6e2a87958662596cf3e26c0d0",
+    "semantic_hash": "ac1a57d6e2a87958662596cf3e26c0d0"
+  },
+  "scripts/split-plants-glb.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "59f26718219bff0ec1f8fc13658d1c41",
+    "semantic_hash": "59f26718219bff0ec1f8fc13658d1c41"
+  },
+  "scripts/split-pokeballs-glb.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "5cc4ba48085185c8b0b88e5e203a4e78",
+    "semantic_hash": "5cc4ba48085185c8b0b88e5e203a4e78"
+  },
+  "server.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "20b679e1ba131ff1c93fd960c5021d20",
+    "semantic_hash": "20b679e1ba131ff1c93fd960c5021d20"
+  },
+  "src/App.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8da35fdb2e3366e652148e3ab169bbc4",
+    "semantic_hash": "8da35fdb2e3366e652148e3ab169bbc4"
+  },
+  "src/api.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "289178c707ee036e56bd1edabc5f18b6",
+    "semantic_hash": "289178c707ee036e56bd1edabc5f18b6"
+  },
+  "src/app/api/[...path]/route.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7c13db7bec94da50b74df1a7c1ccf764",
+    "semantic_hash": "7c13db7bec94da50b74df1a7c1ccf764"
+  },
+  "src/app/api/metrics/biome/route.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7cc171db700f84df43bc2231e2e4594b",
+    "semantic_hash": "7cc171db700f84df43bc2231e2e4594b"
+  },
+  "src/app/layout.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c01a1bd1ce99752ea6eefd73949d2e4e",
+    "semantic_hash": "c01a1bd1ce99752ea6eefd73949d2e4e"
+  },
+  "src/app/page.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "03f5678ced799920fdcab9dcc7748abb",
+    "semantic_hash": "03f5678ced799920fdcab9dcc7748abb"
+  },
+  "src/components/AimIndicator.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0cb5d1c96f9736e4fa5a7fb7aa93715e",
+    "semantic_hash": "0cb5d1c96f9736e4fa5a7fb7aa93715e"
+  },
+  "src/components/AnimatedModel.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "72af9d0cb975e275f26525c428488911",
+    "semantic_hash": "72af9d0cb975e275f26525c428488911"
+  },
+  "src/components/Atmosphere.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c740b8ef04d7a8007163327313548cba",
+    "semantic_hash": "c740b8ef04d7a8007163327313548cba"
+  },
+  "src/components/BallModel.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a2a2ec31948f184dcc5e8d46092d6e5b",
+    "semantic_hash": "a2a2ec31948f184dcc5e8d46092d6e5b"
+  },
+  "src/components/BiomeLandmarks.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "725d5603551a0a967fec492692b703a9",
+    "semantic_hash": "725d5603551a0a967fec492692b703a9"
+  },
+  "src/components/BiomeProps.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9b0b8c4e6c75311d93fef52590492a97",
+    "semantic_hash": "9b0b8c4e6c75311d93fef52590492a97"
+  },
+  "src/components/Cactus.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "312ea5fd1a8599d26504ef64dbb3d833",
+    "semantic_hash": "312ea5fd1a8599d26504ef64dbb3d833"
+  },
+  "src/components/CaptureBurst.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c19cde3f1e032ccf54a40b7c42e604a2",
+    "semantic_hash": "c19cde3f1e032ccf54a40b7c42e604a2"
+  },
+  "src/components/CompanionCreature.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "556398aa8e307228b815f1e6e2fac60f",
+    "semantic_hash": "556398aa8e307228b815f1e6e2fac60f"
+  },
+  "src/components/CompanionPreview.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1b7d833fc02e2f49016a5cd3de08f297",
+    "semantic_hash": "1b7d833fc02e2f49016a5cd3de08f297"
+  },
+  "src/components/CompanionRecallEffect.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "21b4ca7338b809a378d2038081d515fc",
+    "semantic_hash": "21b4ca7338b809a378d2038081d515fc"
+  },
+  "src/components/CreatureGltfPreloader.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0d3cb6adffdf0be9310138ac67e34dcf",
+    "semantic_hash": "0d3cb6adffdf0be9310138ac67e34dcf"
+  },
+  "src/components/FantasyBiomeProps.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f8e91e29f2396cd2d3e77441836448d8",
+    "semantic_hash": "f8e91e29f2396cd2d3e77441836448d8"
+  },
+  "src/components/FantasyGltfProvider.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a9bf46e27e2b499e1b7b947e69e3c6ff",
+    "semantic_hash": "a9bf46e27e2b499e1b7b947e69e3c6ff"
+  },
+  "src/components/FantasyProp.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "01b9342bed144ee03b615b4b28adabfb",
+    "semantic_hash": "01b9342bed144ee03b615b4b28adabfb"
+  },
+  "src/components/GameScene.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cb42e0efd0ccc52a139fa479aa7d1272",
+    "semantic_hash": "cb42e0efd0ccc52a139fa479aa7d1272"
+  },
+  "src/components/GameView.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "687cdafbb99b9eb71311bca711b5cb05",
+    "semantic_hash": "687cdafbb99b9eb71311bca711b5cb05"
+  },
+  "src/components/GlbCharacter.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "288d442b1e35ab573cc4b661a2ad9dcb",
+    "semantic_hash": "288d442b1e35ab573cc4b661a2ad9dcb"
+  },
+  "src/components/Hotbar.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "bd57fca1a38dead0b5d2961f2607d225",
+    "semantic_hash": "bd57fca1a38dead0b5d2961f2607d225"
+  },
+  "src/components/LoadingOverlay.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e7509deacf3aac2666293d1219156f6f",
+    "semantic_hash": "e7509deacf3aac2666293d1219156f6f"
+  },
+  "src/components/ModelErrorBoundary.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "dca7b956185badc0b0cec50178aadef9",
+    "semantic_hash": "dca7b956185badc0b0cec50178aadef9"
+  },
+  "src/components/OceanHorizon.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cb7cfa2fb5a1b3c28e18d487bca3c260",
+    "semantic_hash": "cb7cfa2fb5a1b3c28e18d487bca3c260"
+  },
+  "src/components/PlantGltfPreloader.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "63cdc7ba99dce22ecab1bc80553906c1",
+    "semantic_hash": "63cdc7ba99dce22ecab1bc80553906c1"
+  },
+  "src/components/PlantProp.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "db2af21f99ee087977159adadb61a908",
+    "semantic_hash": "db2af21f99ee087977159adadb61a908"
+  },
+  "src/components/Player.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "5b1562f93b8be392076da43659779af9",
+    "semantic_hash": "5b1562f93b8be392076da43659779af9"
+  },
+  "src/components/Projectile.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "575505991f120256c588033888e54c1a",
+    "semantic_hash": "575505991f120256c588033888e54c1a"
+  },
+  "src/components/SafePointerLockControls.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "bf4ec41c696ff57e0334047dcf916fd1",
+    "semantic_hash": "bf4ec41c696ff57e0334047dcf916fd1"
+  },
+  "src/components/Sandstorm.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e703ac266fa653422c33785a30aab946",
+    "semantic_hash": "e703ac266fa653422c33785a30aab946"
+  },
+  "src/components/SceneTheme.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7d07f5443047db9ae868f399f0405add",
+    "semantic_hash": "7d07f5443047db9ae868f399f0405add"
+  },
+  "src/components/Snowstorm.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "974e84585a49893036d59f8ba39a0939",
+    "semantic_hash": "974e84585a49893036d59f8ba39a0939"
+  },
+  "src/components/ThirdPersonCamera.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "182c6e2512fae04c4d9535e7d452bb2f",
+    "semantic_hash": "182c6e2512fae04c4d9535e7d452bb2f"
+  },
+  "src/components/VillageBiomeProps.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "257fd46f09e9e2f330279e9976672871",
+    "semantic_hash": "257fd46f09e9e2f330279e9976672871"
+  },
+  "src/components/VillageGltfProvider.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "369c73d07b21184b552b4b3c989b5cc5",
+    "semantic_hash": "369c73d07b21184b552b4b3c989b5cc5"
+  },
+  "src/components/VillageProp.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "5210db6f59a2004ab5bac3cc1d53c8ad",
+    "semantic_hash": "5210db6f59a2004ab5bac3cc1d53c8ad"
+  },
+  "src/components/VillageScene.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "98410d8368d6bd87ac1a97768452c565",
+    "semantic_hash": "98410d8368d6bd87ac1a97768452c565"
+  },
+  "src/components/VoxelFallback.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "85a1e67c8316e8393d0e6b4dfa1af81e",
+    "semantic_hash": "85a1e67c8316e8393d0e6b4dfa1af81e"
+  },
+  "src/components/VoxelWorld.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "955c5a22fc9a791cd9cb019fcc41e851",
+    "semantic_hash": "955c5a22fc9a791cd9cb019fcc41e851"
+  },
+  "src/components/WildCreature.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "145f8abb98742dfaeaf0307310791b6b",
+    "semantic_hash": "145f8abb98742dfaeaf0307310791b6b"
+  },
+  "src/components/biomes/cave/CaveEntrance.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2186456db8f9be6ac9b15c997decb53b",
+    "semantic_hash": "2186456db8f9be6ac9b15c997decb53b"
+  },
+  "src/components/biomes/cave/CaveInteriorEffects.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "feb3e09a7918313ba816b10420560289",
+    "semantic_hash": "feb3e09a7918313ba816b10420560289"
+  },
+  "src/components/biomes/desert/Sandstorm.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6028639e3b0a1eda773eaf1fe21f64c5",
+    "semantic_hash": "6028639e3b0a1eda773eaf1fe21f64c5"
+  },
+  "src/components/biomes/distortion/DistortionRealmLandmarks.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "861f11fd4710e33afd24e87de51efa48",
+    "semantic_hash": "861f11fd4710e33afd24e87de51efa48"
+  },
+  "src/components/biomes/icy/IceMountainLandmarks.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "291a3f30dc15cc5c832501379538ea80",
+    "semantic_hash": "291a3f30dc15cc5c832501379538ea80"
+  },
+  "src/components/biomes/icy/Snowstorm.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a88204f82965efe9794172019bdb1628",
+    "semantic_hash": "a88204f82965efe9794172019bdb1628"
+  },
+  "src/components/biomes/moonlit/MoonlitLandmarks.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "abd22037845a605125a9ee5233cf1326",
+    "semantic_hash": "abd22037845a605125a9ee5233cf1326"
+  },
+  "src/components/biomes/sky/DistantSkyIsland.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d7a751b1c626e97e0ec662a4e404e226",
+    "semantic_hash": "d7a751b1c626e97e0ec662a4e404e226"
+  },
+  "src/components/biomes/sky/SkyBelowVista.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0c2002120428afe54147696321c31ff1",
+    "semantic_hash": "0c2002120428afe54147696321c31ff1"
+  },
+  "src/components/biomes/sky/SkyBiomeLandmarks.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f6fe648e6b26e09d07763d91c58be563",
+    "semantic_hash": "f6fe648e6b26e09d07763d91c58be563"
+  },
+  "src/components/biomes/volcanic/Ashfall.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9a284f34dea94597b0da52694b9d80d6",
+    "semantic_hash": "9a284f34dea94597b0da52694b9d80d6"
+  },
+  "src/components/biomes/volcanic/VolcanoCrater.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "55ad9e6852278f263291aad1619cf9c5",
+    "semantic_hash": "55ad9e6852278f263291aad1619cf9c5"
+  },
+  "src/components/gameScene/spawnLogic.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "83b8260556bd30314b82b39339e94d58",
+    "semantic_hash": "83b8260556bd30314b82b39339e94d58"
+  },
+  "src/components/ui/Badge.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b8cfcb0d94d2ef683356787ac0700c78",
+    "semantic_hash": "b8cfcb0d94d2ef683356787ac0700c78"
+  },
+  "src/components/ui/Button.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "509b5c3f01da5acd1d8ca962b305225d",
+    "semantic_hash": "509b5c3f01da5acd1d8ca962b305225d"
+  },
+  "src/components/ui/Checkbox.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "477ec86303e3474060531527f96cfff6",
+    "semantic_hash": "477ec86303e3474060531527f96cfff6"
+  },
+  "src/components/ui/EmptyState.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c60cef82368ae9ebf2a4738e80966e20",
+    "semantic_hash": "c60cef82368ae9ebf2a4738e80966e20"
+  },
+  "src/components/ui/Modal.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "46d6ee99955ef5ff79929becf9df9098",
+    "semantic_hash": "46d6ee99955ef5ff79929becf9df9098"
+  },
+  "src/components/ui/Pagination.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a5aecfc27f6e599dd90bdd25641a9123",
+    "semantic_hash": "a5aecfc27f6e599dd90bdd25641a9123"
+  },
+  "src/components/ui/PasswordField.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c834528c75cedd8b1100c7d5300b912d",
+    "semantic_hash": "c834528c75cedd8b1100c7d5300b912d"
+  },
+  "src/components/ui/ProgressBar.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ef9a2cf2a016e5d6d5094351e13260c7",
+    "semantic_hash": "ef9a2cf2a016e5d6d5094351e13260c7"
+  },
+  "src/components/ui/RadioGroup.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a3d3032d4f03efd93ed791a3153b6035",
+    "semantic_hash": "a3d3032d4f03efd93ed791a3153b6035"
+  },
+  "src/components/ui/SearchField.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "323e5e130c2542000dd5f9b237fd699b",
+    "semantic_hash": "323e5e130c2542000dd5f9b237fd699b"
+  },
+  "src/components/ui/SelectField.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "bfa7d1c2547ed16b43e3599b0d1957df",
+    "semantic_hash": "bfa7d1c2547ed16b43e3599b0d1957df"
+  },
+  "src/components/ui/TabBar.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a604e3eb85e832fbc59847b68c4f7f42",
+    "semantic_hash": "a604e3eb85e832fbc59847b68c4f7f42"
+  },
+  "src/components/ui/TextField.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0d8bb34470aaf097fa860c5aebf8cf2f",
+    "semantic_hash": "0d8bb34470aaf097fa860c5aebf8cf2f"
+  },
+  "src/components/ui/WizardStepper.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "74e30ad5ed5b78f05d774564e896b099",
+    "semantic_hash": "74e30ad5ed5b78f05d774564e896b099"
+  },
+  "src/components/ui/layout/ScreenFrame.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "afdb5bda05a38912098291858d429406",
+    "semantic_hash": "afdb5bda05a38912098291858d429406"
+  },
+  "src/context/GameContext.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3dfb4619171127333020435e1ef0596f",
+    "semantic_hash": "3dfb4619171127333020435e1ef0596f"
+  },
+  "src/data/battleRules.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "97d438b4aad59d6ccf3b8eedde6356f6",
+    "semantic_hash": "97d438b4aad59d6ccf3b8eedde6356f6"
+  },
+  "src/game/animationUtils.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4ff596219d11f2e8a7bc304e1ae6d686",
+    "semantic_hash": "4ff596219d11f2e8a7bc304e1ae6d686"
+  },
+  "src/game/animationUtils.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6dc3ed8c14c08703419974c1cfa4e5f5",
+    "semantic_hash": "6dc3ed8c14c08703419974c1cfa4e5f5"
+  },
+  "src/game/assetResolver.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2992fec3956862faaf58f89c33a4f61c",
+    "semantic_hash": "2992fec3956862faaf58f89c33a4f61c"
+  },
+  "src/game/assetResolver.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2a938536acf5595e4ed275b7ce19813a",
+    "semantic_hash": "2a938536acf5595e4ed275b7ce19813a"
+  },
+  "src/game/assets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e44cf38fb5bc20985d3add9f1ead4695",
+    "semantic_hash": "e44cf38fb5bc20985d3add9f1ead4695"
+  },
+  "src/game/assets.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b55579134d44160dda3d6f7b46cad96b",
+    "semantic_hash": "b55579134d44160dda3d6f7b46cad96b"
+  },
+  "src/game/atmosphereConfig.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3798012c91ca98524f40e14a4dc552f9",
+    "semantic_hash": "3798012c91ca98524f40e14a4dc552f9"
+  },
+  "src/game/balls.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "bda9360b5ab105ea7b9f0aa57514bd8f",
+    "semantic_hash": "bda9360b5ab105ea7b9f0aa57514bd8f"
+  },
+  "src/game/biomeDisplay.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b5454a1f073211069524a7dd718a9142",
+    "semantic_hash": "b5454a1f073211069524a7dd718a9142"
+  },
+  "src/game/biomeDisplay.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e723a58f72960268276b1ea764014779",
+    "semantic_hash": "e723a58f72960268276b1ea764014779"
+  },
+  "src/game/biomeLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "953b3e72ba8ae48996a103ebdd44124d",
+    "semantic_hash": "953b3e72ba8ae48996a103ebdd44124d"
+  },
+  "src/game/biomeLoadMetrics.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "92e8f00a84796226cad63513b6010197",
+    "semantic_hash": "92e8f00a84796226cad63513b6010197"
+  },
+  "src/game/data/regionalBiomes.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7d5cd790fcb3cf5fe65b23900808915a",
+    "semantic_hash": "7d5cd790fcb3cf5fe65b23900808915a"
+  },
+  "src/game/data/spawnCatalog.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d5efa7dafccf43439956002ea4878836",
+    "semantic_hash": "d5efa7dafccf43439956002ea4878836"
+  },
+  "src/game/data/typeAnimationCatalog.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3997006d4d9c24cea05d4e7577a0955f",
+    "semantic_hash": "3997006d4d9c24cea05d4e7577a0955f"
+  },
+  "src/game/fantasyAssets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cc33d68181885694cf49c0918f9e25ac",
+    "semantic_hash": "cc33d68181885694cf49c0918f9e25ac"
+  },
+  "src/game/fantasyVillageLayout.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d89b93d19fc7a875aebb5068f71f9984",
+    "semantic_hash": "d89b93d19fc7a875aebb5068f71f9984"
+  },
+  "src/game/generatedAssetManifest.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d957e6fc37d98da5f67a38b1d1fcce85",
+    "semantic_hash": "d957e6fc37d98da5f67a38b1d1fcce85"
+  },
+  "src/game/logger.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "58ec19bd511b7b0e7291f1fd2d4af24e",
+    "semantic_hash": "58ec19bd511b7b0e7291f1fd2d4af24e"
+  },
+  "src/game/plantAssets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "063de17c30184e3862e49a2d9d32a6bc",
+    "semantic_hash": "063de17c30184e3862e49a2d9d32a6bc"
+  },
+  "src/game/plantAssets.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a14e561e07a0421612383b930edbd637",
+    "semantic_hash": "a14e561e07a0421612383b930edbd637"
+  },
+  "src/game/plantPlacement.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a37cd2674edc04fad20a47172d6446f7",
+    "semantic_hash": "a37cd2674edc04fad20a47172d6446f7"
+  },
+  "src/game/plantsManifest.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "04d7f3ebb6ede1edd045c83838c14753",
+    "semantic_hash": "04d7f3ebb6ede1edd045c83838c14753"
+  },
+  "src/game/playerStyles.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6200b1d9f62e4c10011201850cc18eae",
+    "semantic_hash": "6200b1d9f62e4c10011201850cc18eae"
+  },
+  "src/game/pokemonData.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8cfe7ce821990acc72eae3ea29f41b82",
+    "semantic_hash": "8cfe7ce821990acc72eae3ea29f41b82"
+  },
+  "src/game/pokemonData.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6753ee107096ad53e176008bf62a71df",
+    "semantic_hash": "6753ee107096ad53e176008bf62a71df"
+  },
+  "src/game/proceduralVoxelMaterials.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "36abeb1bb92561be401b426be94e5d15",
+    "semantic_hash": "36abeb1bb92561be401b426be94e5d15"
+  },
+  "src/game/projectilePhysics.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e376324af931877db4be351bff9b628d",
+    "semantic_hash": "e376324af931877db4be351bff9b628d"
+  },
+  "src/game/projectilePhysics.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "84ca98705f9cb6c5a7751cd1f2f2e5fc",
+    "semantic_hash": "84ca98705f9cb6c5a7751cd1f2f2e5fc"
+  },
+  "src/game/sceneThemes.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a82c284adc2adf830b513a6dd46b8284",
+    "semantic_hash": "a82c284adc2adf830b513a6dd46b8284"
+  },
+  "src/game/spawnController.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "43ed50d2c8b8dd66e9f4268940b423a3",
+    "semantic_hash": "43ed50d2c8b8dd66e9f4268940b423a3"
+  },
+  "src/game/spawnController.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "18000af2e23a4bbf2d53a7b12814bf7b",
+    "semantic_hash": "18000af2e23a4bbf2d53a7b12814bf7b"
+  },
+  "src/game/spawnPlacement.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "33ee7998bac7d64d775a9bf767dd5021",
+    "semantic_hash": "33ee7998bac7d64d775a9bf767dd5021"
+  },
+  "src/game/spawnPlacement.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "464dfd733fe95cfc7e6915ab8c6951bb",
+    "semantic_hash": "464dfd733fe95cfc7e6915ab8c6951bb"
+  },
+  "src/game/typeAnims.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8fcdebbde7fadae5d274a64faa83eabb",
+    "semantic_hash": "8fcdebbde7fadae5d274a64faa83eabb"
+  },
+  "src/game/villageAssets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "43a9e13376a667fec7465423990571b2",
+    "semantic_hash": "43a9e13376a667fec7465423990571b2"
+  },
+  "src/game/villageLayout.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0d66ad0ee5452e3d3a25e0fe8cedccc8",
+    "semantic_hash": "0d66ad0ee5452e3d3a25e0fe8cedccc8"
+  },
+  "src/game/world.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d4b5030938e229501f429c0482deaff1",
+    "semantic_hash": "d4b5030938e229501f429c0482deaff1"
+  },
+  "src/game/world.props.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e98ca510196808c87c198e73e261124d",
+    "semantic_hash": "e98ca510196808c87c198e73e261124d"
+  },
+  "src/hooks/useAudioManager.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4d11a7c6f968be208ece5287b337d816",
+    "semantic_hash": "4d11a7c6f968be208ece5287b337d816"
+  },
+  "src/hooks/useGameInput.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "97bae49950c3ad0d72b4be8c17408156",
+    "semantic_hash": "97bae49950c3ad0d72b4be8c17408156"
+  },
+  "src/hooks/useKeyboardControls.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "00d835090e5832e254b1583a07c1cf3f",
+    "semantic_hash": "00d835090e5832e254b1583a07c1cf3f"
+  },
+  "src/hooks/useKeyboardShortcuts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3f22db2f78f4259ac7a54ee459e4b500",
+    "semantic_hash": "3f22db2f78f4259ac7a54ee459e4b500"
+  },
+  "src/hooks/usePagination.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "72e86a27323e8e23fd7ab991223cf5a4",
+    "semantic_hash": "72e86a27323e8e23fd7ab991223cf5a4"
+  },
+  "src/hooks/usePreloadProgress.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1d5945c57a6cae949deeeed2e443c00f",
+    "semantic_hash": "1d5945c57a6cae949deeeed2e443c00f"
+  },
+  "src/hooks/useToast.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "48a9bf4f9544434d7b108eaf8332a28b",
+    "semantic_hash": "48a9bf4f9544434d7b108eaf8332a28b"
+  },
+  "src/hooks/useViewportLayout.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b6a1eebed704e9c3c6cef2149ff509a9",
+    "semantic_hash": "b6a1eebed704e9c3c6cef2149ff509a9"
+  },
+  "src/hooks/useWizard.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8f982869f2f3188aca5cbcba799cad1b",
+    "semantic_hash": "8f982869f2f3188aca5cbcba799cad1b"
+  },
+  "src/main.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f0222472688faf5fa50c23d57d5212a8",
+    "semantic_hash": "f0222472688faf5fa50c23d57d5212a8"
+  },
+  "src/modes/battleRoyale/BattleRoyaleArena.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3057a26437eafb37754bc29f873c4e37",
+    "semantic_hash": "3057a26437eafb37754bc29f873c4e37"
+  },
+  "src/modes/battleRoyale/BattleRoyaleDropScene.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4fc3af2a480f9047ce1f495789c7bcdc",
+    "semantic_hash": "4fc3af2a480f9047ce1f495789c7bcdc"
+  },
+  "src/modes/battleRoyale/BattleRoyaleShell.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "524f35092c50d37fb893016617295f68",
+    "semantic_hash": "524f35092c50d37fb893016617295f68"
+  },
+  "src/screens/BattleArenaScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7aa21876d9dffdfa6c608ff8581d981a",
+    "semantic_hash": "7aa21876d9dffdfa6c608ff8581d981a"
+  },
+  "src/screens/BattleArenaV2Screen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "967e45e308bf4b8c4c11562d6cfd82ec",
+    "semantic_hash": "967e45e308bf4b8c4c11562d6cfd82ec"
+  },
+  "src/screens/BattleRoyaleV2Screen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "29d9778bfa75b8c9b65fe11911dbf03f",
+    "semantic_hash": "29d9778bfa75b8c9b65fe11911dbf03f"
+  },
+  "src/screens/CampaignV2Screen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "98e207803dc6beb077d93fc56faa2d99",
+    "semantic_hash": "98e207803dc6beb077d93fc56faa2d99"
+  },
+  "src/screens/ClueGuesserScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c2c951493c94605a33915021125897eb",
+    "semantic_hash": "c2c951493c94605a33915021125897eb"
+  },
+  "src/screens/DailyGridScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7572714e0f436c254d827c74b1499751",
+    "semantic_hash": "7572714e0f436c254d827c74b1499751"
+  },
+  "src/screens/DashboardScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a008f88c1de3713eae976dbb4d0dacf7",
+    "semantic_hash": "a008f88c1de3713eae976dbb4d0dacf7"
+  },
+  "src/screens/GameCompleteScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "379b36c8b3de424e7d9016aa2cd8139f",
+    "semantic_hash": "379b36c8b3de424e7d9016aa2cd8139f"
+  },
+  "src/screens/LoadingScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "526e226e3aa101e6603b74571c3f6386",
+    "semantic_hash": "526e226e3aa101e6603b74571c3f6386"
+  },
+  "src/screens/MapEditorScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a97845251cdf92a72c147d214f52d4d1",
+    "semantic_hash": "a97845251cdf92a72c147d214f52d4d1"
+  },
+  "src/screens/MinigameHubScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4d937434c22df6c63d45d99d27131c27",
+    "semantic_hash": "4d937434c22df6c63d45d99d27131c27"
+  },
+  "src/screens/PokedexScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "45f39abf88a14153e1a227fa3ca0c3d2",
+    "semantic_hash": "45f39abf88a14153e1a227fa3ca0c3d2"
+  },
+  "src/screens/ProfileSetupScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "78b933d4f6c32d771938ce930a0c3497",
+    "semantic_hash": "78b933d4f6c32d771938ce930a0c3497"
+  },
+  "src/screens/StaticRegionScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1bd37698b94cc0eb8398c4638845f33b",
+    "semantic_hash": "1bd37698b94cc0eb8398c4638845f33b"
+  },
+  "src/screens/TriviaTrainingScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e3507be6828ade120a88fbec2db75513",
+    "semantic_hash": "e3507be6828ade120a88fbec2db75513"
+  },
+  "src/screens/WelcomeScreen.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "eee1bb8d41fee4e68c739558e720d2d6",
+    "semantic_hash": "eee1bb8d41fee4e68c739558e720d2d6"
+  },
+  "src/screens/__tests__/ActionGrid.test.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1d242483b34c0473a9b4c03351c8cdea",
+    "semantic_hash": "1d242483b34c0473a9b4c03351c8cdea"
+  },
+  "src/screens/__tests__/DamageCalculator.test.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c49094e339c736652c273259adc890a2",
+    "semantic_hash": "c49094e339c736652c273259adc890a2"
+  },
+  "src/screens/__tests__/TrainerColumn.test.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "caf01d155a6ccc91b7191d86128bb670",
+    "semantic_hash": "caf01d155a6ccc91b7191d86128bb670"
+  },
+  "src/screens/__tests__/setup.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "00e47f7b9836e8f731101981fa2bb2de",
+    "semantic_hash": "00e47f7b9836e8f731101981fa2bb2de"
+  },
+  "src/screens/battle/ActionGrid.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1977d131b6c6ece5a922e4c188aca09e",
+    "semantic_hash": "1977d131b6c6ece5a922e4c188aca09e"
+  },
+  "src/screens/battle/BattleUtils.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "26f1e7c1f52cd619da5b72b5d913fd89",
+    "semantic_hash": "26f1e7c1f52cd619da5b72b5d913fd89"
+  },
+  "src/screens/battle/DamageCalculator.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b49f3214e8967a0ffad258c9093c8a9c",
+    "semantic_hash": "b49f3214e8967a0ffad258c9093c8a9c"
+  },
+  "src/screens/battle/SwitchUI.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "05f54581c68b232f7c85dcbe833ed4ff",
+    "semantic_hash": "05f54581c68b232f7c85dcbe833ed4ff"
+  },
+  "src/screens/battle/TrainerColumn.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "930e8a13256fedb990d466ea0adf6900",
+    "semantic_hash": "930e8a13256fedb990d466ea0adf6900"
+  },
+  "src/server/br/battleRoyaleServer.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b7a7db01d7f083f54b117e3bd019b5db",
+    "semantic_hash": "b7a7db01d7f083f54b117e3bd019b5db"
+  },
+  "src/server/index.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "5edd049d073a97d28cffd6d1ac0f1bb5",
+    "semantic_hash": "5edd049d073a97d28cffd6d1ac0f1bb5"
+  },
+  "src/server/lib/dataStore.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "bea425e4ac136dfa964ffffcbbac6890",
+    "semantic_hash": "bea425e4ac136dfa964ffffcbbac6890"
+  },
+  "src/server/lib/db.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "eb3734c7c9679e6a3dc4c74755653245",
+    "semantic_hash": "eb3734c7c9679e6a3dc4c74755653245"
+  },
+  "src/server/lib/paths.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f881fed8c8fbdd03bd5977bb5be80939",
+    "semantic_hash": "f881fed8c8fbdd03bd5977bb5be80939"
+  },
+  "src/server/routes/api.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3470e6eda3441418e4a66f5b45d36eb3",
+    "semantic_hash": "3470e6eda3441418e4a66f5b45d36eb3"
+  },
+  "src/server/routes/battle.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "999910e13ff4a742a35d8f433119c226",
+    "semantic_hash": "999910e13ff4a742a35d8f433119c226"
+  },
+  "src/server/routes/battleEngine.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "017f36e822074096b71a3f9566be370a",
+    "semantic_hash": "017f36e822074096b71a3f9566be370a"
+  },
+  "src/server/services/battleEngineCatalog.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8897161700e6e52cf086e00a906c6ced",
+    "semantic_hash": "8897161700e6e52cf086e00a906c6ced"
+  },
+  "src/server/services/battleEngineService.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "81dba154e48c8e18d9cf5ed8d290062d",
+    "semantic_hash": "81dba154e48c8e18d9cf5ed8d290062d"
+  },
+  "src/server/services/battleService.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e87e8a74af44fd1fff6f3779878d2de2",
+    "semantic_hash": "e87e8a74af44fd1fff6f3779878d2de2"
+  },
+  "src/server/services/spawnService.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9281f8ceddb928f38b8866adbb5d60c4",
+    "semantic_hash": "9281f8ceddb928f38b8866adbb5d60c4"
+  },
+  "src/server/showdown/config/config-example.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cf8ee2ca5e0124025e10ea906a9efecc",
+    "semantic_hash": "cf8ee2ca5e0124025e10ea906a9efecc"
+  },
+  "src/server/showdown/config/formats.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "033a90193fc8e4e1c880dc7b84a42f41",
+    "semantic_hash": "033a90193fc8e4e1c880dc7b84a42f41"
+  },
+  "src/server/showdown/data/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9029f3bd3515ccde32edeae011d1fb64",
+    "semantic_hash": "9029f3bd3515ccde32edeae011d1fb64"
+  },
+  "src/server/showdown/data/aliases.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f71b3cd58e3086330f76197828914491",
+    "semantic_hash": "f71b3cd58e3086330f76197828914491"
+  },
+  "src/server/showdown/data/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "332c01d89ae8c9dcb89038c41f4c9ff9",
+    "semantic_hash": "332c01d89ae8c9dcb89038c41f4c9ff9"
+  },
+  "src/server/showdown/data/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "14cb02efdd1f609163ad90a50eda5a0c",
+    "semantic_hash": "14cb02efdd1f609163ad90a50eda5a0c"
+  },
+  "src/server/showdown/data/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ee165f7fbc5d0877e2268f79db3312d3",
+    "semantic_hash": "ee165f7fbc5d0877e2268f79db3312d3"
+  },
+  "src/server/showdown/data/mods/afd/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1bb823d8ce4bbca9a79904a33564535d",
+    "semantic_hash": "1bb823d8ce4bbca9a79904a33564535d"
+  },
+  "src/server/showdown/data/mods/afd/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "19a05041c6f36e5251423ede2bb93c39",
+    "semantic_hash": "19a05041c6f36e5251423ede2bb93c39"
+  },
+  "src/server/showdown/data/mods/afd/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e8474637d7c4cedfa5b2a5ac43ed0ae8",
+    "semantic_hash": "e8474637d7c4cedfa5b2a5ac43ed0ae8"
+  },
+  "src/server/showdown/data/mods/afd/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8ac5f2c064d408fc7d877f19e18672fd",
+    "semantic_hash": "8ac5f2c064d408fc7d877f19e18672fd"
+  },
+  "src/server/showdown/data/mods/afd/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9257ce495e09887c1aea807f8e9903b7",
+    "semantic_hash": "9257ce495e09887c1aea807f8e9903b7"
+  },
+  "src/server/showdown/data/mods/afd/random-teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9a27d18b051e3412ab4debf2a4e59aab",
+    "semantic_hash": "9a27d18b051e3412ab4debf2a4e59aab"
+  },
+  "src/server/showdown/data/mods/afd/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b9997134bde6c5b9ff4a10421cee2d91",
+    "semantic_hash": "b9997134bde6c5b9ff4a10421cee2d91"
+  },
+  "src/server/showdown/data/mods/afd/typechart.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "be0da7d1e45af075051ca4f5a95198c7",
+    "semantic_hash": "be0da7d1e45af075051ca4f5a95198c7"
+  },
+  "src/server/showdown/data/mods/biomechmons/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e7c73b5f7429ca30578a9b2b8b4db5ab",
+    "semantic_hash": "e7c73b5f7429ca30578a9b2b8b4db5ab"
+  },
+  "src/server/showdown/data/mods/biomechmons/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "18ea610c17b56caedf00ab0562381f71",
+    "semantic_hash": "18ea610c17b56caedf00ab0562381f71"
+  },
+  "src/server/showdown/data/mods/biomechmons/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6e1a5354fc7cad24a506697b9b006ba7",
+    "semantic_hash": "6e1a5354fc7cad24a506697b9b006ba7"
+  },
+  "src/server/showdown/data/mods/biomechmons/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d5cf596a4882377dee0477f624e545b3",
+    "semantic_hash": "d5cf596a4882377dee0477f624e545b3"
+  },
+  "src/server/showdown/data/mods/biomechmons/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "91b0da7b7b9f8d315722da2dc2e4cade",
+    "semantic_hash": "91b0da7b7b9f8d315722da2dc2e4cade"
+  },
+  "src/server/showdown/data/mods/ccapm2025/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0228fe36a783ded1a481b7b43eb9a587",
+    "semantic_hash": "0228fe36a783ded1a481b7b43eb9a587"
+  },
+  "src/server/showdown/data/mods/ccapm2025/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a5df37876c7dffd39ca0a09e06d5b664",
+    "semantic_hash": "a5df37876c7dffd39ca0a09e06d5b664"
+  },
+  "src/server/showdown/data/mods/ccapm2025/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e643c03d2ffef12c4889db873d511e8b",
+    "semantic_hash": "e643c03d2ffef12c4889db873d511e8b"
+  },
+  "src/server/showdown/data/mods/ccapm2025/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9cbb1a846e21f3d8c39913e5b208b061",
+    "semantic_hash": "9cbb1a846e21f3d8c39913e5b208b061"
+  },
+  "src/server/showdown/data/mods/ccapm2025/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "00b28923abd9c83ad4c639c15be72989",
+    "semantic_hash": "00b28923abd9c83ad4c639c15be72989"
+  },
+  "src/server/showdown/data/mods/ccapm2025/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "767df8c51357c46f2ae765218c91623b",
+    "semantic_hash": "767df8c51357c46f2ae765218c91623b"
+  },
+  "src/server/showdown/data/mods/ccapm2025/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d09144ede6014d0bc11e8643af0bf24e",
+    "semantic_hash": "d09144ede6014d0bc11e8643af0bf24e"
+  },
+  "src/server/showdown/data/mods/ccapm2025/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c6ff95ca09efab93f7bc671cbc9e4060",
+    "semantic_hash": "c6ff95ca09efab93f7bc671cbc9e4060"
+  },
+  "src/server/showdown/data/mods/ccapm2025/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "559061191cf1fa9b0101089257d172c0",
+    "semantic_hash": "559061191cf1fa9b0101089257d172c0"
+  },
+  "src/server/showdown/data/mods/champions/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "212f59ec59f4e6caa9f5f8d30a72276f",
+    "semantic_hash": "212f59ec59f4e6caa9f5f8d30a72276f"
+  },
+  "src/server/showdown/data/mods/champions/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0e308dee3e99a189d9fefa4f172f6d33",
+    "semantic_hash": "0e308dee3e99a189d9fefa4f172f6d33"
+  },
+  "src/server/showdown/data/mods/champions/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "878a96c81627c0bad3f486663c3cf763",
+    "semantic_hash": "878a96c81627c0bad3f486663c3cf763"
+  },
+  "src/server/showdown/data/mods/champions/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b4c3e3f837b1189f24f12d63f6fff154",
+    "semantic_hash": "b4c3e3f837b1189f24f12d63f6fff154"
+  },
+  "src/server/showdown/data/mods/champions/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9d4224d5358d2284a6e2de0a539f42c9",
+    "semantic_hash": "9d4224d5358d2284a6e2de0a539f42c9"
+  },
+  "src/server/showdown/data/mods/champions/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6cb6c8fcaf2670ef296b8e9add06162d",
+    "semantic_hash": "6cb6c8fcaf2670ef296b8e9add06162d"
+  },
+  "src/server/showdown/data/mods/champions/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "fcd8d302cebe0fd76812b1cc5a8474e0",
+    "semantic_hash": "fcd8d302cebe0fd76812b1cc5a8474e0"
+  },
+  "src/server/showdown/data/mods/champions/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1057a351a212ddc55f5fdb3780469d04",
+    "semantic_hash": "1057a351a212ddc55f5fdb3780469d04"
+  },
+  "src/server/showdown/data/mods/chatbats/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9c09f6316ebc80a4e9d523f52d1f1046",
+    "semantic_hash": "9c09f6316ebc80a4e9d523f52d1f1046"
+  },
+  "src/server/showdown/data/mods/chatbats/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d353f72b3f37f19822e917d571693c9f",
+    "semantic_hash": "d353f72b3f37f19822e917d571693c9f"
+  },
+  "src/server/showdown/data/mods/chatbats/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e30e23c2234591ebdb3ab08f53b239b8",
+    "semantic_hash": "e30e23c2234591ebdb3ab08f53b239b8"
+  },
+  "src/server/showdown/data/mods/chatbats/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7694e3b7ca5baa5b70a4cfaa6accc783",
+    "semantic_hash": "7694e3b7ca5baa5b70a4cfaa6accc783"
+  },
+  "src/server/showdown/data/mods/chatbats/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ccb2d60612b06f8d6b0d613f55b6d41d",
+    "semantic_hash": "ccb2d60612b06f8d6b0d613f55b6d41d"
+  },
+  "src/server/showdown/data/mods/chatbats/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d6f9fd046bd4ef6ce0d218e8db39df00",
+    "semantic_hash": "d6f9fd046bd4ef6ce0d218e8db39df00"
+  },
+  "src/server/showdown/data/mods/fullpotential/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "46aacf4fbec473f7413cd38b33ce873d",
+    "semantic_hash": "46aacf4fbec473f7413cd38b33ce873d"
+  },
+  "src/server/showdown/data/mods/fullpotential/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "5de8d5007d04c2fd90559e5addd50922",
+    "semantic_hash": "5de8d5007d04c2fd90559e5addd50922"
+  },
+  "src/server/showdown/data/mods/gen1/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "82d643c8084395de604909508bbb2b68",
+    "semantic_hash": "82d643c8084395de604909508bbb2b68"
+  },
+  "src/server/showdown/data/mods/gen1/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8b99f82eab32b40b1f64766318f225fd",
+    "semantic_hash": "8b99f82eab32b40b1f64766318f225fd"
+  },
+  "src/server/showdown/data/mods/gen1/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d1fdd8eed48e2296f2c5c094acb287c3",
+    "semantic_hash": "d1fdd8eed48e2296f2c5c094acb287c3"
+  },
+  "src/server/showdown/data/mods/gen1/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "03ea7421d75005ac05cf0812fdd7248a",
+    "semantic_hash": "03ea7421d75005ac05cf0812fdd7248a"
+  },
+  "src/server/showdown/data/mods/gen1/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e3268a557719d0c8fbdc806bf9a0dd07",
+    "semantic_hash": "e3268a557719d0c8fbdc806bf9a0dd07"
+  },
+  "src/server/showdown/data/mods/gen1/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "70c9d219df0a5681820cb46b68e0a2cf",
+    "semantic_hash": "70c9d219df0a5681820cb46b68e0a2cf"
+  },
+  "src/server/showdown/data/mods/gen1/typechart.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "25a56de302c3c5da555809ecb54f599b",
+    "semantic_hash": "25a56de302c3c5da555809ecb54f599b"
+  },
+  "src/server/showdown/data/mods/gen1jpn/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ba606b43ffc3c23f44500e287d55c0cf",
+    "semantic_hash": "ba606b43ffc3c23f44500e287d55c0cf"
+  },
+  "src/server/showdown/data/mods/gen1jpn/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "282e3562e405da8b9a6df3b4f383420b",
+    "semantic_hash": "282e3562e405da8b9a6df3b4f383420b"
+  },
+  "src/server/showdown/data/mods/gen1jpn/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "aeb42d46796f9376bb4fc5d587b2c7d7",
+    "semantic_hash": "aeb42d46796f9376bb4fc5d587b2c7d7"
+  },
+  "src/server/showdown/data/mods/gen1jpn/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "98cb1372fdf722f8fc2b5ffd510b6776",
+    "semantic_hash": "98cb1372fdf722f8fc2b5ffd510b6776"
+  },
+  "src/server/showdown/data/mods/gen1stadium/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "37c6c1e9f99f44cf8c15c813f200ecd1",
+    "semantic_hash": "37c6c1e9f99f44cf8c15c813f200ecd1"
+  },
+  "src/server/showdown/data/mods/gen1stadium/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "97f26d8aab0c76ad6995b8e1a83af265",
+    "semantic_hash": "97f26d8aab0c76ad6995b8e1a83af265"
+  },
+  "src/server/showdown/data/mods/gen1stadium/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "be3928e3b5ae97e433d13c6c100b4a50",
+    "semantic_hash": "be3928e3b5ae97e433d13c6c100b4a50"
+  },
+  "src/server/showdown/data/mods/gen1stadium/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2a4e6a4fbd756654e914bb670c0fe7b7",
+    "semantic_hash": "2a4e6a4fbd756654e914bb670c0fe7b7"
+  },
+  "src/server/showdown/data/mods/gen1stadium/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "77846f5697a5e0e0603a15719c7a4543",
+    "semantic_hash": "77846f5697a5e0e0603a15719c7a4543"
+  },
+  "src/server/showdown/data/mods/gen2/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "88bee04f842e7f94bd9739cc454eb538",
+    "semantic_hash": "88bee04f842e7f94bd9739cc454eb538"
+  },
+  "src/server/showdown/data/mods/gen2/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ed5758c61805510532907d455f5a0cac",
+    "semantic_hash": "ed5758c61805510532907d455f5a0cac"
+  },
+  "src/server/showdown/data/mods/gen2/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c964e4e2b55fa56e082ba8abfdd27c00",
+    "semantic_hash": "c964e4e2b55fa56e082ba8abfdd27c00"
+  },
+  "src/server/showdown/data/mods/gen2/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "05fca5f3992eb4121e9396d4091d4543",
+    "semantic_hash": "05fca5f3992eb4121e9396d4091d4543"
+  },
+  "src/server/showdown/data/mods/gen2/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "34bf8a989ba840bbbb6186179d15d4eb",
+    "semantic_hash": "34bf8a989ba840bbbb6186179d15d4eb"
+  },
+  "src/server/showdown/data/mods/gen2/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "07fb874bfb7883ffb556c8150c977852",
+    "semantic_hash": "07fb874bfb7883ffb556c8150c977852"
+  },
+  "src/server/showdown/data/mods/gen2/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7044268d8f43072050afebcc6e3197d4",
+    "semantic_hash": "7044268d8f43072050afebcc6e3197d4"
+  },
+  "src/server/showdown/data/mods/gen2/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "42b7ab2db300840c419d61b4d37e97f7",
+    "semantic_hash": "42b7ab2db300840c419d61b4d37e97f7"
+  },
+  "src/server/showdown/data/mods/gen2/typechart.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cbf486920d11f230fe817acf865790ad",
+    "semantic_hash": "cbf486920d11f230fe817acf865790ad"
+  },
+  "src/server/showdown/data/mods/gen2stadium2/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e991c4dd403d7ec0df9bc399f25acc88",
+    "semantic_hash": "e991c4dd403d7ec0df9bc399f25acc88"
+  },
+  "src/server/showdown/data/mods/gen2stadium2/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "56b3e5971afbf3cc0cf2119129fb904b",
+    "semantic_hash": "56b3e5971afbf3cc0cf2119129fb904b"
+  },
+  "src/server/showdown/data/mods/gen2stadium2/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "949339e86a07f9921e5d21cfc45cfb28",
+    "semantic_hash": "949339e86a07f9921e5d21cfc45cfb28"
+  },
+  "src/server/showdown/data/mods/gen2stadium2/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "471400e69c95ba8c5d5c2b91d18eb695",
+    "semantic_hash": "471400e69c95ba8c5d5c2b91d18eb695"
+  },
+  "src/server/showdown/data/mods/gen2stadium2/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "18f5bbf49d2bc27168fb0d8655f337cb",
+    "semantic_hash": "18f5bbf49d2bc27168fb0d8655f337cb"
+  },
+  "src/server/showdown/data/mods/gen3/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "13877f320b0d7f05c228cffea082de9e",
+    "semantic_hash": "13877f320b0d7f05c228cffea082de9e"
+  },
+  "src/server/showdown/data/mods/gen3/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1d5dc5c880398dbf1ec614e020200df9",
+    "semantic_hash": "1d5dc5c880398dbf1ec614e020200df9"
+  },
+  "src/server/showdown/data/mods/gen3/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "75d8ffdc4234f1bcbbdf9a14f1ffc251",
+    "semantic_hash": "75d8ffdc4234f1bcbbdf9a14f1ffc251"
+  },
+  "src/server/showdown/data/mods/gen3/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d8db98a72491244dc796cd5e1c1d35ca",
+    "semantic_hash": "d8db98a72491244dc796cd5e1c1d35ca"
+  },
+  "src/server/showdown/data/mods/gen3/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "aae083b7bbd3c2f47cdba51f2fa30c04",
+    "semantic_hash": "aae083b7bbd3c2f47cdba51f2fa30c04"
+  },
+  "src/server/showdown/data/mods/gen3/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cd8d1516304d426f83947f7c2753b24a",
+    "semantic_hash": "cd8d1516304d426f83947f7c2753b24a"
+  },
+  "src/server/showdown/data/mods/gen3/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4e6a877020e44f07b652eff5045964f8",
+    "semantic_hash": "4e6a877020e44f07b652eff5045964f8"
+  },
+  "src/server/showdown/data/mods/gen3colosseum/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8abc94bfdc9fab03a7329e40137ab96d",
+    "semantic_hash": "8abc94bfdc9fab03a7329e40137ab96d"
+  },
+  "src/server/showdown/data/mods/gen3colosseum/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cdd7ecbeadcd82249dc48a3ae0c427eb",
+    "semantic_hash": "cdd7ecbeadcd82249dc48a3ae0c427eb"
+  },
+  "src/server/showdown/data/mods/gen3frlg/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f662d34548530efb58ac47b407fe148e",
+    "semantic_hash": "f662d34548530efb58ac47b407fe148e"
+  },
+  "src/server/showdown/data/mods/gen3frlg/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "598417eaca197b7ddbc4a978e1775d98",
+    "semantic_hash": "598417eaca197b7ddbc4a978e1775d98"
+  },
+  "src/server/showdown/data/mods/gen3frlg/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4b6634c50e54eb6c4d03ea5481770bc0",
+    "semantic_hash": "4b6634c50e54eb6c4d03ea5481770bc0"
+  },
+  "src/server/showdown/data/mods/gen3frlg/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "55013952f928a2801db98301fa94b29e",
+    "semantic_hash": "55013952f928a2801db98301fa94b29e"
+  },
+  "src/server/showdown/data/mods/gen3frlg/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "29776332a6984816f7471ba6c95bcf3c",
+    "semantic_hash": "29776332a6984816f7471ba6c95bcf3c"
+  },
+  "src/server/showdown/data/mods/gen3frlg/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "51119ba78d08a4f081db9f991060d5f0",
+    "semantic_hash": "51119ba78d08a4f081db9f991060d5f0"
+  },
+  "src/server/showdown/data/mods/gen3rs/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f662d34548530efb58ac47b407fe148e",
+    "semantic_hash": "f662d34548530efb58ac47b407fe148e"
+  },
+  "src/server/showdown/data/mods/gen3rs/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d46b7bf4be9aaa47d179059f4b709235",
+    "semantic_hash": "d46b7bf4be9aaa47d179059f4b709235"
+  },
+  "src/server/showdown/data/mods/gen3rs/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "147b9144a69509f5881c2a01b46f2491",
+    "semantic_hash": "147b9144a69509f5881c2a01b46f2491"
+  },
+  "src/server/showdown/data/mods/gen3rs/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "59dafb8f5b41ff94a8d56765c21b911f",
+    "semantic_hash": "59dafb8f5b41ff94a8d56765c21b911f"
+  },
+  "src/server/showdown/data/mods/gen3rs/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "51119ba78d08a4f081db9f991060d5f0",
+    "semantic_hash": "51119ba78d08a4f081db9f991060d5f0"
+  },
+  "src/server/showdown/data/mods/gen4/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "01a41a7b39a0b4c5450b4c731f5099e1",
+    "semantic_hash": "01a41a7b39a0b4c5450b4c731f5099e1"
+  },
+  "src/server/showdown/data/mods/gen4/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f6f18ef55432a87e12af3f6f36a64759",
+    "semantic_hash": "f6f18ef55432a87e12af3f6f36a64759"
+  },
+  "src/server/showdown/data/mods/gen4/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6b7a851149adffad76bb153ac16763b3",
+    "semantic_hash": "6b7a851149adffad76bb153ac16763b3"
+  },
+  "src/server/showdown/data/mods/gen4/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "446eec154b2fa63045347a8f21112ddb",
+    "semantic_hash": "446eec154b2fa63045347a8f21112ddb"
+  },
+  "src/server/showdown/data/mods/gen4/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a0c24e15478276287155e9ca8c12ee2e",
+    "semantic_hash": "a0c24e15478276287155e9ca8c12ee2e"
+  },
+  "src/server/showdown/data/mods/gen4/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7a5fd568c0448c15b8515156f2495501",
+    "semantic_hash": "7a5fd568c0448c15b8515156f2495501"
+  },
+  "src/server/showdown/data/mods/gen4/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "76dbd3fcf1b9428359889ca016ff10a0",
+    "semantic_hash": "76dbd3fcf1b9428359889ca016ff10a0"
+  },
+  "src/server/showdown/data/mods/gen4/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "5c2879a360c04981972611cb074bd9f2",
+    "semantic_hash": "5c2879a360c04981972611cb074bd9f2"
+  },
+  "src/server/showdown/data/mods/gen4pt/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "758aba8ed3066dbdd31582d366cfe4fe",
+    "semantic_hash": "758aba8ed3066dbdd31582d366cfe4fe"
+  },
+  "src/server/showdown/data/mods/gen4pt/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9560de91fb0c8c56b6484d2b496a52c1",
+    "semantic_hash": "9560de91fb0c8c56b6484d2b496a52c1"
+  },
+  "src/server/showdown/data/mods/gen4pt/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "51a081ede369723e002197ea01e93084",
+    "semantic_hash": "51a081ede369723e002197ea01e93084"
+  },
+  "src/server/showdown/data/mods/gen5/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9c85a065c6897bb003a1cd89646d7d65",
+    "semantic_hash": "9c85a065c6897bb003a1cd89646d7d65"
+  },
+  "src/server/showdown/data/mods/gen5/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c15a7c2ccc7b3dff9e35f9a8ec71982a",
+    "semantic_hash": "c15a7c2ccc7b3dff9e35f9a8ec71982a"
+  },
+  "src/server/showdown/data/mods/gen5/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1d3c9aa97dad5a0430b15a08fe0f2e68",
+    "semantic_hash": "1d3c9aa97dad5a0430b15a08fe0f2e68"
+  },
+  "src/server/showdown/data/mods/gen5/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "73122e3030323e6e08fa131b189db168",
+    "semantic_hash": "73122e3030323e6e08fa131b189db168"
+  },
+  "src/server/showdown/data/mods/gen5/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "5997c7ade5e80725d091915cf133cb56",
+    "semantic_hash": "5997c7ade5e80725d091915cf133cb56"
+  },
+  "src/server/showdown/data/mods/gen5/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "65f36b65e3678d17f830132330ca9dcd",
+    "semantic_hash": "65f36b65e3678d17f830132330ca9dcd"
+  },
+  "src/server/showdown/data/mods/gen5/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1b193229050669979556fe1ce9efa063",
+    "semantic_hash": "1b193229050669979556fe1ce9efa063"
+  },
+  "src/server/showdown/data/mods/gen5/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3d0e8b959983dc6679a6e38cf7cd13d8",
+    "semantic_hash": "3d0e8b959983dc6679a6e38cf7cd13d8"
+  },
+  "src/server/showdown/data/mods/gen5/typechart.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8c2092f7f803b3d0d4534602bbc213e5",
+    "semantic_hash": "8c2092f7f803b3d0d4534602bbc213e5"
+  },
+  "src/server/showdown/data/mods/gen5bw1/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c7b1d93a48136a48ad992b4b94de948d",
+    "semantic_hash": "c7b1d93a48136a48ad992b4b94de948d"
+  },
+  "src/server/showdown/data/mods/gen5bw1/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f60465eb803117ec05ccbc1c5be4a4ce",
+    "semantic_hash": "f60465eb803117ec05ccbc1c5be4a4ce"
+  },
+  "src/server/showdown/data/mods/gen5bw1/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "90193db78c7b47d08b0114a23f0435f1",
+    "semantic_hash": "90193db78c7b47d08b0114a23f0435f1"
+  },
+  "src/server/showdown/data/mods/gen5bw1/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "eb2665b6bd66e12237259a7560459617",
+    "semantic_hash": "eb2665b6bd66e12237259a7560459617"
+  },
+  "src/server/showdown/data/mods/gen5bw1/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "76b933d92fed67b683db16fdcb9df4de",
+    "semantic_hash": "76b933d92fed67b683db16fdcb9df4de"
+  },
+  "src/server/showdown/data/mods/gen6/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3981a55249759e22d9083241f7ed7fde",
+    "semantic_hash": "3981a55249759e22d9083241f7ed7fde"
+  },
+  "src/server/showdown/data/mods/gen6/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4aff79fb2beb6fefd66f86a5224a9071",
+    "semantic_hash": "4aff79fb2beb6fefd66f86a5224a9071"
+  },
+  "src/server/showdown/data/mods/gen6/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "90a6970ade722814ed871cda2837c57a",
+    "semantic_hash": "90a6970ade722814ed871cda2837c57a"
+  },
+  "src/server/showdown/data/mods/gen6/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4c88e826168bbfbf72b664a13cc2fee2",
+    "semantic_hash": "4c88e826168bbfbf72b664a13cc2fee2"
+  },
+  "src/server/showdown/data/mods/gen6/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4e28e02a9d5866657d87b43e711fccd6",
+    "semantic_hash": "4e28e02a9d5866657d87b43e711fccd6"
+  },
+  "src/server/showdown/data/mods/gen6/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "814df8d0838987284054767c1495e840",
+    "semantic_hash": "814df8d0838987284054767c1495e840"
+  },
+  "src/server/showdown/data/mods/gen6/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0932ce78c834e60405597d2810373a6f",
+    "semantic_hash": "0932ce78c834e60405597d2810373a6f"
+  },
+  "src/server/showdown/data/mods/gen6/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e36d947e870e726373ea10817628e327",
+    "semantic_hash": "e36d947e870e726373ea10817628e327"
+  },
+  "src/server/showdown/data/mods/gen6/typechart.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "39e7ce6c69e9b7c1b057d4d8eabb2d42",
+    "semantic_hash": "39e7ce6c69e9b7c1b057d4d8eabb2d42"
+  },
+  "src/server/showdown/data/mods/gen6xy/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ccb72a9dd7a12def6fd52918c807caf1",
+    "semantic_hash": "ccb72a9dd7a12def6fd52918c807caf1"
+  },
+  "src/server/showdown/data/mods/gen6xy/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ce26ebbe6663d728a308a8dce11f0f44",
+    "semantic_hash": "ce26ebbe6663d728a308a8dce11f0f44"
+  },
+  "src/server/showdown/data/mods/gen6xy/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c16d39108c78f9517a8002c91849ccc5",
+    "semantic_hash": "c16d39108c78f9517a8002c91849ccc5"
+  },
+  "src/server/showdown/data/mods/gen6xy/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b90149efc6792b9bbf8eee778a973758",
+    "semantic_hash": "b90149efc6792b9bbf8eee778a973758"
+  },
+  "src/server/showdown/data/mods/gen6xy/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d5e38cb74dd4df7411dbde523da82643",
+    "semantic_hash": "d5e38cb74dd4df7411dbde523da82643"
+  },
+  "src/server/showdown/data/mods/gen6xy/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "61e3038ad53da452bed08fc7dd27a6f6",
+    "semantic_hash": "61e3038ad53da452bed08fc7dd27a6f6"
+  },
+  "src/server/showdown/data/mods/gen7/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "5d804904a53811bcd38be1241c7670b1",
+    "semantic_hash": "5d804904a53811bcd38be1241c7670b1"
+  },
+  "src/server/showdown/data/mods/gen7/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c77bb7f1b5bb43100f02ef26b86b139b",
+    "semantic_hash": "c77bb7f1b5bb43100f02ef26b86b139b"
+  },
+  "src/server/showdown/data/mods/gen7/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "fdab25cec4cade17ac8c766fa61b68e8",
+    "semantic_hash": "fdab25cec4cade17ac8c766fa61b68e8"
+  },
+  "src/server/showdown/data/mods/gen7/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "40f6ed9343d459127736a818d5f3605d",
+    "semantic_hash": "40f6ed9343d459127736a818d5f3605d"
+  },
+  "src/server/showdown/data/mods/gen7/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8408825038164bbe3b96a644a1733e37",
+    "semantic_hash": "8408825038164bbe3b96a644a1733e37"
+  },
+  "src/server/showdown/data/mods/gen7/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b5b14034c74bbebef808f4a5d733d033",
+    "semantic_hash": "b5b14034c74bbebef808f4a5d733d033"
+  },
+  "src/server/showdown/data/mods/gen7/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1d8f1fa4fd80f8c1b0b453d45a67f272",
+    "semantic_hash": "1d8f1fa4fd80f8c1b0b453d45a67f272"
+  },
+  "src/server/showdown/data/mods/gen7letsgo/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "08c294d58b2fe9dfa0c8cf8ee97db4e1",
+    "semantic_hash": "08c294d58b2fe9dfa0c8cf8ee97db4e1"
+  },
+  "src/server/showdown/data/mods/gen7letsgo/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "00f53cd4943e6a0ae45dbc4deb9fb17d",
+    "semantic_hash": "00f53cd4943e6a0ae45dbc4deb9fb17d"
+  },
+  "src/server/showdown/data/mods/gen7letsgo/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "de8e56b9b29426f7b6412355b6e11962",
+    "semantic_hash": "de8e56b9b29426f7b6412355b6e11962"
+  },
+  "src/server/showdown/data/mods/gen7letsgo/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b8630fa1f860531b7471c7815d50812e",
+    "semantic_hash": "b8630fa1f860531b7471c7815d50812e"
+  },
+  "src/server/showdown/data/mods/gen7letsgo/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "58b490c345b7093ddf46aaf1682edd07",
+    "semantic_hash": "58b490c345b7093ddf46aaf1682edd07"
+  },
+  "src/server/showdown/data/mods/gen7letsgo/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "98ac13ad87170ab067e3637deb644203",
+    "semantic_hash": "98ac13ad87170ab067e3637deb644203"
+  },
+  "src/server/showdown/data/mods/gen7sm/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "fe150861d985c8a53317ef334d03f83c",
+    "semantic_hash": "fe150861d985c8a53317ef334d03f83c"
+  },
+  "src/server/showdown/data/mods/gen7sm/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1f350ea48de591526b997717478ce89a",
+    "semantic_hash": "1f350ea48de591526b997717478ce89a"
+  },
+  "src/server/showdown/data/mods/gen7sm/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c4f3d400eda23cdb3e0b60ddd59936cb",
+    "semantic_hash": "c4f3d400eda23cdb3e0b60ddd59936cb"
+  },
+  "src/server/showdown/data/mods/gen7sm/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "542dbe6d5465f98f1b5b36791c559374",
+    "semantic_hash": "542dbe6d5465f98f1b5b36791c559374"
+  },
+  "src/server/showdown/data/mods/gen7sm/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "837668b5cb85c9ffec16eefc650e43ff",
+    "semantic_hash": "837668b5cb85c9ffec16eefc650e43ff"
+  },
+  "src/server/showdown/data/mods/gen7sm/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6a0ce5be20563a1cf7ff965cd72a0c7b",
+    "semantic_hash": "6a0ce5be20563a1cf7ff965cd72a0c7b"
+  },
+  "src/server/showdown/data/mods/gen8/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8bd9f36fd1d67a0154b518cbfe05c9b8",
+    "semantic_hash": "8bd9f36fd1d67a0154b518cbfe05c9b8"
+  },
+  "src/server/showdown/data/mods/gen8/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ca9a74fc7e8b8f39540242647eb4e525",
+    "semantic_hash": "ca9a74fc7e8b8f39540242647eb4e525"
+  },
+  "src/server/showdown/data/mods/gen8/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9be97d2e6576e5d2a85df191efb1f5cb",
+    "semantic_hash": "9be97d2e6576e5d2a85df191efb1f5cb"
+  },
+  "src/server/showdown/data/mods/gen8/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2fb6024308a303401de01d76336ce342",
+    "semantic_hash": "2fb6024308a303401de01d76336ce342"
+  },
+  "src/server/showdown/data/mods/gen8/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "425d184449251ef2de364f4cff93b99e",
+    "semantic_hash": "425d184449251ef2de364f4cff93b99e"
+  },
+  "src/server/showdown/data/mods/gen8/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ad381a06a775987010ecbb8e6036ff13",
+    "semantic_hash": "ad381a06a775987010ecbb8e6036ff13"
+  },
+  "src/server/showdown/data/mods/gen8/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "61458ad9300e15fe67e4d019e11d366f",
+    "semantic_hash": "61458ad9300e15fe67e4d019e11d366f"
+  },
+  "src/server/showdown/data/mods/gen8/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4822e5e70e4f23a073a03843668b29ba",
+    "semantic_hash": "4822e5e70e4f23a073a03843668b29ba"
+  },
+  "src/server/showdown/data/mods/gen8/typechart.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4473b99fd9085327adfb4d468338f4e1",
+    "semantic_hash": "4473b99fd9085327adfb4d468338f4e1"
+  },
+  "src/server/showdown/data/mods/gen8bdsp/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "370ca31f8e43be5fe12b382ad6729b8a",
+    "semantic_hash": "370ca31f8e43be5fe12b382ad6729b8a"
+  },
+  "src/server/showdown/data/mods/gen8bdsp/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b4468269bf534e7bd6e1d870b38bad4b",
+    "semantic_hash": "b4468269bf534e7bd6e1d870b38bad4b"
+  },
+  "src/server/showdown/data/mods/gen8bdsp/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "5b9d19662c576e603b3c0dddd719e9ef",
+    "semantic_hash": "5b9d19662c576e603b3c0dddd719e9ef"
+  },
+  "src/server/showdown/data/mods/gen8bdsp/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ac8e100910513e056e5f7cfa6b1dea64",
+    "semantic_hash": "ac8e100910513e056e5f7cfa6b1dea64"
+  },
+  "src/server/showdown/data/mods/gen8bdsp/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e132013218e81963460b7851dbb16915",
+    "semantic_hash": "e132013218e81963460b7851dbb16915"
+  },
+  "src/server/showdown/data/mods/gen8bdsp/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f1e465e0240fa28857962c26a4b2ef6d",
+    "semantic_hash": "f1e465e0240fa28857962c26a4b2ef6d"
+  },
+  "src/server/showdown/data/mods/gen8bdsp/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d7b3811aae7ff79888a9b1a7d289ffd3",
+    "semantic_hash": "d7b3811aae7ff79888a9b1a7d289ffd3"
+  },
+  "src/server/showdown/data/mods/gen8dlc1/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e023a376873d517cadc1b3028d32ee1d",
+    "semantic_hash": "e023a376873d517cadc1b3028d32ee1d"
+  },
+  "src/server/showdown/data/mods/gen8dlc1/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "620c2ddacb279adf48177e784a8351c7",
+    "semantic_hash": "620c2ddacb279adf48177e784a8351c7"
+  },
+  "src/server/showdown/data/mods/gen8dlc1/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "202f455923ea0960de4e1e2ea0615870",
+    "semantic_hash": "202f455923ea0960de4e1e2ea0615870"
+  },
+  "src/server/showdown/data/mods/gen8dlc1/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "134ce5c0edfc75ecf2d1086d0a91a437",
+    "semantic_hash": "134ce5c0edfc75ecf2d1086d0a91a437"
+  },
+  "src/server/showdown/data/mods/gen8dlc1/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b62b4d7d1a58828fe4417b2da5b53311",
+    "semantic_hash": "b62b4d7d1a58828fe4417b2da5b53311"
+  },
+  "src/server/showdown/data/mods/gen8dlc1/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9275069ce148a97f6a2b3ea7f4a1f81c",
+    "semantic_hash": "9275069ce148a97f6a2b3ea7f4a1f81c"
+  },
+  "src/server/showdown/data/mods/gen8dlc1/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ab724b130f01c1bb01124efe730caacc",
+    "semantic_hash": "ab724b130f01c1bb01124efe730caacc"
+  },
+  "src/server/showdown/data/mods/gen8dlc1/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4151e4c49716932efb3b1483d04835c7",
+    "semantic_hash": "4151e4c49716932efb3b1483d04835c7"
+  },
+  "src/server/showdown/data/mods/gen8legends/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "929ecf5fd7e9780664f5be4e82391bd9",
+    "semantic_hash": "929ecf5fd7e9780664f5be4e82391bd9"
+  },
+  "src/server/showdown/data/mods/gen8legends/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "bbc68799799f27f427c160d78b45ad88",
+    "semantic_hash": "bbc68799799f27f427c160d78b45ad88"
+  },
+  "src/server/showdown/data/mods/gen8legends/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "29b7fb469ca3bc6cf14728d1e1ac8bc9",
+    "semantic_hash": "29b7fb469ca3bc6cf14728d1e1ac8bc9"
+  },
+  "src/server/showdown/data/mods/gen8legends/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4151e4c49716932efb3b1483d04835c7",
+    "semantic_hash": "4151e4c49716932efb3b1483d04835c7"
+  },
+  "src/server/showdown/data/mods/gen9dlc1/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "171f427b472af8eda95a967b2c4bcc50",
+    "semantic_hash": "171f427b472af8eda95a967b2c4bcc50"
+  },
+  "src/server/showdown/data/mods/gen9dlc1/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "26ac24ded9c6e039e365ec17b631b45a",
+    "semantic_hash": "26ac24ded9c6e039e365ec17b631b45a"
+  },
+  "src/server/showdown/data/mods/gen9dlc1/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2d056f10c1a4c794e8ffe5c7f08be18c",
+    "semantic_hash": "2d056f10c1a4c794e8ffe5c7f08be18c"
+  },
+  "src/server/showdown/data/mods/gen9dlc1/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "eee571cfc1a7511ba083c98efa4685a0",
+    "semantic_hash": "eee571cfc1a7511ba083c98efa4685a0"
+  },
+  "src/server/showdown/data/mods/gen9dlc1/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "eb763907ded12d1a9ec4d3bfad36cec5",
+    "semantic_hash": "eb763907ded12d1a9ec4d3bfad36cec5"
+  },
+  "src/server/showdown/data/mods/gen9dlc1/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a3a784b7c2a28f6b2e65ab306fe888d6",
+    "semantic_hash": "a3a784b7c2a28f6b2e65ab306fe888d6"
+  },
+  "src/server/showdown/data/mods/gen9dlc1/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ae9d15d7837841be1b537f62167619d6",
+    "semantic_hash": "ae9d15d7837841be1b537f62167619d6"
+  },
+  "src/server/showdown/data/mods/gen9dlc1/typechart.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4473b99fd9085327adfb4d468338f4e1",
+    "semantic_hash": "4473b99fd9085327adfb4d468338f4e1"
+  },
+  "src/server/showdown/data/mods/gen9legends/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "983474f001e7a2225264dcd8c6879189",
+    "semantic_hash": "983474f001e7a2225264dcd8c6879189"
+  },
+  "src/server/showdown/data/mods/gen9legends/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b3bb5b1c3acc095d603d20f9e1a8c68c",
+    "semantic_hash": "b3bb5b1c3acc095d603d20f9e1a8c68c"
+  },
+  "src/server/showdown/data/mods/gen9legends/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "def0a46c4e920dbcb55b62b82421e869",
+    "semantic_hash": "def0a46c4e920dbcb55b62b82421e869"
+  },
+  "src/server/showdown/data/mods/gen9legends/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6bcd1054ffdffabe65923b0b7a19301c",
+    "semantic_hash": "6bcd1054ffdffabe65923b0b7a19301c"
+  },
+  "src/server/showdown/data/mods/gen9predlc/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4aedcb1ba01c45e6b0f2c85b9becab54",
+    "semantic_hash": "4aedcb1ba01c45e6b0f2c85b9becab54"
+  },
+  "src/server/showdown/data/mods/gen9predlc/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "55aba455eafb3bd13f14594a724b422d",
+    "semantic_hash": "55aba455eafb3bd13f14594a724b422d"
+  },
+  "src/server/showdown/data/mods/gen9predlc/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6a2979fa06fba5c87a56db2303f22900",
+    "semantic_hash": "6a2979fa06fba5c87a56db2303f22900"
+  },
+  "src/server/showdown/data/mods/gen9predlc/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7654cc299c0547535e74d819e13d8674",
+    "semantic_hash": "7654cc299c0547535e74d819e13d8674"
+  },
+  "src/server/showdown/data/mods/gen9predlc/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "38632af6ff80b3ebad98f7857fd359f3",
+    "semantic_hash": "38632af6ff80b3ebad98f7857fd359f3"
+  },
+  "src/server/showdown/data/mods/gen9predlc/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f9f8b269fb3fa7ba6c9929b1917f6f41",
+    "semantic_hash": "f9f8b269fb3fa7ba6c9929b1917f6f41"
+  },
+  "src/server/showdown/data/mods/gen9predlc/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "5716a677397897eadcd831cea89b163f",
+    "semantic_hash": "5716a677397897eadcd831cea89b163f"
+  },
+  "src/server/showdown/data/mods/gen9ssb/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d02d5fcc76e534d29df0112399f22d3a",
+    "semantic_hash": "d02d5fcc76e534d29df0112399f22d3a"
+  },
+  "src/server/showdown/data/mods/gen9ssb/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c63f6a9cea3f7119faa759b24a7591a1",
+    "semantic_hash": "c63f6a9cea3f7119faa759b24a7591a1"
+  },
+  "src/server/showdown/data/mods/gen9ssb/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "850cc909a92ea98559ea42aad9821a7e",
+    "semantic_hash": "850cc909a92ea98559ea42aad9821a7e"
+  },
+  "src/server/showdown/data/mods/gen9ssb/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "195f3b1b0cb51e2c28bccc427b834d8d",
+    "semantic_hash": "195f3b1b0cb51e2c28bccc427b834d8d"
+  },
+  "src/server/showdown/data/mods/gen9ssb/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "33b8fd74a3e0680b7f1b48c57d7de3c3",
+    "semantic_hash": "33b8fd74a3e0680b7f1b48c57d7de3c3"
+  },
+  "src/server/showdown/data/mods/gen9ssb/random-teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "641b45d77ea853a3070da99433906fa7",
+    "semantic_hash": "641b45d77ea853a3070da99433906fa7"
+  },
+  "src/server/showdown/data/mods/gen9ssb/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3feff0ad674435b9b06d522cfba7088d",
+    "semantic_hash": "3feff0ad674435b9b06d522cfba7088d"
+  },
+  "src/server/showdown/data/mods/gen9ssb/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "83de8819bdc2c6183f7fb931ccf7c1aa",
+    "semantic_hash": "83de8819bdc2c6183f7fb931ccf7c1aa"
+  },
+  "src/server/showdown/data/mods/gen9ssb/typechart.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f9f0011c4fe402a73c935afb63652fcd",
+    "semantic_hash": "f9f0011c4fe402a73c935afb63652fcd"
+  },
+  "src/server/showdown/data/mods/linked/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7ee73c823a352ceab005af97b1080389",
+    "semantic_hash": "7ee73c823a352ceab005af97b1080389"
+  },
+  "src/server/showdown/data/mods/linked/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "babd89407bc793e5cce9f2a0eeff1cfc",
+    "semantic_hash": "babd89407bc793e5cce9f2a0eeff1cfc"
+  },
+  "src/server/showdown/data/mods/linked/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2b9ce5d95a137c765dd40edf3bc54ff3",
+    "semantic_hash": "2b9ce5d95a137c765dd40edf3bc54ff3"
+  },
+  "src/server/showdown/data/mods/mixandmega/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "05888ab8262af261245ba2c0d5fee9c8",
+    "semantic_hash": "05888ab8262af261245ba2c0d5fee9c8"
+  },
+  "src/server/showdown/data/mods/mixandmega/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d513e590be63082d5e14e8117feaaabc",
+    "semantic_hash": "d513e590be63082d5e14e8117feaaabc"
+  },
+  "src/server/showdown/data/mods/monkeyspaw/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "59c248062f3c51b257f75adbdbb88271",
+    "semantic_hash": "59c248062f3c51b257f75adbdbb88271"
+  },
+  "src/server/showdown/data/mods/monkeyspaw/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d6401f1a81f5991f29a995d8dce86e51",
+    "semantic_hash": "d6401f1a81f5991f29a995d8dce86e51"
+  },
+  "src/server/showdown/data/mods/monkeyspaw/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d780fb0fcf6b2c83bc4432fea65f82d4",
+    "semantic_hash": "d780fb0fcf6b2c83bc4432fea65f82d4"
+  },
+  "src/server/showdown/data/mods/partnersincrime/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "51a7fb81472204f80aada44204e9e34a",
+    "semantic_hash": "51a7fb81472204f80aada44204e9e34a"
+  },
+  "src/server/showdown/data/mods/partnersincrime/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a80fe7905a9151a0746a8715b9e6522a",
+    "semantic_hash": "a80fe7905a9151a0746a8715b9e6522a"
+  },
+  "src/server/showdown/data/mods/partnersincrime/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ffe956d33a170e6cad346b7798c33013",
+    "semantic_hash": "ffe956d33a170e6cad346b7798c33013"
+  },
+  "src/server/showdown/data/mods/partnersincrime/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8929d7c31b3f04026eaf2eec0effe809",
+    "semantic_hash": "8929d7c31b3f04026eaf2eec0effe809"
+  },
+  "src/server/showdown/data/mods/passiveaggressive/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "115e28d44ab5f3f34f6e2f15adde0b44",
+    "semantic_hash": "115e28d44ab5f3f34f6e2f15adde0b44"
+  },
+  "src/server/showdown/data/mods/passiveaggressive/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7f12d9a502dc301fa5d6370f339f7f48",
+    "semantic_hash": "7f12d9a502dc301fa5d6370f339f7f48"
+  },
+  "src/server/showdown/data/mods/passiveaggressive/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "74480a522be90582b6f598c52a76ea32",
+    "semantic_hash": "74480a522be90582b6f598c52a76ea32"
+  },
+  "src/server/showdown/data/mods/passiveaggressive/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a90dbf606fcc6ed7514a352e6772e1f9",
+    "semantic_hash": "a90dbf606fcc6ed7514a352e6772e1f9"
+  },
+  "src/server/showdown/data/mods/passiveaggressive/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "00178472f509e06836343551bbb3058f",
+    "semantic_hash": "00178472f509e06836343551bbb3058f"
+  },
+  "src/server/showdown/data/mods/pokebilities/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c1f316b08be77fc9329dcc510c629e8a",
+    "semantic_hash": "c1f316b08be77fc9329dcc510c629e8a"
+  },
+  "src/server/showdown/data/mods/pokebilities/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "eb36b27c8afb0b92f8413f6a82c8deb0",
+    "semantic_hash": "eb36b27c8afb0b92f8413f6a82c8deb0"
+  },
+  "src/server/showdown/data/mods/pokebilities/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d26cef134e792585f6f78bfa4c6f5757",
+    "semantic_hash": "d26cef134e792585f6f78bfa4c6f5757"
+  },
+  "src/server/showdown/data/mods/pokemoves/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "05678c6530fd7e2ac54aeca2a5b7bb1d",
+    "semantic_hash": "05678c6530fd7e2ac54aeca2a5b7bb1d"
+  },
+  "src/server/showdown/data/mods/pokemoves/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "df29830670252c18b7f4e58d342781d5",
+    "semantic_hash": "df29830670252c18b7f4e58d342781d5"
+  },
+  "src/server/showdown/data/mods/pokemoves/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8f86cfa7b0c67527b847ea9e3c5083fa",
+    "semantic_hash": "8f86cfa7b0c67527b847ea9e3c5083fa"
+  },
+  "src/server/showdown/data/mods/randomroulette/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "debc79a42f528776d50cc83b016c86d3",
+    "semantic_hash": "debc79a42f528776d50cc83b016c86d3"
+  },
+  "src/server/showdown/data/mods/sharedpower/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "69a2b9663b036420e2ec5e91e366dc6d",
+    "semantic_hash": "69a2b9663b036420e2ec5e91e366dc6d"
+  },
+  "src/server/showdown/data/mods/sharedpower/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "334e5ce87c01460d03aba5fe4eb242fa",
+    "semantic_hash": "334e5ce87c01460d03aba5fe4eb242fa"
+  },
+  "src/server/showdown/data/mods/sharedpower/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2ad0089349a23936fb791d3c326b58f0",
+    "semantic_hash": "2ad0089349a23936fb791d3c326b58f0"
+  },
+  "src/server/showdown/data/mods/sharingiscaring/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "18ea610c17b56caedf00ab0562381f71",
+    "semantic_hash": "18ea610c17b56caedf00ab0562381f71"
+  },
+  "src/server/showdown/data/mods/sharingiscaring/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2149d06072875e37e70db4e322029a4d",
+    "semantic_hash": "2149d06072875e37e70db4e322029a4d"
+  },
+  "src/server/showdown/data/mods/sharingiscaring/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d7536c7bb445a3e0061b9210fa150d98",
+    "semantic_hash": "d7536c7bb445a3e0061b9210fa150d98"
+  },
+  "src/server/showdown/data/mods/sharingiscaring/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "714ef1b2e8185954e91a3c7883a39ff3",
+    "semantic_hash": "714ef1b2e8185954e91a3c7883a39ff3"
+  },
+  "src/server/showdown/data/mods/teraoverride/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "82027c44475f4b4380158d7fbee5a62f",
+    "semantic_hash": "82027c44475f4b4380158d7fbee5a62f"
+  },
+  "src/server/showdown/data/mods/teraoverride/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "23eb2590f71ef3aaee1a9c6a2884679d",
+    "semantic_hash": "23eb2590f71ef3aaee1a9c6a2884679d"
+  },
+  "src/server/showdown/data/mods/teraoverride/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ae1d59fdd7368f23494655c60ea58b19",
+    "semantic_hash": "ae1d59fdd7368f23494655c60ea58b19"
+  },
+  "src/server/showdown/data/mods/teraoverride/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "679b06dc2013c514b646c3e23ac94ba6",
+    "semantic_hash": "679b06dc2013c514b646c3e23ac94ba6"
+  },
+  "src/server/showdown/data/mods/teraoverride/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9f1ffd3c9d3d63b281417f8be1a231d6",
+    "semantic_hash": "9f1ffd3c9d3d63b281417f8be1a231d6"
+  },
+  "src/server/showdown/data/mods/thecardgame/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "72bfe0d9b173240b4066a57bb5cad339",
+    "semantic_hash": "72bfe0d9b173240b4066a57bb5cad339"
+  },
+  "src/server/showdown/data/mods/thecardgame/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9404c744550f213877322e78c68180d6",
+    "semantic_hash": "9404c744550f213877322e78c68180d6"
+  },
+  "src/server/showdown/data/mods/thecardgame/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "589377fa7b0ef32ab4cfc2c78c86d24c",
+    "semantic_hash": "589377fa7b0ef32ab4cfc2c78c86d24c"
+  },
+  "src/server/showdown/data/mods/thecardgame/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "bdc939ea3e4a05b9d233b4aef86346ec",
+    "semantic_hash": "bdc939ea3e4a05b9d233b4aef86346ec"
+  },
+  "src/server/showdown/data/mods/thecardgame/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a9405050643be9bbaaccdc9e90aa8b12",
+    "semantic_hash": "a9405050643be9bbaaccdc9e90aa8b12"
+  },
+  "src/server/showdown/data/mods/thecardgame/typechart.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cfa85141f0607f2526c284f9cd21c852",
+    "semantic_hash": "cfa85141f0607f2526c284f9cd21c852"
+  },
+  "src/server/showdown/data/mods/trademarked/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8a89ab0a231575eb9c4c5b5a42ccb2a7",
+    "semantic_hash": "8a89ab0a231575eb9c4c5b5a42ccb2a7"
+  },
+  "src/server/showdown/data/mods/woomod/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1003591a10737772226982b356846dcb",
+    "semantic_hash": "1003591a10737772226982b356846dcb"
+  },
+  "src/server/showdown/data/mods/woomod/conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b37e8996e5b2cda7d83ac260e7694c0c",
+    "semantic_hash": "b37e8996e5b2cda7d83ac260e7694c0c"
+  },
+  "src/server/showdown/data/mods/woomod/formats-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0be969bc2f52d1f5d60cec11dcce6fc8",
+    "semantic_hash": "0be969bc2f52d1f5d60cec11dcce6fc8"
+  },
+  "src/server/showdown/data/mods/woomod/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2ace985aae9ca8dc058a89526765f8ea",
+    "semantic_hash": "2ace985aae9ca8dc058a89526765f8ea"
+  },
+  "src/server/showdown/data/mods/woomod/learnsets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "85fce297d87aef369af9b7a1d24898a5",
+    "semantic_hash": "85fce297d87aef369af9b7a1d24898a5"
+  },
+  "src/server/showdown/data/mods/woomod/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6f97e83730d83cc798c915f20938ee7b",
+    "semantic_hash": "6f97e83730d83cc798c915f20938ee7b"
+  },
+  "src/server/showdown/data/mods/woomod/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b30bb54b65ad12eefeb44cba0a529099",
+    "semantic_hash": "b30bb54b65ad12eefeb44cba0a529099"
+  },
+  "src/server/showdown/data/mods/woomod/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6678f36d3d5192bc9565093d5fed8ae6",
+    "semantic_hash": "6678f36d3d5192bc9565093d5fed8ae6"
+  },
+  "src/server/showdown/data/mods/woomod/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "66777edf2c532392c2bb8815efb15128",
+    "semantic_hash": "66777edf2c532392c2bb8815efb15128"
+  },
+  "src/server/showdown/data/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2ccff34d61e125972d1682c103786bb6",
+    "semantic_hash": "2ccff34d61e125972d1682c103786bb6"
+  },
+  "src/server/showdown/data/natures.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e98df7d385adba4eed716da0a5e506c4",
+    "semantic_hash": "e98df7d385adba4eed716da0a5e506c4"
+  },
+  "src/server/showdown/data/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1baade453d188c1d49c273b58c5669f3",
+    "semantic_hash": "1baade453d188c1d49c273b58c5669f3"
+  },
+  "src/server/showdown/data/pokemongo.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "19723692d785e42c6fb6a0171e4cbf20",
+    "semantic_hash": "19723692d785e42c6fb6a0171e4cbf20"
+  },
+  "src/server/showdown/data/random-battles/ccapm2025/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "177b0d47b098eec67e7b1c8627d97f8c",
+    "semantic_hash": "177b0d47b098eec67e7b1c8627d97f8c"
+  },
+  "src/server/showdown/data/random-battles/chatbats/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "447ae9fc2979cdad351a90186e04cbfb",
+    "semantic_hash": "447ae9fc2979cdad351a90186e04cbfb"
+  },
+  "src/server/showdown/data/random-battles/gen1/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "5970ee7d3e1d0433482a09a0046105e3",
+    "semantic_hash": "5970ee7d3e1d0433482a09a0046105e3"
+  },
+  "src/server/showdown/data/random-battles/gen2/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b1d4fa11a3428d452e54d9aac4edc938",
+    "semantic_hash": "b1d4fa11a3428d452e54d9aac4edc938"
+  },
+  "src/server/showdown/data/random-battles/gen3/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8d275c55c07fa8e9d076b2cf437c0c7e",
+    "semantic_hash": "8d275c55c07fa8e9d076b2cf437c0c7e"
+  },
+  "src/server/showdown/data/random-battles/gen4/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "605e53c6e403072d6af77f5c70a7833d",
+    "semantic_hash": "605e53c6e403072d6af77f5c70a7833d"
+  },
+  "src/server/showdown/data/random-battles/gen5/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6e265784c602416ecff45c603fb1a7fa",
+    "semantic_hash": "6e265784c602416ecff45c603fb1a7fa"
+  },
+  "src/server/showdown/data/random-battles/gen6/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2da65896f3eaaf43aca56e6908d5bb6a",
+    "semantic_hash": "2da65896f3eaaf43aca56e6908d5bb6a"
+  },
+  "src/server/showdown/data/random-battles/gen7/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ee219cc636d34f783940d7f7d5836e62",
+    "semantic_hash": "ee219cc636d34f783940d7f7d5836e62"
+  },
+  "src/server/showdown/data/random-battles/gen7letsgo/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "340aa2ef0cca7154c86fff79af9d8952",
+    "semantic_hash": "340aa2ef0cca7154c86fff79af9d8952"
+  },
+  "src/server/showdown/data/random-battles/gen8/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "174a23ac068768c3d2c7b73981b0a172",
+    "semantic_hash": "174a23ac068768c3d2c7b73981b0a172"
+  },
+  "src/server/showdown/data/random-battles/gen8bdsp/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "380be9830bb14334809ef72637f915ed",
+    "semantic_hash": "380be9830bb14334809ef72637f915ed"
+  },
+  "src/server/showdown/data/random-battles/gen9/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "89c4581305060c1535712b6c7a63f271",
+    "semantic_hash": "89c4581305060c1535712b6c7a63f271"
+  },
+  "src/server/showdown/data/random-battles/gen9baby/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f5687a12f84d553e1e7ba0f94968a135",
+    "semantic_hash": "f5687a12f84d553e1e7ba0f94968a135"
+  },
+  "src/server/showdown/data/random-battles/gen9cap/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f00cc975696d74ae6ddeaabeca00f559",
+    "semantic_hash": "f00cc975696d74ae6ddeaabeca00f559"
+  },
+  "src/server/showdown/data/random-battles/gen9ffa/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4a318347c94d2bc40a9e50782ee45ec0",
+    "semantic_hash": "4a318347c94d2bc40a9e50782ee45ec0"
+  },
+  "src/server/showdown/data/random-battles/partnersincrime/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "941ff3db748e012bf6f75cf6d106276c",
+    "semantic_hash": "941ff3db748e012bf6f75cf6d106276c"
+  },
+  "src/server/showdown/data/random-battles/randomroulette/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f2ccc6e6b92758ee5ff5b1928464230b",
+    "semantic_hash": "f2ccc6e6b92758ee5ff5b1928464230b"
+  },
+  "src/server/showdown/data/random-battles/sharedpower/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "28a17e8c0deea72a30317e76c10f36d6",
+    "semantic_hash": "28a17e8c0deea72a30317e76c10f36d6"
+  },
+  "src/server/showdown/data/random-battles/woomod/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "81a8ac115dac8825ae574e0a74bf9441",
+    "semantic_hash": "81a8ac115dac8825ae574e0a74bf9441"
+  },
+  "src/server/showdown/data/rulesets.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cf72b3943b0e1fb74e6226acb2a61bbd",
+    "semantic_hash": "cf72b3943b0e1fb74e6226acb2a61bbd"
+  },
+  "src/server/showdown/data/scripts.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7734c3ca9327bb75fbdb5b87d024a433",
+    "semantic_hash": "7734c3ca9327bb75fbdb5b87d024a433"
+  },
+  "src/server/showdown/data/tags.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0f509734f823ce86709188ddc66da33f",
+    "semantic_hash": "0f509734f823ce86709188ddc66da33f"
+  },
+  "src/server/showdown/data/text/abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "15b00ea58b6037e5135facb80c275465",
+    "semantic_hash": "15b00ea58b6037e5135facb80c275465"
+  },
+  "src/server/showdown/data/text/default.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e42f7c1b0eff8a03f999975496315f98",
+    "semantic_hash": "e42f7c1b0eff8a03f999975496315f98"
+  },
+  "src/server/showdown/data/text/items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4da7c60f429ce2ce6e4056bd1e3aea91",
+    "semantic_hash": "4da7c60f429ce2ce6e4056bd1e3aea91"
+  },
+  "src/server/showdown/data/text/moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f8b039a40f109e3881ca701b31be7124",
+    "semantic_hash": "f8b039a40f109e3881ca701b31be7124"
+  },
+  "src/server/showdown/data/text/pokedex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e7634e8c88d0232d40c3d80a54049bc7",
+    "semantic_hash": "e7634e8c88d0232d40c3d80a54049bc7"
+  },
+  "src/server/showdown/data/typechart.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cf36a37cc3e4aaae849dfb21cc1a9883",
+    "semantic_hash": "cf36a37cc3e4aaae849dfb21cc1a9883"
+  },
+  "src/server/showdown/lib/crashlogger.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6421ceb8db8b48f8bacf8a1952366cf7",
+    "semantic_hash": "6421ceb8db8b48f8bacf8a1952366cf7"
+  },
+  "src/server/showdown/lib/dashycode.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "faa68e0a9e41deea893af335f078fc77",
+    "semantic_hash": "faa68e0a9e41deea893af335f078fc77"
+  },
+  "src/server/showdown/lib/database.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a1e542ecbd970417f428f90b73696cff",
+    "semantic_hash": "a1e542ecbd970417f428f90b73696cff"
+  },
+  "src/server/showdown/lib/fs.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ba78204713030f45b86d3ed494f940ab",
+    "semantic_hash": "ba78204713030f45b86d3ed494f940ab"
+  },
+  "src/server/showdown/lib/index.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "86aa92de0115e4d08268309b965e08a4",
+    "semantic_hash": "86aa92de0115e4d08268309b965e08a4"
+  },
+  "src/server/showdown/lib/net.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4caf9541bc41d95edd17b1ac07c2c344",
+    "semantic_hash": "4caf9541bc41d95edd17b1ac07c2c344"
+  },
+  "src/server/showdown/lib/process-manager.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1a356211376b80efc160d23290986f8f",
+    "semantic_hash": "1a356211376b80efc160d23290986f8f"
+  },
+  "src/server/showdown/lib/repl.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a5b684c895169b8811d10493b5cbb708",
+    "semantic_hash": "a5b684c895169b8811d10493b5cbb708"
+  },
+  "src/server/showdown/lib/sql.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c4fe8373acedc9de052eaedc11b5105e",
+    "semantic_hash": "c4fe8373acedc9de052eaedc11b5105e"
+  },
+  "src/server/showdown/lib/static-server.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "26c561d2897ea28841f5d1fc553bb7cf",
+    "semantic_hash": "26c561d2897ea28841f5d1fc553bb7cf"
+  },
+  "src/server/showdown/lib/streams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d75c07693ceb8631647061b4d86d1bad",
+    "semantic_hash": "d75c07693ceb8631647061b4d86d1bad"
+  },
+  "src/server/showdown/lib/utils.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "b2c0e086c690565cf056f1474e896687",
+    "semantic_hash": "b2c0e086c690565cf056f1474e896687"
+  },
+  "src/server/showdown/package.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "73dcb1213173170d536f9bdd4ee86794",
+    "semantic_hash": "73dcb1213173170d536f9bdd4ee86794"
+  },
+  "src/server/showdown/sim/battle-actions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a06b3ce9924bed686043c84d09cb9caa",
+    "semantic_hash": "a06b3ce9924bed686043c84d09cb9caa"
+  },
+  "src/server/showdown/sim/battle-queue.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "76f6593dec9494abeb37a8fe3f1f3465",
+    "semantic_hash": "76f6593dec9494abeb37a8fe3f1f3465"
+  },
+  "src/server/showdown/sim/battle-stream.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4d3328a6ee2f98fb0669bb046fa19431",
+    "semantic_hash": "4d3328a6ee2f98fb0669bb046fa19431"
+  },
+  "src/server/showdown/sim/battle.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ad824a09593b4d275be3924b1bdf8e2b",
+    "semantic_hash": "ad824a09593b4d275be3924b1bdf8e2b"
+  },
+  "src/server/showdown/sim/dex-abilities.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "216f2f08e541d15a481a73683d22c7cd",
+    "semantic_hash": "216f2f08e541d15a481a73683d22c7cd"
+  },
+  "src/server/showdown/sim/dex-conditions.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e6ba2736c87fb5880f902ee4b79e4da1",
+    "semantic_hash": "e6ba2736c87fb5880f902ee4b79e4da1"
+  },
+  "src/server/showdown/sim/dex-data.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "98f8702c7e1cc839f647a8fb6dbbabea",
+    "semantic_hash": "98f8702c7e1cc839f647a8fb6dbbabea"
+  },
+  "src/server/showdown/sim/dex-formats.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d546f4532fcb5aef8b9e44b99dd0d40b",
+    "semantic_hash": "d546f4532fcb5aef8b9e44b99dd0d40b"
+  },
+  "src/server/showdown/sim/dex-items.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e3ad655428705fdb283a37add1a37924",
+    "semantic_hash": "e3ad655428705fdb283a37add1a37924"
+  },
+  "src/server/showdown/sim/dex-moves.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6ae4ee013f6174ffdb63228e482443fa",
+    "semantic_hash": "6ae4ee013f6174ffdb63228e482443fa"
+  },
+  "src/server/showdown/sim/dex-species.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "65c65a78236ee5b3f09070e03d169e5f",
+    "semantic_hash": "65c65a78236ee5b3f09070e03d169e5f"
+  },
+  "src/server/showdown/sim/dex.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "8e218022a158e32310cfcc844f77c562",
+    "semantic_hash": "8e218022a158e32310cfcc844f77c562"
+  },
+  "src/server/showdown/sim/field.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e8ba85d416102af955b56567d105b3ab",
+    "semantic_hash": "e8ba85d416102af955b56567d105b3ab"
+  },
+  "src/server/showdown/sim/index.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "edb293837f2a464104fc046971d2a4ef",
+    "semantic_hash": "edb293837f2a464104fc046971d2a4ef"
+  },
+  "src/server/showdown/sim/pokemon.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6ba068fd9ea93639965a35c5d012b14f",
+    "semantic_hash": "6ba068fd9ea93639965a35c5d012b14f"
+  },
+  "src/server/showdown/sim/prng.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "effbd35f6bd4233dfd62ba2089986419",
+    "semantic_hash": "effbd35f6bd4233dfd62ba2089986419"
+  },
+  "src/server/showdown/sim/side.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ecdf719d7d8e0ac0ac2c50bb45de1903",
+    "semantic_hash": "ecdf719d7d8e0ac0ac2c50bb45de1903"
+  },
+  "src/server/showdown/sim/state.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3e51b82af8d0dba9b8fcad8f4fd5e165",
+    "semantic_hash": "3e51b82af8d0dba9b8fcad8f4fd5e165"
+  },
+  "src/server/showdown/sim/team-validator.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2407ab42686844edf75ad18139a637fd",
+    "semantic_hash": "2407ab42686844edf75ad18139a637fd"
+  },
+  "src/server/showdown/sim/teams.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "327bcf4ea8c776004e92aba9ad95f851",
+    "semantic_hash": "327bcf4ea8c776004e92aba9ad95f851"
+  },
+  "src/server/test/battle.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "319b065b0f6f817a8fe6507c9c567202",
+    "semantic_hash": "319b065b0f6f817a8fe6507c9c567202"
+  },
+  "src/server/test/battleEngine.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0041dcbb292383504a26ab43d86728d1",
+    "semantic_hash": "0041dcbb292383504a26ab43d86728d1"
+  },
+  "src/server/test/db.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "f7fb98910ed70ea3916be729a5afb63f",
+    "semantic_hash": "f7fb98910ed70ea3916be729a5afb63f"
+  },
+  "src/server/test/spawnService.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6fb879ff33fd1e6bc9478ee08a434e63",
+    "semantic_hash": "6fb879ff33fd1e6bc9478ee08a434e63"
+  },
+  "src/services/authService.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "fcb2c0f3cfce0effae47ce3289eb2cdc",
+    "semantic_hash": "fcb2c0f3cfce0effae47ce3289eb2cdc"
+  },
+  "src/services/campaignService.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "91f298e2eb34e0ee9fbcb58282bd0092",
+    "semantic_hash": "91f298e2eb34e0ee9fbcb58282bd0092"
+  },
+  "src/services/shopService.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7afa0f875bc94f3e03c839e7dd3deda2",
+    "semantic_hash": "7afa0f875bc94f3e03c839e7dd3deda2"
+  },
+  "src/services/trainerService.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "dc6e8107c34a3817291e490c81bb6d48",
+    "semantic_hash": "dc6e8107c34a3817291e490c81bb6d48"
+  },
+  "src/utils/MapStorage.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "ba52935d561b6542e10e339c90b94a10",
+    "semantic_hash": "ba52935d561b6542e10e339c90b94a10"
+  },
+  "v2/biome/public/manifest.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d9d975cebe2ec20b6c652e1e4c12ccf0",
+    "semantic_hash": "d9d975cebe2ec20b6c652e1e4c12ccf0"
+  },
+  "v2/biome/scripts/generateAssetManifest.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "127abf0dfc6c23e2c5aadda75c30a501",
+    "semantic_hash": "127abf0dfc6c23e2c5aadda75c30a501"
+  },
+  "v2/biome/server/battleRoyaleServer.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "fecc48e4c5070bbb95241611ebc7ae71",
+    "semantic_hash": "fecc48e4c5070bbb95241611ebc7ae71"
+  },
+  "v2/biome/src/App.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7c3837fef6be976f1d03104460443a57",
+    "semantic_hash": "7c3837fef6be976f1d03104460443a57"
+  },
+  "v2/biome/src/app/App.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d80b9a9b0835cc2ae50dc867ee684047",
+    "semantic_hash": "d80b9a9b0835cc2ae50dc867ee684047"
+  },
+  "v2/biome/src/app/ModeSelectScreen.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3032895b8a10a0f6c83e9d28aede90d6",
+    "semantic_hash": "3032895b8a10a0f6c83e9d28aede90d6"
+  },
+  "v2/biome/src/biomes/cave/CaveEntrance.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "46870b04a2f7495a1a3c36f267947910",
+    "semantic_hash": "46870b04a2f7495a1a3c36f267947910"
+  },
+  "v2/biome/src/biomes/cave/CaveInteriorEffects.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "feb3e09a7918313ba816b10420560289",
+    "semantic_hash": "feb3e09a7918313ba816b10420560289"
+  },
+  "v2/biome/src/biomes/desert/Sandstorm.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4d1fdcb5193a50046f9f442dc82350fa",
+    "semantic_hash": "4d1fdcb5193a50046f9f442dc82350fa"
+  },
+  "v2/biome/src/biomes/distortion/DistortionRealmLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1c3e56dc8b3261b78ffcf3316ebdccc6",
+    "semantic_hash": "1c3e56dc8b3261b78ffcf3316ebdccc6"
+  },
+  "v2/biome/src/biomes/icy/IceMountainLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cbeaa7fa43215f50db38a73e3b969b1d",
+    "semantic_hash": "cbeaa7fa43215f50db38a73e3b969b1d"
+  },
+  "v2/biome/src/biomes/icy/Snowstorm.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a88204f82965efe9794172019bdb1628",
+    "semantic_hash": "a88204f82965efe9794172019bdb1628"
+  },
+  "v2/biome/src/biomes/moonlit/MoonlitLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "12850c29dda14b8531d372b802519baa",
+    "semantic_hash": "12850c29dda14b8531d372b802519baa"
+  },
+  "v2/biome/src/biomes/sky/DistantSkyIsland.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d7a751b1c626e97e0ec662a4e404e226",
+    "semantic_hash": "d7a751b1c626e97e0ec662a4e404e226"
+  },
+  "v2/biome/src/biomes/sky/SkyBelowVista.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0c2002120428afe54147696321c31ff1",
+    "semantic_hash": "0c2002120428afe54147696321c31ff1"
+  },
+  "v2/biome/src/biomes/sky/SkyBiomeLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2d361b276b3d78ddc350bfe5c7395938",
+    "semantic_hash": "2d361b276b3d78ddc350bfe5c7395938"
+  },
+  "v2/biome/src/biomes/volcanic/Ashfall.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9a284f34dea94597b0da52694b9d80d6",
+    "semantic_hash": "9a284f34dea94597b0da52694b9d80d6"
+  },
+  "v2/biome/src/biomes/volcanic/VolcanoCrater.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "76a99f0c9d2dbc26724ba761a80fdcb6",
+    "semantic_hash": "76a99f0c9d2dbc26724ba761a80fdcb6"
+  },
+  "v2/biome/src/entities/AnimatedModel.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "009e7a3877ec2e82dd6ae865bf03e06a",
+    "semantic_hash": "009e7a3877ec2e82dd6ae865bf03e06a"
+  },
+  "v2/biome/src/entities/CompanionCreature.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a7f111ff13ce270343f8cbc86630bca0",
+    "semantic_hash": "a7f111ff13ce270343f8cbc86630bca0"
+  },
+  "v2/biome/src/entities/ModelErrorBoundary.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "dca7b956185badc0b0cec50178aadef9",
+    "semantic_hash": "dca7b956185badc0b0cec50178aadef9"
+  },
+  "v2/biome/src/entities/Player.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "295b4147ada3f4a3e9cc991a7c361d98",
+    "semantic_hash": "295b4147ada3f4a3e9cc991a7c361d98"
+  },
+  "v2/biome/src/entities/VoxelFallback.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7b1aba55ecda42f575be9b81368c0ec0",
+    "semantic_hash": "7b1aba55ecda42f575be9b81368c0ec0"
+  },
+  "v2/biome/src/entities/WildCreature.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cc13c2ef6dc85067abd22b7f55345e92",
+    "semantic_hash": "cc13c2ef6dc85067abd22b7f55345e92"
+  },
+  "v2/biome/src/environment/Atmosphere.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d3d759ae2d3e74285965370ef4a3f160",
+    "semantic_hash": "d3d759ae2d3e74285965370ef4a3f160"
+  },
+  "v2/biome/src/environment/OceanHorizon.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "30f98f3453e4c9758365fabaa5ef7669",
+    "semantic_hash": "30f98f3453e4c9758365fabaa5ef7669"
+  },
+  "v2/biome/src/game/balls.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3478a75e4877ecd70a6f5c8ab2c610a9",
+    "semantic_hash": "3478a75e4877ecd70a6f5c8ab2c610a9"
+  },
+  "v2/biome/src/game/biomeLoadMetrics.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "92e8f00a84796226cad63513b6010197",
+    "semantic_hash": "92e8f00a84796226cad63513b6010197"
+  },
+  "v2/biome/src/game/proceduralVoxelMaterials.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "36abeb1bb92561be401b426be94e5d15",
+    "semantic_hash": "36abeb1bb92561be401b426be94e5d15"
+  },
+  "v2/biome/src/game/projectilePhysics.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4ec9777a919e5eddfe12a895e47e9a42",
+    "semantic_hash": "4ec9777a919e5eddfe12a895e47e9a42"
+  },
+  "v2/biome/src/hooks/useKeyboardControls.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cfe9c3093e2e29859540b1c45b337fb8",
+    "semantic_hash": "cfe9c3093e2e29859540b1c45b337fb8"
+  },
+  "v2/biome/src/index.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a8706475bf738dbf3eff617703d948a5",
+    "semantic_hash": "a8706475bf738dbf3eff617703d948a5"
+  },
+  "v2/biome/src/regions/CustomImportRegion.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d41ec43f6215b7775c2e1b5bf8cbaeb4",
+    "semantic_hash": "d41ec43f6215b7775c2e1b5bf8cbaeb4"
+  },
+  "v2/biome/src/regions/ObsidianFieldlands.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7e9e5f27c878962a98544dc0d0b06d8d",
+    "semantic_hash": "7e9e5f27c878962a98544dc0d0b06d8d"
+  },
+  "v2/biome/src/regions/StaticRegionLoader.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7659bbbe1d090ed066112491a60766e2",
+    "semantic_hash": "7659bbbe1d090ed066112491a60766e2"
+  },
+  "v2/biome/src/regions/StaticRegionPlayer.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3a2f67126aa56e05d04fdaf2aa34f081",
+    "semantic_hash": "3a2f67126aa56e05d04fdaf2aa34f081"
+  },
+  "v2/biome/src/reportWebVitals.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "240e2381f826a9bb84d178b29b7b9abe",
+    "semantic_hash": "240e2381f826a9bb84d178b29b7b9abe"
+  },
+  "v2/biome/src/scenes/battleRoyale/BattleRoyaleArena.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2a8f628659a0b0a76eaed4c219e32c0d",
+    "semantic_hash": "2a8f628659a0b0a76eaed4c219e32c0d"
+  },
+  "v2/biome/src/scenes/battleRoyale/BattleRoyaleDropScene.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e8698dc788fdc9fb5534036259390e53",
+    "semantic_hash": "e8698dc788fdc9fb5534036259390e53"
+  },
+  "v2/biome/src/scenes/battleRoyale/BattleRoyaleShell.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9d0d366af91e891d9c6da5d843d630db",
+    "semantic_hash": "9d0d366af91e891d9c6da5d843d630db"
+  },
+  "v2/biome/src/scenes/normal/GameScene.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c407dc645cd7fe3d8500d10b24e543bb",
+    "semantic_hash": "c407dc645cd7fe3d8500d10b24e543bb"
+  },
+  "v2/biome/src/setupTests.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1a77571e1a8cf36018a41bcedf60db75",
+    "semantic_hash": "1a77571e1a8cf36018a41bcedf60db75"
+  },
+  "v2/biome/src/systems/AimIndicator.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "18fa63b9e5d0489eee57c5422a7a9dd1",
+    "semantic_hash": "18fa63b9e5d0489eee57c5422a7a9dd1"
+  },
+  "v2/biome/src/systems/CaptureBurst.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c19cde3f1e032ccf54a40b7c42e604a2",
+    "semantic_hash": "c19cde3f1e032ccf54a40b7c42e604a2"
+  },
+  "v2/biome/src/systems/CompanionRecallEffect.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "21b4ca7338b809a378d2038081d515fc",
+    "semantic_hash": "21b4ca7338b809a378d2038081d515fc"
+  },
+  "v2/biome/src/systems/Projectile.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d3c05e43f284a379d56a767e4a8df592",
+    "semantic_hash": "d3c05e43f284a379d56a767e4a8df592"
+  },
+  "v2/biome/src/systems/SafePointerLockControls.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "14aa8a3aefd63004c525f74377548d40",
+    "semantic_hash": "14aa8a3aefd63004c525f74377548d40"
+  },
+  "v2/biome/src/systems/ThirdPersonCamera.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7c6668e0e735cc4c30052e324b924133",
+    "semantic_hash": "7c6668e0e735cc4c30052e324b924133"
+  },
+  "v2/biome/src/ui/Hotbar.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c12229dd2d8d6c360c9e876e2df40184",
+    "semantic_hash": "c12229dd2d8d6c360c9e876e2df40184"
+  },
+  "v2/biome/src/ui/LoadingOverlay.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e9570a576477e398c6d65abb2a596ec1",
+    "semantic_hash": "e9570a576477e398c6d65abb2a596ec1"
+  },
+  "v2/biome/src/world/VoxelWorld.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "628268d49a115dfcba92f60a00d7ad70",
+    "semantic_hash": "628268d49a115dfcba92f60a00d7ad70"
+  },
+  "v2/biome/src/world/assetManifest.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "fea6ee04a3defc49b0bef4b7db0f7252",
+    "semantic_hash": "fea6ee04a3defc49b0bef4b7db0f7252"
+  },
+  "v2/biome/src/world/biomes.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4c3a9ffccdbd0ce2833872c5b0ebc76f",
+    "semantic_hash": "4c3a9ffccdbd0ce2833872c5b0ebc76f"
+  },
+  "v2/biome/src/world/constants.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9d72bcd5ed4101d3e61f1103f55dd106",
+    "semantic_hash": "9d72bcd5ed4101d3e61f1103f55dd106"
+  },
+  "v2/biome/src/world/generatedAssetManifest.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "fd1718cf375f8ad27ccff6cb59b849fa",
+    "semantic_hash": "fd1718cf375f8ad27ccff6cb59b849fa"
+  },
+  "v2/biome/src/world/heightLookup.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "40a6e58b35d2b2de8cbd5394637652f0",
+    "semantic_hash": "40a6e58b35d2b2de8cbd5394637652f0"
+  },
+  "v2/biome/src/world/index.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e6867f8e8d231f9300770dea251d3f38",
+    "semantic_hash": "e6867f8e8d231f9300770dea251d3f38"
+  },
+  "v2/biome/src/world/mapCache.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6cdd9465c92051512cd74c239d646b68",
+    "semantic_hash": "6cdd9465c92051512cd74c239d646b68"
+  },
+  "v2/biome/src/world/terrainGeneration.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0b17102065db1a063a7de8c293a427b9",
+    "semantic_hash": "0b17102065db1a063a7de8c293a427b9"
+  },
+  "v2/biome/tools/biome_dashboard/app.py": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9da30ec2bdbf4ed8c4199e5eb277d183",
+    "semantic_hash": "9da30ec2bdbf4ed8c4199e5eb277d183"
+  },
+  "v2/biome/tools/biome_dashboard/biome_load_metrics.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "586644fbde4aed17277f9ff01066088a",
+    "semantic_hash": "586644fbde4aed17277f9ff01066088a"
+  },
+  "vitest.config.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3f6283d5f81651aaed8516da9b26eaa4",
+    "semantic_hash": "3f6283d5f81651aaed8516da9b26eaa4"
+  },
+  "graphify-lib.ps1": {
+    "mtime": 1784037211.985548,
+    "ast_hash": "4fab766f20cb75f148e9394178a15908",
+    "semantic_hash": "4fab766f20cb75f148e9394178a15908"
+  },
+  "scripts/bridge_components.py": {
+    "mtime": 1784037043.5398822,
+    "ast_hash": "d6a25152e867d393e2f9ec48d9377750",
+    "semantic_hash": "d6a25152e867d393e2f9ec48d9377750"
+  },
+  "scripts/graph_analyzer.py": {
+    "mtime": 1784036657.9529395,
+    "ast_hash": "839296d5c4d9b1bec263fa2cac403430",
+    "semantic_hash": "839296d5c4d9b1bec263fa2cac403430"
+  }
+}

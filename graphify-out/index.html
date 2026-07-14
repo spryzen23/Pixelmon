@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Pixelmon graphify index</title>
+<style>
+  :root { color-scheme: light; }
+  body { font-family: Segoe UI, system-ui, sans-serif; margin: 2rem; background: #f6f7f9; color: #1a1a1a; }
+  h1 { font-size: 1.5rem; margin: 0 0 .25rem; }
+  .meta { color: #555; margin-bottom: 1.25rem; }
+  table { border-collapse: collapse; width: 100%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  th, td { padding: .55rem .7rem; border-bottom: 1px solid #e6e8eb; text-align: left; font-size: .92rem; }
+  th { background: #eef1f5; position: sticky; top: 0; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.ok td:nth-child(3) { color: #0a7a32; font-weight: 600; }
+  tr.missing td:nth-child(3) { color: #b00020; font-weight: 600; }
+  tr.skip td:nth-child(3) { color: #777; }
+  code { font-size: .85rem; }
+  .muted { color: #777; }
+  a { color: #0b57d0; }
+</style>
+</head>
+<body>
+  <h1>Pixelmon knowledge graphs</h1>
+  <p class="meta">Generated 2026-07-14 19:26:50 &middot; OK graphs: 2 &middot; listed nodes: 4365 &middot; edges: 8551<br/>
+  Repo root merged graph: <code>graphify-out\graph.json</code> &middot; <code>graphify show .</code> &middot; <code>graphify merge</code></p>
+  <table>
+    <thead>
+      <tr><th>Tier</th><th>Codebase</th><th>Status</th><th>Nodes</th><th>Edges</th><th>Comms</th><th>KB</th><th>View</th></tr>
+    </thead>
+    <tbody>
+<tr class="ok repo-root">
+  <td>repo-root</td>
+  <td><code>(repo-root) .</code></td>
+  <td>ok</td>
+  <td class="num">3921</td>
+  <td class="num">7564</td>
+  <td class="num">406</td>
+  <td class="num">3813.6</td>
+  <td><a href="./graph.html">open graph.html</a></td>
+</tr>
+<tr class="ok primary">
+  <td>primary</td>
+  <td><code>v2\biome</code></td>
+  <td>ok</td>
+  <td class="num">444</td>
+  <td class="num">987</td>
+  <td class="num">27</td>
+  <td class="num">486</td>
+  <td><a href="../v2/biome/graphify-out/graph.html">open graph.html</a></td>
+</tr>
+<tr class="skip optional">
+  <td>optional</td>
+  <td><code>v2\biome\tools\biome_dashboard</code></td>
+  <td>skip</td>
+  <td class="num">-</td>
+  <td class="num">-</td>
+  <td class="num">-</td>
+  <td class="num">-</td>
+  <td><span class="muted">no extractable code</span></td>
+</tr>
+<tr class="skip optional">
+  <td>optional</td>
+  <td><code>docs</code></td>
+  <td>skip</td>
+  <td class="num">-</td>
+  <td class="num">-</td>
+  <td class="num">-</td>
+  <td class="num">-</td>
+  <td><span class="muted">no extractable code</span></td>
+</tr>
+    </tbody>
+  </table>
+</body>
+</html>

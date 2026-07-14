@@ -1,0 +1,307 @@
+{
+  "public/manifest.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d9d975cebe2ec20b6c652e1e4c12ccf0",
+    "semantic_hash": "d9d975cebe2ec20b6c652e1e4c12ccf0"
+  },
+  "scripts/generateAssetManifest.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "127abf0dfc6c23e2c5aadda75c30a501",
+    "semantic_hash": "127abf0dfc6c23e2c5aadda75c30a501"
+  },
+  "server/battleRoyaleServer.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "fecc48e4c5070bbb95241611ebc7ae71",
+    "semantic_hash": "fecc48e4c5070bbb95241611ebc7ae71"
+  },
+  "src/App.test.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7c3837fef6be976f1d03104460443a57",
+    "semantic_hash": "7c3837fef6be976f1d03104460443a57"
+  },
+  "src/app/App.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d80b9a9b0835cc2ae50dc867ee684047",
+    "semantic_hash": "d80b9a9b0835cc2ae50dc867ee684047"
+  },
+  "src/app/ModeSelectScreen.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3032895b8a10a0f6c83e9d28aede90d6",
+    "semantic_hash": "3032895b8a10a0f6c83e9d28aede90d6"
+  },
+  "src/biomes/cave/CaveEntrance.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "46870b04a2f7495a1a3c36f267947910",
+    "semantic_hash": "46870b04a2f7495a1a3c36f267947910"
+  },
+  "src/biomes/cave/CaveInteriorEffects.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "feb3e09a7918313ba816b10420560289",
+    "semantic_hash": "feb3e09a7918313ba816b10420560289"
+  },
+  "src/biomes/desert/Sandstorm.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4d1fdcb5193a50046f9f442dc82350fa",
+    "semantic_hash": "4d1fdcb5193a50046f9f442dc82350fa"
+  },
+  "src/biomes/distortion/DistortionRealmLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1c3e56dc8b3261b78ffcf3316ebdccc6",
+    "semantic_hash": "1c3e56dc8b3261b78ffcf3316ebdccc6"
+  },
+  "src/biomes/icy/IceMountainLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cbeaa7fa43215f50db38a73e3b969b1d",
+    "semantic_hash": "cbeaa7fa43215f50db38a73e3b969b1d"
+  },
+  "src/biomes/icy/Snowstorm.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a88204f82965efe9794172019bdb1628",
+    "semantic_hash": "a88204f82965efe9794172019bdb1628"
+  },
+  "src/biomes/moonlit/MoonlitLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "12850c29dda14b8531d372b802519baa",
+    "semantic_hash": "12850c29dda14b8531d372b802519baa"
+  },
+  "src/biomes/sky/DistantSkyIsland.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d7a751b1c626e97e0ec662a4e404e226",
+    "semantic_hash": "d7a751b1c626e97e0ec662a4e404e226"
+  },
+  "src/biomes/sky/SkyBelowVista.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0c2002120428afe54147696321c31ff1",
+    "semantic_hash": "0c2002120428afe54147696321c31ff1"
+  },
+  "src/biomes/sky/SkyBiomeLandmarks.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2d361b276b3d78ddc350bfe5c7395938",
+    "semantic_hash": "2d361b276b3d78ddc350bfe5c7395938"
+  },
+  "src/biomes/volcanic/Ashfall.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9a284f34dea94597b0da52694b9d80d6",
+    "semantic_hash": "9a284f34dea94597b0da52694b9d80d6"
+  },
+  "src/biomes/volcanic/VolcanoCrater.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "76a99f0c9d2dbc26724ba761a80fdcb6",
+    "semantic_hash": "76a99f0c9d2dbc26724ba761a80fdcb6"
+  },
+  "src/entities/AnimatedModel.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "009e7a3877ec2e82dd6ae865bf03e06a",
+    "semantic_hash": "009e7a3877ec2e82dd6ae865bf03e06a"
+  },
+  "src/entities/CompanionCreature.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a7f111ff13ce270343f8cbc86630bca0",
+    "semantic_hash": "a7f111ff13ce270343f8cbc86630bca0"
+  },
+  "src/entities/ModelErrorBoundary.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "dca7b956185badc0b0cec50178aadef9",
+    "semantic_hash": "dca7b956185badc0b0cec50178aadef9"
+  },
+  "src/entities/Player.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "295b4147ada3f4a3e9cc991a7c361d98",
+    "semantic_hash": "295b4147ada3f4a3e9cc991a7c361d98"
+  },
+  "src/entities/VoxelFallback.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7b1aba55ecda42f575be9b81368c0ec0",
+    "semantic_hash": "7b1aba55ecda42f575be9b81368c0ec0"
+  },
+  "src/entities/WildCreature.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cc13c2ef6dc85067abd22b7f55345e92",
+    "semantic_hash": "cc13c2ef6dc85067abd22b7f55345e92"
+  },
+  "src/environment/Atmosphere.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d3d759ae2d3e74285965370ef4a3f160",
+    "semantic_hash": "d3d759ae2d3e74285965370ef4a3f160"
+  },
+  "src/environment/OceanHorizon.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "30f98f3453e4c9758365fabaa5ef7669",
+    "semantic_hash": "30f98f3453e4c9758365fabaa5ef7669"
+  },
+  "src/game/balls.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3478a75e4877ecd70a6f5c8ab2c610a9",
+    "semantic_hash": "3478a75e4877ecd70a6f5c8ab2c610a9"
+  },
+  "src/game/biomeLoadMetrics.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "92e8f00a84796226cad63513b6010197",
+    "semantic_hash": "92e8f00a84796226cad63513b6010197"
+  },
+  "src/game/proceduralVoxelMaterials.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "36abeb1bb92561be401b426be94e5d15",
+    "semantic_hash": "36abeb1bb92561be401b426be94e5d15"
+  },
+  "src/game/projectilePhysics.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4ec9777a919e5eddfe12a895e47e9a42",
+    "semantic_hash": "4ec9777a919e5eddfe12a895e47e9a42"
+  },
+  "src/hooks/useKeyboardControls.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "cfe9c3093e2e29859540b1c45b337fb8",
+    "semantic_hash": "cfe9c3093e2e29859540b1c45b337fb8"
+  },
+  "src/index.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "a8706475bf738dbf3eff617703d948a5",
+    "semantic_hash": "a8706475bf738dbf3eff617703d948a5"
+  },
+  "src/regions/CustomImportRegion.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d41ec43f6215b7775c2e1b5bf8cbaeb4",
+    "semantic_hash": "d41ec43f6215b7775c2e1b5bf8cbaeb4"
+  },
+  "src/regions/ObsidianFieldlands.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7e9e5f27c878962a98544dc0d0b06d8d",
+    "semantic_hash": "7e9e5f27c878962a98544dc0d0b06d8d"
+  },
+  "src/regions/StaticRegionLoader.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7659bbbe1d090ed066112491a60766e2",
+    "semantic_hash": "7659bbbe1d090ed066112491a60766e2"
+  },
+  "src/regions/StaticRegionPlayer.jsx": {
+    "mtime": 1781388015.0,
+    "ast_hash": "3a2f67126aa56e05d04fdaf2aa34f081",
+    "semantic_hash": "3a2f67126aa56e05d04fdaf2aa34f081"
+  },
+  "src/reportWebVitals.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "240e2381f826a9bb84d178b29b7b9abe",
+    "semantic_hash": "240e2381f826a9bb84d178b29b7b9abe"
+  },
+  "src/scenes/battleRoyale/BattleRoyaleArena.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "2a8f628659a0b0a76eaed4c219e32c0d",
+    "semantic_hash": "2a8f628659a0b0a76eaed4c219e32c0d"
+  },
+  "src/scenes/battleRoyale/BattleRoyaleDropScene.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e8698dc788fdc9fb5534036259390e53",
+    "semantic_hash": "e8698dc788fdc9fb5534036259390e53"
+  },
+  "src/scenes/battleRoyale/BattleRoyaleShell.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9d0d366af91e891d9c6da5d843d630db",
+    "semantic_hash": "9d0d366af91e891d9c6da5d843d630db"
+  },
+  "src/scenes/normal/GameScene.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c407dc645cd7fe3d8500d10b24e543bb",
+    "semantic_hash": "c407dc645cd7fe3d8500d10b24e543bb"
+  },
+  "src/setupTests.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "1a77571e1a8cf36018a41bcedf60db75",
+    "semantic_hash": "1a77571e1a8cf36018a41bcedf60db75"
+  },
+  "src/systems/AimIndicator.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "18fa63b9e5d0489eee57c5422a7a9dd1",
+    "semantic_hash": "18fa63b9e5d0489eee57c5422a7a9dd1"
+  },
+  "src/systems/CaptureBurst.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c19cde3f1e032ccf54a40b7c42e604a2",
+    "semantic_hash": "c19cde3f1e032ccf54a40b7c42e604a2"
+  },
+  "src/systems/CompanionRecallEffect.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "21b4ca7338b809a378d2038081d515fc",
+    "semantic_hash": "21b4ca7338b809a378d2038081d515fc"
+  },
+  "src/systems/Projectile.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "d3c05e43f284a379d56a767e4a8df592",
+    "semantic_hash": "d3c05e43f284a379d56a767e4a8df592"
+  },
+  "src/systems/SafePointerLockControls.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "14aa8a3aefd63004c525f74377548d40",
+    "semantic_hash": "14aa8a3aefd63004c525f74377548d40"
+  },
+  "src/systems/ThirdPersonCamera.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "7c6668e0e735cc4c30052e324b924133",
+    "semantic_hash": "7c6668e0e735cc4c30052e324b924133"
+  },
+  "src/ui/Hotbar.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "c12229dd2d8d6c360c9e876e2df40184",
+    "semantic_hash": "c12229dd2d8d6c360c9e876e2df40184"
+  },
+  "src/ui/LoadingOverlay.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e9570a576477e398c6d65abb2a596ec1",
+    "semantic_hash": "e9570a576477e398c6d65abb2a596ec1"
+  },
+  "src/world/VoxelWorld.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "628268d49a115dfcba92f60a00d7ad70",
+    "semantic_hash": "628268d49a115dfcba92f60a00d7ad70"
+  },
+  "src/world/assetManifest.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "fea6ee04a3defc49b0bef4b7db0f7252",
+    "semantic_hash": "fea6ee04a3defc49b0bef4b7db0f7252"
+  },
+  "src/world/biomes.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "4c3a9ffccdbd0ce2833872c5b0ebc76f",
+    "semantic_hash": "4c3a9ffccdbd0ce2833872c5b0ebc76f"
+  },
+  "src/world/constants.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9d72bcd5ed4101d3e61f1103f55dd106",
+    "semantic_hash": "9d72bcd5ed4101d3e61f1103f55dd106"
+  },
+  "src/world/generatedAssetManifest.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "fd1718cf375f8ad27ccff6cb59b849fa",
+    "semantic_hash": "fd1718cf375f8ad27ccff6cb59b849fa"
+  },
+  "src/world/heightLookup.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "40a6e58b35d2b2de8cbd5394637652f0",
+    "semantic_hash": "40a6e58b35d2b2de8cbd5394637652f0"
+  },
+  "src/world/index.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "e6867f8e8d231f9300770dea251d3f38",
+    "semantic_hash": "e6867f8e8d231f9300770dea251d3f38"
+  },
+  "src/world/mapCache.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "6cdd9465c92051512cd74c239d646b68",
+    "semantic_hash": "6cdd9465c92051512cd74c239d646b68"
+  },
+  "src/world/terrainGeneration.js": {
+    "mtime": 1781388015.0,
+    "ast_hash": "0b17102065db1a063a7de8c293a427b9",
+    "semantic_hash": "0b17102065db1a063a7de8c293a427b9"
+  },
+  "tools/biome_dashboard/app.py": {
+    "mtime": 1781388015.0,
+    "ast_hash": "9da30ec2bdbf4ed8c4199e5eb277d183",
+    "semantic_hash": "9da30ec2bdbf4ed8c4199e5eb277d183"
+  },
+  "tools/biome_dashboard/biome_load_metrics.json": {
+    "mtime": 1781388015.0,
+    "ast_hash": "586644fbde4aed17277f9ff01066088a",
+    "semantic_hash": "586644fbde4aed17277f9ff01066088a"
+  }
+}
