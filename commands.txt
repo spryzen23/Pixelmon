@@ -376,3 +376,12 @@ git branch -M main
 git add .
 git commit -m "emailapis deployment v1"
 git push -u origin main
+
+
+
+.\graphify.bat build
+
+
+cd e:\maha\pokemon_landing
+python -m http.server 8000
+# Open http://localhost:8000 in your browser
