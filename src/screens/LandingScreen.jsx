@@ -199,16 +199,27 @@ export function LandingScreen() {
 
   // Load model-viewer dynamically in browser
   useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      !document.getElementById("model-viewer-script")
-    ) {
-      const script = document.createElement("script");
-      script.id = "model-viewer-script";
-      script.type = "module";
-      script.src =
-        "https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js";
-      document.head.appendChild(script);
+    if (typeof window !== "undefined") {
+      // Suppress multiple instances of Three.js warning caused by model-viewer bundling its own Three.js
+      const originalWarn = console.warn;
+      console.warn = (...args) => {
+        if (
+          typeof args[0] === "string" &&
+          args[0].includes("Multiple instances of Three.js")
+        ) {
+          return;
+        }
+        originalWarn(...args);
+      };
+
+      if (!document.getElementById("model-viewer-script")) {
+        const script = document.createElement("script");
+        script.id = "model-viewer-script";
+        script.type = "module";
+        script.src =
+          "https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js";
+        document.head.appendChild(script);
+      }
     }
   }, []);
 
@@ -986,13 +997,16 @@ export function LandingScreen() {
                 disable-zoom=""
                 disable-pan=""
                 style={{
-                  width: "100px",
-                  height: "100px",
+                  width: "200px",
+                  height: "200px",
                   filter: "drop-shadow(0 4px 20px rgba(255,212,63,0.6))",
                 }}
                 poster="/assets/images/thumbnails/0025.png"
                 loading="lazy"
                 shadow-intensity="0"
+                autoplay
+                interaction-prompt="none"
+                camera-orbit="auto auto 180%"
               />
             </div>
             {/* 3D Charizard orbiting left */}
@@ -1015,13 +1029,16 @@ export function LandingScreen() {
                 disable-zoom=""
                 disable-pan=""
                 style={{
-                  width: "110px",
-                  height: "110px",
+                  width: "240px",
+                  height: "240px",
                   filter: "drop-shadow(0 4px 20px rgba(255,100,0,0.6))",
                 }}
                 poster="/assets/images/thumbnails/0006.png"
                 loading="lazy"
                 shadow-intensity="0"
+                autoplay
+                interaction-prompt="none"
+                camera-orbit="auto auto 200%"
               />
             </div>
             {/* 3D Mewtwo bottom-right */}
@@ -1044,13 +1061,16 @@ export function LandingScreen() {
                 disable-zoom=""
                 disable-pan=""
                 style={{
-                  width: "90px",
-                  height: "90px",
+                  width: "180px",
+                  height: "180px",
                   filter: "drop-shadow(0 4px 20px rgba(150,50,255,0.6))",
                 }}
                 poster="/assets/images/thumbnails/0150.png"
                 loading="lazy"
                 shadow-intensity="0"
+                autoplay
+                interaction-prompt="none"
+                camera-orbit="auto auto 180%"
               />
             </div>
 
