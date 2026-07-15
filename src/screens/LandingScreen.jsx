@@ -97,6 +97,79 @@ const CAROUSEL_POKEMON = [
   { id: "1008", name: "Miraidon" },
 ];
 
+const SHOWCASE_POKEMON = [
+  {
+    id: "0149",
+    name: "Dragonite",
+    src: "/assets/models/glb/regular/149.glb",
+    poster: "/assets/images/thumbnails/0149.png",
+    types: [
+      { name: "dragon", emoji: "🐉", label: "Dragon" },
+      { name: "flying", emoji: "🦅", label: "Flying" },
+    ],
+    glowColor: "rgba(230, 126, 34, 0.45)",
+    desc: "A legendary Dragon/Flying Pokémon known for its intelligence, kind heart, and supersonic flight speeds.",
+  },
+  {
+    id: "0025",
+    name: "Pikachu",
+    src: "/assets/models/glb/regular/25.glb",
+    poster: "/assets/images/thumbnails/0025.png",
+    types: [
+      { name: "electric", emoji: "⚡", label: "Electric" },
+    ],
+    glowColor: "rgba(241, 196, 15, 0.45)",
+    desc: "Stores electricity in its red cheeks and releases it in a powerful burst when threatened.",
+  },
+  {
+    id: "0150",
+    name: "Mewtwo",
+    src: "/assets/models/glb/regular/150.glb",
+    poster: "/assets/images/thumbnails/0150.png",
+    types: [
+      { name: "psychic", emoji: "🔮", label: "Psychic" },
+    ],
+    glowColor: "rgba(200, 50, 255, 0.45)",
+    desc: "A Pokémon created by recombining Mew's genes. It's said to have the most savage heart among Pokémon.",
+  },
+  {
+    id: "0006",
+    name: "Charizard",
+    src: "/assets/models/glb/regular/6.glb",
+    poster: "/assets/images/thumbnails/0006.png",
+    types: [
+      { name: "fire", emoji: "🔥", label: "Fire" },
+      { name: "flying", emoji: "🦅", label: "Flying" },
+    ],
+    glowColor: "rgba(238, 21, 21, 0.45)",
+    desc: "Spits fire that is hot enough to melt boulders. It may cause forest fires by blowing flames.",
+  },
+  {
+    id: "0658",
+    name: "Greninja",
+    src: "/assets/models/glb/regular/658.glb",
+    poster: "/assets/images/thumbnails/0658.png",
+    types: [
+      { name: "water", emoji: "💧", label: "Water" },
+      { name: "dark", emoji: "🌙", label: "Dark" },
+    ],
+    glowColor: "rgba(41, 128, 185, 0.45)",
+    desc: "It creates throwing stars out of compressed water. When it spins them and throws them at high speed, they can split metal.",
+  },
+  {
+    id: "0249",
+    name: "Lugia",
+    src: "/assets/models/glb/regular/249.glb",
+    poster: "/assets/images/thumbnails/0249.png",
+    types: [
+      { name: "psychic", emoji: "🔮", label: "Psychic" },
+      { name: "flying", emoji: "🦅", label: "Flying" },
+    ],
+    glowColor: "rgba(100, 150, 255, 0.45)",
+    desc: "It is said to be the guardian of the seas. It is rumored to have been seen on the night of a storm.",
+  },
+];
+
 const GAMEPLAY_POKEMON = [
   { id: "0006", name: "Charizard" },
   { id: "0025", name: "Pikachu" },
@@ -153,17 +226,44 @@ const CHORD_PROGRESSIONS = [
 ];
 
 const LANDING_TRAINERS = [
-  { id: "player-21", name: "Arc Runner", src: "/assets/players/player%20(21).glb", type: "Cyber" },
-  { id: "player-5", name: "Explorer", src: "/assets/players/player%20(5).glb", type: "Adventure" },
-  { id: "player-9", name: "Aero Kinetic", src: "/assets/players/player%20(9).glb", type: "Sci-Fi" },
-  { id: "player-8", name: "Glitch Weaver", src: "/assets/players/player%20(8).glb", type: "Voxel" },
-  { id: "player-6", name: "Field Scout", src: "/assets/players/player%20(6).glb", type: "Scout" },
+  {
+    id: "player-21",
+    name: "Arc Runner",
+    src: "/assets/players/player%20(21).glb",
+    type: "Cyber",
+  },
+  {
+    id: "player-5",
+    name: "Explorer",
+    src: "/assets/players/player%20(5).glb",
+    type: "Adventure",
+  },
+  {
+    id: "player-9",
+    name: "Aero Kinetic",
+    src: "/assets/players/player%20(9).glb",
+    type: "Sci-Fi",
+  },
+  {
+    id: "player-8",
+    name: "Glitch Weaver",
+    src: "/assets/players/player%20(8).glb",
+    type: "Voxel",
+  },
+  {
+    id: "player-6",
+    name: "Field Scout",
+    src: "/assets/players/player%20(6).glb",
+    type: "Scout",
+  },
 ];
 
 export function LandingScreen() {
   const { goTo, setUser } = useGame();
   const canvasRef = useRef(null);
+  const landingRootRef = useRef(null);
   const [selectedTrainerIdx, setSelectedTrainerIdx] = useState(0);
+  const [selectedShowcaseIdx, setSelectedShowcaseIdx] = useState(0);
 
   // Loader sequence states
   const [showLoader, setShowLoader] = useState(() => {
@@ -537,11 +637,14 @@ export function LandingScreen() {
   useEffect(() => {
     if (showLoader) return;
 
+    const rootEl = landingRootRef.current;
+    if (!rootEl) return;
+
     // Nav scrolled class trigger
     const handleScrollNav = () => {
-      setScrolled(window.scrollY > 40);
+      setScrolled(rootEl.scrollTop > 40);
     };
-    window.addEventListener("scroll", handleScrollNav, { passive: true });
+    rootEl.addEventListener("scroll", handleScrollNav, { passive: true });
 
     // Stats counter intersection observer
     const statsObserver = new IntersectionObserver(
@@ -628,60 +731,19 @@ export function LandingScreen() {
           const shift = progressVal * (30 + idx * 10);
           fl.style.transform = `translateY(${shift}px) rotate(${progressVal * 90}deg)`;
         });
-      } else if (id === "showcase") {
-        const cards = document.querySelectorAll(".model-card");
-        const count = cards.length;
-        cards.forEach((card, idx) => {
-          const cardOffset = idx / count;
-          let cardProgress = progressVal * 3.5 - cardOffset * 2.5;
-          cardProgress = Math.max(0, Math.min(1.5, cardProgress));
 
-          const focusDist = Math.abs(cardProgress - 0.7);
-
-          if (focusDist < 0.55) {
-            const y = (cardProgress - 0.7) * 600;
-            const x = 0;
-            const z = -200 * (focusDist / 0.55);
-            const rotX = (cardProgress - 0.7) * -40;
-
-            card.style.transform = `translate3d(calc(-50% + ${x}px), ${y}px, ${z}px) rotateX(${rotX}deg)`;
-            card.style.left = "50%";
-
-            const baseOpacity = 1 - focusDist / 0.55;
-            const opacity = Math.pow(baseOpacity, 1.5);
-            card.style.opacity = Math.max(0, Math.min(1, opacity));
-
-            const blur = Math.max(0, (focusDist - 0.2) * 12);
-            card.style.filter = `blur(${blur}px)`;
-            card.style.pointerEvents = focusDist < 0.2 ? "auto" : "none";
-
-            const viewer = card.querySelector("model-viewer");
-            if (viewer) {
-              const rot = (cardProgress - 0.35) * 800;
-              viewer.setAttribute("camera-orbit", `${rot}deg 75deg 3m`);
-
-              const scale = 0.85 + (1 - focusDist / 0.55) * 0.4;
-              viewer.style.transform = `scale(${Math.max(0.85, Math.min(1.25, scale))})`;
-              viewer.style.transition = "transform 0.1s ease-out";
-            }
-          } else {
-            card.style.opacity = "0";
-            card.style.transform = "translate3d(-50%, -600px, -500px)";
-            card.style.pointerEvents = "none";
-          }
-        });
       } else if (id === "biomes") {
         const grid = document.querySelector(".biomes-grid");
         if (grid) {
           const sticky = document.querySelector(".biomes-scroll-container");
           if (sticky) {
             const rect = sticky.getBoundingClientRect();
-            const totalScrollable = sticky.scrollHeight - window.innerHeight;
+            const totalScrollable = sticky.scrollHeight - rootEl.clientHeight;
             const scrolledInSection = -rect.top;
             let ratio = scrolledInSection / totalScrollable;
             ratio = Math.max(0, Math.min(1, ratio));
 
-            const maxTranslate = grid.scrollWidth - window.innerWidth;
+            const maxTranslate = grid.scrollWidth - rootEl.clientWidth;
             if (maxTranslate > 0) {
               grid.style.transform = `translateX(${-ratio * maxTranslate}px)`;
             }
@@ -698,9 +760,8 @@ export function LandingScreen() {
     };
 
     const handleScroll3D = () => {
-      const scrollTop = window.scrollY;
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
+      const scrollTop = rootEl.scrollTop;
+      const docHeight = rootEl.scrollHeight - rootEl.clientHeight;
       const globalProgress = docHeight > 0 ? scrollTop / docHeight : 0;
 
       document.documentElement.style.setProperty(
@@ -715,7 +776,7 @@ export function LandingScreen() {
       sections.forEach((sec) => {
         if (!sec.el) return;
         const rect = sec.el.getBoundingClientRect();
-        const viewHeight = window.innerHeight;
+        const viewHeight = rootEl.clientHeight;
 
         const entrance = rect.top - viewHeight;
         const totalDist = rect.height + viewHeight;
@@ -732,7 +793,7 @@ export function LandingScreen() {
       });
     };
 
-    window.addEventListener("scroll", handleScroll3D, { passive: true });
+    rootEl.addEventListener("scroll", handleScroll3D, { passive: true });
     handleScroll3D(); // initial call
 
     const tick = () => {
@@ -750,8 +811,10 @@ export function LandingScreen() {
     tick();
 
     return () => {
-      window.removeEventListener("scroll", handleScrollNav);
-      window.removeEventListener("scroll", handleScroll3D);
+      if (rootEl) {
+        rootEl.removeEventListener("scroll", handleScrollNav);
+        rootEl.removeEventListener("scroll", handleScroll3D);
+      }
       cancelAnimationFrame(animationFrameId);
       statsObserver.disconnect();
       revealObserver.disconnect();
@@ -811,7 +874,7 @@ export function LandingScreen() {
   }
 
   return (
-    <div className="landing-root">
+    <div className="landing-root" ref={landingRootRef}>
       {/* BACKGROUND & OVERLAYS */}
       <canvas id="bg-particles" ref={canvasRef}></canvas>
       <div className="grid-overlay"></div>
@@ -977,102 +1040,7 @@ export function LandingScreen() {
           <div className="hero-trainer-wrap">
             <div className="hero-trainer-glow"></div>
 
-            {/* 3D Pikachu orbiting top-right */}
-            <div
-              className="hero-pokemon"
-              style={{
-                top: "8%",
-                right: "-2%",
-                animationDuration: "5.2s",
-                animationDelay: "0s",
-              }}
-            >
-              <model-viewer
-                src="/assets/models/glb/regular/25.glb"
-                alt="Pikachu"
-                auto-rotate=""
-                auto-rotate-delay="0"
-                rotation-per-second="30deg"
-                camera-controls=""
-                disable-zoom=""
-                disable-pan=""
-                style={{
-                  width: "200px",
-                  height: "200px",
-                  filter: "drop-shadow(0 4px 20px rgba(255,212,63,0.6))",
-                }}
-                poster="/assets/images/thumbnails/0025.png"
-                loading="lazy"
-                shadow-intensity="0"
-                autoplay
-                interaction-prompt="none"
-                camera-orbit="auto auto 180%"
-              />
-            </div>
-            {/* 3D Charizard orbiting left */}
-            <div
-              className="hero-pokemon"
-              style={{
-                top: "38%",
-                left: "-8%",
-                animationDuration: "4.8s",
-                animationDelay: "-2s",
-              }}
-            >
-              <model-viewer
-                src="/assets/models/glb/regular/6.glb"
-                alt="Charizard"
-                auto-rotate=""
-                auto-rotate-delay="0"
-                rotation-per-second="25deg"
-                camera-controls=""
-                disable-zoom=""
-                disable-pan=""
-                style={{
-                  width: "240px",
-                  height: "240px",
-                  filter: "drop-shadow(0 4px 20px rgba(255,100,0,0.6))",
-                }}
-                poster="/assets/images/thumbnails/0006.png"
-                loading="lazy"
-                shadow-intensity="0"
-                autoplay
-                interaction-prompt="none"
-                camera-orbit="auto auto 200%"
-              />
-            </div>
-            {/* 3D Mewtwo bottom-right */}
-            <div
-              className="hero-pokemon"
-              style={{
-                bottom: "18%",
-                right: "-3%",
-                animationDuration: "6s",
-                animationDelay: "-1s",
-              }}
-            >
-              <model-viewer
-                src="/assets/models/glb/regular/150.glb"
-                alt="Mewtwo"
-                auto-rotate=""
-                auto-rotate-delay="0"
-                rotation-per-second="20deg"
-                camera-controls=""
-                disable-zoom=""
-                disable-pan=""
-                style={{
-                  width: "180px",
-                  height: "180px",
-                  filter: "drop-shadow(0 4px 20px rgba(150,50,255,0.6))",
-                }}
-                poster="/assets/images/thumbnails/0150.png"
-                loading="lazy"
-                shadow-intensity="0"
-                autoplay
-                interaction-prompt="none"
-                camera-orbit="auto auto 180%"
-              />
-            </div>
+
 
             <div className="hero-trainer-container">
               <model-viewer
@@ -1090,7 +1058,7 @@ export function LandingScreen() {
                 autoplay
                 interaction-prompt="none"
               />
-              
+
               {/* Sleek Selector HUD */}
               <div className="trainer-selector">
                 {LANDING_TRAINERS.map((trainer, idx) => (
@@ -1101,7 +1069,9 @@ export function LandingScreen() {
                     title={`${trainer.name} (${trainer.type})`}
                   >
                     <span className="trainer-selector-dot"></span>
-                    <span className="trainer-selector-label">{trainer.name}</span>
+                    <span className="trainer-selector-label">
+                      {trainer.name}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -1128,200 +1098,62 @@ export function LandingScreen() {
             </p>
           </div>
 
-          <div className="showcase-grid">
-            {/* Rayquaza */}
-            <div
-              className="model-card reveal"
-              style={{ "--mc-glow": "rgba(39,174,96,0.3)" }}
+          <div className="showcase-container reveal reveal-delay-3">
+            {/* Active Pokemon Card */}
+            <div 
+              key={selectedShowcaseIdx}
+              className="active-model-card"
+              style={{ "--active-glow": SHOWCASE_POKEMON[selectedShowcaseIdx].glowColor }}
             >
-              <model-viewer
-                src="/assets/models/glb/regular/384.glb"
-                alt="Rayquaza"
-                auto-rotate=""
-                auto-rotate-delay="500"
-                rotation-per-second="20deg"
-                camera-controls=""
-                environment-image="neutral"
-                shadow-intensity="0.5"
-                exposure="1.2"
-                poster="/assets/images/thumbnails/0384.png"
-                loading="lazy"
-              />
-              <div className="model-card-overlay"></div>
-              <div className="model-hint">&#x21BA; Drag to rotate</div>
-              <div className="model-card-info">
-                <div className="model-card-name">Rayquaza</div>
-                <div className="model-card-types">
-                  <span className="model-type-badge type-dragon">
-                    &#x1F409; Dragon
-                  </span>
-                  <span className="model-type-badge type-flying">
-                    &#x1F985; Flying
-                  </span>
+              <div className="active-model-viewer-wrap">
+                <model-viewer
+                  key={SHOWCASE_POKEMON[selectedShowcaseIdx].id}
+                  src={SHOWCASE_POKEMON[selectedShowcaseIdx].src}
+                  alt={SHOWCASE_POKEMON[selectedShowcaseIdx].name}
+                  auto-rotate=""
+                  camera-controls=""
+                  environment-image="neutral"
+                  shadow-intensity="0.8"
+                  exposure="1.2"
+                  poster={SHOWCASE_POKEMON[selectedShowcaseIdx].poster}
+                  loading="eager"
+                  autoplay
+                  interaction-prompt="none"
+                  style={{ width: "100%", height: "100%" }}
+                />
+                <div className="model-hint">&#x21BA; Drag to rotate</div>
+              </div>
+              <div className="active-model-details">
+                <h3 className="active-model-name">{SHOWCASE_POKEMON[selectedShowcaseIdx].name}</h3>
+                <div className="active-model-types">
+                  {SHOWCASE_POKEMON[selectedShowcaseIdx].types.map(t => (
+                    <span key={t.name} className={`model-type-badge type-${t.name}`}>
+                      {t.emoji} {t.label}
+                    </span>
+                  ))}
                 </div>
+                <p className="active-model-desc">{SHOWCASE_POKEMON[selectedShowcaseIdx].desc}</p>
               </div>
             </div>
 
-            {/* Lucario */}
-            <div
-              className="model-card reveal reveal-delay-1"
-              style={{ "--mc-glow": "rgba(41,128,185,0.4)" }}
-            >
-              <model-viewer
-                src="/assets/models/glb/regular/448.glb"
-                alt="Lucario"
-                auto-rotate=""
-                auto-rotate-delay="500"
-                rotation-per-second="22deg"
-                camera-controls=""
-                environment-image="neutral"
-                shadow-intensity="0.5"
-                exposure="1.2"
-                poster="/assets/images/thumbnails/0448.png"
-                loading="lazy"
-              />
-              <div className="model-card-overlay"></div>
-              <div className="model-hint">&#x21BA; Drag to rotate</div>
-              <div className="model-card-info">
-                <div className="model-card-name">Lucario</div>
-                <div className="model-card-types">
-                  <span className="model-type-badge type-fighting">
-                    &#x1F94A; Fighting
-                  </span>
-                  <span className="model-type-badge type-steel">
-                    &#x1F529; Steel
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Gengar */}
-            <div
-              className="model-card reveal reveal-delay-2"
-              style={{ "--mc-glow": "rgba(127,0,255,0.3)" }}
-            >
-              <model-viewer
-                src="/assets/models/glb/regular/94.glb"
-                alt="Gengar"
-                auto-rotate=""
-                auto-rotate-delay="500"
-                rotation-per-second="18deg"
-                camera-controls=""
-                environment-image="neutral"
-                shadow-intensity="0.4"
-                exposure="1.0"
-                poster="/assets/images/thumbnails/0094.png"
-                loading="lazy"
-              />
-              <div className="model-card-overlay"></div>
-              <div className="model-hint">&#x21BA; Drag to rotate</div>
-              <div className="model-card-info">
-                <div className="model-card-name">Gengar</div>
-                <div className="model-card-types">
-                  <span className="model-type-badge type-ghost">
-                    &#x1F47B; Ghost
-                  </span>
-                  <span className="model-type-badge type-poison">
-                    &#x2620;&#xFE0F; Poison
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Charizard */}
-            <div
-              className="model-card reveal"
-              style={{ "--mc-glow": "rgba(238,21,21,0.3)" }}
-            >
-              <model-viewer
-                src="/assets/models/glb/regular/6.glb"
-                alt="Charizard"
-                auto-rotate=""
-                auto-rotate-delay="500"
-                rotation-per-second="22deg"
-                camera-controls=""
-                environment-image="neutral"
-                shadow-intensity="0.5"
-                exposure="1.3"
-                poster="/assets/images/thumbnails/0006.png"
-                loading="lazy"
-              />
-              <div className="model-card-overlay"></div>
-              <div className="model-hint">&#x21BA; Drag to rotate</div>
-              <div className="model-card-info">
-                <div className="model-card-name">Charizard</div>
-                <div className="model-card-types">
-                  <span className="model-type-badge type-fire">
-                    &#x1F525; Fire
-                  </span>
-                  <span className="model-type-badge type-flying">
-                    &#x1F985; Flying
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Mewtwo */}
-            <div
-              className="model-card reveal reveal-delay-1"
-              style={{ "--mc-glow": "rgba(200,50,255,0.3)" }}
-            >
-              <model-viewer
-                src="/assets/models/glb/regular/150.glb"
-                alt="Mewtwo"
-                auto-rotate=""
-                auto-rotate-delay="500"
-                rotation-per-second="18deg"
-                camera-controls=""
-                environment-image="neutral"
-                shadow-intensity="0.4"
-                exposure="1.1"
-                poster="/assets/images/thumbnails/0150.png"
-                loading="lazy"
-              />
-              <div className="model-card-overlay"></div>
-              <div className="model-hint">&#x21BA; Drag to rotate</div>
-              <div className="model-card-info">
-                <div className="model-card-name">Mewtwo</div>
-                <div className="model-card-types">
-                  <span className="model-type-badge type-psychic">
-                    &#x1F52E; Psychic
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Garchomp */}
-            <div
-              className="model-card reveal reveal-delay-2"
-              style={{ "--mc-glow": "rgba(100,150,255,0.3)" }}
-            >
-              <model-viewer
-                src="/assets/models/glb/regular/445.glb"
-                alt="Garchomp"
-                auto-rotate=""
-                auto-rotate-delay="500"
-                rotation-per-second="24deg"
-                camera-controls=""
-                environment-image="neutral"
-                shadow-intensity="0.5"
-                exposure="1.2"
-                poster="/assets/images/thumbnails/0445.png"
-                loading="lazy"
-              />
-              <div className="model-card-overlay"></div>
-              <div className="model-hint">&#x21BA; Drag to rotate</div>
-              <div className="model-card-info">
-                <div className="model-card-name">Garchomp</div>
-                <div className="model-card-types">
-                  <span className="model-type-badge type-dragon">
-                    &#x1F409; Dragon
-                  </span>
-                  <span className="model-type-badge type-ground">
-                    &#x1F3D4;&#xFE0F; Ground
-                  </span>
-                </div>
-              </div>
+            {/* Downside Selector Thumbnails */}
+            <div className="showcase-selector-downside">
+              {SHOWCASE_POKEMON.map((pokemon, idx) => (
+                <button
+                  key={pokemon.id}
+                  className={`showcase-thumb-btn ${selectedShowcaseIdx === idx ? "active" : ""}`}
+                  style={{ "--thumb-glow": pokemon.glowColor }}
+                  onClick={() => setSelectedShowcaseIdx(idx)}
+                >
+                  <div className="thumb-preview">
+                    <img src={pokemon.poster} alt={pokemon.name} />
+                  </div>
+                  <div className="thumb-info">
+                    <span className="thumb-name">{pokemon.name}</span>
+                    <span className="thumb-type">{pokemon.types[0].label}</span>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
         </div>
