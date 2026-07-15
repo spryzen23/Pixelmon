@@ -1229,15 +1229,15 @@
       position: relative;
       perspective: 1500px;
       transform-style: preserve-3d;
-      min-height: 120vh;
-      overflow: hidden;
+      min-height: 180vh;
+      overflow: visible;
     }
 
     .landing-root .showcase-inner{ max-width: 1200px; margin: 0 auto; transform-style: preserve-3d; }
 
     .landing-root .showcase-grid{
       position: relative;
-      height: 620px;
+      height: 720px;
       perspective: 1500px;
       transform-style: preserve-3d;
       display: flex;

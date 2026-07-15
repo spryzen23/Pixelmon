@@ -633,40 +633,40 @@ export function LandingScreen() {
         const count = cards.length;
         cards.forEach((card, idx) => {
           const cardOffset = idx / count;
-          let cardProgress = progressVal * 4.5 - cardOffset * 3.2;
+          let cardProgress = progressVal * 3.5 - cardOffset * 2.5;
           cardProgress = Math.max(0, Math.min(1.5, cardProgress));
 
           const focusDist = Math.abs(cardProgress - 0.7);
 
-          if (focusDist < 0.35) {
-            const y = (cardProgress - 0.7) * 750;
+          if (focusDist < 0.55) {
+            const y = (cardProgress - 0.7) * 600;
             const x = 0;
-            const z = -300 * (focusDist / 0.35);
-            const rotX = (cardProgress - 0.7) * -65;
+            const z = -200 * (focusDist / 0.55);
+            const rotX = (cardProgress - 0.7) * -40;
 
             card.style.transform = `translate3d(calc(-50% + ${x}px), ${y}px, ${z}px) rotateX(${rotX}deg)`;
             card.style.left = "50%";
 
-            const baseOpacity = 1 - focusDist / 0.35;
-            const opacity = Math.pow(baseOpacity, 4);
+            const baseOpacity = 1 - focusDist / 0.55;
+            const opacity = Math.pow(baseOpacity, 1.5);
             card.style.opacity = Math.max(0, Math.min(1, opacity));
 
-            const blur = Math.max(0, (focusDist - 0.08) * 18);
+            const blur = Math.max(0, (focusDist - 0.2) * 12);
             card.style.filter = `blur(${blur}px)`;
-            card.style.pointerEvents = focusDist < 0.15 ? "auto" : "none";
+            card.style.pointerEvents = focusDist < 0.2 ? "auto" : "none";
 
             const viewer = card.querySelector("model-viewer");
             if (viewer) {
               const rot = (cardProgress - 0.35) * 800;
               viewer.setAttribute("camera-orbit", `${rot}deg 75deg 3m`);
 
-              const scale = 0.85 + (1 - focusDist / 0.35) * 0.4;
+              const scale = 0.85 + (1 - focusDist / 0.55) * 0.4;
               viewer.style.transform = `scale(${Math.max(0.85, Math.min(1.25, scale))})`;
               viewer.style.transition = "transform 0.1s ease-out";
             }
           } else {
             card.style.opacity = "0";
-            card.style.transform = "translate3d(-50%, -1500px, -1000px)";
+            card.style.transform = "translate3d(-50%, -600px, -500px)";
             card.style.pointerEvents = "none";
           }
         });
